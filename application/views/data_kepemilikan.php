@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Sipetgis - Data Kepemilikan Ternak</title>
+    <meta
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+      name="viewport"
+    />
+    <link
+      rel="icon"
+      href="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/kaiadmin/favicon.ico"
+      type="image/x-icon"
+    />
+
+    <!-- Fonts and icons -->
+    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["<?php echo base_url(); ?>assets/SIPETGIS/assets/css/fonts.min.css"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/css/plugins.min.css" />
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/css/kaiadmin.min.css" />
+
+    <!-- DataTables CSS -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.bootstrap5.min.css"
+    />
+
+    <style>
+      .dashboard-header {
+        background: linear-gradient(90deg, #1a73e8 0%, #0d47a1 100%);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+      .stat-card {
+        border-radius: 10px;
+        transition: all 0.3s;
+      }
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+      .stat-icon {
+        font-size: 2.5rem;
+        opacity: 0.8;
+      }
+      .filter-section {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .table-responsive {
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+      }
+      .detail-section {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 30px;
+      }
+      .detail-header {
+        border-bottom: 2px solid #1a73e8;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+      }
+      .btn-detail {
+        background-color: #1a73e8;
+        color: white;
+        border-radius: 20px;
+        padding: 5px 15px;
+        font-size: 14px;
+      }
+      .btn-detail:hover {
+        background-color: #0d47a1;
+        color: white;
+      }
+      .badge-ternak {
+        background-color: #e3f2fd;
+        color: #1a73e8;
+        padding: 3px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+      }
+      .dataTables_wrapper .dataTables_length,
+      .dataTables_wrapper .dataTables_filter,
+      .dataTables_wrapper .dataTables_info,
+      .dataTables_wrapper .dataTables_paginate {
+        padding: 10px;
+      }
+      .dt-buttons .btn {
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <!-- Sidebar -->
+      <div class="sidebar" data-background-color="white">
+        <div class="sidebar-logo">
+          <!-- Logo Header -->
+          <div class="logo-header" data-background-color="white">
+            <a href="index.html" class="logo" style="text-decoration: none">
+              <div
+                style="
+                  color: #1e3a8a;
+                  font-weight: 800;
+                  font-size: 24px;
+                  font-family:
+                    &quot;Segoe UI&quot;, Tahoma, Geneva, Verdana, sans-serif;
+                  letter-spacing: 0.5px;
+                  line-height: 1;
+                "
+              >
+                SIPETGIS
+              </div>
+            </a>
+            <div class="nav-toggle">
+              <button class="btn btn-toggle toggle-sidebar">
+                <i class="gg-menu-right"></i>
+              </button>
+              <button class="btn btn-toggle sidenav-toggler">
+                <i class="gg-menu-left"></i>
+              </button>
+            </div>
+            <button class="topbar-toggler more">
+              <i class="gg-more-vertical-alt"></i>
+            </button>
+          </div>
+          <!-- End Logo Header -->
+        </div>
+        <div class="sidebar-wrapper scrollbar scrollbar-inner">
+          <div class="sidebar-content">
+            <ul class="nav nav-secondary">
+              <li class="nav-item">
+                <a href="index.html">
+                  <i class="fas fa-home"></i>
+                  <p>Dashboard</p>
+                </a>
+              </li>
+              <li class="nav-section">
+                <span class="sidebar-mini-icon">
+                  <i class="fa fa-ellipsis-h"></i>
+                </span>
+                <h4 class="text-section">Menu Utama</h4>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link d-flex align-items-center justify-content-between collapsed"
+                  data-bs-toggle="collapse"
+                  href="#masterDataSubmenu"
+                  role="button"
+                  aria-expanded="false"
+                >
+                  <div class="d-flex align-items-center">
+                    <i class="fas fa-database me-2"></i>
+                    <span>Master Data</span>
+                  </div>
+                  <i class="fas fa-chevron-down ms-2"></i>
+                </a>
+                <div class="collapse" id="masterDataSubmenu">
+                  <ul class="list-unstyled ps-4">
+                    <li>
+                      <a href="pelaku-usaha.html" class="nav-link"
+                        >Pelaku Usaha</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="views/masterdata/akses-pengguna.html"
+                        class="nav-link"
+                        >Akses Pengguna</a
+                      >
+                    </li>
+                    <li>
+                      <a href="pengobatan.html" class="nav-link">Pengobatan</a>
+                    </li>
+                    <li>
+                      <a href="vaksinasi.html" class="nav-link">Vaksinasi</a>
+                    </li>
+                    <li>
+                      <a href="komoditas.html" class="nav-link">Komoditas</a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li class="nav-item active">
+                <a
+                  class="nav-link d-flex align-items-center justify-content-between collapsed"
+                  data-bs-toggle="collapse"
+                  href="#dataSubmenu"
+                  role="button"
+                  aria-expanded="false"
+                >
+                  <div class="d-flex align-items-center">
+                    <i class="fas fa-users me-2"></i>
+                    <span>Data</span>
+                  </div>
+                  <i class="fas fa-chevron-down ms-2"></i>
+                </a>
+                <div class="collapse" id="dataSubmenu">
+                  <ul class="list-unstyled ps-4">
+                    <li>
+                      <a
+                        href="data-kepemilikan-ternak.html"
+                        class="nav-link active"
+                        >Kepemilikan Ternak</a
+                      >
+                    </li>
+                    <li>
+                      <a href="data-history-ternak.html" class="nav-link"
+                        >History Data Ternak</a
+                      >
+                    </li>
+                    <li>
+                      <a href="data-vaksinasi.html" class="nav-link"
+                        >Vaksinasi</a
+                      >
+                    </li>
+                    <li>
+                      <a href="data-history-vaksinasi.html" class="nav-link"
+                        >History Vaksinasi</a
+                      >
+                    </li>
+                    <li>
+                      <a href="data-pengobatan.html" class="nav-link"
+                        >Pengobatan Ternak</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li class="nav-item">
+                <a href="laporan.html">
+                  <i class="fas fa-chart-bar"></i>
+                  <p>Laporan</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="peta-sebaran.html">
+                  <i class="fas fa-map-marked-alt"></i>
+                  <p>Peta Sebaran</p>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- End Sidebar -->
+
+      <div class="main-panel">
+        <div class="main-header">
+          <div class="main-header-logo">
+            <!-- End Logo Header -->
+          </div>
+          <!-- Navbar Header -->
+          <nav
+            class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
+          >
+            <div class="container-fluid">
+              <nav
+                class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
+              >
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <button type="submit" class="btn btn-search pe-1">
+                      <i class="fa fa-search search-icon"></i>
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search ..."
+                    class="form-control"
+                  />
+                </div>
+              </nav>
+
+              <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+                <li
+                  class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none"
+                >
+                  <a
+                    class="nav-link dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    href="#"
+                    role="button"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                  >
+                    <i class="fa fa-search"></i>
+                  </a>
+                  <ul class="dropdown-menu dropdown-search animated fadeIn">
+                    <form class="navbar-left navbar-form nav-search">
+                      <div class="input-group">
+                        <input
+                          type="text"
+                          placeholder="Search ..."
+                          class="form-control"
+                        />
+                      </div>
+                    </form>
+                  </ul>
+                </li>
+
+                <li class="nav-item topbar-user dropdown hidden-caret">
+                  <a
+                    class="dropdown-toggle profile-pic"
+                    data-bs-toggle="dropdown"
+                    href="#"
+                    aria-expanded="false"
+                  >
+                    <div class="avatar-sm">
+                      <img
+                        src="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/logo dkpp.png"
+                        alt="..."
+                        class="avatar-img rounded-circle"
+                      />
+                    </div>
+                    <span class="profile-username">
+                      <span class="fw-bold">Administrator</span>
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-user animated fadeIn">
+                    <div class="dropdown-user-scroll scrollbar-outer">
+                      <li>
+                        <div class="user-box">
+                          <div class="u-text">
+                            <h4>Administrator</h4>
+                            <p class="text-muted">admin@dkppsby.go.id</p>
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="login.html">
+                          <i class="fas fa-sign-out-alt me-2"></i>Keluar
+                        </a>
+                      </li>
+                    </div>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </nav>
+          <!-- End Navbar -->
+        </div>
+
+        <div class="container">
+          <div class="page-inner">
+            <!-- Dashboard Header -->
+            <div
+              class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
+            >
+              <div>
+                <h3 class="fw-bold mb-1">Data Kepemilikan Ternak</h3>
+                <h6 class="op-7 mb-0">
+                  Manajemen data kepemilikan ternak di Kota Surabaya
+                </h6>
+              </div>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="filter-section">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <div class="form-group mb-0">
+                    <label for="filterKomoditas" class="form-label fw-bold">
+                      Filter Komoditas Ternak:
+                    </label>
+                    <select class="form-select" id="filterKomoditas">
+                      <option selected>- Pilih Komoditas Ternak -</option>
+                      <option value="all">Semua Komoditas</option>
+                      <option value="sapi_potong">Sapi Potong</option>
+                      <option value="ayam_petelur">Ayam Ras Petelur</option>
+                      <option value="ayam_kampung">Ayam Kampung</option>
+                      <option value="kambing">Kambing</option>
+                      <option value="itik">Itik</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6 text-end">
+                  <button id="filterBtn" class="btn btn-primary">
+                    <i class="fas fa-filter me-2"></i>Filter Data
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="card stat-card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table id="dataTernakTable" class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>No</th>
+                        <th>Jenis Ternak</th>
+                        <th>Komoditas Ternak</th>
+                        <th>Jumlah</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>Ternak Besar</td>
+                        <td>Sapi Potong</td>
+                        <td>5 <span class="">Ekor</span></td>
+                        <td>
+                          <button
+                            class="btn btn-detail btn-sm"
+                            onclick="showDetail('Sapi Potong', 'Ternak Besar')"
+                          >
+                            <i class="fas fa-eye me-1"></i>Detail
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>Ternak Unggas</td>
+                        <td>Ayam Ras Petelur</td>
+                        <td>1,225 <span class="">Ekor</span></td>
+                        <td>
+                          <button
+                            class="btn btn-detail btn-sm"
+                            onclick="
+                              showDetail('Ayam Ras Petelur', 'Ternak Unggas')
+                            "
+                          >
+                            <i class="fas fa-eye me-1"></i>Detail
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>3</td>
+                        <td>Ternak Unggas</td>
+                        <td>Ayam Kampung</td>
+                        <td>350 <span class="">Ekor</span></td>
+                        <td>
+                          <button
+                            class="btn btn-detail btn-sm"
+                            onclick="
+                              showDetail('Ayam Kampung', 'Ternak Unggas')
+                            "
+                          >
+                            <i class="fas fa-eye me-1"></i>Detail
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>4</td>
+                        <td>Ternak Kecil</td>
+                        <td>Kambing</td>
+                        <td>120 <span class="">Ekor</span></td>
+                        <td>
+                          <button
+                            class="btn btn-detail btn-sm"
+                            onclick="showDetail('Kambing', 'Ternak Kecil')"
+                          >
+                            <i class="fas fa-eye me-1"></i>Detail
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>5</td>
+                        <td>Ternak Unggas</td>
+                        <td>Itik</td>
+                        <td>80 <span class="">Ekor</span></td>
+                        <td>
+                          <button
+                            class="btn btn-detail btn-sm"
+                            onclick="showDetail('Itik', 'Ternak Unggas')"
+                          >
+                            <i class="fas fa-eye me-1"></i>Detail
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Detail Section (Initially Hidden) -->
+            <div
+              id="detailSection"
+              class="detail-section"
+              style="display: none"
+            >
+              <div class="detail-header">
+                <h5 class="fw-bold mb-0">Daftar Rincian Transaksi Ternak</h5>
+                <div id="detailInfo" class="text-muted mt-2">
+                  <!-- Detail info will be inserted here -->
+                </div>
+              </div>
+
+              <div class="table-responsive">
+                <table id="detailTable" class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Nama Peternak</th>
+                      <th>Kec / Desa</th>
+                      <th>Jumlah Masuk</th>
+                      <th>Jumlah Keluar</th>
+                      <th>Tanggal Transaksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="detailTableBody">
+                    <!-- Detail data will be inserted here -->
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="text-end mt-3">
+                <button id="closeDetailBtn" class="btn btn-outline-primary">
+                  <i class="fas fa-times me-2"></i>Tutup Detail
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--   Core JS Files   -->
+    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/popper.min.js"></script>
+    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/bootstrap.min.js"></script>
+
+    <!-- jQuery Scrollbar -->
+    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.bootstrap5.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"
+    ></script>
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"
+    ></script>
+
+    <!-- Kaiadmin JS -->
+    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/kaiadmin.min.js"></script>
+
+    <script>
+      // Data untuk detail transaksi
+      const detailData = {
+        "Sapi Potong": [
+          {
+            no: 1,
+            nama: "Peternak Sapi Maju",
+            kecamatan: "Genteng / Sudiroprajan",
+            masuk: 2,
+            keluar: 0,
+            tanggal: "15-10-2022",
+          },
+          {
+            no: 2,
+            nama: "Mekar Sari Farm",
+            kecamatan: "Tambaksari / Rangkah",
+            masuk: 3,
+            keluar: 0,
+            tanggal: "20-10-2022",
+          },
+        ],
+        "Ayam Ras Petelur": [
+          {
+            no: 1,
+            nama: "Berdikari (Kandang Jaya)",
+            kecamatan: "Lampihong / Kandang Jaya",
+            masuk: 500,
+            keluar: 0,
+            tanggal: "27-10-2022",
+          },
+          {
+            no: 2,
+            nama: "LUKAH BANUA BARU",
+            kecamatan: "Paringin / Paringin Kota",
+            masuk: 725,
+            keluar: 0,
+            tanggal: "28-10-2022",
+          },
+        ],
+        "Ayam Kampung": [
+          {
+            no: 1,
+            nama: "Peternak Mandiri",
+            kecamatan: "Sawahan / Putat Jaya",
+            masuk: 200,
+            keluar: 0,
+            tanggal: "05-11-2022",
+          },
+          {
+            no: 2,
+            nama: "Karya Tani",
+            kecamatan: "Genteng / Embong Kaliasin",
+            masuk: 150,
+            keluar: 0,
+            tanggal: "10-11-2022",
+          },
+        ],
+        Kambing: [
+          {
+            no: 1,
+            nama: "Ternak Sejahtera",
+            kecamatan: "Tambaksari / Tanjungsari",
+            masuk: 50,
+            keluar: 0,
+            tanggal: "01-11-2022",
+          },
+          {
+            no: 2,
+            nama: "Makmur Farm",
+            kecamatan: "Sawahan / Bendul Merisi",
+            masuk: 70,
+            keluar: 0,
+            tanggal: "03-11-2022",
+          },
+        ],
+        Itik: [
+          {
+            no: 1,
+            nama: "Bebek Unggul",
+            kecamatan: "Genteng / Kapasari",
+            masuk: 40,
+            keluar: 0,
+            tanggal: "08-11-2022",
+          },
+          {
+            no: 2,
+            nama: "Maju Jaya Farm",
+            kecamatan: "Tambaksari / Kedungdoro",
+            masuk: 40,
+            keluar: 0,
+            tanggal: "12-11-2022",
+          },
+        ],
+      };
+
+      // Inisialisasi DataTable
+      $(document).ready(function () {
+        $("#dataTernakTable").DataTable({
+          dom: "Bfrtip",
+          buttons: ["copy", "csv", "excel", "pdf", "print"],
+          language: {
+            search: "Cari:",
+            lengthMenu: "Tampilkan _MENU_ data",
+            info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            paginate: {
+              first: "Pertama",
+              last: "Terakhir",
+              next: "Berikutnya",
+              previous: "Sebelumnya",
+            },
+          },
+          pageLength: 10,
+          responsive: true,
+        });
+
+        // Filter button event
+        $("#filterBtn").click(function () {
+          const selectedValue = $("#filterKomoditas").val();
+
+          if (
+            selectedValue === "all" ||
+            selectedValue === "- Pilih Komoditas Ternak -"
+          ) {
+            $("#dataTernakTable").DataTable().search("").draw();
+          } else {
+            let searchTerm = "";
+            switch (selectedValue) {
+              case "sapi_potong":
+                searchTerm = "Sapi Potong";
+                break;
+              case "ayam_petelur":
+                searchTerm = "Ayam Ras Petelur";
+                break;
+              case "ayam_kampung":
+                searchTerm = "Ayam Kampung";
+                break;
+              case "kambing":
+                searchTerm = "Kambing";
+                break;
+              case "itik":
+                searchTerm = "Itik";
+                break;
+            }
+            $("#dataTernakTable").DataTable().search(searchTerm).draw();
+          }
+        });
+
+        // Close detail button event
+        $("#closeDetailBtn").click(function () {
+          $("#detailSection").hide();
+        });
+      });
+
+      // Function to show detail
+      function showDetail(komoditas, jenisTernak) {
+        // Update detail info
+        $("#detailInfo").html(`
+          <span class="fw-bold">Jenis Ternak:</span> ${jenisTernak}<br>
+          <span class="fw-bold">Komoditas Ternak:</span> ${komoditas}
+        `);
+
+        // Clear and populate detail table
+        const detailTableBody = $("#detailTableBody");
+        detailTableBody.empty();
+
+        if (detailData[komoditas]) {
+          detailData[komoditas].forEach((item) => {
+            detailTableBody.append(`
+              <tr>
+                <td>${item.no}</td>
+                <td>${item.nama}</td>
+                <td>${item.kecamatan}</td>
+                <td>${item.masuk}</td>
+                <td>${item.keluar}</td>
+                <td>${item.tanggal}</td>
+              </tr>
+            `);
+          });
+        }
+
+        // Show detail section
+        $("#detailSection").show();
+
+        // Scroll to detail section
+        $("html, body").animate(
+          {
+            scrollTop: $("#detailSection").offset().top - 20,
+          },
+          500,
+        );
+      }
+    </script>
+  </body>
+</html>
