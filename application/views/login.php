@@ -52,6 +52,7 @@
 
       .form-group {
         margin-bottom: 25px;
+        position: relative;
       }
 
       .form-group label {
@@ -85,6 +86,36 @@
       .form-group input::placeholder {
         color: #a0aec0;
         font-weight: 400;
+      }
+
+      /* Style untuk input password dengan icon mata */
+      .password-wrapper {
+        position: relative;
+        width: 100%;
+      }
+
+      .password-wrapper input {
+        padding-right: 50px;
+      }
+
+      .toggle-password {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        user-select: none;
+        font-size: 20px;
+        color: #718096;
+        transition: color 0.3s ease;
+        z-index: 10;
+        background: transparent;
+        border: none;
+        padding: 5px;
+      }
+
+      .toggle-password:hover {
+        color: #1a4ba1;
       }
 
       .login-btn {
@@ -157,7 +188,7 @@
         border-radius: 4px;
       }
 
-      .demo-email {
+      .demo-username {
         font-weight: 500;
         color: #2d3748;
       }
@@ -184,6 +215,8 @@
         }
       }
     </style>
+    <!-- Menambahkan Font Awesome untuk icon mata -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   </head>
   <body>
     <div class="login-container">
@@ -192,184 +225,70 @@
         <div class="subtitle">Dinas Ketahanan Pangan dan Pertanian</div>
       </div>
 
-      <form id="loginForm">
+      <form action="<?php echo site_url('login/cek_login'); ?>" method="POST">
         <div class="form-group">
-          <label for="email">EMAIL</label>
+          <label for="username">USERNAME</label>
           <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Masukkan email"
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Masukkan username"
             autocomplete="username"
           />
         </div>
 
         <div class="form-group">
           <label for="password">PASSWORD</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Masukkan password"
-            autocomplete="current-password"
-          />
+          <div class="password-wrapper">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Masukkan password"
+              autocomplete="current-password"
+            />
+            <span class="toggle-password" onclick="togglePasswordVisibility()">
+              <i id="password-icon" class="fa-regular fa-eye"></i>
+            </span>
+          </div>
         </div>
 
         <button type="submit" class="login-btn" id="loginButton">MASUK</button>
       </form>
+
+     
     </div>
 
     <script>
-      // Fungsi untuk mengisi kredensial demo
-      function fillDemoCredentials(email) {
-        document.getElementById("email").value = email;
-        document.getElementById("password").value = "password";
-
-        // Highlight input fields
-        const emailInput = document.getElementById("email");
+      function togglePasswordVisibility() {
         const passwordInput = document.getElementById("password");
-
-        emailInput.style.borderColor = "#1a4ba1";
-        passwordInput.style.borderColor = "#1a4ba1";
-
-        setTimeout(() => {
-          emailInput.style.borderColor = "#cbd5e0";
-          passwordInput.style.borderColor = "#cbd5e0";
-        }, 1500);
-
-        // Auto submit setelah mengisi
-        setTimeout(() => {
-          document
-            .getElementById("loginForm")
-            .dispatchEvent(new Event("submit"));
-        }, 800);
-      }
-
-      // Fungsi untuk menentukan halaman tujuan berdasarkan role
-      function getRedirectUrl(email) {
-        const roleRoutes = {
-          "admin@dkppsby.go.id": "index.html",
-          "petugas@sawahan.go.id": "dashboard-petugas.html",
-          "kepala@dkppsby.go.id": "dashboard-kepala.html",
-        };
-
-        return roleRoutes[email] || "index.html";
-      }
-
-      // Fungsi untuk mendapatkan nama role berdasarkan email
-      function getRoleName(email) {
-        const roleNames = {
-          "admin@dkppsby.go.id": "Admin Bidang",
-          "petugas@sawahan.go.id": "Petugas Kecamatan",
-          "kepala@dkppsby.go.id": "Kepala Dinas",
-        };
-
-        return roleNames[email] || "Pengguna";
-      }
-
-      // Handle form submission
-      document
-        .getElementById("loginForm")
-        .addEventListener("submit", function (e) {
-          e.preventDefault();
-
-          const email = document.getElementById("email").value.trim();
-          const password = document.getElementById("password").value;
-          const loginBtn = document.getElementById("loginButton");
-
-          // Validasi sederhana
-          if (!email || !password) {
-            alert("Mohon lengkapi semua field yang diperlukan.");
-            return;
-          }
-
-          if (!isValidEmail(email)) {
-            alert(
-              "Format email tidak valid. Mohon masukkan alamat email yang benar.",
-            );
-            return;
-          }
-
-          // Simulasi proses autentikasi
-          authenticateUser(email, password);
-        });
-
-      // Fungsi validasi email
-      function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-      }
-
-      // Fungsi simulasi autentikasi dengan redirect langsung
-      function authenticateUser(email, password) {
-        const loginBtn = document.getElementById("loginButton");
-        const originalText = loginBtn.textContent;
-
-        // Tampilkan loading state
-        loginBtn.textContent = "Memproses...";
-        loginBtn.disabled = true;
-
-        // Simulasi delay proses login
-        setTimeout(() => {
-          // Daftar akun yang valid
-          const validAccounts = [
-            "admin@dkppsby.go.id",
-            "petugas@sawahan.go.id",
-            "kepala@dkppsby.go.id",
-          ];
-
-          // Password untuk semua akun adalah "password"
-          if (validAccounts.includes(email) && password === "password") {
-            // Dapatkan role dan halaman tujuan
-            const role = getRoleName(email);
-            const redirectUrl = getRedirectUrl(email);
-
-            // Simpan informasi login ke localStorage
-            localStorage.setItem(
-              "loggedInUser",
-              JSON.stringify({
-                email: email,
-                role: role,
-                loginTime: new Date().toISOString(),
-              }),
-            );
-
-            // Tampilkan pesan sukses di button
-            loginBtn.textContent = "Login Berhasil!";
-            loginBtn.style.backgroundColor = "#10b981";
-
-            // Redirect langsung setelah 1 detik
-            setTimeout(() => {
-              // REDIRECT LANGSUNG KE HALAMAN YANG SESUAI
-              window.location.href = redirectUrl;
-            }, 1000);
-          } else {
-            // Reset button
-            loginBtn.textContent = originalText;
-            loginBtn.disabled = false;
-
-            // Tampilkan pesan error
-            if (!validAccounts.includes(email)) {
-              alert(
-                "Email tidak terdaftar. Gunakan salah satu akun demo yang tersedia.",
-              );
-            } else if (password !== "password") {
-              alert(
-                "Password salah. Password untuk semua akun demo adalah: password",
-              );
-            }
-          }
-        }, 800);
-      }
-
-      // Jika ada data login tersimpan, tampilkan informasi
-      window.addEventListener("load", function () {
-        const savedUser = localStorage.getItem("loggedInUser");
-        if (savedUser) {
-          const user = JSON.parse(savedUser);
-          console.log(`Pengguna sebelumnya: ${user.email} (${user.role})`);
+        const passwordIcon = document.getElementById("password-icon");
+        
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          passwordIcon.className = "fa-regular fa-eye-slash";
+        } else {
+          passwordInput.type = "password";
+          passwordIcon.className = "fa-regular fa-eye";
         }
-      });
+      }
+
+      function fillDemo(username) {
+        document.getElementById("username").value = username;
+        document.getElementById("password").value = "password";
+        
+        // Highlight sebentar
+        const usernameInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+        
+        usernameInput.style.borderColor = "#1a4ba1";
+        passwordInput.style.borderColor = "#1a4ba1";
+        
+        setTimeout(() => {
+          usernameInput.style.borderColor = "#cbd5e0";
+          passwordInput.style.borderColor = "#cbd5e0";
+        }, 500);
+      }
     </script>
   </body>
 </html>

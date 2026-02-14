@@ -246,6 +246,21 @@
                         >Pengobatan Ternak</a
                       >
                     </li>
+                     <li>
+                      <a href="<?= site_url('data_penjual_pakan') ?>" class="nav-link"
+                        >Penjual Pakan Ternak</a
+                      >
+                    </li>
+                     <li>
+                      <a href="<?= site_url('data_klinik') ?>" class="nav-link"
+                        >Klinik Hewan</a
+                      >
+                    </li>
+                     <li>
+                      <a href="<?= site_url('data_penjual_obat') ?>" class="nav-link"
+                        >Penjual Obat Hewan</a
+                      >
+                    </li>
                   </ul>
                 </div>
               </li>

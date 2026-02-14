@@ -132,7 +132,7 @@
         <div class="sidebar-logo">
           <!-- Logo Header -->
           <div class="logo-header" data-background-color="white">
-            <a href="index.html" class="logo" style="text-decoration: none">
+            <a href="<?php echo base_url(); ?>" class="logo" style="text-decoration: none">
               <div
                 style="
                   color: #1e3a8a;
@@ -165,7 +165,7 @@
           <div class="sidebar-content">
             <ul class="nav nav-secondary">
               <li class="nav-item">
-                <a href="index.html">
+                <a href="<?php echo base_url(); ?>">
                   <i class="fas fa-home"></i>
                   <p>Dashboard</p>
                 </a>
@@ -193,25 +193,25 @@
                 <div class="collapse" id="masterDataSubmenu">
                   <ul class="list-unstyled ps-4">
                     <li>
-                      <a href="pelaku-usaha.html" class="nav-link"
+                      <a href="<?php echo base_url(); ?>pelaku_usaha" class="nav-link"
                         >Pelaku Usaha</a
                       >
                     </li>
                     <li>
                       <a
-                        href="views/masterdata/akses-pengguna.html"
+                        href="<?php echo base_url(); ?>akses_pengguna"
                         class="nav-link"
                         >Akses Pengguna</a
                       >
                     </li>
                     <li>
-                      <a href="pengobatan.html" class="nav-link">Pengobatan</a>
+                      <a href="<?php echo base_url(); ?>pengobatan" class="nav-link">Pengobatan</a>
                     </li>
                     <li>
-                      <a href="vaksinasi.html" class="nav-link">Vaksinasi</a>
+                      <a href="<?php echo base_url(); ?>vaksinasi" class="nav-link">Vaksinasi</a>
                     </li>
                     <li>
-                      <a href="komoditas.html" class="nav-link">Komoditas</a>
+                      <a href="<?php echo base_url(); ?>komoditas" class="nav-link">Komoditas</a>
                     </li>
                   </ul>
                 </div>
@@ -234,42 +234,58 @@
                   <ul class="list-unstyled ps-4">
                     <li>
                       <a
-                        href="data-kepemilikan-ternak.html"
+                        href="<?php echo base_url(); ?>data_kepemilikan"
                         class="nav-link active"
                         >Kepemilikan Ternak</a
                       >
                     </li>
                     <li>
-                      <a href="data-history-ternak.html" class="nav-link"
+                      <a href="<?php echo base_url(); ?>data_history_ternak" class="nav-link"
                         >History Data Ternak</a
                       >
                     </li>
                     <li>
-                      <a href="data-vaksinasi.html" class="nav-link"
+                      <a href="<?php echo base_url(); ?>data_vaksinasi" class="nav-link"
                         >Vaksinasi</a
                       >
                     </li>
                     <li>
-                      <a href="data-history-vaksinasi.html" class="nav-link"
+                      <a href="<?php echo base_url(); ?>data_history_vaksinasi" class="nav-link"
                         >History Vaksinasi</a
                       >
                     </li>
                     <li>
-                      <a href="data-pengobatan.html" class="nav-link"
+                      <a href="<?php echo base_url(); ?>data_pengobatan" class="nav-link"
                         >Pengobatan Ternak</a
+                      >
+                    </li>
+                     </li>
+                     <li>
+                      <a href="<?= site_url('data_penjual_pakan') ?>" class="nav-link"
+                        >Penjual Pakan Ternak</a
+                      >
+                    </li>
+                     <li>
+                      <a href="<?= site_url('data_klinik') ?>" class="nav-link"
+                        >Klinik Hewan</a
+                      >
+                    </li>
+                     <li>
+                      <a href="<?= site_url('data_penjual_obat') ?>" class="nav-link"
+                        >Penjual Obat Hewan</a
                       >
                     </li>
                   </ul>
                 </div>
               </li>
               <li class="nav-item">
-                <a href="laporan.html">
+                <a href="<?php echo base_url(); ?>laporan">
                   <i class="fas fa-chart-bar"></i>
                   <p>Laporan</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="peta-sebaran.html">
+                <a href="<?php echo base_url(); ?>peta_sebaran">
                   <i class="fas fa-map-marked-alt"></i>
                   <p>Peta Sebaran</p>
                 </a>
@@ -290,22 +306,6 @@
             class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
           >
             <div class="container-fluid">
-              <nav
-                class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
-              >
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <button type="submit" class="btn btn-search pe-1">
-                      <i class="fa fa-search search-icon"></i>
-                    </button>
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Search ..."
-                    class="form-control"
-                  />
-                </div>
-              </nav>
 
               <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
                 <li
@@ -364,7 +364,7 @@
                       </li>
                       <li>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="login.html">
+                        <a class="dropdown-item" href="<?php echo base_url(); ?>login">
                           <i class="fas fa-sign-out-alt me-2"></i>Keluar
                         </a>
                       </li>

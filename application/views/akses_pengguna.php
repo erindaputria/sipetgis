@@ -483,7 +483,7 @@
         <div class="sidebar-logo">
           <!-- Logo Header -->
           <div class="logo-header" data-background-color="white">
-            <a href="index.html" class="logo" style="text-decoration: none">
+            <a href="<?php echo site_url('dashboard'); ?>" class="logo" style="text-decoration: none">
               <div
                 style="
                   color: #1e3a8a; /* Biru navy yang elegan */
@@ -580,7 +580,7 @@
                 <div class="collapse" id="dataSubmenu">
                   <ul class="list-unstyled ps-4">
                     <li>
-                      <a href="<?= site_url('data_kepemilikan_ternak') ?>" class="nav-link"
+                      <a href="<?= site_url('data_kepemilikan') ?>" class="nav-link"
                         >Kepemilikan Ternak</a
                       >
                     </li>
@@ -604,17 +604,32 @@
                         >Pengobatan Ternak</a
                       >
                     </li>
+                    <li>
+                      <a href="<?= site_url('data_penjual_pakan') ?>" class="nav-link"
+                        >Penjual Pakan Ternak</a
+                      >
+                    </li>
+                     <li>
+                      <a href="<?= site_url('data_klinik') ?>" class="nav-link"
+                        >Klinik Hewan</a
+                      >
+                    </li>
+                     <li>
+                      <a href="<?= site_url('data_penjual_obat') ?>" class="nav-link"
+                        >Penjual Obat Hewan</a
+                      >
+                    </li>
                   </ul>
                 </div>
               </li>
               <li class="nav-item">
-                <a href="laporan.html">
+                <a href="<?php echo base_url(); ?>laporan">
                   <i class="fas fa-chart-bar"></i>
                   <p>Laporan</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="peta-sebaran.html">
+                <a href="<?php echo base_url(); ?>peta_sebaran">
                   <i class="fas fa-map-marked-alt"></i>
                   <p>Peta Sebaran</p>
                 </a>
@@ -692,7 +707,7 @@
                       </li>
                       <li>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="login.html">
+                        <a class="dropdown-item" href="<?php echo base_url(); ?>login">
                           <i class="fas fa-sign-out-alt me-2"></i>Keluar
                         </a>
                       </li>

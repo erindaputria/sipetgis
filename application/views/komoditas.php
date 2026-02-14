@@ -352,7 +352,7 @@
                 <div class="collapse" id="dataSubmenu">
                   <ul class="list-unstyled ps-4">
                     <li>
-                      <a href="<?= site_url('data_kepemilikan_ternak') ?>" class="nav-link">Kepemilikan Ternak</a>
+                      <a href="<?= site_url('data_kepemilikan') ?>" class="nav-link">Kepemilikan Ternak</a>
                     </li>
                     <li>
                       <a href="<?= site_url('data_history_ternak') ?>" class="nav-link">History Data Ternak</a>
@@ -365,6 +365,21 @@
                     </li>
                     <li>
                       <a href="<?= site_url('data_pengobatan') ?>" class="nav-link">Pengobatan Ternak</a>
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_penjual_pakan') ?>" class="nav-link"
+                        >Penjual Pakan Ternak</a
+                      >
+                    </li>
+                     <li>
+                      <a href="<?= site_url('data_klinik') ?>" class="nav-link"
+                        >Klinik Hewan</a
+                      >
+                    </li>
+                     <li>
+                      <a href="<?= site_url('data_penjual_obat') ?>" class="nav-link"
+                        >Penjual Obat Hewan</a
+                      >
                     </li>
                   </ul>
                 </div>
@@ -411,7 +426,7 @@
                     <div class="dropdown-user-scroll scrollbar-outer">
                       <li>
                         <div class="user-box">
-                          <div class="u-text">
+                          <div class="u-text"> 
                             <h4>Administrator</h4>
                             <p class="text-muted">admin@dkppsby.go.id</p>
                           </div>

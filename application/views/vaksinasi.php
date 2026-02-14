@@ -333,7 +333,7 @@
                 <div class="collapse" id="dataSubmenu">
                   <ul class="list-unstyled ps-4">
                     <li>
-                      <a href="<?= site_url('data_kepemilikan_ternak') ?>" class="nav-link"
+                      <a href="<?= site_url('data_kepemilikan') ?>" class="nav-link"
                         >Kepemilikan Ternak</a
                       >
                     </li>
@@ -355,6 +355,21 @@
                     <li>
                       <a href="<?= site_url('data_pengobatan') ?>" class="nav-link"
                         >Pengobatan Ternak</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_penjual_pakan') ?>" class="nav-link"
+                        >Penjual Pakan Ternak</a
+                      >
+                    </li>
+                     <li>
+                      <a href="<?= site_url('data_klinik') ?>" class="nav-link"
+                        >Klinik Hewan</a
+                      >
+                    </li>
+                     <li>
+                      <a href="<?= site_url('data_penjual_obat') ?>" class="nav-link"
+                        >Penjual Obat Hewan</a
                       >
                     </li>
                   </ul>
