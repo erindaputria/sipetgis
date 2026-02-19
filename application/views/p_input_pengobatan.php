@@ -193,6 +193,51 @@
             text-align: center;
             padding: 20px;
         }
+        /* Tambahan style untuk profile */
+        .profile-username {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .kecamatan-badge {
+            background-color: #1a73e8;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .avatar-sm {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #1a73e8;
+        }
+        .topbar-user .dropdown-toggle::after {
+            display: none;
+        }
+        /* Style untuk multiple komoditas */
+        .komoditas-table th {
+            background-color: #e9f0fa;
+            font-size: 0.9rem;
+        }
+        .btn-add-row {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-add-row:hover {
+            background-color: #218838;
+            color: white;
+        }
+        .btn-remove-row {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-remove-row:hover {
+            background-color: #c82333;
+            color: white;
+        }
     </style>
 </head>
 
@@ -263,7 +308,22 @@
                 <div class="main-header-logo"></div>
                 <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
                     <div class="container-fluid">
+                        <!-- Search icon untuk mobile (seperti dashboard) -->
                         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+                            <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" aria-haspopup="true">
+                                    <i class="fa fa-search"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-search animated fadeIn">
+                                    <form class="navbar-left navbar-form nav-search">
+                                        <div class="input-group">
+                                            <input type="text" placeholder="Search ..." class="form-control" />
+                                        </div>
+                                    </form>
+                                </ul>
+                            </li>
+
+                            <!-- User Dropdown dengan data dari session -->
                             <li class="nav-item topbar-user dropdown hidden-caret">
                                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                                     <div class="avatar-sm">
@@ -278,14 +338,14 @@
                                         <li>
                                             <div class="user-box">
                                                 <div class="u-text">
-                                                    <h4>Kecamatan Sawahan</h4>
-                                                    <p class="text-muted">petugas@sawahan.go.id</p>
+                                                    <h4>Kecamatan <?php echo $this->session->userdata('kecamatan'); ?></h4>
+                                                    <p class="text-muted"><?php echo $this->session->userdata('username'); ?></p>
                                                 </div>
                                             </div>
                                         </li>
                                         <li>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="<?php echo base_url(); ?>login">
+                                            <a class="dropdown-item" href="<?php echo site_url('login/logout'); ?>">
                                                 <i class="fas fa-sign-out-alt me-2"></i>Keluar
                                             </a>
                                         </li>
@@ -299,18 +359,18 @@
 
             <div class="container">
                 <div class="page-inner">
-                    <!-- Page Header -->
+                    <!-- Page Header dengan data dari session -->
                     <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                         <div class="flex-grow-1">
                             <h3 class="fw-bold mb-1">Pengobatan Ternak</h3>
-                            <h6 class="op-7 mb-0">Kecamatan Sawahan, Surabaya</h6>
+                            <h6 class="op-7 mb-0">Kecamatan <?php echo $this->session->userdata('kecamatan') ?: 'Sawahan'; ?>, Surabaya</h6>
                         </div>
                     </div>
 
                     <!-- Alert Section -->
                     <div id="alert-container"></div>
 
-                    <!-- Existing Data Table -->
+                    <!-- Existing Data Table dengan Multiple Komoditas -->
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card form-card">
@@ -319,30 +379,63 @@
                                         <table class="table table-bordered table-hover table-custom">
                                             <thead>
                                                 <tr>
-                                                    <th>No</th>
-                                                    <th>Nama Peternak</th>
-                                                    <th>Komoditas Ternak</th>
+                                                    <th rowspan="2">No</th>
+                                                    <th rowspan="2">Nama Peternak</th>
+                                                    <th colspan="3" class="text-center">Detail Pengobatan</th>
+                                                    <th rowspan="2">Kelurahan</th>
+                                                    <th rowspan="2">Tanggal</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>Komoditas</th>
                                                     <th>Jenis Pengobatan</th>
                                                     <th>Jumlah</th>
-                                                    <th>Tanggal</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="dataTableBody">
                                                 <?php if (!empty($pengobatan_data)): ?>
                                                     <?php $no = 1; ?>
                                                     <?php foreach ($pengobatan_data as $data): ?>
-                                                        <tr>
-                                                            <td><?php echo $no++; ?></td>
-                                                            <td><?php echo htmlspecialchars($data['nama_peternak'] ?? '-'); ?></td>
-                                                            <td><?php echo htmlspecialchars($data['komoditas_ternak'] ?? '-'); ?></td>
-                                                            <td><?php echo htmlspecialchars($data['jenis_pengobatan'] ?? '-'); ?></td>
-                                                            <td><?php echo htmlspecialchars($data['jumlah'] ?? '0'); ?></td>
-                                                            <td><?php echo isset($data['tanggal_pengobatan']) ? date('d-m-Y', strtotime($data['tanggal_pengobatan'])) : '-'; ?></td>
-                                                        </tr>
+                                                        <?php 
+                                                        $rowspan = isset($data['details']) ? count($data['details']) : 1;
+                                                        $firstRow = true;
+                                                        ?>
+                                                        
+                                                        <?php if (isset($data['details']) && !empty($data['details'])): ?>
+                                                            <?php foreach ($data['details'] as $index => $detail): ?>
+                                                                <tr>
+                                                                    <?php if ($firstRow): ?>
+                                                                        <td rowspan="<?php echo $rowspan; ?>"><?php echo $no; ?></td>
+                                                                        <td rowspan="<?php echo $rowspan; ?>"><?php echo htmlspecialchars($data['nama_peternak'] ?? '-'); ?></td>
+                                                                    <?php endif; ?>
+                                                                    
+                                                                    <td><?php echo htmlspecialchars($detail['komoditas_ternak'] ?? '-'); ?></td>
+                                                                    <td><?php echo htmlspecialchars($detail['jenis_pengobatan'] ?? '-'); ?></td>
+                                                                    <td><?php echo htmlspecialchars($detail['jumlah'] ?? '0'); ?></td>
+                                                                    
+                                                                    <?php if ($firstRow): ?>
+                                                                        <td rowspan="<?php echo $rowspan; ?>"><?php echo htmlspecialchars($data['kelurahan'] ?? '-'); ?></td>
+                                                                        <td rowspan="<?php echo $rowspan; ?>"><?php echo isset($data['tanggal_pengobatan']) ? date('d-m-Y', strtotime($data['tanggal_pengobatan'])) : '-'; ?></td>
+                                                                    <?php endif; ?>
+                                                                </tr>
+                                                                <?php $firstRow = false; ?>
+                                                            <?php endforeach; ?>
+                                                            <?php $no++; ?>
+                                                        <?php else: ?>
+                                                            <!-- Fallback untuk data lama (format single) -->
+                                                            <tr>
+                                                                <td><?php echo $no++; ?></td>
+                                                                <td><?php echo htmlspecialchars($data['nama_peternak'] ?? '-'); ?></td>
+                                                                <td><?php echo htmlspecialchars($data['komoditas_ternak'] ?? '-'); ?></td>
+                                                                <td><?php echo htmlspecialchars($data['jenis_pengobatan'] ?? '-'); ?></td>
+                                                                <td><?php echo htmlspecialchars($data['jumlah'] ?? '0'); ?></td>
+                                                                <td><?php echo htmlspecialchars($data['kelurahan'] ?? '-'); ?></td>
+                                                                <td><?php echo isset($data['tanggal_pengobatan']) ? date('d-m-Y', strtotime($data['tanggal_pengobatan'])) : '-'; ?></td>
+                                                            </tr>
+                                                        <?php endif; ?>
                                                     <?php endforeach; ?>
                                                 <?php else: ?>
                                                     <tr>
-                                                        <td colspan="6" class="text-center">Tidak ada data pengobatan</td>
+                                                        <td colspan="7" class="text-center">Tidak ada data pengobatan</td>
                                                     </tr>
                                                 <?php endif; ?>
                                             </tbody>
@@ -374,6 +467,8 @@
                                     <div class="card-body">
                                         <form id="formPengobatan" enctype="multipart/form-data">
                                             <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                                            <!-- Tambahkan hidden input untuk kecamatan dari session -->
+                                            <input type="hidden" name="kecamatan_session" id="kecamatan_session" value="<?php echo $this->session->userdata('kecamatan') ?: 'Sawahan'; ?>">
                                             
                                             <div class="row">
                                                 <!-- Nama Peternak -->
@@ -389,7 +484,7 @@
                                                     <input type="text" class="form-control" id="nik" name="nik" placeholder="Masukkan NIK (opsional)" />
                                                 </div>
 
-                                                <!-- ========== NAMA PETUGAS - DROPDOWN ========== -->
+                                                <!-- NAMA PETUGAS - DROPDOWN -->
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label required-field">Nama Petugas</label>
                                                     <select class="form-control" id="nama_petugas" name="nama_petugas" required>
@@ -411,42 +506,6 @@
                                                         <option value="Drh. Niken Rahmawati">Drh. Niken Rahmawati</option>
                                                     </select>
                                                     <div class="invalid-feedback">Nama petugas harus dipilih</div>
-                                                </div>
-                                                <!-- ========== END NAMA PETUGAS ========== -->
-
-                                                <!-- Komoditas Ternak -->
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label required-field">Komoditas Ternak</label>
-                                                    <select class="form-control" id="komoditas_ternak" name="komoditas_ternak" required>
-                                                        <option value="">Pilih Komoditas</option>
-                                                        <option value="Sapi Potong">Sapi Potong</option>
-                                                        <option value="Kambing">Kambing</option>
-                                                        <option value="Ayam Ras Petelur">Ayam Ras Petelur</option>
-                                                        <option value="Ayam Kampung">Ayam Kampung</option>
-                                                        <option value="Itik">Itik</option>
-                                                    </select>
-                                                    <div class="invalid-feedback">Komoditas ternak harus dipilih</div>
-                                                </div>
-
-                                                <!-- Jenis Pengobatan -->
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label required-field">Jenis Pengobatan</label>
-                                                    <select class="form-control" id="jenis_pengobatan" name="jenis_pengobatan" required>
-                                                        <option value="">Pilih Jenis Pengobatan</option>
-                                                        <option value="Pengobatan Herbal">Pengobatan Herbal</option>
-                                                        <option value="Pengobatan Kimia">Pengobatan Kimia</option>
-                                                        <option value="Pengobatan Tradisional">Pengobatan Tradisional</option>
-                                                        <option value="Vaksin">Vaksin</option>
-                                                        <option value="Vitamin">Vitamin</option>
-                                                    </select>
-                                                    <div class="invalid-feedback">Jenis pengobatan harus dipilih</div>
-                                                </div>
-
-                                                <!-- Jumlah -->
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label required-field">Jumlah</label>
-                                                    <input type="number" class="form-control" id="jumlah" name="jumlah" placeholder="Masukkan jumlah ternak yang diobati" min="1" required />
-                                                    <div class="invalid-feedback">Jumlah harus diisi (minimal 1)</div>
                                                 </div>
 
                                                 <!-- Tanggal Pengobatan -->
@@ -480,6 +539,93 @@
                                                 </div>
                                             </div>
 
+                                            <!-- MULTIPLE KOMODITAS SECTION -->
+                                            <div class="row mt-3">
+                                                <div class="col-md-12">
+                                                    <div class="card address-card">
+                                                        <div class="card-header card-header-address">
+                                                            <h5 class="card-title mb-0">
+                                                                <i class="fas fa-list me-2 text-success"></i>DATA KOMODITAS TERNAK
+                                                            </h5>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="table-responsive">
+                                                                <table class="table table-bordered komoditas-table" id="komoditasTable">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th width="30%">Komoditas Ternak <span class="text-danger">*</span></th>
+                                                                            <th width="30%">Jenis Pengobatan <span class="text-danger">*</span></th>
+                                                                            <th width="20%">Jumlah <span class="text-danger">*</span></th>
+                                                                            <th width="20%">Aksi</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="komoditasBody">
+                                                                        <tr class="komoditas-row">
+                                                                            <td>
+                                                                                <select class="form-control komoditas_ternak" name="komoditas_ternak[]" required>
+                                                                                    <option value="">Pilih Komoditas</option>
+                                                                                    <option value="Sapi Potong">Sapi Potong</option>
+                                                                                    <option value="Sapi Perah">Sapi Perah</option>
+                                                                                    <option value="Kerbau">Kerbau</option>
+                                                                                    <option value="Kambing">Kambing</option>
+                                                                                    <option value="Domba">Domba</option>
+                                                                                    <option value="Babi">Babi</option>
+                                                                                    <option value="Kuda">Kuda</option>
+                                                                                    <option value="Kelinci">Kelinci</option>
+                                                                                    <option value="Ayam Ras Petelur">Ayam Ras Petelur</option>
+                                                                                    <option value="Ayam Ras Pedaging">Ayam Ras Pedaging</option>
+                                                                                    <option value="Ayam Kampung">Ayam Kampung</option>
+                                                                                    <option value="Itik">Itik</option>
+                                                                                    <option value="Entok">Entok</option>
+                                                                                    <option value="Burung Puyuh">Burung Puyuh</option>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <select class="form-control jenis_pengobatan" name="jenis_pengobatan[]" required>
+                                                                                    <option value="">Pilih Jenis</option>
+                                                                                    <option value="Pengobatan Herbal">Pengobatan Herbal</option>
+                                                                                    <option value="Pengobatan Kimia">Pengobatan Kimia</option>
+                                                                                    <option value="Pengobatan Tradisional">Pengobatan Tradisional</option>
+                                                                                    <option value="Vaksin">Vaksin</option>
+                                                                                    <option value="Vitamin">Vitamin</option>
+                                                                                    <option value="Antibiotik">Antibiotik</option>
+                                                                                    <option value="Antiparasit">Antiparasit</option>
+                                                                                    <option value="Obat Cacing">Obat Cacing</option>
+                                                                                    <option value="Obat Luka">Obat Luka</option>
+                                                                                    <option value="Obat Kulit">Obat Kulit</option>
+                                                                                    <option value="Suplemen">Suplemen</option>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input type="number" class="form-control jumlah" name="jumlah[]" placeholder="Jumlah" min="1" required />
+                                                                            </td>
+                                                                            <td class="text-center">
+                                                                                <button type="button" class="btn btn-success btn-sm btn-add-row" title="Tambah baris">
+                                                                                    <i class="fas fa-plus"></i>
+                                                                                </button>
+                                                                                <button type="button" class="btn btn-danger btn-sm btn-remove-row" title="Hapus baris" style="display: none;">
+                                                                                    <i class="fas fa-trash"></i>
+                                                                                </button>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                    <tfoot>
+                                                                        <tr>
+                                                                            <td colspan="4">
+                                                                                <button type="button" class="btn btn-primary btn-sm" id="btnTambahKomoditas">
+                                                                                    <i class="fas fa-plus-circle me-1"></i>Tambah Komoditas Lain
+                                                                                </button>
+                                                                                <small class="text-muted ms-3">* Anda dapat menambahkan multiple komoditas untuk satu peternak</small>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tfoot>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <!-- Card Alamat -->
                                             <div class="row mt-3">
                                                 <div class="col-md-12">
@@ -491,10 +637,10 @@
                                                         </div>
                                                         <div class="card-body">
                                                             <div class="row">
-                                                                <!-- Kecamatan -->
+                                                                <!-- Kecamatan - Diambil dari session -->
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label required-field">Kecamatan</label>
-                                                                    <input type="text" class="form-control" id="kecamatan" name="kecamatan" value="Sawahan" readonly />
+                                                                    <input type="text" class="form-control" id="kecamatan" name="kecamatan" value="<?php echo $this->session->userdata('kecamatan') ?: 'Sawahan'; ?>" readonly />
                                                                 </div>
 
                                                                 <!-- Kelurahan -->
@@ -660,6 +806,217 @@
                 resetForm();
             });
 
+            // Variable untuk counter baris
+            let rowCount = 1;
+
+            // Fungsi untuk menambah baris komoditas baru
+            function addKomoditasRow() {
+                rowCount++;
+                
+                const newRow = `
+                    <tr class="komoditas-row">
+                        <td>
+                            <select class="form-control komoditas_ternak" name="komoditas_ternak[]" required>
+                                <option value="">Pilih Komoditas</option>
+                                <option value="Sapi Potong">Sapi Potong</option>
+                                <option value="Sapi Perah">Sapi Perah</option>
+                                <option value="Kerbau">Kerbau</option>
+                                <option value="Kambing">Kambing</option>
+                                <option value="Domba">Domba</option>
+                                <option value="Babi">Babi</option>
+                                <option value="Kuda">Kuda</option>
+                                <option value="Kelinci">Kelinci</option>
+                                <option value="Ayam Ras Petelur">Ayam Ras Petelur</option>
+                                <option value="Ayam Ras Pedaging">Ayam Ras Pedaging</option>
+                                <option value="Ayam Kampung">Ayam Kampung</option>
+                                <option value="Itik">Itik</option>
+                                <option value="Entok">Entok</option>
+                                <option value="Burung Puyuh">Burung Puyuh</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control jenis_pengobatan" name="jenis_pengobatan[]" required>
+                                <option value="">Pilih Jenis</option>
+                                <option value="Pengobatan Herbal">Pengobatan Herbal</option>
+                                <option value="Pengobatan Kimia">Pengobatan Kimia</option>
+                                <option value="Pengobatan Tradisional">Pengobatan Tradisional</option>
+                                <option value="Vaksin">Vaksin</option>
+                                <option value="Vitamin">Vitamin</option>
+                                <option value="Antibiotik">Antibiotik</option>
+                                <option value="Antiparasit">Antiparasit</option>
+                                <option value="Obat Cacing">Obat Cacing</option>
+                                <option value="Obat Luka">Obat Luka</option>
+                                <option value="Obat Kulit">Obat Kulit</option>
+                                <option value="Suplemen">Suplemen</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control jumlah" name="jumlah[]" placeholder="Jumlah" min="1" required />
+                        </td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-success btn-sm btn-add-row" title="Tambah baris">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm btn-remove-row" title="Hapus baris">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                
+                $('#komoditasBody').append(newRow);
+                updateRemoveButtons();
+            }
+
+            // Fungsi untuk menghapus baris komoditas
+            function removeKomoditasRow(btn) {
+                if ($('.komoditas-row').length > 1) {
+                    $(btn).closest('tr').remove();
+                    updateRemoveButtons();
+                }
+            }
+
+            // Fungsi untuk mengupdate tampilan tombol remove
+            function updateRemoveButtons() {
+                const rowCount = $('.komoditas-row').length;
+                
+                if (rowCount > 1) {
+                    $('.btn-remove-row').show();
+                } else {
+                    $('.btn-remove-row').hide();
+                }
+            }
+
+            // Event handler untuk tombol tambah (di dalam tabel)
+            $(document).on('click', '.btn-add-row', function() {
+                addKomoditasRow();
+            });
+
+            // Event handler untuk tombol hapus
+            $(document).on('click', '.btn-remove-row', function() {
+                removeKomoditasRow(this);
+            });
+
+            // Tombol tambah di footer
+            $('#btnTambahKomoditas').click(function() {
+                addKomoditasRow();
+            });
+
+            // Fungsi validasi komoditas rows
+            function validateKomoditasRows() {
+                let isValid = true;
+                let errorMessages = [];
+                
+                $('.komoditas-row').each(function(index) {
+                    const komoditas = $(this).find('.komoditas_ternak').val();
+                    const jenis = $(this).find('.jenis_pengobatan').val();
+                    const jumlah = $(this).find('.jumlah').val();
+                    
+                    // Reset error style
+                    $(this).find('.komoditas_ternak, .jenis_pengobatan, .jumlah').removeClass('is-invalid');
+                    
+                    if (!komoditas || komoditas === '') {
+                        $(this).find('.komoditas_ternak').addClass('is-invalid');
+                        isValid = false;
+                        errorMessages.push(`Baris ${index + 1}: Komoditas ternak harus dipilih`);
+                    }
+                    
+                    if (!jenis || jenis === '') {
+                        $(this).find('.jenis_pengobatan').addClass('is-invalid');
+                        isValid = false;
+                        errorMessages.push(`Baris ${index + 1}: Jenis pengobatan harus dipilih`);
+                    }
+                    
+                    if (!jumlah || jumlah === '' || parseInt(jumlah) < 1) {
+                        $(this).find('.jumlah').addClass('is-invalid');
+                        isValid = false;
+                        errorMessages.push(`Baris ${index + 1}: Jumlah harus diisi (minimal 1)`);
+                    }
+                });
+                
+                if (!isValid) {
+                    showAlert('danger', 'Harap lengkapi data komoditas dengan benar:<br>' + errorMessages.join('<br>'));
+                }
+                
+                return isValid;
+            }
+
+            // Fungsi reset form
+            function resetForm() {
+                $('#formContainer').removeClass('show');
+                $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT PENGOBATAN');
+                
+                // Reset hanya menyisakan 1 baris komoditas
+                $('#komoditasBody').empty();
+                const defaultRow = `
+                    <tr class="komoditas-row">
+                        <td>
+                            <select class="form-control komoditas_ternak" name="komoditas_ternak[]" required>
+                                <option value="">Pilih Komoditas</option>
+                                <option value="Sapi Potong">Sapi Potong</option>
+                                <option value="Sapi Perah">Sapi Perah</option>
+                                <option value="Kerbau">Kerbau</option>
+                                <option value="Kambing">Kambing</option>
+                                <option value="Domba">Domba</option>
+                                <option value="Babi">Babi</option>
+                                <option value="Kuda">Kuda</option>
+                                <option value="Kelinci">Kelinci</option>
+                                <option value="Ayam Ras Petelur">Ayam Ras Petelur</option>
+                                <option value="Ayam Ras Pedaging">Ayam Ras Pedaging</option>
+                                <option value="Ayam Kampung">Ayam Kampung</option>
+                                <option value="Itik">Itik</option>
+                                <option value="Entok">Entok</option>
+                                <option value="Burung Puyuh">Burung Puyuh</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control jenis_pengobatan" name="jenis_pengobatan[]" required>
+                                <option value="">Pilih Jenis</option>
+                                <option value="Pengobatan Herbal">Pengobatan Herbal</option>
+                                <option value="Pengobatan Kimia">Pengobatan Kimia</option>
+                                <option value="Pengobatan Tradisional">Pengobatan Tradisional</option>
+                                <option value="Vaksin">Vaksin</option>
+                                <option value="Vitamin">Vitamin</option>
+                                <option value="Antibiotik">Antibiotik</option>
+                                <option value="Antiparasit">Antiparasit</option>
+                                <option value="Obat Cacing">Obat Cacing</option>
+                                <option value="Obat Luka">Obat Luka</option>
+                                <option value="Obat Kulit">Obat Kulit</option>
+                                <option value="Suplemen">Suplemen</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control jumlah" name="jumlah[]" placeholder="Jumlah" min="1" required />
+                        </td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-success btn-sm btn-add-row" title="Tambah baris">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm btn-remove-row" style="display: none;" title="Hapus baris">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                $('#komoditasBody').html(defaultRow);
+                updateRemoveButtons();
+                
+                // Reset field lainnya
+                $('#formPengobatan')[0].reset();
+                $('#kecamatan').val('<?php echo $this->session->userdata('kecamatan') ?: 'Sawahan'; ?>');
+                const today = new Date().toISOString().split('T')[0];
+                $('#tanggal_pengobatan').val(today);
+                
+                // Reset UI elements
+                $('#coordinateInfo').hide();
+                $('#photoPreview').hide();
+                $('#photoPlaceholder').show();
+                $('#btnRemovePhoto').hide();
+                
+                // Remove invalid class
+                $('.is-invalid').removeClass('is-invalid');
+            }
+
             // Geolocation Function
             $('#btnGetLocation').click(function() {
                 if (navigator.geolocation) {
@@ -775,13 +1132,10 @@
             $('#formPengobatan').submit(function(e) {
                 e.preventDefault();
 
-                // Validasi form
-                const requiredFields = [
+                // Validasi field umum
+                const commonFields = [
                     'nama_peternak',
-                    'nama_petugas', // <-- TAMBAHKAN VALIDASI NAMA PETUGAS
-                    'komoditas_ternak',
-                    'jenis_pengobatan',
-                    'jumlah',
+                    'nama_petugas',
                     'tanggal_pengobatan',
                     'bantuan_prov',
                     'kelurahan',
@@ -791,13 +1145,13 @@
                 
                 let isValid = true;
 
-                // Reset semua error
-                requiredFields.forEach(function(fieldId) {
+                // Reset error pada field umum
+                commonFields.forEach(function(fieldId) {
                     $('#' + fieldId).removeClass('is-invalid');
                 });
 
-                // Cek field yang kosong
-                requiredFields.forEach(function(fieldId) {
+                // Cek field umum yang kosong
+                commonFields.forEach(function(fieldId) {
                     const field = $('#' + fieldId);
                     if (!field.val() || field.val() === '') {
                         field.addClass('is-invalid');
@@ -805,8 +1159,12 @@
                     }
                 });
 
+                // Validasi komoditas rows
+                if (!validateKomoditasRows()) {
+                    isValid = false;
+                }
+
                 if (!isValid) {
-                    showAlert('danger', 'Harap isi semua field yang wajib diisi!');
                     return;
                 }
 
@@ -852,27 +1210,6 @@
                     }
                 });
             });
-
-            // Reset Form Function
-            function resetForm() {
-                $('#formContainer').removeClass('show');
-                $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT PENGOBATAN');
-                $('#formPengobatan')[0].reset();
-                
-                // Set default values
-                $('#kecamatan').val('Sawahan');
-                const today = new Date().toISOString().split('T')[0];
-                $('#tanggal_pengobatan').val(today);
-                
-                // Reset UI elements
-                $('#coordinateInfo').hide();
-                $('#photoPreview').hide();
-                $('#photoPlaceholder').show();
-                $('#btnRemovePhoto').hide();
-                
-                // Remove invalid class
-                $('.is-invalid').removeClass('is-invalid');
-            }
 
             // Alert Function
             function showAlert(type, message) {

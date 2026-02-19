@@ -48,7 +48,59 @@
         .table th { background-color: #f8f9fa; font-weight: 600; }
         .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, 
         .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_paginate { padding: 10px; }
-        .dt-buttons .btn { border-radius: 5px; margin-right: 5px; }
+        
+        /* Style untuk tombol DataTables */
+        .dt-buttons .btn {
+            border-radius: 5px;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+
+        .dt-buttons .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .dt-buttons .btn-primary {
+            background-color: #0d6efd !important;
+            border-color: #0d6efd !important;
+            color: white !important;
+        }
+
+        .dt-buttons .btn-success {
+            background-color: #198754 !important;
+            border-color: #198754 !important;
+            color: white !important;
+        }
+
+        .dt-buttons .btn-danger {
+            background-color: #dc3545 !important;
+            border-color: #dc3545 !important;
+            color: white !important;
+        }
+
+        .dt-buttons .btn-info {
+            background-color: #0dcaf0 !important;
+            border-color: #0dcaf0 !important;
+            color: white !important;
+        }
+
+        /* Pagination styling */
+        .pagination .page-link {
+            border: none;
+            color: #495057;
+            margin: 0 3px;
+            border-radius: 6px !important;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #4361ee;
+            color: white;
+        }
+
+        .pagination .page-link:hover {
+            background-color: #f8f9fa;
+        }
         
         /* Map Styles */
         .map-container { height: 500px; border-radius: 8px; overflow: hidden; border: 1px solid #dee2e6; background-color: #f8f9fa; }
@@ -68,7 +120,7 @@
         .modal-foto .modal-body { text-align: center; }
         .modal-foto img { max-width: 100%; max-height: 80vh; }
         
-        /* PERSIS SEPERTI GAMBAR 1 */
+        /* Layout */
         .dataTables_filter { float: right !important; }
         .dataTables_length { float: left !important; }
         .dt-buttons { float: left !important; margin-right: 10px; }
@@ -185,7 +237,7 @@
                        
                     </div>
                     
-                    <!-- Filter Section - PERSIS GAMBAR 1 -->
+                    <!-- Filter Section -->
                     <div class="filter-section">
                         <div class="row align-items-center">
                             <div class="col-md-3">
@@ -240,7 +292,7 @@
                                             <th>Komoditas</th>
                                             <th>Jenis Pengobatan</th>
                                             <th>Jumlah</th>
-                                          
+                                            <th>Lokasi</th>
                                             <th>Peta</th>
                                             <th>Tanggal</th>
                                             <th>Aksi</th>
@@ -251,11 +303,11 @@
                                         <!-- Data dari AJAX -->
                                     </tbody>
                                 </table>
-                            </div>
+                            </div> 
                         </div>
                     </div>
                     
-                    <!-- MAP SECTION - PERSIS SEPERTI GAMBAR 2 -->
+                    <!-- MAP SECTION -->
                     <div id="mapSection" class="map-section" style="display: none;">
                         <div class="detail-header">
                             <div class="map-title" id="mapTitle">Peta Lokasi Ternak</div>
@@ -414,26 +466,56 @@
             loadData();
             loadKelurahanFilter();
             
-            // Initialize DataTable
+            // Initialize DataTable dengan tombol berwarna
             dataTable = $("#historyDataTable").DataTable({
                 dom: 'Bfrtip',
                 buttons: [
-                    { extend: 'copy', className: 'btn btn-primary', text: '<i class="fas fa-copy me-1"></i> Copy' },
-                    { extend: 'csv', className: 'btn btn-primary', text: '<i class="fas fa-file-csv me-1"></i> CSV' },
-                    { extend: 'excel', className: 'btn btn-primary', text: '<i class="fas fa-file-excel me-1"></i> Excel' },
-                    { extend: 'pdf', className: 'btn btn-primary', text: '<i class="fas fa-file-pdf me-1"></i> PDF' },
-                    { extend: 'print', className: 'btn btn-primary', text: '<i class="fas fa-print me-1"></i> Print' }
+                    {
+                        extend: 'copy',
+                        text: '<i class="fas fa-copy"></i> Copy',
+                        className: 'btn btn-sm btn-primary'
+                    },
+                    {
+                        extend: 'csv',
+                        text: '<i class="fas fa-file-csv"></i> CSV',
+                        className: 'btn btn-sm btn-success'
+                    },
+                    {
+                        extend: 'excel',
+                        text: '<i class="fas fa-file-excel"></i> Excel',
+                        className: 'btn btn-sm btn-success'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<i class="fas fa-file-pdf"></i> PDF',
+                        className: 'btn btn-sm btn-danger'
+                    },
+                    {
+                        extend: 'print',
+                        text: '<i class="fas fa-print"></i> Print',
+                        className: 'btn btn-sm btn-info'
+                    }
                 ],
                 language: {
                     search: "Cari:",
                     lengthMenu: "Tampilkan _MENU_ data",
                     info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                    paginate: { first: "Pertama", last: "Terakhir", next: "Berikutnya", previous: "Sebelumnya" }
+                    infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
+                    infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
+                    zeroRecords: "Tidak ada data yang ditemukan",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Berikutnya",
+                        previous: "Sebelumnya"
+                    }
                 },
                 pageLength: 10,
+                lengthChange: true,
+                lengthMenu: [5, 10, 25, 50, 100],
                 responsive: true,
                 columnDefs: [
-                    { orderable: false, targets: [1, 6, 8, 9] }
+                    { orderable: false, targets: [6, 8, 9] } // Non-aktifkan sorting untuk kolom Peta, Aksi, Foto
                 ]
             });
             
@@ -657,12 +739,12 @@
             });
         }
         
-        // ================ MAP FUNCTION - PERSIS GAMBAR 2 ================
+        // ================ MAP FUNCTION ================
         function showMap(komoditas, peternak, coordinates) {
             const [lat, lng] = coordinates.split(",").map(c => parseFloat(c.trim()));
             if (!lat || !lng || isNaN(lat) || isNaN(lng)) { alert("Koordinat tidak valid"); return; }
             
-            // Title dan Info - PERSIS GAMBAR 2
+            // Title dan Info
             $("#mapTitle").text(`Peta Lokasi Ternak ${komoditas}, Peternak: ${peternak}`);
             $("#mapInfo").html(`
                 <div class="row">
@@ -671,7 +753,7 @@
                 </div>
             `);
             
-            // Informasi Peternak - PERSIS GAMBAR 2
+            // Informasi Peternak
             $("#farmInfo").html(`
                 <div class="mb-2"><span class="fw-bold">Nama Peternak:</span><br><span class="text-primary fw-bold">${peternak}</span></div>
                 <div class="mb-2"><span class="fw-bold">Komoditas:</span><br><span class="badge bg-primary">${komoditas}</span></div>
@@ -679,7 +761,7 @@
                 <div class="mb-2"><span class="fw-bold">Status:</span><br><span class="badge bg-success">Aktif</span></div>
             `);
             
-            // Detail Koordinat - PERSIS GAMBAR 2
+            // Detail Koordinat
             $("#coordInfo").html(`
                 <div class="mb-2"><span class="fw-bold">Latitude:</span><br><code>${lat.toFixed(6)}</code></div>
                 <div class="mb-2"><span class="fw-bold">Longitude:</span><br><code>${lng.toFixed(6)}</code></div>
@@ -696,7 +778,7 @@
                     L.control.attribution({ position: "bottomright" }).addTo(map).addAttribution("© OpenStreetMap contributors");
                     updateMapView();
                     
-                    // Icon BIRU dengan huruf P - PERSIS GAMBAR 2
+                    // Icon BIRU dengan huruf P
                     const farmIcon = L.divIcon({
                         html: `<div style="background-color: #1a73e8; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 14px;">P</div>`,
                         className: "farm-marker", iconSize: [30, 30], iconAnchor: [15, 15]

@@ -6,20 +6,32 @@ class P_Input_Vaksinasi extends CI_Controller {
     public function __construct() {
         parent::__construct();
         
-        // Load library yang diperlukan
+        // LOAD SESSION LIBRARY TERLEBIH DAHULU
         $this->load->library('session');
+        
+        // CEK SESSION LOGIN
+        if (!$this->session->userdata('username')) {
+            redirect('login');
+        }
+        
+        // Load library yang diperlukan
         $this->load->library('form_validation');
+        $this->load->library('upload');
         $this->load->model('P_Input_Vaksinasi_Model');
+        $this->load->helper(array('form', 'url', 'file'));
     }
     
     public function index() {
+        // Ambil kecamatan dari session
+        $kecamatan = $this->session->userdata('kecamatan');
+        
         // Data untuk view
         $data['title'] = 'Input Vaksinasi Ternak - SIPETGIS';
         
-        // Ambil data dari model
-        $data['vaksinasi_data'] = $this->P_Input_Vaksinasi_Model->get_vaksinasi_for_table();
+        // Ambil data dari model berdasarkan kecamatan
+        $data['vaksinasi_data'] = $this->P_Input_Vaksinasi_Model->get_vaksinasi_by_kecamatan($kecamatan);
         
-        // Load view tanpa folder petugas
+        // Load view
         $this->load->view('p_input_vaksinasi', $data);
     }
     
@@ -51,7 +63,7 @@ class P_Input_Vaksinasi extends CI_Controller {
         if (!empty($_FILES['foto_vaksinasi']['name'])) {
             $config['upload_path'] = FCPATH . 'uploads/vaksinasi/';
             $config['allowed_types'] = 'jpg|jpeg|png';
-            $config['max_size'] = 5120;
+            $config['max_size'] = 5120; // 5MB
             $config['encrypt_name'] = TRUE;
             
             // Buat folder jika belum ada
@@ -59,26 +71,39 @@ class P_Input_Vaksinasi extends CI_Controller {
                 mkdir($config['upload_path'], 0777, TRUE);
             }
             
-            $this->load->library('upload', $config);
+            $this->upload->initialize($config);
             
             if ($this->upload->do_upload('foto_vaksinasi')) {
                 $upload_data = $this->upload->data();
                 $foto_vaksinasi = $upload_data['file_name'];
+            } else {
+                $error = $this->upload->display_errors();
+                echo json_encode(array(
+                    'status' => 'error',
+                    'message' => 'Gagal upload foto: ' . strip_tags($error)
+                ));
+                return;
             }
         }
         
+        // Ambil kecamatan dari session
+        $kecamatan = $this->session->userdata('kecamatan');
+        $nama_petugas = $this->session->userdata('username');
+        
         // Siapkan data untuk disimpan
         $data = array(
+            'nama_petugas' => $nama_petugas,
             'nama_peternak' => $this->input->post('nama_peternak'),
             'komoditas_ternak' => $this->input->post('komoditas_ternak'),
             'jenis_vaksinasi' => $this->input->post('jenis_vaksinasi'),
             'jumlah' => $this->input->post('jumlah'),
             'tanggal_vaksinasi' => $this->input->post('tanggal_vaksinasi'),
-            'keterangan' => $this->input->post('keterangan'),
+            'keterangan' => $this->input->post('keterangan') ?? '',
             'bantuan_prov' => $this->input->post('bantuan_prov'),
+            'kecamatan' => $kecamatan, // Tambahkan kecamatan dari session
             'kelurahan' => $this->input->post('kelurahan'),
-            'rt' => $this->input->post('rt'),
-            'rw' => $this->input->post('rw'),
+            'rt' => $this->input->post('rt') ?? '',
+            'rw' => $this->input->post('rw') ?? '',
             'latitude' => $this->input->post('latitude'),
             'longitude' => $this->input->post('longitude'),
             'foto_vaksinasi' => $foto_vaksinasi
@@ -102,8 +127,8 @@ class P_Input_Vaksinasi extends CI_Controller {
     
     public function get_data() {
         $this->output->set_content_type('application/json');
-        $data = $this->P_Input_Vaksinasi_Model->get_all_vaksinasi();
+        $kecamatan = $this->session->userdata('kecamatan');
+        $data = $this->P_Input_Vaksinasi_Model->get_all_vaksinasi($kecamatan);
         echo json_encode(array('data' => $data));
     }
 }
-?>

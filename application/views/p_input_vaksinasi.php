@@ -83,6 +83,7 @@
             background: linear-gradient(90deg, #0d47a1 0%, #1a73e8 100%);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(26, 115, 232, 0.3);
+            color: white;
         }
         .btn-back {
             background: #6c757d;
@@ -192,6 +193,30 @@
             text-align: center;
             padding: 20px;
         }
+        /* Tambahan style untuk profile */
+        .profile-username {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .kecamatan-badge {
+            background-color: #1a73e8;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .avatar-sm {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #1a73e8;
+        }
+        .topbar-user .dropdown-toggle::after {
+            display: none;
+        }
     </style>
 </head>
 
@@ -200,7 +225,6 @@
         <!-- Sidebar -->
         <div class="sidebar" data-background-color="white">
             <div class="sidebar-logo">
-                <!-- Logo Header -->
                 <div class="logo-header" data-background-color="white">
                     <a href="<?php echo base_url(); ?>p_dashboard_petugas" class="logo" style="text-decoration: none">
                         <div style="color: #1e3a8a; font-weight: 800; font-size: 24px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; letter-spacing: 0.5px; line-height: 1;">
@@ -219,7 +243,6 @@
                         <i class="gg-more-vertical-alt"></i>
                     </button>
                 </div>
-                <!-- End Logo Header -->
             </div>
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
                 <div class="sidebar-content">
@@ -258,16 +281,14 @@
                 </div>
             </div>
         </div>
-        <!-- End Sidebar -->
 
         <div class="main-panel">
             <div class="main-header">
-                <div class="main-header-logo">
-                    <!-- End Logo Header -->
-                </div>
+                <div class="main-header-logo"></div>
                 <!-- Navbar Header -->
                 <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
                     <div class="container-fluid">
+                        <!-- Search icon untuk mobile -->
                         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
                             <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" aria-haspopup="true">
@@ -282,34 +303,44 @@
                                 </ul>
                             </li>
 
-                            <li class="nav-item topbar-user dropdown hidden-caret">
-                                <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
-                                    <div class="avatar-sm">
-                                        <img src="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/petugas lapangan.png" alt="..." class="avatar-img rounded-circle" />
-                                    </div>
-                                    <span class="profile-username">
-                                        <span class="fw-bold">Petugas Lapangan</span>
-                                    </span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-user animated fadeIn">
-                                    <div class="dropdown-user-scroll scrollbar-outer">
-                                        <li>
-                                            <div class="user-box">
-                                                <div class="u-text">
-                                                    <h4>Kecamatan Sawahan</h4>
-                                                    <p class="text-muted">petugas@sawahan.go.id</p>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="<?php echo base_url(); ?>login">
-                                                <i class="fas fa-sign-out-alt me-2"></i>Keluar
-                                            </a>
-                                        </li>
-                                    </div>
-                                </ul>
-                            </li>
+                            <!-- User Dropdown dengan data dari session -->
+                           <li class="nav-item topbar-user dropdown hidden-caret">
+                  <a
+                    class="dropdown-toggle profile-pic"
+                    data-bs-toggle="dropdown"
+                    href="#"
+                    aria-expanded="false"
+                  >
+                    <div class="avatar-sm">
+                      <img
+                        src="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/petugas lapangan.png"
+                        alt="..."
+                        class="avatar-img rounded-circle"
+                      />
+                    </div>
+                    <span class="profile-username">
+                      <span class="fw-bold">Petugas Lapangan</span>
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-user animated fadeIn">
+                    <div class="dropdown-user-scroll scrollbar-outer">
+                      <li>
+                        <div class="user-box">
+                          <div class="u-text">
+                            <h4>Kecamatan <?php echo $this->session->userdata('kecamatan'); ?></h4>
+                            <p class="text-muted"><?php echo $this->session->userdata('username'); ?></p>
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="<?php echo site_url('login/logout'); ?>">
+                          <i class="fas fa-sign-out-alt me-2"></i>Keluar
+                        </a>
+                      </li>
+                    </div>
+                  </ul>
+                </li>
                         </ul>
                     </div>
                 </nav>
@@ -318,11 +349,11 @@
 
             <div class="container">
                 <div class="page-inner">
-                    <!-- Page Header -->
+                    <!-- Page Header dengan data dari session -->
                     <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                         <div class="flex-grow-1">
                             <h3 class="fw-bold mb-1">Vaksinasi Ternak</h3>
-                            <h6 class="op-7 mb-0">Kecamatan Sawahan, Surabaya</h6>
+                            <h6 class="op-7 mb-0">Kecamatan <?php echo $this->session->userdata('kecamatan') ?: 'Sawahan'; ?>, Surabaya</h6>
                         </div>
                     </div>
 
@@ -360,11 +391,11 @@
                                                     <?php foreach ($vaksinasi_data as $data): ?>
                                                         <tr>
                                                             <td><?php echo $no++; ?></td>
-                                                            <td><?php echo htmlspecialchars($data['nama_peternak']); ?></td>
-                                                            <td><?php echo htmlspecialchars($data['komoditas_ternak']); ?></td>
-                                                            <td><?php echo htmlspecialchars($data['jenis_vaksinasi']); ?></td>
-                                                            <td><?php echo htmlspecialchars($data['jumlah']); ?></td>
-                                                            <td><?php echo date('d-m-Y', strtotime($data['tanggal_vaksinasi'])); ?></td>
+                                                            <td><?php echo htmlspecialchars($data['nama_peternak'] ?? '-'); ?></td>
+                                                            <td><?php echo htmlspecialchars($data['komoditas_ternak'] ?? '-'); ?></td>
+                                                            <td><?php echo htmlspecialchars($data['jenis_vaksinasi'] ?? '-'); ?></td>
+                                                            <td><?php echo htmlspecialchars($data['jumlah'] ?? '0'); ?></td>
+                                                            <td><?php echo isset($data['tanggal_vaksinasi']) ? date('d-m-Y', strtotime($data['tanggal_vaksinasi'])) : '-'; ?></td>
                                                         </tr>
                                                     <?php endforeach; ?>
                                                 <?php else: ?>
@@ -408,6 +439,8 @@
                                             );
                                             ?>
                                             <input type="hidden" name="<?php echo $csrf['name']; ?>" value="<?php echo $csrf['hash']; ?>">
+                                            <!-- Hidden input untuk kecamatan dari session -->
+                                            <input type="hidden" name="kecamatan_session" id="kecamatan_session" value="<?php echo $this->session->userdata('kecamatan') ?: 'Sawahan'; ?>">
                                             
                                             <div class="row">
                                                 <!-- Nama Peternak -->
@@ -473,7 +506,7 @@
                                                 <!-- Keterangan -->
                                                 <div class="col-md-12 mb-3">
                                                     <label class="form-label">Keterangan</label>
-                                                    <textarea class="form-control" id="keterangan" name="keterangan" rows="2" placeholder="Masukkan keterangan tambahan"></textarea>
+                                                    <textarea class="form-control" id="keterangan" name="keterangan" rows="2" placeholder="Masukkan keterangan tambahan (opsional)"></textarea>
                                                 </div>
                                             </div>
 
@@ -488,27 +521,28 @@
                                                         </div>
                                                         <div class="card-body">
                                                             <div class="row">
-                                                                <!-- Kecamatan -->
+                                                                <!-- Kecamatan - Diambil dari session -->
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label required-field">Kecamatan</label>
-                                                                    <input type="text" class="form-control" id="kecamatan" name="kecamatan" value="Sawahan" readonly />
+                                                                    <input type="text" class="form-control" id="kecamatan" name="kecamatan" value="<?php echo $this->session->userdata('kecamatan') ?: 'Sawahan'; ?>" readonly />
                                                                 </div>
 
-                                                                <!-- Desa -->
+                                                                <!-- Desa/Kelurahan -->
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label required-field">Desa/Kelurahan</label>
                                                                     <input type="text" class="form-control" id="kelurahan" name="kelurahan" placeholder="Masukkan nama desa/kelurahan" required />
                                                                     <div class="invalid-feedback">Desa/kelurahan harus diisi</div>
                                                                 </div>
 
-                                                                <!-- RT/RW -->
+                                                                <!-- RT -->
                                                                 <div class="col-md-3 mb-3">
                                                                     <label class="form-label">RT</label>
-                                                                    <input type="text" class="form-control" id="rt" name="rt" placeholder="RT" />
+                                                                    <input type="text" class="form-control" id="rt" name="rt" placeholder="RT (opsional)" />
                                                                 </div>
+                                                                <!-- RW -->
                                                                 <div class="col-md-3 mb-3">
                                                                     <label class="form-label">RW</label>
-                                                                    <input type="text" class="form-control" id="rw" name="rw" placeholder="RW" />
+                                                                    <input type="text" class="form-control" id="rw" name="rw" placeholder="RW (opsional)" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -517,71 +551,96 @@
                                             </div>
 
                                             <!-- Titik Koordinat -->
-                                            <div class="row">
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label required-field">Latitude</label>
-                                                    <input type="text" class="form-control" id="latitude" name="latitude" placeholder="Latitude akan diambil otomatis" readonly required />
-                                                    <div class="invalid-feedback">Latitude harus diisi. Klik tombol 'Ambil Lokasi'</div>
-                                                </div>
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label required-field">Longitude</label>
-                                                    <input type="text" class="form-control" id="longitude" name="longitude" placeholder="Longitude akan diambil otomatis" readonly required />
-                                                    <div class="invalid-feedback">Longitude harus diisi. Klik tombol 'Ambil Lokasi'</div>
-                                                </div>
-                                                <div class="col-md-12 mb-3">
-                                                    <button class="btn btn-get-location" type="button" id="btnGetLocation">
-                                                        <i class="fas fa-map-marker-alt me-2"></i>Ambil Lokasi
-                                                    </button>
-                                                    <div class="coordinate-info mt-2" id="coordinateInfo" style="display: none">
-                                                        <small>
-                                                            <i class="fas fa-info-circle me-1"></i>
-                                                            Koordinat berhasil diambil:
-                                                            <span id="latDisplay"></span>,
-                                                            <span id="lngDisplay"></span>
-                                                            <br />
-                                                            <span id="accuracyInfo"></span>
-                                                        </small>
+                                            <div class="row mt-3">
+                                                <div class="col-md-12">
+                                                    <div class="card address-card">
+                                                        <div class="card-header card-header-address">
+                                                            <h5 class="card-title mb-0">
+                                                                <i class="fas fa-globe me-2 text-success"></i>TITIK KOORDINAT
+                                                            </h5>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-md-6 mb-3">
+                                                                    <label class="form-label required-field">Latitude</label>
+                                                                    <input type="text" class="form-control" id="latitude" name="latitude" placeholder="Latitude akan diambil otomatis" readonly required />
+                                                                    <div class="invalid-feedback">Latitude harus diisi. Klik tombol 'Ambil Lokasi'</div>
+                                                                </div>
+                                                                <div class="col-md-6 mb-3">
+                                                                    <label class="form-label required-field">Longitude</label>
+                                                                    <input type="text" class="form-control" id="longitude" name="longitude" placeholder="Longitude akan diambil otomatis" readonly required />
+                                                                    <div class="invalid-feedback">Longitude harus diisi. Klik tombol 'Ambil Lokasi'</div>
+                                                                </div>
+                                                                <div class="col-md-12 mb-3">
+                                                                    <button class="btn btn-get-location" type="button" id="btnGetLocation">
+                                                                        <i class="fas fa-map-marker-alt me-2"></i>Ambil Lokasi
+                                                                    </button>
+                                                                    <div class="coordinate-info mt-2" id="coordinateInfo" style="display: none">
+                                                                        <small>
+                                                                            <i class="fas fa-info-circle me-1"></i>
+                                                                            Koordinat berhasil diambil:
+                                                                            <span id="latDisplay"></span>,
+                                                                            <span id="lngDisplay"></span>
+                                                                            <br />
+                                                                            <span id="accuracyInfo"></span>
+                                                                        </small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <!-- Foto -->
-                                            <div class="row">
-                                                <div class="col-md-12 mb-3">
-                                                    <label class="form-label">Foto Vaksinasi</label>
-                                                    <div class="d-flex align-items-start">
-                                                        <div class="me-3">
-                                                            <div class="photo-placeholder" id="photoPlaceholder" onclick="document.getElementById('foto_vaksinasi').click()">
-                                                                <div class="text-center">
-                                                                    <i class="fas fa-camera fa-2x mb-2"></i>
-                                                                    <div>Klik untuk upload foto</div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-12">
+                                                    <div class="card address-card">
+                                                        <div class="card-header card-header-address">
+                                                            <h5 class="card-title mb-0">
+                                                                <i class="fas fa-camera me-2 text-success"></i>FOTO VAKSINASI
+                                                            </h5>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-md-12 mb-3">
+                                                                    <div class="d-flex align-items-start">
+                                                                        <div class="me-3">
+                                                                            <div class="photo-placeholder" id="photoPlaceholder" onclick="document.getElementById('foto_vaksinasi').click()">
+                                                                                <div class="text-center">
+                                                                                    <i class="fas fa-camera fa-2x mb-2"></i>
+                                                                                    <div>Klik untuk upload foto</div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <img id="photoPreview" class="photo-preview" alt="Preview Foto" />
+                                                                        </div>
+                                                                        <div class="flex-grow-1">
+                                                                            <input type="file" class="form-control d-none" id="foto_vaksinasi" name="foto_vaksinasi" accept="image/jpeg, image/jpg, image/png" />
+                                                                            <small class="text-muted d-block mb-2">Upload foto vaksinasi (maks. 5MB, format: JPG, PNG)</small>
+                                                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="document.getElementById('foto_vaksinasi').click()">
+                                                                                <i class="fas fa-upload me-1"></i>Pilih File
+                                                                            </button>
+                                                                            <button type="button" class="btn btn-outline-danger btn-sm ms-2" id="btnRemovePhoto" style="display: none">
+                                                                                <i class="fas fa-trash me-1"></i>Hapus
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            <img id="photoPreview" class="photo-preview" alt="Preview Foto" />
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <input type="file" class="form-control d-none" id="foto_vaksinasi" name="foto_vaksinasi" accept="image/*" />
-                                                            <small class="text-muted d-block mb-2">Upload foto vaksinasi (maks. 5MB, format: JPG, PNG)</small>
-                                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="document.getElementById('foto_vaksinasi').click()">
-                                                                <i class="fas fa-upload me-1"></i>Pilih File
-                                                            </button>
-                                                            <button type="button" class="btn btn-outline-danger btn-sm ms-2" id="btnRemovePhoto" style="display: none">
-                                                                <i class="fas fa-trash me-1"></i>Hapus
-                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <!-- Submit Button -->
-                                            <div class="row">
+                                            <div class="row mt-4">
                                                 <div class="col-md-12">
                                                     <div class="text-end">
                                                         <button type="button" class="btn btn-light me-2" id="btnCancel">
                                                             <i class="fas fa-times me-1"></i>Batal
                                                         </button>
                                                         <button type="submit" class="btn btn-submit">
-                                                            <i class="fas fa-save me-1"></i>Kirim Data
+                                                            <i class="fas fa-save me-1"></i>Simpan Data
                                                         </button>
                                                     </div>
                                                 </div>
@@ -601,296 +660,268 @@
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/popper.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/bootstrap.min.js"></script>
-
-    <!-- jQuery Scrollbar -->
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-
-    <!-- Kaiadmin JS -->
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/kaiadmin.min.js"></script>
 
     <script>
-        // Set today's date as default
-        document.addEventListener("DOMContentLoaded", function () {
-            const today = new Date().toISOString().split("T")[0];
-            document.getElementById("tanggal_vaksinasi").value = today;
+        $(document).ready(function() {
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            $('#tanggal_vaksinasi').val(today);
             
             // Hide loading spinner
-            document.getElementById("loadingSpinner").style.display = "none";
-        });
-
-        // Toggle Form Visibility
-        document.getElementById("toggleFormBtn").addEventListener("click", function () {
-            const formContainer = document.getElementById("formContainer");
-            formContainer.classList.toggle("show");
-
-            if (formContainer.classList.contains("show")) {
-                this.innerHTML = '<i class="fas fa-minus-circle me-2"></i> TUTUP FORM INPUT VAKSINASI';
-                this.scrollIntoView({ behavior: "smooth" });
-            } else {
-                this.innerHTML = '<i class="fas fa-plus-circle me-2"></i> INPUT VAKSINASI';
-            }
-        });
-
-        // Cancel Button
-        document.getElementById("btnCancel").addEventListener("click", function () {
-            document.getElementById("formContainer").classList.remove("show");
-            document.getElementById("toggleFormBtn").innerHTML = '<i class="fas fa-plus-circle me-2"></i> INPUT VAKSINASI';
-            document.getElementById("formVaksinasi").reset();
-            document.getElementById("kecamatan").value = "Sawahan";
-            document.getElementById("coordinateInfo").style.display = "none";
-            document.getElementById("photoPreview").style.display = "none";
-            document.getElementById("photoPlaceholder").style.display = "flex";
-            document.getElementById("btnRemovePhoto").style.display = "none";
+            $('#loadingSpinner').hide();
             
-            // Reset tanggal ke hari ini
-            const today = new Date().toISOString().split("T")[0];
-            document.getElementById("tanggal_vaksinasi").value = today;
-            
-            // Hapus class invalid
-            const invalidFields = document.querySelectorAll('.is-invalid');
-            invalidFields.forEach(field => {
-                field.classList.remove('is-invalid');
+            // Toggle Form Visibility
+            $('#toggleFormBtn').click(function() {
+                const formContainer = $('#formContainer');
+                formContainer.toggleClass('show');
+
+                if (formContainer.hasClass('show')) {
+                    $(this).html('<i class="fas fa-minus-circle me-2"></i> TUTUP FORM INPUT VAKSINASI');
+                    $('html, body').animate({
+                        scrollTop: formContainer.offset().top - 50
+                    }, 500);
+                } else {
+                    $(this).html('<i class="fas fa-plus-circle me-2"></i> INPUT VAKSINASI');
+                }
             });
-        });
 
-        // Geolocation Function
-        document.getElementById("btnGetLocation").addEventListener("click", function () {
-            if (navigator.geolocation) {
-                const btn = this;
-                const originalText = btn.innerHTML;
+            // Cancel Button
+            $('#btnCancel').click(function() {
+                resetForm();
+            });
 
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Mengambil lokasi...';
-                btn.disabled = true;
+            // Geolocation Function
+            $('#btnGetLocation').click(function() {
+                if (navigator.geolocation) {
+                    const btn = $(this);
+                    const originalText = btn.html();
 
-                navigator.geolocation.getCurrentPosition(
-                    function (position) {
-                        const lat = position.coords.latitude;
-                        const lng = position.coords.longitude;
-                        const accuracy = position.coords.accuracy;
+                    btn.html('<i class="fas fa-spinner fa-spin me-2"></i>Mengambil lokasi...');
+                    btn.prop('disabled', true);
 
-                        // Format koordinat
-                        const formattedLat = lat.toFixed(6);
-                        const formattedLng = lng.toFixed(6);
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            const lat = position.coords.latitude;
+                            const lng = position.coords.longitude;
+                            const accuracy = position.coords.accuracy;
 
-                        // Set nilai ke input
-                        document.getElementById("latitude").value = formattedLat;
-                        document.getElementById("longitude").value = formattedLng;
-                        
-                        // Hapus class invalid
-                        document.getElementById("latitude").classList.remove("is-invalid");
-                        document.getElementById("longitude").classList.remove("is-invalid");
+                            // Format koordinat
+                            const formattedLat = lat.toFixed(6);
+                            const formattedLng = lng.toFixed(6);
 
-                        // Tampilkan informasi
-                        document.getElementById("latDisplay").textContent = formattedLat;
-                        document.getElementById("lngDisplay").textContent = formattedLng;
-                        document.getElementById("accuracyInfo").textContent = `Akurasi: ±${Math.round(accuracy)} meter`;
-                        document.getElementById("coordinateInfo").style.display = "block";
+                            // Set nilai ke input
+                            $('#latitude').val(formattedLat);
+                            $('#longitude').val(formattedLng);
+                            
+                            // Hapus class invalid
+                            $('#latitude, #longitude').removeClass('is-invalid');
 
-                        // Reset button
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
+                            // Tampilkan informasi
+                            $('#latDisplay').text(formattedLat);
+                            $('#lngDisplay').text(formattedLng);
+                            $('#accuracyInfo').text(`Akurasi: ±${Math.round(accuracy)} meter`);
+                            $('#coordinateInfo').show();
 
-                        // Success message
-                        showAlert("success", "Lokasi berhasil diambil!");
-                    },
-                    function (error) {
-                        let errorMessage = "Gagal mendapatkan lokasi. ";
+                            // Reset button
+                            btn.html(originalText);
+                            btn.prop('disabled', false);
 
-                        switch (error.code) {
-                            case error.PERMISSION_DENIED:
-                                errorMessage += "Izin lokasi ditolak. Harap izinkan akses lokasi di browser Anda.";
-                                break;
-                            case error.POSITION_UNAVAILABLE:
-                                errorMessage += "Informasi lokasi tidak tersedia.";
-                                break;
-                            case error.TIMEOUT:
-                                errorMessage += "Waktu permintaan lokasi habis.";
-                                break;
-                            default:
-                                errorMessage += "Terjadi kesalahan yang tidak diketahui.";
+                            showAlert('success', 'Lokasi berhasil diambil!');
+                        },
+                        function(error) {
+                            let errorMessage = 'Gagal mendapatkan lokasi. ';
+
+                            switch(error.code) {
+                                case error.PERMISSION_DENIED:
+                                    errorMessage += 'Izin lokasi ditolak. Harap izinkan akses lokasi di browser Anda.';
+                                    break;
+                                case error.POSITION_UNAVAILABLE:
+                                    errorMessage += 'Informasi lokasi tidak tersedia.';
+                                    break;
+                                case error.TIMEOUT:
+                                    errorMessage += 'Waktu permintaan lokasi habis.';
+                                    break;
+                                default:
+                                    errorMessage += 'Terjadi kesalahan yang tidak diketahui.';
+                            }
+
+                            // Reset button
+                            btn.html(originalText);
+                            btn.prop('disabled', false);
+
+                            showAlert('danger', errorMessage);
+                        },
+                        {
+                            enableHighAccuracy: true,
+                            timeout: 10000,
+                            maximumAge: 0
                         }
+                    );
+                } else {
+                    showAlert('danger', 'Browser Anda tidak mendukung geolocation.');
+                }
+            });
 
-                        // Reset button
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
+            // Photo Upload Functionality
+            $('#foto_vaksinasi').change(function(e) {
+                const file = e.target.files[0];
+                
+                if (file) {
+                    // Validasi file size (max 5MB)
+                    if (file.size > 5 * 1024 * 1024) {
+                        showAlert('danger', 'Ukuran file maksimal 5MB');
+                        $(this).val('');
+                        return;
+                    }
 
-                        showAlert("danger", errorMessage);
+                    // Validasi file type
+                    const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                    if (!validTypes.includes(file.type)) {
+                        showAlert('danger', 'Format file harus JPG atau PNG');
+                        $(this).val('');
+                        return;
+                    }
+
+                    // Create preview
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#photoPreview').attr('src', e.target.result).show();
+                        $('#photoPlaceholder').hide();
+                        $('#btnRemovePhoto').show();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Remove Photo
+            $('#btnRemovePhoto').click(function() {
+                $('#foto_vaksinasi').val('');
+                $('#photoPreview').hide();
+                $('#photoPlaceholder').show();
+                $(this).hide();
+            });
+
+            // Form Submission dengan AJAX
+            $('#formVaksinasi').submit(function(e) {
+                e.preventDefault();
+
+                // Validasi form
+                const requiredFields = [
+                    'nama_peternak',
+                    'komoditas_ternak',
+                    'jenis_vaksinasi',
+                    'jumlah',
+                    'tanggal_vaksinasi',
+                    'bantuan_prov',
+                    'kelurahan',
+                    'latitude',
+                    'longitude'
+                ];
+                
+                let isValid = true;
+
+                // Reset semua error
+                requiredFields.forEach(function(fieldId) {
+                    $('#' + fieldId).removeClass('is-invalid');
+                });
+
+                // Cek field yang kosong
+                requiredFields.forEach(function(fieldId) {
+                    const field = $('#' + fieldId);
+                    if (!field.val() || field.val() === '') {
+                        field.addClass('is-invalid');
+                        isValid = false;
+                    }
+                });
+
+                if (!isValid) {
+                    showAlert('danger', 'Harap isi semua field yang wajib diisi!');
+                    return;
+                }
+
+                // Tampilkan loading
+                const submitBtn = $(this).find('button[type="submit"]');
+                const originalText = submitBtn.html();
+
+                submitBtn.html('<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...');
+                submitBtn.prop('disabled', true);
+
+                // Kirim data dengan AJAX
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: '<?php echo base_url("P_Input_Vaksinasi/save"); ?>',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            showAlert('success', response.message);
+                            
+                            // Reset form
+                            resetForm();
+                            
+                            // Reload page setelah 1.5 detik
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            showAlert('danger', response.message);
+                        }
                     },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 10000,
-                        maximumAge: 0,
+                    error: function(xhr, status, error) {
+                        console.error('Error:', xhr.responseText);
+                        showAlert('danger', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
+                    },
+                    complete: function() {
+                        submitBtn.html(originalText);
+                        submitBtn.prop('disabled', false);
                     }
-                );
-            } else {
-                showAlert("danger", "Browser Anda tidak mendukung geolocation.");
-            }
-        });
-
-        // Photo Upload Functionality
-        document.getElementById("foto_vaksinasi").addEventListener("change", function (e) {
-            const file = e.target.files[0];
-            const preview = document.getElementById("photoPreview");
-            const placeholder = document.getElementById("photoPlaceholder");
-            const removeBtn = document.getElementById("btnRemovePhoto");
-
-            if (file) {
-                // Validasi file size (max 5MB)
-                if (file.size > 5 * 1024 * 1024) {
-                    showAlert("danger", "Ukuran file maksimal 5MB");
-                    this.value = "";
-                    return;
-                }
-
-                // Validasi file type
-                const validTypes = ["image/jpeg", "image/jpg", "image/png"];
-                if (!validTypes.includes(file.type)) {
-                    showAlert("danger", "Format file harus JPG atau PNG");
-                    this.value = "";
-                    return;
-                }
-
-                // Create preview
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    preview.src = e.target.result;
-                    preview.style.display = "block";
-                    placeholder.style.display = "none";
-                    removeBtn.style.display = "inline-block";
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Remove Photo
-        document.getElementById("btnRemovePhoto").addEventListener("click", function () {
-            document.getElementById("foto_vaksinasi").value = "";
-            document.getElementById("photoPreview").style.display = "none";
-            document.getElementById("photoPlaceholder").style.display = "flex";
-            this.style.display = "none";
-        });
-
-        // Form Submission dengan AJAX
-        document.getElementById("formVaksinasi").addEventListener("submit", function (e) {
-            e.preventDefault();
-
-            // Validasi form
-            const requiredFields = [
-                "nama_peternak",
-                "komoditas_ternak",
-                "jenis_vaksinasi",
-                "jumlah",
-                "tanggal_vaksinasi",
-                "bantuan_prov",
-                "kelurahan",
-                "latitude",
-                "longitude"
-            ];
-            
-            let isValid = true;
-
-            // Reset semua error
-            requiredFields.forEach((fieldId) => {
-                const field = document.getElementById(fieldId);
-                field.classList.remove("is-invalid");
+                });
             });
 
-            // Cek field yang kosong
-            requiredFields.forEach((fieldId) => {
-                const field = document.getElementById(fieldId);
-                if (!field.value || field.value === "") {
-                    field.classList.add("is-invalid");
-                    isValid = false;
-                }
-            });
-
-            if (!isValid) {
-                showAlert("danger", "Harap isi semua field yang wajib diisi!");
-                return;
+            // Reset Form Function
+            function resetForm() {
+                $('#formContainer').removeClass('show');
+                $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT VAKSINASI');
+                $('#formVaksinasi')[0].reset();
+                
+                // Set default values - ambil dari session
+                $('#kecamatan').val('<?php echo $this->session->userdata('kecamatan') ?: 'Sawahan'; ?>');
+                const today = new Date().toISOString().split('T')[0];
+                $('#tanggal_vaksinasi').val(today);
+                
+                // Reset UI elements
+                $('#coordinateInfo').hide();
+                $('#photoPreview').hide();
+                $('#photoPlaceholder').show();
+                $('#btnRemovePhoto').hide();
+                
+                // Remove invalid class
+                $('.is-invalid').removeClass('is-invalid');
             }
 
-            // Tampilkan loading
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
+            // Alert Function
+            function showAlert(type, message) {
+                const alertHtml = `
+                    <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                        ${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `;
 
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...';
-            submitBtn.disabled = true;
+                $('#alert-container').html(alertHtml);
 
-            // Kirim data dengan AJAX menggunakan jQuery
-            var formData = new FormData(this);
-
-            $.ajax({
-                url: "<?php echo base_url('P_Input_Vaksinasi/save'); ?>",
-                type: "POST",
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: "json",
-                success: function(response) {
-                    if (response.status === "success") {
-                        showAlert("success", response.message);
-                        
-                        // Reset form
-                        document.getElementById("formVaksinasi").reset();
-                        document.getElementById("formContainer").classList.remove("show");
-                        document.getElementById("toggleFormBtn").innerHTML = '<i class="fas fa-plus-circle me-2"></i> INPUT VAKSINASI';
-                        document.getElementById("kecamatan").value = "Sawahan";
-                        document.getElementById("coordinateInfo").style.display = "none";
-                        document.getElementById("photoPreview").style.display = "none";
-                        document.getElementById("photoPlaceholder").style.display = "flex";
-                        document.getElementById("btnRemovePhoto").style.display = "none";
-                        
-                        // Set tanggal ke hari ini
-                        const today = new Date().toISOString().split("T")[0];
-                        document.getElementById("tanggal_vaksinasi").value = today;
-                        
-                        // Reload page untuk update tabel
-                        setTimeout(function() {
-                            location.reload();
-                        }, 1500);
-                        
-                    } else {
-                        showAlert("danger", response.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error:", xhr.responseText);
-                    showAlert("danger", "Terjadi kesalahan saat menyimpan data.");
-                },
-                complete: function() {
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                }
-            });
+                // Auto dismiss after 5 seconds
+                setTimeout(function() {
+                    $('.alert-dismissible').alert('close');
+                }, 5000);
+            }
         });
-
-        // Alert Function
-        function showAlert(type, message) {
-            // Remove existing alerts
-            const existingAlert = document.querySelector(".alert-dismissible");
-            if (existingAlert) {
-                existingAlert.remove();
-            }
-
-            const alertHtml = `
-                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            `;
-
-            const alertContainer = document.getElementById("alert-container");
-            alertContainer.innerHTML = alertHtml;
-
-            // Auto dismiss after 5 seconds
-            setTimeout(() => {
-                const alert = document.querySelector(".alert-dismissible");
-                if (alert) {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                }
-            }, 5000);
-        }
     </script>
 </body>
 </html>

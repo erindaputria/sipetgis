@@ -191,14 +191,14 @@
                 </span>
                 <h4 class="text-section">Menu Utama</h4>
               </li>
-              <li class="nav-item active">
-                <a href="<?php echo base_url(); ?>p_input_pengobatan">
+              <li class="nav-item">
+                <a href="<?php echo base_url(); ?>P_Input_Pengobatan">
                   <i class="fas fa-heartbeat"></i>
                   <p>Pengobatan</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="<?php echo base_url(); ?>p_input_vaksinasi">
+                <a href="<?php echo base_url(); ?>P_Input_Vaksinasi">
                   <i class="fas fa-syringe"></i>
                   <p>Vaksinasi</p>
                 </a>
@@ -268,7 +268,7 @@
                       />
                     </div>
                     <span class="profile-username">
-                      <span class="fw-bold">Petugas Lapangan</span>
+                      <span class="fw-bold"><?php echo $this->session->userdata('username') ?: 'Petugas Lapangan'; ?></span>
                     </span>
                   </a>
                   <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -323,7 +323,7 @@
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
                           <p class="card-category">Jumlah Peternak</p>
-                          <h4 class="card-title">12</h4>
+                          <h4 class="card-title"><?php echo isset($total_peternak) ? number_format($total_peternak, 0, ',', '.') : '0'; ?></h4>
                           <p class="card-subtitle">Peternak</p>
                         </div>
                       </div>
@@ -345,7 +345,7 @@
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
                           <p class="card-category">Komoditas Ternak</p>
-                          <h4 class="card-title">5</h4>
+                          <h4 class="card-title"><?php echo isset($jumlah_komoditas) ? $jumlah_komoditas : '0'; ?></h4>
                           <p class="card-subtitle">Jenis Ternak</p>
                         </div>
                       </div>
@@ -367,10 +367,49 @@
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
                           <p class="card-category">Total Ternak</p>
-                          <h4 class="card-title">1,225</h4>
+                          <h4 class="card-title"><?php echo isset($total_ternak) ? number_format($total_ternak, 0, ',', '.') : '0'; ?></h4>
                           <p class="card-subtitle">Ekor</p>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ringkasan Aktivitas -->
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    <h4 class="card-title">Ringkasan Pengobatan</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                      <span>Total Kasus Pengobatan:</span>
+                      <span class="fw-bold"><?php echo isset($total_pengobatan) ? number_format($total_pengobatan, 0, ',', '.') : '0'; ?> kasus</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                      <span>Total Ternak Diobati:</span>
+                      <span class="fw-bold"><?php echo isset($total_ternak_diobati) ? number_format($total_ternak_diobati, 0, ',', '.') : '0'; ?> ekor</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    <h4 class="card-title">Ringkasan Vaksinasi</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                      <span>Total Kasus Vaksinasi:</span>
+                      <span class="fw-bold"><?php echo isset($total_vaksinasi) ? number_format($total_vaksinasi, 0, ',', '.') : '0'; ?> kasus</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                      <span>Total Ternak Divaksin:</span>
+                      <span class="fw-bold"><?php echo isset($total_ternak_divaksin) ? number_format($total_ternak_divaksin, 0, ',', '.') : '0'; ?> ekor</span>
                     </div>
                   </div>
                 </div>
@@ -381,7 +420,7 @@
             <div class="row mt-4">
               <!-- Card Pengobatan -->
               <div class="col-md-12 mb-4">
-                <a href="<?php echo base_url(); ?>p_input_pengobatan" class="action-link">
+                <a href="<?php echo base_url(); ?>P_Input_Pengobatan" class="action-link">
                   <div class="card card-stats card-round action-card">
                     <div class="card-body">
                       <div class="row align-items-center">
@@ -407,7 +446,7 @@
 
               <!-- Card Vaksinasi -->
               <div class="col-md-12 mb-4">
-                <a href="<?php echo base_url(); ?>p_input_vaksinasi" class="action-link">
+                <a href="<?php echo base_url(); ?>P_Input_Vaksinasi" class="action-link">
                   <div class="card card-stats card-round action-card">
                     <div class="card-body">
                       <div class="row align-items-center">
@@ -496,29 +535,17 @@
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/kaiadmin.min.js"></script>
 
     <script>
-      // Commodity Chart
+      // Commodity Chart dengan data dinamis
       document.addEventListener("DOMContentLoaded", function () {
         var ctx = document.getElementById("commodityChart").getContext("2d");
         var commodityChart = new Chart(ctx, {
           type: "doughnut",
           data: {
-            labels: [
-              "Ayam Ras Petelur",
-              "Sapi Potong",
-              "Kambing",
-              "Ayam Kampung",
-              "Itik",
-            ],
+            labels: <?php echo json_encode($chart_labels); ?>,
             datasets: [
               {
-                data: [1225, 850, 620, 450, 320],
-                backgroundColor: [
-                  "#1a73e8",
-                  "#34a853",
-                  "#fbbc05",
-                  "#ea4335",
-                  "#9334e6",
-                ],
+                data: <?php echo json_encode($chart_data); ?>,
+                backgroundColor: <?php echo json_encode($chart_colors); ?>,
                 borderWidth: 1,
               },
             ],

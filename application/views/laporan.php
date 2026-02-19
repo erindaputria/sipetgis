@@ -86,9 +86,60 @@
       .dataTables_wrapper .dataTables_paginate {
         padding: 10px;
       }
+      
+      /* Style untuk tombol DataTables */
       .dt-buttons .btn {
         border-radius: 5px;
+        margin-right: 5px;
+        transition: all 0.3s;
       }
+
+      .dt-buttons .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+
+      .dt-buttons .btn-primary {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+        color: white !important;
+      }
+
+      .dt-buttons .btn-success {
+        background-color: #198754 !important;
+        border-color: #198754 !important;
+        color: white !important;
+      }
+
+      .dt-buttons .btn-danger {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+        color: white !important;
+      }
+
+      .dt-buttons .btn-info {
+        background-color: #0dcaf0 !important;
+        border-color: #0dcaf0 !important;
+        color: white !important;
+      }
+
+      /* Pagination styling */
+      .pagination .page-link {
+        border: none;
+        color: #495057;
+        margin: 0 3px;
+        border-radius: 6px !important;
+      }
+
+      .pagination .page-item.active .page-link {
+        background-color: #4361ee;
+        color: white;
+      }
+
+      .pagination .page-link:hover {
+        background-color: #f8f9fa;
+      }
+      
       .report-title {
         text-align: center;
         font-weight: bold;
@@ -435,7 +486,7 @@
               <div>
                 <h3 class="fw-bold mb-1">Laporan Tabulasi Data</h3>
                 <h6 class="op-7 mb-0">
-                  Tabulasi Data Peternakan Kota SUrabaya
+                  Tabulasi Data Peternakan Kota Surabaya
                 </h6>
               </div>
             </div>
@@ -940,34 +991,37 @@
             buttons: [
               {
                 extend: "copy",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-copy me-1"></i> Copy',
+                text: '<i class="fas fa-copy"></i> Copy',
+                className: 'btn btn-sm btn-primary'
               },
               {
                 extend: "csv",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-file-csv me-1"></i> CSV',
+                text: '<i class="fas fa-file-csv"></i> CSV',
+                className: 'btn btn-sm btn-success'
               },
               {
                 extend: "excel",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-file-excel me-1"></i> Excel',
+                text: '<i class="fas fa-file-excel"></i> Excel',
+                className: 'btn btn-sm btn-success'
               },
               {
                 extend: "pdf",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-file-pdf me-1"></i> PDF',
+                text: '<i class="fas fa-file-pdf"></i> PDF',
+                className: 'btn btn-sm btn-danger'
               },
               {
                 extend: "print",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-print me-1"></i> Print',
-              },
+                text: '<i class="fas fa-print"></i> Print',
+                className: 'btn btn-sm btn-info'
+              }
             ],
             language: {
               search: "Cari:",
               lengthMenu: "Tampilkan _MENU_ data",
               info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+              infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
+              infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
+              zeroRecords: "Tidak ada data yang ditemukan",
               paginate: {
                 first: "Pertama",
                 last: "Terakhir",
@@ -976,6 +1030,8 @@
               },
             },
             pageLength: 10,
+            lengthChange: true,
+            lengthMenu: [5, 10, 25, 50, 100],
             responsive: true,
             ordering: false,
             paging: true,
@@ -1031,34 +1087,37 @@
             buttons: [
               {
                 extend: "copy",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-copy me-1"></i> Copy',
+                text: '<i class="fas fa-copy"></i> Copy',
+                className: 'btn btn-sm btn-primary'
               },
               {
                 extend: "csv",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-file-csv me-1"></i> CSV',
+                text: '<i class="fas fa-file-csv"></i> CSV',
+                className: 'btn btn-sm btn-success'
               },
               {
                 extend: "excel",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-file-excel me-1"></i> Excel',
+                text: '<i class="fas fa-file-excel"></i> Excel',
+                className: 'btn btn-sm btn-success'
               },
               {
                 extend: "pdf",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-file-pdf me-1"></i> PDF',
+                text: '<i class="fas fa-file-pdf"></i> PDF',
+                className: 'btn btn-sm btn-danger'
               },
               {
                 extend: "print",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-print me-1"></i> Print',
-              },
+                text: '<i class="fas fa-print"></i> Print',
+                className: 'btn btn-sm btn-info'
+              }
             ],
             language: {
               search: "Cari:",
               lengthMenu: "Tampilkan _MENU_ data",
               info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+              infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
+              infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
+              zeroRecords: "Tidak ada data yang ditemukan",
               paginate: {
                 first: "Pertama",
                 last: "Terakhir",
@@ -1067,6 +1126,8 @@
               },
             },
             pageLength: 10,
+            lengthChange: true,
+            lengthMenu: [5, 10, 25, 50, 100],
             responsive: true,
             ordering: false,
             paging: true,
@@ -1115,34 +1176,37 @@
             buttons: [
               {
                 extend: "copy",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-copy me-1"></i> Copy',
+                text: '<i class="fas fa-copy"></i> Copy',
+                className: 'btn btn-sm btn-primary'
               },
               {
                 extend: "csv",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-file-csv me-1"></i> CSV',
+                text: '<i class="fas fa-file-csv"></i> CSV',
+                className: 'btn btn-sm btn-success'
               },
               {
                 extend: "excel",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-file-excel me-1"></i> Excel',
+                text: '<i class="fas fa-file-excel"></i> Excel',
+                className: 'btn btn-sm btn-success'
               },
               {
                 extend: "pdf",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-file-pdf me-1"></i> PDF',
+                text: '<i class="fas fa-file-pdf"></i> PDF',
+                className: 'btn btn-sm btn-danger'
               },
               {
                 extend: "print",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-print me-1"></i> Print',
-              },
+                text: '<i class="fas fa-print"></i> Print',
+                className: 'btn btn-sm btn-info'
+              }
             ],
             language: {
               search: "Cari:",
               lengthMenu: "Tampilkan _MENU_ data",
               info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+              infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
+              infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
+              zeroRecords: "Tidak ada data yang ditemukan",
               paginate: {
                 first: "Pertama",
                 last: "Terakhir",
@@ -1151,6 +1215,8 @@
               },
             },
             pageLength: 10,
+            lengthChange: true,
+            lengthMenu: [5, 10, 25, 50, 100],
             responsive: true,
             ordering: false,
             paging: true,
@@ -1247,34 +1313,37 @@
             buttons: [
               {
                 extend: "copy",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-copy me-1"></i> Copy',
+                text: '<i class="fas fa-copy"></i> Copy',
+                className: 'btn btn-sm btn-primary'
               },
               {
                 extend: "csv",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-file-csv me-1"></i> CSV',
+                text: '<i class="fas fa-file-csv"></i> CSV',
+                className: 'btn btn-sm btn-success'
               },
               {
                 extend: "excel",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-file-excel me-1"></i> Excel',
+                text: '<i class="fas fa-file-excel"></i> Excel',
+                className: 'btn btn-sm btn-success'
               },
               {
                 extend: "pdf",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-file-pdf me-1"></i> PDF',
+                text: '<i class="fas fa-file-pdf"></i> PDF',
+                className: 'btn btn-sm btn-danger'
               },
               {
                 extend: "print",
-                className: "btn btn-primary",
-                text: '<i class="fas fa-print me-1"></i> Print',
-              },
+                text: '<i class="fas fa-print"></i> Print',
+                className: 'btn btn-sm btn-info'
+              }
             ],
             language: {
               search: "Cari:",
               lengthMenu: "Tampilkan _MENU_ data",
               info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+              infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
+              infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
+              zeroRecords: "Tidak ada data yang ditemukan",
               paginate: {
                 first: "Pertama",
                 last: "Terakhir",
@@ -1283,6 +1352,8 @@
               },
             },
             pageLength: 10,
+            lengthChange: true,
+            lengthMenu: [5, 10, 25, 50, 100],
             responsive: true,
             ordering: false,
             paging: true,

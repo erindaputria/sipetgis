@@ -74,7 +74,7 @@ class Akses_Pengguna extends CI_Controller {
         } else {
             $this->session->set_flashdata('error', 'Gagal memperbarui data pengguna');
         }
-        
+         
         redirect('akses_pengguna');
     }
     
@@ -89,4 +89,4 @@ class Akses_Pengguna extends CI_Controller {
         
         redirect('akses_pengguna');
     }
-}
+} 

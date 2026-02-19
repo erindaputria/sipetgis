@@ -45,23 +45,55 @@
       href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css"
     />
     <style>
-      .dataTables_wrapper {
-        padding: 20px;
+      .dataTables_wrapper .dataTables_length,
+      .dataTables_wrapper .dataTables_filter,
+      .dataTables_wrapper .dataTables_info,
+      .dataTables_wrapper .dataTables_paginate {
+        padding: 10px;
       }
-
-      .dataTables_length select {
+      
+      .dt-buttons .btn {
         border-radius: 5px;
-        border: 1px solid #dee2e6;
-        padding: 5px 10px;
+        margin-right: 5px;
       }
 
-      .dataTables_filter input {
+      .dt-buttons .btn {
         border-radius: 5px;
-        border: 1px solid #dee2e6;
-        padding: 5px 10px;
-        width: 200px;
+        font-weight: 500;
+        padding: 6px 15px;
+        margin-right: 5px;
+        transition: all 0.3s;
       }
 
+      .dt-buttons .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+
+      .dt-buttons .btn-primary {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+        color: white !important;
+      }
+
+      .dt-buttons .btn-success {
+        background-color: #198754 !important;
+        border-color: #198754 !important;
+        color: white !important;
+      }
+
+      .dt-buttons .btn-danger {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+        color: white !important;
+      }
+
+      .dt-buttons .btn-info {
+        background-color: #0dcaf0 !important;
+        border-color: #0dcaf0 !important;
+        color: white !important;
+      }
+      
       table.dataTable {
         border-collapse: separate !important;
         border-spacing: 0 8px !important;
@@ -135,30 +167,6 @@
         color: white;
       }
 
-      .dt-buttons .btn {
-        border-radius: 5px;
-        font-weight: 500;
-        padding: 6px 15px;
-        margin-right: 5px;
-        border: 1px solid #dee2e6;
-        background: white;
-        color: #495057;
-      }
-
-      .dt-buttons .btn:hover {
-        background-color: #f8f9fa;
-      }
-
-      .dt-buttons .btn-export-blue {
-        background-color: #0d6efd !important;
-        color: white !important;
-        border-color: #0d6efd !important;
-      }
-
-      .dt-buttons .btn-export-blue:hover {
-        background-color: #0b5ed7 !important;
-      }
-
       .badge-kelompok {
         background-color: #e3f2fd;
         color: #1976d2;
@@ -197,219 +205,6 @@
         background: linear-gradient(135deg, #3a56d4 0%, #3046b8 100%);
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-      }
-
-      /* ===== CUSTOM PAGINATION CARDS ===== */
-      .pagination-cards {
-        display: flex;
-        gap: 15px;
-        margin: 15px 0;
-        flex-wrap: wrap;
-        align-items: center;
-      }
-
-      .pagination-card {
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        padding: 12px 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        min-width: 200px;
-      }
-
-      .pagination-card .card-label {
-        font-weight: 600;
-        color: #495057;
-        font-size: 14px;
-        white-space: nowrap;
-      }
-
-      .pagination-card .card-value {
-        font-weight: 700;
-        color: #0d6efd;
-        font-size: 15px;
-      }
-
-      .page-btn {
-        background: #fff;
-        border: 1px solid #ced4da;
-        border-radius: 4px;
-        padding: 4px 10px;
-        margin: 0 2px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: all 0.2s;
-        min-width: 32px;
-        text-align: center;
-      }
-
-      .page-btn:hover:not(:disabled) {
-        background: #0d6efd;
-        color: white;
-        border-color: #0d6efd;
-      }
-
-      .page-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-
-      .current-page {
-        display: inline-block;
-        padding: 4px 12px;
-        background: #0d6efd;
-        color: white;
-        border-radius: 4px;
-        margin: 0 5px;
-        min-width: 30px;
-        text-align: center;
-        font-weight: 600;
-      }
-
-      .dataTables_info {
-        display: none !important;
-      }
-
-      /* Advanced Pagination Navigator */
-      .advanced-pagination {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-top: 15px;
-        justify-content: flex-end;
-        flex-wrap: wrap;
-      }
-
-      .page-navigation {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        flex-wrap: wrap;
-      }
-
-      .page-input {
-        width: 70px;
-        text-align: center;
-        border: 1px solid #ced4da;
-        border-radius: 4px;
-        padding: 6px;
-        font-size: 14px;
-      }
-
-      .page-jump {
-        background: #0d6efd;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        padding: 6px 12px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: all 0.2s;
-      }
-
-      .page-jump:hover {
-        background: #0b5ed7;
-      }
-
-      .page-range {
-        font-weight: 600;
-        color: #0d6efd;
-        white-space: nowrap;
-      }
-
-      .total-pages {
-        color: #6c757d;
-        font-size: 14px;
-      }
-
-      /* Compact Page Buttons */
-      .compact-pages {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        flex-wrap: wrap;
-      }
-
-      .compact-pages .page-btn {
-        min-width: 28px;
-        height: 28px;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .ellipsis {
-        padding: 0 5px;
-        color: #6c757d;
-      }
-
-      /* Pagination Controls */
-      .pagination-controls {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-left: auto;
-      }
-
-      .nav-control-btn {
-        background: #fff;
-        border: 1px solid #ced4da;
-        border-radius: 4px;
-        padding: 6px 12px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: all 0.2s;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-
-      .nav-control-btn:hover:not(:disabled) {
-        background: #0d6efd;
-        color: white;
-        border-color: #0d6efd;
-      }
-
-      .nav-control-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-
-      /* Responsif untuk mobile */
-      @media (max-width: 768px) {
-        .pagination-cards {
-          flex-direction: column;
-          gap: 10px;
-        }
-
-        .pagination-card {
-          justify-content: space-between;
-          min-width: auto;
-          width: 100%;
-        }
-
-        .page-btn {
-          padding: 4px 8px;
-          min-width: 28px;
-        }
-
-        .advanced-pagination {
-          justify-content: center;
-        }
-
-        .compact-pages {
-          justify-content: center;
-        }
-
-        .pagination-controls {
-          margin-left: 0;
-          width: 100%;
-          justify-content: center;
-        }
       }
 
       /* Style untuk badge peran */
@@ -1155,45 +950,55 @@
       }
 
       $(document).ready(function () {
-        // Inisialisasi DataTable
+        // Inisialisasi DataTable dengan tampilan seperti pelaku usaha
         var table = $("#aksesPenggunaTable").DataTable({
-          dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
-               '<"row"<"col-sm-12"tr>>' +
-               '<"row"<"col-sm-12 col-md-5"B>>',
+          dom: "Bfrtip",
           buttons: [
             {
+              extend: "copy",
+              text: '<i class="fas fa-copy"></i> Copy',
+              className: 'btn btn-sm btn-primary'
+            },
+            {
+              extend: "csv",
+              text: '<i class="fas fa-file-csv"></i> CSV',
+              className: 'btn btn-sm btn-success'
+            },
+            {
               extend: "excel",
-              className: "btn btn-export-blue",
-              text: '<i class="fas fa-file-excel me-1"></i>Excel',
+              text: '<i class="fas fa-file-excel"></i> Excel',
+              className: 'btn btn-sm btn-success'
             },
             {
               extend: "pdf",
-              className: "btn btn-export-blue",
-              text: '<i class="fas fa-file-pdf me-1"></i>PDF',
+              text: '<i class="fas fa-file-pdf"></i> PDF',
+              className: 'btn btn-sm btn-danger'
             },
             {
               extend: "print",
-              className: "btn btn-export-blue",
-              text: '<i class="fas fa-print me-1"></i>Print',
-            },
+              text: '<i class="fas fa-print"></i> Print',
+              className: 'btn btn-sm btn-info'
+            }
           ],
           language: {
             search: "Cari:",
-            lengthMenu: "",
-            info: "",
-            infoEmpty: "",
-            infoFiltered: "",
+            lengthMenu: "Tampilkan _MENU_ data",
+            info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
+            infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
             zeroRecords: "Tidak ada data yang ditemukan",
             paginate: {
-              first: "«",
-              last: "»",
-              next: "›",
-              previous: "‹",
-            },
+              first: "Pertama",
+              last: "Terakhir",
+              next: "Berikutnya",
+              previous: "Sebelumnya"
+            }
           },
           pageLength: 10,
-          lengthChange: false,
+          lengthChange: true,
+          lengthMenu: [5, 10, 25, 50, 100],
           responsive: true,
+          order: [[0, 'asc']]
         });
 
         // Event untuk tombol lihat password
@@ -1250,7 +1055,7 @@
               return false;
             }
             
-            if (password.length < 6) {
+            if (password.length < 6) { 
               e.preventDefault();
               alert('Password minimal 6 karakter!');
               return false;
@@ -1262,11 +1067,6 @@
         setTimeout(function() {
           $('.alert').alert('close');
         }, 5000);
-
-        // Refresh halaman setelah modal ditutup
-        $('#tambahDataModal, #editDataModal, #viewPasswordModal').on('hidden.bs.modal', function () {
-          location.reload();
-        });
       });
     </script>
   </body>

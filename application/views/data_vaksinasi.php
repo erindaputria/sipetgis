@@ -119,8 +119,58 @@
       .dataTables_wrapper .dataTables_paginate {
         padding: 10px;
       }
+      
+      /* Style untuk tombol DataTables */
       .dt-buttons .btn {
         border-radius: 5px;
+        margin-right: 5px;
+        transition: all 0.3s;
+      }
+
+      .dt-buttons .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+
+      .dt-buttons .btn-primary {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+        color: white !important;
+      }
+
+      .dt-buttons .btn-success {
+        background-color: #198754 !important;
+        border-color: #198754 !important;
+        color: white !important;
+      }
+
+      .dt-buttons .btn-danger {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+        color: white !important;
+      }
+
+      .dt-buttons .btn-info {
+        background-color: #0dcaf0 !important;
+        border-color: #0dcaf0 !important;
+        color: white !important;
+      }
+
+      /* Pagination styling */
+      .pagination .page-link {
+        border: none;
+        color: #495057;
+        margin: 0 3px;
+        border-radius: 6px !important;
+      }
+
+      .pagination .page-item.active .page-link {
+        background-color: #4361ee;
+        color: white;
+      }
+
+      .pagination .page-link:hover {
+        background-color: #f8f9fa;
       }
     </style>
   </head>
@@ -686,20 +736,51 @@
       $(document).ready(function () {
         $("#dataVaksinasiTable").DataTable({
           dom: "Bfrtip",
-          buttons: ["copy", "csv", "excel", "pdf", "print"],
+          buttons: [
+            {
+              extend: "copy",
+              text: '<i class="fas fa-copy"></i> Copy',
+              className: 'btn btn-sm btn-primary'
+            },
+            {
+              extend: "csv",
+              text: '<i class="fas fa-file-csv"></i> CSV',
+              className: 'btn btn-sm btn-success'
+            },
+            {
+              extend: "excel",
+              text: '<i class="fas fa-file-excel"></i> Excel',
+              className: 'btn btn-sm btn-success'
+            },
+            {
+              extend: "pdf",
+              text: '<i class="fas fa-file-pdf"></i> PDF',
+              className: 'btn btn-sm btn-danger'
+            },
+            {
+              extend: "print",
+              text: '<i class="fas fa-print"></i> Print',
+              className: 'btn btn-sm btn-info'
+            }
+          ],
           language: {
             search: "Cari:",
             lengthMenu: "Tampilkan _MENU_ data",
             info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
+            infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
+            zeroRecords: "Tidak ada data yang ditemukan",
             paginate: {
               first: "Pertama",
               last: "Terakhir",
               next: "Berikutnya",
-              previous: "Sebelumnya",
-            },
+              previous: "Sebelumnya"
+            }
           },
           pageLength: 10,
-          responsive: true,
+          lengthChange: true,
+          lengthMenu: [5, 10, 25, 50, 100],
+          responsive: true
         });
 
         // Filter button event

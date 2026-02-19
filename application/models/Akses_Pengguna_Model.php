@@ -40,4 +40,4 @@ class Akses_Pengguna_Model extends CI_Model {
         $this->db->where('username', $username);
         return $this->db->get($this->table)->row();
     }
-}
+} 

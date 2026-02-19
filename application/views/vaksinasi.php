@@ -64,6 +64,48 @@
         width: 200px;
       }
 
+      .dataTables_wrapper .dataTables_length,
+      .dataTables_wrapper .dataTables_filter,
+      .dataTables_wrapper .dataTables_info,
+      .dataTables_wrapper .dataTables_paginate {
+        padding: 10px;
+      }
+      
+      .dt-buttons .btn {
+        border-radius: 5px;
+        margin-right: 5px;
+        transition: all 0.3s;
+      }
+
+      .dt-buttons .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+
+      .dt-buttons .btn-primary {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+        color: white !important;
+      }
+
+      .dt-buttons .btn-success {
+        background-color: #198754 !important;
+        border-color: #198754 !important;
+        color: white !important;
+      }
+
+      .dt-buttons .btn-danger {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+        color: white !important;
+      }
+
+      .dt-buttons .btn-info {
+        background-color: #0dcaf0 !important;
+        border-color: #0dcaf0 !important;
+        color: white !important;
+      }
+
       table.dataTable {
         border-collapse: separate !important;
         border-spacing: 0 8px !important;
@@ -125,30 +167,6 @@
       .btn-delete:hover {
         background-color: #dc3545;
         color: white;
-      }
-
-      .dt-buttons .btn {
-        border-radius: 5px;
-        font-weight: 500;
-        padding: 6px 15px;
-        margin-right: 5px;
-        border: 1px solid #dee2e6;
-        background: white;
-        color: #495057;
-      }
-
-      .dt-buttons .btn:hover {
-        background-color: #f8f9fa;
-      }
-
-      .dt-buttons .btn-export-blue {
-        background-color: #0d6efd !important;
-        color: white !important;
-        border-color: #0d6efd !important;
-      }
-
-      .dt-buttons .btn-export-blue:hover {
-        background-color: #0b5ed7 !important;
       }
 
       .pagination .page-link {
@@ -759,46 +777,55 @@
 
     <script>
       $(document).ready(function () {
-        // Inisialisasi DataTable
+        // Inisialisasi DataTable dengan tampilan seperti halaman lainnya
         var table = $("#vaksinasiTable").DataTable({
-          dom:
-            '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
-            '<"row"<"col-sm-12"tr>>' +
-            '<"row"<"col-sm-12 col-md-5"B>>',
+          dom: "Bfrtip",
           buttons: [
             {
+              extend: "copy",
+              text: '<i class="fas fa-copy"></i> Copy',
+              className: 'btn btn-sm btn-primary'
+            },
+            {
+              extend: "csv",
+              text: '<i class="fas fa-file-csv"></i> CSV',
+              className: 'btn btn-sm btn-success'
+            },
+            {
               extend: "excel",
-              className: "btn btn-export-blue",
-              text: '<i class="fas fa-file-excel me-1"></i>Excel',
+              text: '<i class="fas fa-file-excel"></i> Excel',
+              className: 'btn btn-sm btn-success'
             },
             {
               extend: "pdf",
-              className: "btn btn-export-blue",
-              text: '<i class="fas fa-file-pdf me-1"></i>PDF',
+              text: '<i class="fas fa-file-pdf"></i> PDF',
+              className: 'btn btn-sm btn-danger'
             },
             {
               extend: "print",
-              className: "btn btn-export-blue",
-              text: '<i class="fas fa-print me-1"></i>Print',
-            },
+              text: '<i class="fas fa-print"></i> Print',
+              className: 'btn btn-sm btn-info'
+            }
           ],
           language: {
             search: "Cari:",
-            lengthMenu: "",
-            info: "",
-            infoEmpty: "",
-            infoFiltered: "",
+            lengthMenu: "Tampilkan _MENU_ data",
+            info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
+            infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
             zeroRecords: "Tidak ada data yang ditemukan",
             paginate: {
-              first: "«",
-              last: "»",
-              next: "›",
-              previous: "‹",
-            },
+              first: "Pertama",
+              last: "Terakhir",
+              next: "Berikutnya",
+              previous: "Sebelumnya"
+            }
           },
           pageLength: 10,
-          lengthChange: false,
+          lengthChange: true,
+          lengthMenu: [5, 10, 25, 50, 100],
           responsive: true,
+          order: [[0, 'asc']]
         });
 
         // Fungsi untuk edit data
@@ -830,11 +857,6 @@
           }
         });
 
-        // Refresh halaman setelah modal tambah/edit data ditutup
-        $('#tambahDataModal, #editDataModal').on('hidden.bs.modal', function () {
-          location.reload();
-        });
-        
         // Auto close alert setelah 5 detik
         setTimeout(function() {
           $('.alert').alert('close');
