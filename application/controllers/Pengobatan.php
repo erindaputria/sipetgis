@@ -11,7 +11,7 @@ class Pengobatan extends CI_Controller {
     
     public function index() {
         $data['pengobatan'] = $this->Pengobatan_Model->get_all();
-        $this->load->view('pengobatan', $data); // Pastikan nama view sesuai
+        $this->load->view('admin/pengobatan', $data); // Pastikan nama view sesuai
     }
     
     public function simpan() {

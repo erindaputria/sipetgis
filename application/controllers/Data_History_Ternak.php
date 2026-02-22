@@ -7,7 +7,7 @@ class Data_History_Ternak extends CI_Controller {
     {
         // $this->load->model('Dashboard_model');
         // $data = $this->Dashboard_model->get_summary();
-        $this->load->view('data_history_ternak');
+        $this->load->view('admin/data/data_history_ternak');
         
     }
     

@@ -14,7 +14,7 @@ class Vaksinasi extends CI_Controller {
         $data['title'] = 'Master Data Vaksinasi';
         
         // Langsung load view vaksinasi tanpa templates
-        $this->load->view('vaksinasi', $data);
+        $this->load->view('admin/vaksinasi', $data);
     }
     
     public function simpan() {

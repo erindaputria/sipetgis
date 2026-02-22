@@ -11,7 +11,7 @@ class Akses_Pengguna extends CI_Controller {
     
     public function index() {
         $data['akses'] = $this->Akses_Pengguna_Model->get_all();
-        $this->load->view('akses_pengguna', $data);
+        $this->load->view('admin/akses_pengguna', $data);
     }
     
     public function simpan() {

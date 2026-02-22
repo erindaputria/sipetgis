@@ -12,7 +12,7 @@ class Komoditas extends CI_Controller {
     
     public function index() {
         $data['komoditas'] = $this->Komoditas_Model->get_all();
-        $this->load->view('komoditas', $data);
+        $this->load->view('admin/komoditas', $data);
     }
     
     public function simpan() {

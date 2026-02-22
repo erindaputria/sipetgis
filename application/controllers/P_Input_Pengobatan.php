@@ -7,46 +7,79 @@ class P_Input_Pengobatan extends CI_Controller {
         parent::__construct();
         
         $this->load->library('session');
+        $this->load->library('upload');
+        $this->load->library('form_validation');
+        $this->load->helper(array('form', 'url', 'file'));
         
         // CEK SESSION LOGIN
-        if (!$this->session->userdata('username')) {
+        if (!$this->session->userdata('logged_in')) {
             redirect('login');
         }
         
         $this->load->model('P_Input_Pengobatan_Model');
-        $this->load->library('upload');
-        $this->load->library('form_validation');
-        $this->load->helper(array('form', 'url', 'file'));
     }
 
     public function index() {
-        $kecamatan = $this->session->userdata('kecamatan');
-        $data['pengobatan_data'] = $this->P_Input_Pengobatan_Model->get_pengobatan_by_kecamatan($kecamatan);
-        $this->load->view('p_input_pengobatan', $data);
+        $user_kecamatan = $this->session->userdata('kecamatan');
+        $data['pengobatan_data'] = $this->P_Input_Pengobatan_Model->get_pengobatan_by_kecamatan($user_kecamatan);
+        $data['kel_list'] = $this->get_all_kelurahan();
+        $data['user_kecamatan'] = $user_kecamatan;
+        
+        $this->load->view('petugas/p_input_pengobatan', $data);
+    }
+    
+    private function get_all_kelurahan() {
+        return array(
+            'Asemrowo' => array('Asemrowo', 'Genting Kalianak', 'Tambak Sarioso'),
+            'Benowo' => array('Benowo', 'Kandangan', 'Romokalisari', 'Sememi', 'Tambak Osowilangun'),
+            'Bubutan' => array('Alun-alun Contong', 'Bubutan', 'Gundih', 'Jepara', 'Tembok Dukuh'),
+            'Bulak' => array('Bulak', 'Kedung Cowek', 'Kenjeran', 'Sukolilo Baru'),
+            'Dukuh Pakis' => array('Dukuh Kupang', 'Dukuh Pakis', 'Gunung Sari', 'Pradah Kalikendal'),
+            'Gayungan' => array('Dukuh Menanggal', 'Gayungan', 'Ketintang', 'Menanggal'),
+            'Genteng' => array('Embong Kaliasin', 'Genteng', 'Kapasari', 'Ketabang', 'Peneleh'),
+            'Gubeng' => array('Airlangga', 'Baratajaya', 'Gubeng', 'Kertajaya', 'Mojo'),
+            'Gunung Anyar' => array('Gunung Anyar', 'Gunung Anyar Tambak', 'Rungkut Menanggal', 'Rungkut Tengah'),
+            'Jambangan' => array('Jambangan', 'Karah', 'Kebonsari', 'Pagesangan'),
+            'Karang Pilang' => array('Karang Pilang', 'Kebraon', 'Kedurus', 'Waru Gunung'),
+            'Kenjeran' => array('Bulak Banteng', 'Tambak Wedi', 'Tanah Kali Kedinding', 'Sidotopo Wetan'),
+            'Krembangan' => array('Dupak', 'Kemayoran', 'Krembangan Selatan', 'Krembangan Utara', 'Morokrembangan', 'Perak Barat'),
+            'Lakarsantri' => array('Bangkingan', 'Jeruk', 'Lakarsantri', 'Lidah Kulon', 'Lidah Wetan', 'Sumur Welut'),
+            'Mulyorejo' => array('Dukuh Sutorejo', 'Kalijudan', 'Kaliawan', 'Kejawan Putih Tambak', 'Manyar Sabrangan', 'Mulyorejo'),
+            'Pabean Cantian' => array('Bongkaran', 'Krembangan Utara', 'Nyamplungan', 'Perak Timur', 'Perak Utara'),
+            'Pakal' => array('Babat Jerawat', 'Pakal', 'Sumber Rejo'),
+            'Rungkut' => array('Kali Rungkut', 'Kedung Baruk', 'Medokan Ayu', 'Penjaringan Sari', 'Rungkut Kidul', 'Wonorejo'),
+            'Sambikerep' => array('Bringin', 'Lontar', 'Madya', 'Sambikerep'),
+            'Sawahan' => array('Banyu Urip', 'Kupang Krajan', 'Pakis', 'Patemon', 'Putat Jaya', 'Sawahan'),
+            'Semampir' => array('Ampel', 'Pegirian', 'Sidotopo', 'Ujung', 'Wonokusumo'),
+            'Simokerto' => array('Kapasan', 'Simokerto', 'Simolawang', 'Tambak Rejo'),
+            'Sukolilo' => array('Gebang Putih', 'Keputih', 'Klampis Ngasem', 'Medokan Semampir', 'Menur Pumpungan', 'Nginden Jangkungan', 'Semolowaru'),
+            'Sukomanunggal' => array('Putat Gede', 'Simomulyo', 'Simomulyo Baru', 'Sukomanunggal', 'Tanjungsari'),
+            'Tambaksari' => array('Gading', 'Kapas Madya', 'Pacar Kembang', 'Pacar Keling', 'Ploso', 'Rangkah', 'Tambaksari'),
+            'Tandes' => array('Balongsari', 'Banjar Sugihan', 'Karang Poh', 'Manukan Kulon', 'Manukan Wetan', 'Tandes'),
+            'Tegalsari' => array('Dr. Soetomo', 'Kedungdoro', 'Keputran', 'Tegalsari', 'Wonorejo'),
+            'Tenggilis Mejoyo' => array('Kendangsari', 'Kutisari', 'Panjang Jiwo', 'Tenggilis Mejoyo'),
+            'Wiyung' => array('Babat Jerawat', 'Balas Klumprik', 'Jajar Tunggal', 'Wiyung'),
+            'Wonocolo' => array('Bendul Merisi', 'Jemur Wonosari', 'Margorejo', 'Sidosermo', 'Siwalankerto'),
+            'Wonokromo' => array('Darmo', 'Jagir', 'Ngagel', 'Ngagel Rejo', 'Sawunggaling', 'Wonokromo')
+        );
     }
 
     public function save() {
-        // Set validation rules with unique checks
-        $this->form_validation->set_rules('nama_peternak', 'Nama Peternak', 'required');
-        $this->form_validation->set_rules('nik', 'NIK', 'required|is_unique[input_pengobatan.nik]', 
-            array('is_unique' => 'NIK %s sudah terdaftar. Mohon gunakan NIK yang berbeda.')
-        );
-        $this->form_validation->set_rules('telp', 'No. Telepon', 'required|is_unique[input_pengobatan.telp]',
-            array('is_unique' => 'No. Telepon %s sudah terdaftar. Mohon gunakan nomor yang berbeda.')
-        );
-        $this->form_validation->set_rules('nama_petugas', 'Nama Petugas', 'required');
+        // Set validation rules
+        $this->form_validation->set_rules('nama_peternak', 'Nama Peternak', 'required|trim');
+        $this->form_validation->set_rules('nama_petugas', 'Nama Petugas', 'required|trim');
         $this->form_validation->set_rules('tanggal_pengobatan', 'Tanggal Pengobatan', 'required');
-        $this->form_validation->set_rules('bantuan_prov', 'Bantuan Provinsi', 'required');
-        $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required');
-        $this->form_validation->set_rules('latitude', 'Latitude', 'required');
-        $this->form_validation->set_rules('longitude', 'Longitude', 'required');
+        $this->form_validation->set_rules('bantuan_prov', 'Bantuan Provinsi', 'required|trim');
+        $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required|trim');
+        $this->form_validation->set_rules('latitude', 'Latitude', 'required|trim');
+        $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim');
 
-        // Get komoditas arrays from POST
+        // Validasi array data (multiple komoditas)
         $komoditas = $this->input->post('komoditas_ternak');
+        $gejala_klinis = $this->input->post('gejala_klinis');
         $jenis = $this->input->post('jenis_pengobatan');
         $jumlah = $this->input->post('jumlah');
 
-        // Validate komoditas arrays
         if (empty($komoditas) || !is_array($komoditas)) {
             $response = array(
                 'status' => 'error',
@@ -56,7 +89,6 @@ class P_Input_Pengobatan extends CI_Controller {
             return;
         }
 
-        // Validate each komoditas row
         foreach ($komoditas as $index => $k) {
             if (empty($k)) {
                 $response = array(
@@ -66,14 +98,25 @@ class P_Input_Pengobatan extends CI_Controller {
                 echo json_encode($response);
                 return;
             }
-            if (empty($jenis[$index])) {
+            
+            if (empty($gejala_klinis[$index])) {
                 $response = array(
                     'status' => 'error',
-                    'message' => 'Jenis pengobatan baris ke-' . ($index + 1) . ' harus diisi'
+                    'message' => 'Gejala klinis/diagnosa baris ke-' . ($index + 1) . ' harus diisi'
                 );
                 echo json_encode($response);
                 return;
             }
+             
+            if (empty($jenis[$index])) {
+                $response = array(
+                    'status' => 'error',
+                    'message' => 'Jenis pengobatan baris ke-' . ($index + 1) . ' harus dipilih'
+                );
+                echo json_encode($response);
+                return;
+            }
+            
             if (empty($jumlah[$index]) || $jumlah[$index] < 1) {
                 $response = array(
                     'status' => 'error',
@@ -93,7 +136,7 @@ class P_Input_Pengobatan extends CI_Controller {
             return;
         }
 
-        // Handle multiple file uploads
+        // Upload foto
         $uploaded_files = array();
         $upload_path = './uploads/pengobatan/';
         
@@ -101,85 +144,76 @@ class P_Input_Pengobatan extends CI_Controller {
             mkdir($upload_path, 0777, TRUE);
         }
 
-        if (!empty($_FILES['foto_pengobatan']['name'][0])) {
-            $files = $_FILES['foto_pengobatan'];
-            $file_count = count($files['name']);
+        if (isset($_FILES['foto_pengobatan']) && $_FILES['foto_pengobatan']['error'] != 4) {
             
-            for ($i = 0; $i < $file_count; $i++) {
-                $_FILES['file_' . $i] = array(
-                    'name' => $files['name'][$i],
-                    'type' => $files['type'][$i],
-                    'tmp_name' => $files['tmp_name'][$i],
-                    'error' => $files['error'][$i],
-                    'size' => $files['size'][$i]
+            $config['upload_path'] = $upload_path;
+            $config['allowed_types'] = 'jpg|jpeg|png';
+            $config['max_size'] = 5120;
+            $config['encrypt_name'] = TRUE;
+            
+            $this->upload->initialize($config);
+            
+            if ($this->upload->do_upload('foto_pengobatan')) {
+                $upload_data = $this->upload->data();
+                $uploaded_files[] = $upload_data['file_name'];
+            } else {
+                $error = $this->upload->display_errors();
+                $response = array(
+                    'status' => 'error',
+                    'message' => 'Gagal upload foto: ' . strip_tags($error)
                 );
-                
-                $config['upload_path'] = $upload_path;
-                $config['allowed_types'] = 'jpg|jpeg|png';
-                $config['max_size'] = 5120; // 5MB
-                $config['encrypt_name'] = TRUE;
-                
-                $this->upload->initialize($config);
-                
-                if ($this->upload->do_upload('file_' . $i)) {
-                    $upload_data = $this->upload->data();
-                    $uploaded_files[] = $upload_data['file_name'];
-                } else {
-                    $error = $this->upload->display_errors();
-                    $response = array(
-                        'status' => 'error',
-                        'message' => 'Gagal upload foto ' . ($i + 1) . ': ' . strip_tags($error)
-                    );
-                    echo json_encode($response);
-                    return;
-                }
+                echo json_encode($response);
+                return;
             }
         }
 
-        // Ambil kecamatan dari session
-        $kecamatan = $this->session->userdata('kecamatan');
-        $nama_petugas = $this->input->post('nama_petugas');
-
-        // Data master
-        $master_data = array(
-            'nama_petugas' => $nama_petugas,
-            'nama_peternak' => $this->input->post('nama_peternak'),
-            'nik' => $this->input->post('nik'),
-            'tanggal_pengobatan' => $this->input->post('tanggal_pengobatan'),
-            'keterangan' => $this->input->post('keterangan') ?? '',
-            'bantuan_prov' => $this->input->post('bantuan_prov'),
-            'kecamatan' => $kecamatan,
-            'kelurahan' => $this->input->post('kelurahan'),
-            'rt' => $this->input->post('rt') ?? '',
-            'rw' => $this->input->post('rw') ?? '',
-            'latitude' => $this->input->post('latitude'),
-            'longitude' => $this->input->post('longitude'),
-            'telp' => $this->input->post('telp'),
-            'foto_pengobatan' => implode(',', $uploaded_files) // Simpan multiple foto dipisah koma
-        );
-
-        // Data detail (multiple komoditas)
-        $detail_data = array();
+        // Karena ini multiple komoditas dalam SATU tabel, kita perlu menyimpan setiap baris sebagai record terpisah
+        $success_count = 0;
+        
         foreach ($komoditas as $index => $k) {
-            $detail_data[] = array(
+            $nik_val = $this->input->post('nik');
+            $telp_val = $this->input->post('telp');
+            $keterangan_val = $this->input->post('keterangan');
+            $rt_val = $this->input->post('rt');
+            $rw_val = $this->input->post('rw');
+            
+            // Data untuk setiap baris komoditas
+            $data = array(
+                'nama_petugas' => $this->input->post('nama_petugas'),
+                'nama_peternak' => $this->input->post('nama_peternak'),
+                'nik' => (!empty($nik_val)) ? $nik_val : NULL,
+                'tanggal_pengobatan' => $this->input->post('tanggal_pengobatan'),
+                'keterangan' => (!empty($keterangan_val)) ? $keterangan_val : NULL,
+                'bantuan_prov' => $this->input->post('bantuan_prov'),
+                'kecamatan' => $this->session->userdata('kecamatan'),
+                'kelurahan' => $this->input->post('kelurahan'),
+                'rt' => (!empty($rt_val)) ? $rt_val : NULL,
+                'rw' => (!empty($rw_val)) ? $rw_val : NULL,
+                'latitude' => $this->input->post('latitude'),
+                'longitude' => $this->input->post('longitude'),
+                'telp' => (!empty($telp_val)) ? $telp_val : NULL,
+                'foto_pengobatan' => !empty($uploaded_files) ? $uploaded_files[0] : NULL,
                 'komoditas_ternak' => $k,
+                'gejala_klinis' => $gejala_klinis[$index],
                 'jenis_pengobatan' => $jenis[$index],
                 'jumlah' => $jumlah[$index]
             );
+            
+            if ($this->P_Input_Pengobatan_Model->save_pengobatan($data)) {
+                $success_count++;
+            }
         }
 
-        // Simpan ke database melalui model
-        $insert_id = $this->P_Input_Pengobatan_Model->save_pengobatan_with_details($master_data, $detail_data);
-
-        if ($insert_id) {
+        if ($success_count > 0) {
+            $foto_msg = !empty($uploaded_files) ? ' dan 1 foto' : ' (tanpa foto)';
             $response = array(
                 'status' => 'success',
-                'message' => 'Data pengobatan berhasil disimpan dengan ' . count($detail_data) . ' komoditas dan ' . count($uploaded_files) . ' foto'
+                'message' => $success_count . ' data pengobatan berhasil disimpan' . $foto_msg
             );
         } else {
             $response = array(
                 'status' => 'error',
-                'message' => 'Gagal menyimpan data pengobatan. Silakan coba lagi.'
+                'message' => 'Gagal menyimpan data pengobatan. Silakan cek kembali data Anda.'
             );
         }
 
@@ -187,64 +221,94 @@ class P_Input_Pengobatan extends CI_Controller {
     }
 
     public function get_all_data() {
+        $user_kecamatan = $this->session->userdata('kecamatan');
+        $data = $this->P_Input_Pengobatan_Model->get_pengobatan_by_kecamatan($user_kecamatan);
+        echo json_encode($data);
+    }
+
+    // HAPUS method get_detail karena tidak ada kolom id
+    // public function get_detail($id) {
+    //     $data = $this->P_Input_Pengobatan_Model->get_pengobatan_by_id($id);
+    //     echo json_encode($data);
+    // }
+
+    public function get_by_periode() {
+        $tahun = $this->input->post('tahun');
         $kecamatan = $this->session->userdata('kecamatan');
-        $data = $this->P_Input_Pengobatan_Model->get_all_for_datatable($kecamatan);
-        echo json_encode($data);
-    }
-
-    public function get_detail($id) {
-        $data = $this->P_Input_Pengobatan_Model->get_pengobatan_by_id($id);
-        echo json_encode($data);
-    }
-
-    public function delete($id) {
-        $result = $this->P_Input_Pengobatan_Model->delete_pengobatan($id);
         
-        if ($result) {
+        if (!$tahun) {
+            $tahun = date('Y');
+        }
+        
+        $data = $this->P_Input_Pengobatan_Model->get_by_periode($tahun, $kecamatan);
+        
+        if (!empty($data)) {
             $response = array(
                 'status' => 'success',
-                'message' => 'Data berhasil dihapus'
+                'data' => $data
             );
         } else {
             $response = array(
-                'status' => 'error',
-                'message' => 'Gagal menghapus data'
+                'status' => 'empty',
+                'data' => [],
+                'message' => 'Tidak ada data untuk tahun ' . $tahun . ' di kecamatan ' . $kecamatan
             );
         }
         
         echo json_encode($response);
     }
-    
-    public function filter_data() {
-        $kecamatan = $this->session->userdata('kecamatan');
-        $komoditas = $this->input->post('komoditas');
-        $kelurahan = $this->input->post('kelurahan');
-        $periode = $this->input->post('periode');
+
+    // HAPUS method delete karena tidak ada kolom id
+    // public function delete($id) {
+    //     $result = $this->P_Input_Pengobatan_Model->delete_pengobatan($id);
+    //     
+    //     if ($result) {
+    //         $response = array(
+    //             'status' => 'success',
+    //             'message' => 'Data berhasil dihapus'
+    //         );
+    //     } else {
+    //         $response = array(
+    //             'status' => 'error',
+    //             'message' => 'Gagal menghapus data'
+    //         );
+    //     }
+    //     
+    //     echo json_encode($response);
+    // }
+
+    public function get_kelurahan_by_kecamatan() {
+        $kecamatan = $this->input->post('kecamatan');
+        $kel_list = $this->get_all_kelurahan();
         
-        if ($komoditas != 'all' && $komoditas != '') {
-            $data = $this->P_Input_Pengobatan_Model->get_by_komoditas($komoditas, $kecamatan);
-        } elseif ($kelurahan != 'all' && $kelurahan != '') {
-            $data = $this->P_Input_Pengobatan_Model->get_by_kelurahan($kelurahan, $kecamatan);
-        } elseif ($periode != 'all' && $periode != '') {
-            $data = $this->P_Input_Pengobatan_Model->get_by_periode($periode, $kecamatan);
+        if (isset($kel_list[$kecamatan])) {
+            echo json_encode($kel_list[$kecamatan]);
         } else {
-            $data = $this->P_Input_Pengobatan_Model->get_all_for_datatable($kecamatan);
+            echo json_encode([]);
+        }
+    }
+    
+    /**
+     * Cek apakah NIK sudah pernah digunakan
+     */
+    public function cek_nik() {
+        $nik = $this->input->post('nik');
+        $kecamatan = $this->session->userdata('kecamatan');
+        
+        if (empty($nik)) {
+            echo json_encode(['status' => 'empty']);
+            return;
         }
         
-        echo json_encode($data);
-    }
-    
-    public function get_statistik() {
-        $kecamatan = $this->session->userdata('kecamatan');
-        $statistik = array(
-            'total' => $this->P_Input_Pengobatan_Model->count_all($kecamatan),
-            'total_ternak' => $this->P_Input_Pengobatan_Model->sum_jumlah($kecamatan),
-            'total_peternak' => $this->P_Input_Pengobatan_Model->count_unique_peternak($kecamatan),
-            'total_kelurahan' => $this->P_Input_Pengobatan_Model->count_unique_kelurahan($kecamatan),
-            'per_bulan' => $this->P_Input_Pengobatan_Model->get_statistik_per_bulan(null, $kecamatan),
-            'per_komoditas' => $this->P_Input_Pengobatan_Model->get_statistik_per_komoditas($kecamatan)
-        );
+        $cek = $this->P_Input_Pengobatan_Model->cek_nik_exists($nik, $kecamatan);
         
-        echo json_encode($statistik);
+        if ($cek) {
+            echo json_encode([
+                'status' => 'exists',
+                'message' => 'NIK ini sudah pernah digunakan sebanyak ' . $cek . ' kali di kecamatan ini'
+            ]);
+        } else {
+            echo json_encode(['status' => 'new']);
+        }
     }
-}
+} 

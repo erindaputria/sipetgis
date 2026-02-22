@@ -7,7 +7,7 @@ class Data_History_Vaksinasi extends CI_Controller {
     {
         // $this->load->model('Dashboard_model');
         // $data = $this->Dashboard_model->get_summary();
-        $this->load->view('data_history_vaksinasi');
+        $this->load->view('admin/data/data_history_vaksinasi');
         
     }
     

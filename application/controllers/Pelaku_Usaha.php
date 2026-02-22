@@ -12,7 +12,7 @@ class Pelaku_Usaha extends CI_Controller {
     
     public function index() {
         $data['pelaku_usaha'] = $this->Pelaku_Usaha_Model->get_all();
-        $this->load->view('pelaku_usaha', $data);
+        $this->load->view('admin/pelaku_usaha', $data);
     }
     
     public function simpan() {

@@ -7,7 +7,7 @@ class K_Laporan_Kepala extends CI_Controller {
     {
         // $this->load->model('Dashboard_model');
         // $data = $this->Dashboard_model->get_summary();
-        $this->load->view('k_laporan_kepala');
+        $this->load->view('kepala/k_laporan_kepala');
         
     }
     

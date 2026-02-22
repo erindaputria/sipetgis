@@ -7,7 +7,7 @@ class Data_Kepemilikan extends CI_Controller {
     {
         // $this->load->model('Dashboard_model');
         // $data = $this->Dashboard_model->get_summary();
-        $this->load->view('data_kepemilikan');
+        $this->load->view('admin/data/data_kepemilikan');
         
     }
     

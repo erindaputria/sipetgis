@@ -70,7 +70,7 @@ class P_Dashboard_Petugas extends CI_Controller {
         $data['total_pengobatan'] = $total_pengobatan;
         $data['total_ternak_diobati'] = $total_ternak_diobati;
         $data['total_vaksinasi'] = $total_vaksinasi;
-        $data['total_ternak_divaksin'] = $total_ternak_divaksin;
+        $data['total_ternak_divaksin'] = $total_ternak_divaksin; 
         $data['chart_labels'] = $chart_labels;
         $data['chart_data'] = $chart_data;
         $data['chart_colors'] = array_slice($chart_colors, 0, count($chart_labels));
@@ -80,6 +80,6 @@ class P_Dashboard_Petugas extends CI_Controller {
         $data['username'] = $this->session->userdata('username');
         $data['role'] = $this->session->userdata('role');
         
-        $this->load->view('p_dashboard_petugas', $data);
+        $this->load->view('petugas/p_dashboard_petugas', $data);
     }
 }
