@@ -203,12 +203,21 @@
                   <p>Vaksinasi</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="<?php echo base_url(); ?>p_input_pelaku_usaha">
-                  <i class="fas fa-user-tie"></i>
-                  <p>Pelaku Usaha Ternak</p>
-                </a>
-              </li>
+
+               <!-- Pelaku Usaha -->
+                        <li class="nav-item active">
+                            <a href="<?php echo base_url(); ?>P_Input_Pelaku_Usaha">
+                                <i class="fas fa-users"></i>
+                                <p>Pelaku Usaha</p>
+                            </a>
+                        </li>
+                        
+              <li class="nav-item active">
+        <a href="<?php echo base_url(); ?>P_Input_Jenis_Usaha">
+            <i class="fas fa-store"></i>
+            <p>Jenis Usaha</p>
+        </a>
+    </li>
               <li class="nav-item">
                 <a href="<?php echo base_url(); ?>p_input_penjual_pakan">
                   <i class="fas fa-seedling"></i>
@@ -225,6 +234,12 @@
                 <a href="<?php echo base_url(); ?>p_input_penjual_obat_hewan">
                  <i class="fas fa-pills"></i>
                   <p>Penjual Obat Hewan</p>
+                </a>
+              </li>
+               <li class="nav-item">
+                <a href="<?php echo base_url(); ?>p_input_rpu">
+                 <i class="fas fa-cut"></i>
+                  <p>RPU</p>
                 </a>
               </li>
             </ul>
@@ -326,213 +341,168 @@
               </div>
             </div>
 
-            <!-- Statistics Cards -->
-            <div class="row">
-              <!-- Kotak 1: Jumlah Peternak -->
-              <div class="col-md-4">
-                <div class="card card-stats card-round stat-card">
-                  <div class="card-body">
-                    <div class="row align-items-center">
-                      <div class="col-icon">
-                        <div class="icon-big text-center icon-primary">
-                          <i class="fas fa-users stat-icon"></i>
-                        </div>
-                      </div>
-                      <div class="col col-stats ms-3 ms-sm-0">
-                        <div class="numbers">
-                          <p class="card-category">Jumlah Peternak</p>
-                          <h4 class="card-title"><?php echo isset($total_peternak) ? number_format($total_peternak, 0, ',', '.') : '0'; ?></h4>
-                          <p class="card-subtitle">Peternak</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+           <!-- Statistics Cards - Ubah bagian ini -->
+<div class="row">
+  <!-- Kotak 1: Jumlah Pemilik Usaha -->
+  <div class="col-md-4">
+    <div class="card card-stats card-round stat-card">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-icon">
+            <div class="icon-big text-center icon-primary">
+              <i class="fas fa-users stat-icon"></i>
+            </div>
+          </div>
+          <div class="col col-stats ms-3 ms-sm-0">
+            <div class="numbers">
+              <p class="card-category">Jumlah Pemilik Usaha</p>
+              <h4 class="card-title"><?php echo isset($total_pemilik_usaha) ? number_format($total_pemilik_usaha, 0, ',', '.') : '0'; ?></h4>
+              <p class="card-subtitle">Pemilik</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-              <!-- Kotak 2: Komoditas Ternak -->
-              <div class="col-md-4">
-                <div class="card card-stats card-round stat-card">
-                  <div class="card-body">
-                    <div class="row align-items-center">
-                      <div class="col-icon">
+  <!-- Kotak 2: Jenis Usaha -->
+  <div class="col-md-4">
+    <div class="card card-stats card-round stat-card">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-icon">
+            <div class="icon-big text-center icon-success">
+              <i class="fas fa-store stat-icon"></i>
+            </div>
+          </div>
+          <div class="col col-stats ms-3 ms-sm-0">
+            <div class="numbers">
+              <p class="card-category">Jenis Usaha</p>
+              <h4 class="card-title"><?php echo isset($jumlah_jenis_usaha) ? $jumlah_jenis_usaha : '0'; ?></h4>
+              <p class="card-subtitle">Jenis Usaha</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kotak 3: Total Ternak -->
+  <div class="col-md-4">
+    <div class="card card-stats card-round stat-card">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-icon">
+            <div class="icon-big text-center icon-warning">
+              <i class="fas fa-warehouse stat-icon"></i>
+            </div>
+          </div>
+          <div class="col col-stats ms-3 ms-sm-0">
+            <div class="numbers">
+              <p class="card-category">Total Ternak</p>
+              <h4 class="card-title"><?php echo isset($total_ternak) ? number_format($total_ternak, 0, ',', '.') : '0'; ?></h4>
+              <p class="card-subtitle">Ekor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tambahkan informasi Total Usaha -->
+<div class="row mt-2">
+  <div class="col-md-12">
+    <div class="alert alert-info">
+      <i class="fas fa-info-circle me-2"></i>
+      Total Usaha Ternak: <strong><?php echo isset($total_usaha) ? number_format($total_usaha, 0, ',', '.') : '0'; ?></strong> data usaha
+    </div>
+  </div>
+</div>
+
+<!-- Action Cards Section - Perbaiki link untuk Jenis Usaha -->
+<div class="row mt-4">
+  <!-- Card Pengobatan -->
+  <div class="col-md-12 mb-4">
+    <a href="<?php echo base_url(); ?>P_Input_Pengobatan" class="action-link">
+      <div class="card card-stats card-round action-card">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-md-2 text-center">
+              <div class="icon-big text-center icon-danger">
+                <i class="fas fa-heartbeat action-icon"></i>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <h4 class="card-title-action mb-1">PENGOBATAN</h4>
+              <p class="card-subtitle-action mb-0">
+                Input data pengobatan ternak
+              </p>
+            </div>
+            <div class="col-md-2 text-end">
+              <i class="fas fa-chevron-right fa-2x text-muted"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <!-- Card Vaksinasi -->
+  <div class="col-md-12 mb-4">
+    <a href="<?php echo base_url(); ?>P_Input_Vaksinasi" class="action-link">
+      <div class="card card-stats card-round action-card">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-md-2 text-center">
+              <div class="icon-big text-center icon-info">
+                <i class="fas fa-syringe action-icon"></i>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <h4 class="card-title-action mb-1">VAKSINASI</h4>
+              <p class="card-subtitle-action mb-0">
+                Input data vaksinasi ternak
+              </p>
+            </div>
+            <div class="col-md-2 text-end">
+              <i class="fas fa-chevron-right fa-2x text-muted"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+
+ <!-- Card Jenis Usaha -->
+<div class="col-md-12">
+    <a href="<?php echo base_url(); ?>P_Input_Jenis_Usaha" class="action-link">
+        <div class="card card-stats card-round action-card">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
                         <div class="icon-big text-center icon-success">
-                          <i class="fas fa-paw stat-icon"></i>
+                            <i class="fas fa-store action-icon"></i>
                         </div>
-                      </div>
-                      <div class="col col-stats ms-3 ms-sm-0">
-                        <div class="numbers">
-                          <p class="card-category">Komoditas Ternak</p>
-                          <h4 class="card-title"><?php echo isset($jumlah_komoditas) ? $jumlah_komoditas : '0'; ?></h4>
-                          <p class="card-subtitle">Jenis Ternak</p>
-                        </div>
-                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Kotak 3: Total Ternak -->
-              <div class="col-md-4">
-                <div class="card card-stats card-round stat-card">
-                  <div class="card-body">
-                    <div class="row align-items-center">
-                      <div class="col-icon">
-                        <div class="icon-big text-center icon-warning">
-                          <i class="fas fa-warehouse stat-icon"></i>
-                        </div>
-                      </div>
-                      <div class="col col-stats ms-3 ms-sm-0">
-                        <div class="numbers">
-                          <p class="card-category">Total Ternak</p>
-                          <h4 class="card-title"><?php echo isset($total_ternak) ? number_format($total_ternak, 0, ',', '.') : '0'; ?></h4>
-                          <p class="card-subtitle">Ekor</p>
-                        </div>
-                      </div>
+                    <div class="col-md-8">
+                        <h4 class="card-title-action mb-1">
+                            JENIS USAHA
+                        </h4>
+                        <p class="card-subtitle-action mb-0">
+                            Input data jenis usaha ternak
+                        </p>
                     </div>
-                  </div>
+                    <div class="col-md-2 text-end">
+                        <i class="fas fa-chevron-right fa-2x text-muted"></i>
+                    </div>
                 </div>
-              </div>
             </div>
-
-            <!-- Ringkasan Aktivitas -->
-            <div class="row mt-4">
-              <div class="col-md-6">
-                <div class="card">
-                  <div class="card-header">
-                    <h4 class="card-title">Ringkasan Pengobatan</h4>
-                  </div>
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between mb-3">
-                      <span>Total Kasus Pengobatan:</span>
-                      <span class="fw-bold"><?php echo isset($total_pengobatan) ? number_format($total_pengobatan, 0, ',', '.') : '0'; ?> kasus</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-3">
-                      <span>Total Ternak Diobati:</span>
-                      <span class="fw-bold"><?php echo isset($total_ternak_diobati) ? number_format($total_ternak_diobati, 0, ',', '.') : '0'; ?> ekor</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="col-md-6">
-                <div class="card">
-                  <div class="card-header">
-                    <h4 class="card-title">Ringkasan Vaksinasi</h4>
-                  </div>
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between mb-3">
-                      <span>Total Kasus Vaksinasi:</span>
-                      <span class="fw-bold"><?php echo isset($total_vaksinasi) ? number_format($total_vaksinasi, 0, ',', '.') : '0'; ?> kasus</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-3">
-                      <span>Total Ternak Divaksin:</span>
-                      <span class="fw-bold"><?php echo isset($total_ternak_divaksin) ? number_format($total_ternak_divaksin, 0, ',', '.') : '0'; ?> ekor</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Action Cards Section -->
-            <div class="row mt-4">
-              <!-- Card Pengobatan -->
-              <div class="col-md-12 mb-4">
-                <a href="<?php echo base_url(); ?>P_Input_Pengobatan" class="action-link">
-                  <div class="card card-stats card-round action-card">
-                    <div class="card-body">
-                      <div class="row align-items-center">
-                        <div class="col-md-2 text-center">
-                          <div class="icon-big text-center icon-danger">
-                            <i class="fas fa-heartbeat action-icon"></i>
-                          </div>
-                        </div>
-                        <div class="col-md-8">
-                          <h4 class="card-title-action mb-1">PENGOBATAN</h4>
-                          <p class="card-subtitle-action mb-0">
-                            Input data pengobatan ternak
-                          </p>
-                        </div>
-                        <div class="col-md-2 text-end">
-                          <i class="fas fa-chevron-right fa-2x text-muted"></i>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </div>
-
-              <!-- Card Vaksinasi -->
-              <div class="col-md-12 mb-4">
-                <a href="<?php echo base_url(); ?>P_Input_Vaksinasi" class="action-link">
-                  <div class="card card-stats card-round action-card">
-                    <div class="card-body">
-                      <div class="row align-items-center">
-                        <div class="col-md-2 text-center">
-                          <div class="icon-big text-center icon-info">
-                            <i class="fas fa-syringe action-icon"></i>
-                          </div>
-                        </div>
-                        <div class="col-md-8">
-                          <h4 class="card-title-action mb-1">VAKSINASI</h4>
-                          <p class="card-subtitle-action mb-0">
-                            Input data vaksinasi ternak
-                          </p>
-                        </div>
-                        <div class="col-md-2 text-end">
-                          <i class="fas fa-chevron-right fa-2x text-muted"></i>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </div>
-
-              <!-- Card Pelaku Usaha Ternak -->
-              <div class="col-md-12">
-                <a href="<?php echo base_url(); ?>p_input_pelaku_usaha" class="action-link">
-                  <div class="card card-stats card-round action-card">
-                    <div class="card-body">
-                      <div class="row align-items-center">
-                        <div class="col-md-2 text-center">
-                          <div class="icon-big text-center icon-success">
-                            <i class="fas fa-user-tie action-icon"></i>
-                          </div>
-                        </div>
-                        <div class="col-md-8">
-                          <h4 class="card-title-action mb-1">
-                            PELAKU USAHA TERNAK
-                          </h4>
-                          <p class="card-subtitle-action mb-0">
-                            Input data pelaku usaha ternak
-                          </p>
-                        </div>
-                        <div class="col-md-2 text-end">
-                          <i class="fas fa-chevron-right fa-2x text-muted"></i>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </div>
-
-            <!-- Chart Section -->
-            <div class="row mt-4">
-              <div class="col-md-12">
-                <div class="card">
-                  <div class="card-header">
-                    <h4 class="card-title">Komposisi Ternak</h4>
-                  </div>
-                  <div class="card-body">
-                    <div class="commodity-chart">
-                      <canvas id="commodityChart"></canvas>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+        </div>
+    </a>
+</div>
+</div>
           </div>
         </div>
       </div>

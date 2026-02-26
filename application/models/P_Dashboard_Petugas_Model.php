@@ -20,9 +20,22 @@ class P_Dashboard_Petugas_Model extends CI_Model {
         $this->db->where('kecamatan', $kecamatan);
         $result['total_vaksinasi'] = $this->db->count_all_results('input_vaksinasi');
         
-        // Total pelaku usaha
+        // Total jenis usaha
         $this->db->where('kecamatan', $kecamatan);
-        $result['total_pelaku_usaha'] = $this->db->count_all_results('input_pelaku_usaha');
+        $result['total_jenis_usaha'] = $this->db->count_all_results('input_jenis_usaha');
+        
+        // Total pemilik usaha (unique) - menggunakan nama_peternak
+        $this->db->select('COUNT(DISTINCT nama_peternak) as total');
+        $this->db->where('kecamatan', $kecamatan);
+        $query = $this->db->get('input_jenis_usaha');
+        $result['total_pemilik_usaha'] = $query->row()->total ?? 0;
+        
+        // Total ternak dari semua jenis usaha (tambah - kurang)
+        $this->db->select('SUM(jumlah_tambah) as total_tambah, SUM(jumlah_kurang) as total_kurang');
+        $this->db->where('kecamatan', $kecamatan);
+        $query = $this->db->get('input_jenis_usaha');
+        $row = $query->row();
+        $result['total_ternak'] = ($row->total_tambah ?? 0) - ($row->total_kurang ?? 0);
         
         // Total ternak diobati
         $this->db->select('SUM(jumlah) as total');

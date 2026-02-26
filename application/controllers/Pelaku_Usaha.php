@@ -8,10 +8,18 @@ class Pelaku_Usaha extends CI_Controller {
         $this->load->model('Pelaku_Usaha_Model');
         $this->load->library('session');
         $this->load->helper('security');
+        
+        // Cek login (sesuaikan dengan sistem autentikasi Anda)
+        if(!$this->session->userdata('logged_in')) {
+            redirect('login');
+        }
     }
     
     public function index() {
         $data['pelaku_usaha'] = $this->Pelaku_Usaha_Model->get_all();
+        $data['title'] = 'Master Data Pelaku Usaha';
+        $data['active_menu'] = 'pelaku_usaha';
+        
         $this->load->view('admin/pelaku_usaha', $data);
     }
     
@@ -19,12 +27,14 @@ class Pelaku_Usaha extends CI_Controller {
         // Validasi input
         $this->load->library('form_validation');
         
-        $this->form_validation->set_rules('nama_peternak', 'Nama Peternak', 'required|min_length[3]|max_length[100]');
+        $this->form_validation->set_rules('nama', 'Nama Pelaku Usaha', 'required|min_length[3]|max_length[255]');
         $this->form_validation->set_rules('nik', 'NIK', 'required|exact_length[16]|numeric');
+        $this->form_validation->set_rules('telepon', 'Telepon', 'min_length[10]|max_length[15]');
         $this->form_validation->set_rules('alamat', 'Alamat', 'required');
         $this->form_validation->set_rules('kecamatan', 'Kecamatan', 'required');
-        $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required');
-        $this->form_validation->set_rules('telepon', 'Telepon', 'min_length[10]|max_length[15]');
+        $this->form_validation->set_rules('jenis_usaha', 'Jenis Usaha', 'required');
+        $this->form_validation->set_rules('latitude', 'Latitude', 'numeric');
+        $this->form_validation->set_rules('longitude', 'Longitude', 'numeric');
         
         if ($this->form_validation->run() == FALSE) {
             $errors = validation_errors();
@@ -40,12 +50,17 @@ class Pelaku_Usaha extends CI_Controller {
         }
         
         $data = array(
-            'nama_peternak' => $this->input->post('nama_peternak'),
+            'nama' => $this->input->post('nama'),
             'nik' => $nik,
+            'telepon' => $this->input->post('telepon'),
             'alamat' => $this->input->post('alamat'),
             'kecamatan' => $this->input->post('kecamatan'),
-            'kelurahan' => $this->input->post('kelurahan'),
-            'telepon' => $this->input->post('telepon')
+            'jenis_usaha' => $this->input->post('jenis_usaha'),
+            'latitude' => $this->input->post('latitude'),
+            'longitude' => $this->input->post('longitude'),
+            'status' => $this->input->post('status') ?: 'Aktif',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
         );
         
         $result = $this->Pelaku_Usaha_Model->insert($data);
@@ -65,12 +80,14 @@ class Pelaku_Usaha extends CI_Controller {
         // Validasi input
         $this->load->library('form_validation');
         
-        $this->form_validation->set_rules('nama_peternak', 'Nama Peternak', 'required|min_length[3]|max_length[100]');
+        $this->form_validation->set_rules('nama', 'Nama Pelaku Usaha', 'required|min_length[3]|max_length[255]');
         $this->form_validation->set_rules('nik', 'NIK', 'required|exact_length[16]|numeric');
+        $this->form_validation->set_rules('telepon', 'Telepon', 'min_length[10]|max_length[15]');
         $this->form_validation->set_rules('alamat', 'Alamat', 'required');
         $this->form_validation->set_rules('kecamatan', 'Kecamatan', 'required');
-        $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required');
-        $this->form_validation->set_rules('telepon', 'Telepon', 'min_length[10]|max_length[15]');
+        $this->form_validation->set_rules('jenis_usaha', 'Jenis Usaha', 'required');
+        $this->form_validation->set_rules('latitude', 'Latitude', 'numeric');
+        $this->form_validation->set_rules('longitude', 'Longitude', 'numeric');
         
         if ($this->form_validation->run() == FALSE) {
             $errors = validation_errors();
@@ -87,12 +104,16 @@ class Pelaku_Usaha extends CI_Controller {
         }
         
         $data = array(
-            'nama_peternak' => $this->input->post('nama_peternak'),
+            'nama' => $this->input->post('nama'),
             'nik' => $nik,
+            'telepon' => $this->input->post('telepon'),
             'alamat' => $this->input->post('alamat'),
             'kecamatan' => $this->input->post('kecamatan'),
-            'kelurahan' => $this->input->post('kelurahan'),
-            'telepon' => $this->input->post('telepon')
+            'jenis_usaha' => $this->input->post('jenis_usaha'),
+            'latitude' => $this->input->post('latitude'),
+            'longitude' => $this->input->post('longitude'),
+            'status' => $this->input->post('status'),
+            'updated_at' => date('Y-m-d H:i:s')
         );
         
         $result = $this->Pelaku_Usaha_Model->update($id, $data);
@@ -116,5 +137,19 @@ class Pelaku_Usaha extends CI_Controller {
         }
         
         redirect('pelaku_usaha');
+    }
+    
+    public function detail($id) {
+        $data['pelaku'] = $this->Pelaku_Usaha_Model->get_by_id($id);
+        
+        if (!$data['pelaku']) {
+            $this->session->set_flashdata('error', 'Data tidak ditemukan');
+            redirect('pelaku_usaha');
+        }
+        
+        $data['title'] = 'Detail Pelaku Usaha';
+        $data['active_menu'] = 'pelaku_usaha';
+        
+        $this->load->view('admin/pelaku_usaha_detail', $data);
     }
 }

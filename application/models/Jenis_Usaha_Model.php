@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Pelaku_Usaha_Model extends CI_Model {
+class Jenis_Usaha_Model extends CI_Model {
     
-    private $table = 'pelaku_usaha';
+    private $table = 'jenis_usaha';
     
     public function __construct() {
         parent::__construct();
@@ -11,7 +11,7 @@ class Pelaku_Usaha_Model extends CI_Model {
     }
     
     public function get_all() {
-        $this->db->order_by('nama', 'ASC');
+        $this->db->order_by('nama_peternak', 'ASC');
         return $this->db->get($this->table)->result();
     }
     
@@ -47,28 +47,7 @@ class Pelaku_Usaha_Model extends CI_Model {
     
     public function get_by_kecamatan($kecamatan) {
         $this->db->where('kecamatan', $kecamatan);
-        $this->db->order_by('nama', 'ASC');
+        $this->db->order_by('nama_peternak', 'ASC');
         return $this->db->get($this->table)->result();
-    }
-    
-    public function get_by_status($status) {
-        $this->db->where('status', $status);
-        $this->db->order_by('nama', 'ASC');
-        return $this->db->get($this->table)->result();
-    }
-    
-    public function get_by_jenis_usaha($jenis_usaha) {
-        $this->db->where('jenis_usaha', $jenis_usaha);
-        $this->db->order_by('nama', 'ASC');
-        return $this->db->get($this->table)->result();
-    }
-    
-    public function count_all() {
-        return $this->db->count_all($this->table);
-    }
-    
-    public function count_by_status($status) {
-        $this->db->where('status', $status);
-        return $this->db->count_all_results($this->table);
     }
 }

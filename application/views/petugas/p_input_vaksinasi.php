@@ -366,11 +366,18 @@
         </a>
     </li>
 
-    <!-- Pelaku Usaha -->
-    <li class="nav-item">
-        <a href="<?php echo base_url(); ?>P_Input_Pelaku_Usaha">
-            <i class="fas fa-users"></i>
-            <p>Pelaku Usaha Ternak</p>
+     <!-- Pelaku Usaha -->
+                        <li class="nav-item active">
+                            <a href="<?php echo base_url(); ?>P_Input_Pelaku_Usaha">
+                                <i class="fas fa-users"></i>
+                                <p>Pelaku Usaha</p>
+                            </a>
+                        </li>
+
+     <li class="nav-item active">
+        <a href="<?php echo base_url(); ?>P_Input_Jenis_Usaha">
+            <i class="fas fa-store"></i>
+            <p>Jenis Usaha</p>
         </a>
     </li>
 
@@ -397,6 +404,12 @@
             <p>Penjual Obat Hewan</p>
         </a>
     </li>
+     <li class="nav-item">
+                <a href="<?php echo base_url(); ?>p_input_rpu">
+                 <i class="fas fa-cut"></i>
+                  <p>RPU</p>
+                </a>
+              </li>
 </ul>
                 </div>
             </div>

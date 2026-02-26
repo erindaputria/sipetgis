@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Master Data Pelaku Usaha - SIPETGIS</title>
+    <title>Master Data Jenis Usaha - SIPETGIS</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="<?php echo base_url('assets/SIPETGIS/assets/img/kaiadmin/favicon.ico'); ?>" type="image/x-icon" />
 
@@ -107,16 +107,6 @@
             transition: all 0.2s;
         }
 
-        .btn-view {
-            background-color: rgba(13, 202, 240, 0.1);
-            color: #0dcaf0;
-        }
-
-        .btn-view:hover {
-            background-color: #0dcaf0;
-            color: white;
-        }
-
         .btn-edit {
             background-color: rgba(67, 97, 238, 0.1);
             color: #4361ee;
@@ -150,6 +140,30 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
+        .dt-buttons .btn-primary {
+            background-color: #0d6efd !important;
+            border-color: #0d6efd !important;
+            color: white !important;
+        }
+
+        .dt-buttons .btn-success {
+            background-color: #198754 !important;
+            border-color: #198754 !important;
+            color: white !important;
+        }
+
+        .dt-buttons .btn-danger {
+            background-color: #dc3545 !important;
+            border-color: #dc3545 !important;
+            color: white !important;
+        }
+
+        .dt-buttons .btn-info {
+            background-color: #0dcaf0 !important;
+            border-color: #0dcaf0 !important;
+            color: white !important;
+        }
+
         .badge-kelompok {
             background-color: #e3f2fd;
             color: #1976d2;
@@ -157,23 +171,6 @@
             font-weight: 500;
             padding: 4px 10px;
             border-radius: 20px;
-        }
-
-        .badge-status {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .badge-status.active {
-            background-color: #d1e7dd;
-            color: #0f5132;
-        }
-
-        .badge-status.inactive {
-            background-color: #f8d7da;
-            color: #842029;
         }
 
         /* Pagination Styles */
@@ -214,21 +211,6 @@
             border: none;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
-        }
-
-        .info-row {
-            display: flex;
-            margin-bottom: 10px;
-        }
-
-        .info-label {
-            font-weight: 600;
-            width: 120px;
-            color: #6c757d;
-        }
-
-        .info-value {
-            flex: 1;
         }
     </style>
 </head>
@@ -291,11 +273,11 @@
                             </a>
                             <div class="collapse show" id="masterDataSubmenu">
                                 <ul class="list-unstyled ps-4">
-                                    <li class="nav-item">
-                                        <a href="<?= site_url('pelaku_usaha') ?>" class="nav-link active">Pelaku Usaha</a>
-                                    </li>
                                     <li>
-                                        <a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a>
+                       <a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a>
+                    </li>
+                                    <li class="nav-item">
+                                        <a href="<?= site_url('jenis_usaha') ?>" class="nav-link active">Jenis Usaha</a>
                                     </li>
                                     <li>
                                         <a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a>
@@ -456,7 +438,7 @@
                     <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                         <div>
                             <h3 class="fw-bold mb-1">Master Data</h3>
-                            <h6 class="op-7 mb-0">Kelola Data Pelaku Usaha</h6>
+                            <h6 class="op-7 mb-0">Kelola Data Jenis Usaha</h6>
                         </div>
                         <div class="ms-md-auto py-2 py-md-0">
                             <button class="btn btn-primary-custom text-white"
@@ -471,10 +453,10 @@
                     <div class="modal fade" id="tambahDataModal" tabindex="-1">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content modal-form">
-                                <form action="<?= base_url('pelaku_usaha/simpan'); ?>" method="post">
+                                <form action="<?= base_url('jenis_usaha/simpan'); ?>" method="post">
                                     <div class="modal-header">
                                         <h5 class="modal-title">
-                                            <i class="fas fa-user-plus me-2"></i>Tambah Data Pelaku Usaha
+                                            <i class="fas fa-user-plus me-2"></i>Tambah Data Jenis Usaha
                                         </h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
@@ -482,41 +464,14 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Nama Pelaku Usaha <span class="text-danger">*</span></label>
-                                                    <input type="text" name="nama" class="form-control" required>
+                                                    <label>Nama Peternak</label>
+                                                    <input type="text" name="nama_peternak" class="form-control" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>NIK <span class="text-danger">*</span></label>
-                                                    <input type="text" name="nik" class="form-control" required maxlength="16">
-                                                    <small class="text-muted">16 digit angka</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Telepon</label>
-                                                    <input type="text" name="telepon" class="form-control" maxlength="15">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Jenis Usaha <span class="text-danger">*</span></label>
-                                                    <select name="jenis_usaha" class="form-control" required>
-                                                        <option value="">Pilih Jenis Usaha</option>
-                                                        <option value="Peternak Sapi">Peternak Sapi</option>
-                                                        <option value="Peternak Kambing">Peternak Kambing</option>
-                                                        <option value="Peternak Domba">Peternak Domba</option>
-                                                        <option value="Peternak Ayam">Peternak Ayam</option>
-                                                        <option value="Peternak Itik">Peternak Itik</option>
-                                                        <option value="Pedagang Ternak">Pedagang Ternak</option>
-                                                        <option value="Pengolah Hasil Ternak">Pengolah Hasil Ternak</option>
-                                                        <option value="Distributor Pakan">Distributor Pakan</option>
-                                                        <option value="Lainnya">Lainnya</option>
-                                                    </select>
+                                                    <label>NIK</label>
+                                                    <input type="text" name="nik" class="form-control" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -524,83 +479,74 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label>Alamat Lengkap <span class="text-danger">*</span></label>
+                                                    <label>Alamat Lengkap</label>
                                                     <textarea name="alamat" class="form-control" rows="3" required></textarea>
                                                 </div>
                                             </div>
                                         </div>
                                         
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Kecamatan <span class="text-danger">*</span></label>
-                                                    <select name="kecamatan" class="form-control" required>
-                                                        <option value="">Pilih Kecamatan</option>
-                                                        <option value="ASEMROWO">ASEMROWO</option>
-                                                        <option value="BENOWO">BENOWO</option>
-                                                        <option value="BUBUTAN">BUBUTAN</option>
-                                                        <option value="BULAK">BULAK</option>
-                                                        <option value="DUKUH PAKIS">DUKUH PAKIS</option>
-                                                        <option value="GAYUNGAN">GAYUNGAN</option>
-                                                        <option value="GENTENG">GENTENG</option>
-                                                        <option value="GUBENG">GUBENG</option>
-                                                        <option value="GUNUNG ANYAR">GUNUNG ANYAR</option>
-                                                        <option value="JAMBANGAN">JAMBANGAN</option>
-                                                        <option value="KARANG PILANG">KARANG PILANG</option>
-                                                        <option value="KENJERAN">KENJERAN</option>
-                                                        <option value="KREMBANGAN">KREMBANGAN</option>
-                                                        <option value="LAKARSANTRI">LAKARSANTRI</option>
-                                                        <option value="MULYOREJO">MULYOREJO</option>
-                                                        <option value="PABEAN CANTIAN">PABEAN CANTIAN</option>
-                                                        <option value="PAKAL">PAKAL</option>
-                                                        <option value="RUNGKUT">RUNGKUT</option>
-                                                        <option value="SAMBIKEREP">SAMBIKEREP</option>
-                                                        <option value="SAWAHAN">SAWAHAN</option>
-                                                        <option value="SEMAMPIR">SEMAMPIR</option>
-                                                        <option value="SIMOKERTO">SIMOKERTO</option>
-                                                        <option value="SUKOLILO">SUKOLILO</option>
-                                                        <option value="SUKOMANUNGGAL">SUKOMANUNGGAL</option>
-                                                        <option value="TAMBAKSARI">TAMBAKSARI</option>
-                                                        <option value="TANDES">TANDES</option>
-                                                        <option value="TEGALSARI">TEGALSARI</option>
-                                                        <option value="TENGGILIS MEJOYO">TENGGILIS MEJOYO</option>
-                                                        <option value="WIYUNG">WIYUNG</option>
-                                                        <option value="WONOCOLO">WONOCOLO</option>
-                                                        <option value="WONOKROMO">WONOKROMO</option>
-                                                    </select>
-                                                </div>
+                                           <div class="col-md-6">
+                                            <div class="form-group">
+                                                  <label>Kecamatan</label>
+                                                  <select name="kecamatan" class="form-control" required>
+                                                    <option value="">Pilih Kecamatan</option>
+                                                    <option value="ASEMROWO">ASEMROWO</option>
+                                                    <option value="BENOWO">BENOWO</option>
+                                                    <option value="BUBUTAN">BUBUTAN</option>
+                                                    <option value="BULAK">BULAK</option>
+                                                    <option value="DUKUH PAKIS">DUKUH PAKIS</option>
+                                                    <option value="GAYUNGAN">GAYUNGAN</option>
+                                                    <option value="GENTENG">GENTENG</option>
+                                                    <option value="GUBENG">GUBENG</option>
+                                                    <option value="GUNUNG ANYAR">GUNUNG ANYAR</option>
+                                                    <option value="JAMBANGAN">JAMBANGAN</option>
+                                                    <option value="KARANG PILANG">KARANG PILANG</option>
+                                                    <option value="KENJERAN">KENJERAN</option>
+                                                    <option value="KREMBANGAN">KREMBANGAN</option>
+                                                    <option value="LAKARSANTRI">LAKARSANTRI</option>
+                                                    <option value="MULYOREJO">MULYOREJO</option>
+                                                    <option value="PABEAN CANTIAN">PABEAN CANTIAN</option>
+                                                    <option value="PAKAL">PAKAL</option>
+                                                    <option value="RUNGKUT">RUNGKUT</option>
+                                                    <option value="SAMBIKEREP">SAMBIKEREP</option>
+                                                    <option value="SAWAHAN">SAWAHAN</option>
+                                                    <option value="SEMAMPIR">SEMAMPIR</option>
+                                                    <option value="SIMOKERTO">SIMOKERTO</option>
+                                                    <option value="SUKOLILO">SUKOLILO</option>
+                                                    <option value="SUKOMANUNGGAL">SUKOMANUNGGAL</option>
+                                                    <option value="TAMBAKSARI">TAMBAKSARI</option>
+                                                    <option value="TANDES">TANDES</option>
+                                                    <option value="TEGALSARI">TEGALSARI</option>
+                                                    <option value="TENGGILIS MEJOYO">TENGGILIS MEJOYO</option>
+                                                    <option value="WIYUNG">WIYUNG</option>
+                                                    <option value="WONOCOLO">WONOCOLO</option>
+                                                    <option value="WONOKROMO">WONOKROMO</option>
+                                                  </select>
+                                                  </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Status</label>
-                                                    <select name="status" class="form-control">
-                                                        <option value="Aktif">Aktif</option>
-                                                        <option value="Non-Aktif">Non-Aktif</option>
+                                                    <label>Kelurahan</label>
+                                                    <select name="kelurahan" class="form-control" required>
+                                                        <option value="">Pilih Kelurahan</option>
+                                                        <option value="Bendul Merisi">Bendul Merisi</option>
+                                                        <option value="Jemur Wonosari">Jemur Wonosari</option>
+                                                        <option value="Margorejo">Margorejo</option>
+                                                        <option value="Sidosermo">Sidosermo</option>
+                                                        <option value="Siwalankerto">Siwalankerto</option>
+                                                        <option value="Kebraon">Kebraon</option>
+                                                        <option value="Kedurus">Kedurus</option>
+                                                        <option value="Warugunung">Warugunung</option>
+                                                        <option value="Karangpilang">Karangpilang</option>
+                                                        <option value="Karang Poh">Karang Poh</option>
+                                                        <option value="Balongsari">Balongsari</option>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
                                         
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Latitude</label>
-                                                    <input type="text" name="latitude" class="form-control" placeholder="Contoh: -7.2575">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Longitude</label>
-                                                    <input type="text" name="longitude" class="form-control" placeholder="Contoh: 112.7521">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <small class="text-muted"><span class="text-danger">*</span> Field wajib diisi</small>
-                                            </div>
-                                        </div>
+                                       
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -619,11 +565,11 @@
                     <div class="modal fade" id="editDataModal" tabindex="-1">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content modal-form">
-                                <form action="<?= base_url('pelaku_usaha/update'); ?>" method="post">
+                                <form action="<?= base_url('jenis_usaha/update'); ?>" method="post">
                                     <input type="hidden" id="edit_id" name="id">
                                     <div class="modal-header">
                                         <h5 class="modal-title">
-                                            <i class="fas fa-edit me-2"></i>Edit Data Pelaku Usaha
+                                            <i class="fas fa-edit me-2"></i>Edit Data Jenis Usaha
                                         </h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
@@ -631,41 +577,14 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Nama Pelaku Usaha <span class="text-danger">*</span></label>
-                                                    <input type="text" id="edit_nama" name="nama" class="form-control" required>
+                                                    <label>Nama Peternak</label>
+                                                    <input type="text" id="edit_nama_peternak" name="nama_peternak" class="form-control" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>NIK <span class="text-danger">*</span></label>
-                                                    <input type="text" id="edit_nik" name="nik" class="form-control" required maxlength="16">
-                                                    <small class="text-muted">16 digit angka</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Telepon</label>
-                                                    <input type="text" id="edit_telepon" name="telepon" class="form-control" maxlength="15">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Jenis Usaha <span class="text-danger">*</span></label>
-                                                    <select id="edit_jenis_usaha" name="jenis_usaha" class="form-control" required>
-                                                        <option value="">Pilih Jenis Usaha</option>
-                                                        <option value="Peternak Sapi">Peternak Sapi</option>
-                                                        <option value="Peternak Kambing">Peternak Kambing</option>
-                                                        <option value="Peternak Domba">Peternak Domba</option>
-                                                        <option value="Peternak Ayam">Peternak Ayam</option>
-                                                        <option value="Peternak Itik">Peternak Itik</option>
-                                                        <option value="Pedagang Ternak">Pedagang Ternak</option>
-                                                        <option value="Pengolah Hasil Ternak">Pengolah Hasil Ternak</option>
-                                                        <option value="Distributor Pakan">Distributor Pakan</option>
-                                                        <option value="Lainnya">Lainnya</option>
-                                                    </select>
+                                                    <label>NIK</label>
+                                                    <input type="text" id="edit_nik" name="nik" class="form-control" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -673,7 +592,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label>Alamat Lengkap <span class="text-danger">*</span></label>
+                                                    <label>Alamat Lengkap</label>
                                                     <textarea id="edit_alamat" name="alamat" class="form-control" rows="3" required></textarea>
                                                 </div>
                                             </div>
@@ -682,7 +601,7 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Kecamatan <span class="text-danger">*</span></label>
+                                                    <label>Kecamatan</label>
                                                     <select id="edit_kecamatan" name="kecamatan" class="form-control" required>
                                                         <option value="">Pilih Kecamatan</option>
                                                         <option value="ASEMROWO">ASEMROWO</option>
@@ -721,35 +640,26 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Status</label>
-                                                    <select id="edit_status" name="status" class="form-control">
-                                                        <option value="Aktif">Aktif</option>
-                                                        <option value="Non-Aktif">Non-Aktif</option>
+                                                    <label>Kelurahan</label>
+                                                    <select id="edit_kelurahan" name="kelurahan" class="form-control" required>
+                                                        <option value="">Pilih Kelurahan</option>
+                                                        <option value="Bendul Merisi">Bendul Merisi</option>
+                                                        <option value="Jemur Wonosari">Jemur Wonosari</option>
+                                                        <option value="Margorejo">Margorejo</option>
+                                                        <option value="Sidosermo">Sidosermo</option>
+                                                        <option value="Siwalankerto">Siwalankerto</option>
+                                                        <option value="Kebraon">Kebraon</option>
+                                                        <option value="Kedurus">Kedurus</option>
+                                                        <option value="Warugunung">Warugunung</option>
+                                                        <option value="Karangpilang">Karangpilang</option>
+                                                        <option value="Karang Poh">Karang Poh</option>
+                                                        <option value="Balongsari">Balongsari</option>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
                                         
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Latitude</label>
-                                                    <input type="text" id="edit_latitude" name="latitude" class="form-control" placeholder="Contoh: -7.2575">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Longitude</label>
-                                                    <input type="text" id="edit_longitude" name="longitude" class="form-control" placeholder="Contoh: 112.7521">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <small class="text-muted"><span class="text-danger">*</span> Field wajib diisi</small>
-                                            </div>
-                                        </div>
+                                      
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -770,61 +680,43 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table id="pelakuUsahaTable" class="table table-hover w-100">
+                                        <table id="jenisUsahaTable" class="table table-hover w-100">
                                             <thead>
                                                 <tr>
                                                     <th width="50">No</th>
-                                                    <th>Nama</th>
-                                                    <th>NIK</th>
-                                                    <th>Telepon</th>
-                                                    <th>Jenis Usaha</th>
+                                                    <th>Nama Peternak</th>
+                                                    <th>Alamat</th>
                                                     <th>Kecamatan</th>
-                                                    <th>Status</th>
-                                                    <th width="150">Aksi</th>
+                                                    <th>Kelurahan</th>
+                                                    <th>NIK</th>
+                                                    <th width="100">Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php if(!empty($pelaku_usaha)): ?>
+                                                <?php if(!empty($jenis_usaha)): ?>
                                                     <?php $no = 1; ?>
-                                                    <?php foreach($pelaku_usaha as $row): ?>
+                                                    <?php foreach($jenis_usaha as $row): ?>
                                                         <tr>
                                                             <td><?= $no++; ?></td>
-                                                            <td><?= htmlspecialchars($row->nama ?? ''); ?></td>
-                                                            <td><?= htmlspecialchars($row->nik ?? '-'); ?></td>
-                                                            <td><?= htmlspecialchars($row->telepon ?? '-'); ?></td>
-                                                            <td>
-                                                                <span class="badge-kelompok">
-                                                                    <?= htmlspecialchars($row->jenis_usaha ?? '-'); ?>
-                                                                </span>
-                                                            </td>
+                                                            <td><?= htmlspecialchars($row->nama_peternak ?? ''); ?></td>
+                                                            <td><?= htmlspecialchars($row->alamat ?? ''); ?></td>
                                                             <td><?= htmlspecialchars($row->kecamatan ?? ''); ?></td>
+                                                            <td><?= htmlspecialchars($row->kelurahan ?? ''); ?></td>
+                                                            <td><?= htmlspecialchars($row->nik ?? '-'); ?></td>
                                                             <td>
-                                                                <?php if(($row->status ?? 'Aktif') == 'Aktif'): ?>
-                                                                    <span class="badge-status active">Aktif</span>
-                                                                <?php else: ?>
-                                                                    <span class="badge-status inactive">Non-Aktif</span>
-                                                                <?php endif; ?>
-                                                            </td>
-                                                            <td>
-                                                                <a href="<?= site_url('pelaku_usaha/detail/'.$row->id); ?>" class="btn btn-action btn-view" title="Detail">
-                                                                    <i class="fas fa-eye"></i>
-                                                                </a>
                                                                 <button class="btn btn-action btn-edit" title="Edit"
                                                                         data-id="<?= $row->id ?? ''; ?>"
-                                                                        data-nama="<?= htmlspecialchars($row->nama ?? ''); ?>"
+                                                                        data-nama="<?= htmlspecialchars($row->nama_peternak ?? ''); ?>"
                                                                         data-nik="<?= htmlspecialchars($row->nik ?? ''); ?>"
-                                                                        data-telepon="<?= htmlspecialchars($row->telepon ?? ''); ?>"
                                                                         data-alamat="<?= htmlspecialchars($row->alamat ?? ''); ?>"
                                                                         data-kecamatan="<?= htmlspecialchars($row->kecamatan ?? ''); ?>"
-                                                                        data-jenis_usaha="<?= htmlspecialchars($row->jenis_usaha ?? ''); ?>"
-                                                                        data-latitude="<?= htmlspecialchars($row->latitude ?? ''); ?>"
-                                                                        data-longitude="<?= htmlspecialchars($row->longitude ?? ''); ?>"
-                                                                        data-status="<?= htmlspecialchars($row->status ?? 'Aktif'); ?>">
+                                                                        data-kelurahan="<?= htmlspecialchars($row->kelurahan ?? ''); ?>"
+                                                                        data-telepon="<?= htmlspecialchars($row->telepon ?? ''); ?>">
                                                                     <i class="fas fa-edit"></i>
                                                                 </button>
                                                                 <button class="btn btn-action btn-delete" title="Hapus"
                                                                         data-id="<?= $row->id ?? ''; ?>"
-                                                                        data-nama="<?= htmlspecialchars($row->nama ?? ''); ?>">
+                                                                        data-nama="<?= htmlspecialchars($row->nama_peternak ?? ''); ?>">
                                                                     <i class="fas fa-trash"></i>
                                                                 </button>
                                                             </td>
@@ -832,7 +724,7 @@
                                                     <?php endforeach; ?>
                                                 <?php else: ?>
                                                     <tr>
-                                                        <td colspan="8" class="text-center">Tidak ada data</td>
+                                                        <td colspan="7" class="text-center">Tidak ada data</td>
                                                     </tr>
                                                 <?php endif; ?>
                                             </tbody>
@@ -871,8 +763,8 @@
 
     <script>
         $(document).ready(function () {
-            // Inisialisasi DataTable
-            var table = $("#pelakuUsahaTable").DataTable({
+            // Inisialisasi DataTable dengan tampilan seperti halaman akses pengguna
+            var table = $("#jenisUsahaTable").DataTable({
                 dom: "Bfrtip",
                 buttons: [
                     {
@@ -922,52 +814,49 @@
                 order: [[0, 'asc']]
             });
 
-            // Event untuk tombol edit
+            // Event untuk tombol edit - SAMA SEPERTI DI AKSES PENGGUNA
             $(document).on("click", ".btn-edit", function () {
                 var id = $(this).data('id');
                 var nama = $(this).data('nama');
                 var nik = $(this).data('nik');
-                var telepon = $(this).data('telepon');
                 var alamat = $(this).data('alamat');
                 var kecamatan = $(this).data('kecamatan');
-                var jenis_usaha = $(this).data('jenis_usaha');
-                var latitude = $(this).data('latitude');
-                var longitude = $(this).data('longitude');
-                var status = $(this).data('status');
+                var kelurahan = $(this).data('kelurahan');
+                var telepon = $(this).data('telepon');
                 
                 $('#edit_id').val(id);
-                $('#edit_nama').val(nama);
+                $('#edit_nama_peternak').val(nama);
                 $('#edit_nik').val(nik);
-                $('#edit_telepon').val(telepon);
                 $('#edit_alamat').val(alamat);
                 $('#edit_kecamatan').val(kecamatan);
-                $('#edit_jenis_usaha').val(jenis_usaha);
-                $('#edit_latitude').val(latitude);
-                $('#edit_longitude').val(longitude);
-                $('#edit_status').val(status);
+                $('#edit_kelurahan').val(kelurahan);
+                $('#edit_telepon').val(telepon);
                 
                 $('#editDataModal').modal('show');
             });
 
-            // Event untuk tombol hapus
+            // Event untuk tombol hapus - SAMA SEPERTI DI AKSES PENGGUNA
             $(document).on("click", ".btn-delete", function () {
                 var id = $(this).data('id');
                 var nama = $(this).data('nama');
                 
-                if (confirm("Apakah Anda yakin ingin menghapus data pelaku usaha: " + nama + "?")) {
-                    window.location.href = "<?= base_url('pelaku_usaha/hapus/'); ?>" + id;
+                if (confirm("Apakah Anda yakin ingin menghapus data jenis usaha: " + nama + "?")) {
+                    // Redirect langsung ke controller hapus - SAMA SEPERTI DI AKSES PENGGUNA
+                    window.location.href = "<?= base_url('jenis_usaha/hapus/'); ?>" + id;
                 }
             });
 
             // Event untuk validasi NIK (16 digit)
             $("input[name='nik'], #edit_nik").on("input", function () {
                 var nikValue = $(this).val();
+                // Hanya angka dan maksimal 16 digit
                 $(this).val(nikValue.replace(/\D/g, '').slice(0, 16));
             });
             
             // Event untuk validasi telepon
             $("input[name='telepon'], #edit_telepon").on("input", function () {
                 var phoneValue = $(this).val();
+                // Hanya angka
                 $(this).val(phoneValue.replace(/\D/g, ''));
             });
 
@@ -975,6 +864,11 @@
             setTimeout(function() {
                 $('.alert').alert('close');
             }, 5000);
+
+            // Refresh halaman setelah modal ditutup - SAMA SEPERTI DI AKSES PENGGUNA
+            $('#tambahDataModal, #editDataModal').on('hidden.bs.modal', function () {
+                location.reload();
+            });
         });
     </script>
 </body>

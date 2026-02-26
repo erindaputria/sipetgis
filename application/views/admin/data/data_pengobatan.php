@@ -335,12 +335,18 @@
                             </a>
                             <div class="collapse" id="masterDataSubmenu">
                                 <ul class="list-unstyled ps-4">
-                                    <li><a href="<?php echo base_url(); ?>pelaku_usaha" class="nav-link">Pelaku Usaha</a></li>
+                                    <li>
+                       <a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a>
+                    </li>
+                                    <li>
+                       <a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a>
+                    </li>
                                     <li><a href="<?php echo base_url(); ?>akses_pengguna" class="nav-link">Akses Pengguna</a></li>
                                     <li><a href="<?php echo base_url(); ?>pengobatan" class="nav-link">Pengobatan</a></li>
                                     <li><a href="<?php echo base_url(); ?>vaksinasi" class="nav-link">Vaksinasi</a></li>
                                     <li><a href="<?php echo base_url(); ?>komoditas" class="nav-link">Komoditas</a></li>
                                     <li><a href="<?php echo base_url(); ?>layanan_klinik" class="nav-link">Layanan Klinik</a></li>
+                                    <li><a href="<?php echo base_url(); ?>rpu" class="nav-link">RPU</a></li>
                                 </ul>
                             </div>
                         </li>

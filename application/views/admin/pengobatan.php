@@ -317,8 +317,11 @@
                             <div class="collapse show" id="masterDataSubmenu">
                                 <ul class="list-unstyled ps-4">
                                     <li>
-                                        <a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a>
-                                    </li>
+                       <a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a>
+                    </li>
+                                     <li>
+                       <a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a>
+                    </li>
                                     <li>
                                         <a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a>
                                     </li>
@@ -333,6 +336,9 @@
                                     </li>
                                      <li>
                       <a href="<?= site_url('layanan_klinik') ?>" class="nav-link">Layanan Klinik</a>
+                    </li>
+                    <li>
+                      <a href="<?= site_url('rpu') ?>" class="nav-link">RPU</a>
                     </li>
                                 </ul>
                             </div>

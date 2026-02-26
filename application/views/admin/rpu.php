@@ -2,7 +2,7 @@
 <html lang="id">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Master Data Akses Pengguna - SIPETGIS</title>
+    <title>Master Data RPU - SIPETGIS</title>
     <meta
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
       name="viewport"
@@ -44,6 +44,8 @@
       rel="stylesheet"
       href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css"
     />
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
       .dataTables_wrapper .dataTables_length,
       .dataTables_wrapper .dataTables_filter,
@@ -167,15 +169,6 @@
         color: white;
       }
 
-      .badge-kelompok {
-        background-color: #e3f2fd;
-        color: #1976d2;
-        font-size: 12px;
-        font-weight: 500;
-        padding: 4px 10px;
-        border-radius: 20px;
-      }
-
       .pagination .page-link {
         border: none;
         color: #495057;
@@ -207,66 +200,38 @@
         box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
       }
 
-      /* Style untuk badge peran */
-      .badge-peran {
-        font-size: 12px;
-        font-weight: 500;
-        padding: 4px 10px;
-        border-radius: 20px;
-        white-space: nowrap;
-      }
-
-      .badge-admin {
-        background-color: #e3f2fd;
-        color: #1976d2;
-      }
-
-      .badge-kepala {
-        background-color: #e8f5e9;
-        color: #2e7d32;
-      }
-
-      .badge-petugas {
-        background-color: #fff3e0;
-        color: #f57c00;
-      }
-
-      .badge-aktif {
-        background-color: #e8f5e9;
-        color: #2e7d32;
-      }
-
-      .badge-nonaktif {
-        background-color: #ffebee;
-        color: #d32f2f;
-      }
-
-      /* Password field styles */
-      .password-field {
-        position: relative;
-      }
-
-      .password-toggle {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        color: #6c757d;
-        cursor: pointer;
-      }
-
-      .password-toggle:hover {
-        color: #495057;
-      }
-
       /* Flash message styles */
       .alert {
         border-radius: 8px;
         border: none;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         margin-bottom: 20px;
+      }
+
+      /* Map preview styles */
+      .map-preview {
+        height: 200px;
+        border-radius: 8px;
+        margin-top: 10px;
+        border: 1px solid #dee2e6;
+        background-color: #f8f9fa;
+      }
+
+      .coordinate-badge {
+        background-color: #e3f2fd;
+        color: #1976d2;
+        font-size: 11px;
+        font-weight: 500;
+        padding: 2px 8px;
+        border-radius: 12px;
+        display: inline-block;
+        margin: 2px 0;
+      }
+
+      .text-muted-small {
+        font-size: 11px;
+        color: #6c757d;
+        margin-top: 2px;
       }
     </style>
   </head>
@@ -281,7 +246,7 @@
             <a href="<?php echo site_url('dashboard'); ?>" class="logo" style="text-decoration: none">
               <div
                 style="
-                  color: #1e3a8a; /* Biru navy yang elegan */
+                  color: #1e3a8a;
                   font-weight: 800;
                   font-size: 24px;
                   font-family:
@@ -345,9 +310,10 @@
                        <a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a>
                     </li>
                     <li>
-                      <a href="<?= site_url('akses_pengguna') ?>" class="nav-link active"
-                        >Akses Pengguna</a
-                      >
+                      <a href="<?= site_url('rpu') ?>" class="nav-link active">RPU</a>
+                    </li>
+                    <li>
+                      <a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a>
                     </li>
                     <li>
                       <a href="<?= site_url('pengobatan') ?>" class="nav-link">Pengobatan</a>
@@ -360,9 +326,6 @@
                     </li>
                      <li>
                       <a href="<?= site_url('layanan_klinik') ?>" class="nav-link">Layanan Klinik</a>
-                    </li>
-                    <li>
-                      <a href="<?= site_url('rpu') ?>" class="nav-link">RPU</a>
                     </li>
                   </ul>
                 </div>
@@ -549,7 +512,7 @@
             >
               <div>
                 <h3 class="fw-bold mb-1">Master Data</h3>
-                <h6 class="op-7 mb-0">Kelola Data Akses Pengguna</h6>
+                <h6 class="op-7 mb-0">Kelola Data Rumah Potong Unggas (RPU)</h6>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                 <button class="btn btn-primary-custom text-white"
@@ -564,103 +527,41 @@
             <div class="modal fade" id="tambahDataModal" tabindex="-1">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content modal-form">
-                  <form action="<?= base_url('akses_pengguna/simpan'); ?>" method="post">
+                  <form action="<?= base_url('rpu/simpan'); ?>" method="post">
                     <div class="modal-header">
                       <h5 class="modal-title">
-                        <i class="fas fa-user-plus me-2"></i>Tambah Data Akses Pengguna
+                        <i class="fas fa-plus-circle me-2"></i>Tambah Data RPU
                       </h5>
                       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                       <div class="row">
-                        <div class="col-md-6 mb-3">
-                          <label>Username <span class="text-danger">*</span></label>
-                          <input type="text" name="username" class="form-control" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label>Password <span class="text-danger">*</span></label>
-                          <div class="password-field">
-                            <input type="password" id="password" name="password" class="form-control" required>
-                            <button type="button" class="password-toggle" onclick="togglePassword('password')">
-                              <i class="fas fa-eye"></i>
-                            </button>
-                          </div>
+                        <div class="col-md-12 mb-3">
+                          <label>Nama RPU/Pejagal <span class="text-danger">*</span></label>
+                          <input type="text" name="pejagal" class="form-control" placeholder="Contoh: RPU Sumber Rejeki" required>
+                          <small class="text-muted">Nama tempat pemotongan unggas</small>
                         </div>
                       </div>
                       
                       <div class="row">
                         <div class="col-md-6 mb-3">
-                          <label>Konfirmasi Password <span class="text-danger">*</span></label>
-                          <div class="password-field">
-                            <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
-                            <button type="button" class="password-toggle" onclick="togglePassword('confirm_password')">
-                              <i class="fas fa-eye"></i>
-                            </button>
-                          </div>
+                          <label>Latitude</label>
+                          <input type="text" id="latitude" name="latitude" class="form-control" placeholder="Contoh: -7.2574719">
+                          <small class="text-muted">Koordinat lintang (opsional)</small>
                         </div>
                         <div class="col-md-6 mb-3">
-                          <label>Level <span class="text-danger">*</span></label>
-                          <select name="level" class="form-control" required>
-                            <option value="">Pilih Level</option>
-                            <option value="Administrator">Administrator</option>
-                            <option value="Petugas Lapangan">Petugas Lapangan</option>
-                            <option value="Kepala Dinas">Kepala Dinas</option>
-                          </select>
+                          <label>Longitude</label>
+                          <input type="text" id="longitude" name="longitude" class="form-control" placeholder="Contoh: 112.7520883">
+                          <small class="text-muted">Koordinat bujur (opsional)</small>
                         </div>
                       </div>
-
+                      
+                      <!-- Map Preview -->
                       <div class="row">
-                        <div class="col-md-6 mb-3">
-                          <label>Telepon <span class="text-danger">*</span></label>
-                          <input type="text" name="telepon" class="form-control" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label>Kecamatan <span class="text-danger">*</span></label>
-                          <select name="kecamatan" class="form-control" required>
-                            <option value="">Pilih Kecamatan</option>
-                            <option value="ASEMROWO">ASEMROWO</option>
-                            <option value="BENOWO">BENOWO</option>
-                            <option value="BUBUTAN">BUBUTAN</option>
-                            <option value="BULAK">BULAK</option>
-                            <option value="DUKUH PAKIS">DUKUH PAKIS</option>
-                            <option value="GAYUNGAN">GAYUNGAN</option>
-                            <option value="GENTENG">GENTENG</option>
-                            <option value="GUBENG">GUBENG</option>
-                            <option value="GUNUNG ANYAR">GUNUNG ANYAR</option>
-                            <option value="JAMBANGAN">JAMBANGAN</option>
-                            <option value="KARANG PILANG">KARANG PILANG</option>
-                            <option value="KENJERAN">KENJERAN</option>
-                            <option value="KREMBANGAN">KREMBANGAN</option>
-                            <option value="LAKARSANTRI">LAKARSANTRI</option>
-                            <option value="MULYOREJO">MULYOREJO</option>
-                            <option value="PABEAN CANTIAN">PABEAN CANTIAN</option>
-                            <option value="PAKAL">PAKAL</option>
-                            <option value="RUNGKUT">RUNGKUT</option>
-                            <option value="SAMBIKEREP">SAMBIKEREP</option>
-                            <option value="SAWAHAN">SAWAHAN</option>
-                            <option value="SEMAMPIR">SEMAMPIR</option>
-                            <option value="SIMOKERTO">SIMOKERTO</option>
-                            <option value="SUKOLILO">SUKOLILO</option>
-                            <option value="SUKOMANUNGGAL">SUKOMANUNGGAL</option>
-                            <option value="TAMBAKSARI">TAMBAKSARI</option>
-                            <option value="TANDES">TANDES</option>
-                            <option value="TEGALSARI">TEGALSARI</option>
-                            <option value="TENGGILIS MEJOYO">TENGGILIS MEJOYO</option>
-                            <option value="WIYUNG">WIYUNG</option>
-                            <option value="WONOCOLO">WONOCOLO</option>
-                            <option value="WONOKROMO">WONOKROMO</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-md-6 mb-3">
-                          <label>Status <span class="text-danger">*</span></label>
-                          <select name="status" class="form-control" required>
-                            <option value="">Pilih Status</option>
-                            <option value="Aktif">Aktif</option>
-                            <option value="Non-Aktif">Non-Aktif</option>
-                          </select>
+                        <div class="col-md-12">
+                          <label>Preview Peta</label>
+                          <div id="mapPreview" class="map-preview"></div>
+                          <small class="text-muted">Peta akan muncul jika latitude dan longitude diisi</small>
                         </div>
                       </div>
                     </div>
@@ -681,92 +582,39 @@
             <div class="modal fade" id="editDataModal" tabindex="-1">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content modal-form">
-                  <form action="<?= base_url('akses_pengguna/update'); ?>" method="post">
+                  <form action="<?= base_url('rpu/update'); ?>" method="post">
                     <input type="hidden" id="edit_id" name="id">
                     <div class="modal-header">
                       <h5 class="modal-title">
-                        <i class="fas fa-edit me-2"></i>Edit Data Akses Pengguna
+                        <i class="fas fa-edit me-2"></i>Edit Data RPU
                       </h5>
                       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                       <div class="row">
-                        <div class="col-md-6 mb-3">
-                          <label>Username <span class="text-danger">*</span></label>
-                          <input type="text" id="edit_username" name="username" class="form-control" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label>Password <span class="text-muted">(Kosongkan jika tidak diubah)</span></label>
-                          <div class="password-field">
-                            <input type="password" id="edit_password" name="password" class="form-control">
-                            <button type="button" class="password-toggle" onclick="togglePassword('edit_password')">
-                              <i class="fas fa-eye"></i>
-                            </button>
-                          </div>
+                        <div class="col-md-12 mb-3">
+                          <label>Nama RPU/Pejagal <span class="text-danger">*</span></label>
+                          <input type="text" id="edit_pejagal" name="pejagal" class="form-control" required>
                         </div>
                       </div>
                       
                       <div class="row">
                         <div class="col-md-6 mb-3">
-                          <label>Level <span class="text-danger">*</span></label>
-                          <select id="edit_level" name="level" class="form-control" required>
-                            <option value="">Pilih Level</option>
-                            <option value="Administrator">Administrator</option>
-                            <option value="Petugas Lapangan">Petugas Lapangan</option>
-                            <option value="Kepala Dinas">Kepala Dinas</option>
-                          </select>
+                          <label>Latitude</label>
+                          <input type="text" id="edit_latitude" name="latitude" class="form-control" placeholder="Contoh: -7.2574719">
                         </div>
                         <div class="col-md-6 mb-3">
-                          <label>Telepon <span class="text-danger">*</span></label>
-                          <input type="text" id="edit_telepon" name="telepon" class="form-control" required>
+                          <label>Longitude</label>
+                          <input type="text" id="edit_longitude" name="longitude" class="form-control" placeholder="Contoh: 112.7520883">
                         </div>
                       </div>
-
+                      
+                      <!-- Map Preview for Edit -->
                       <div class="row">
-                        <div class="col-md-6 mb-3">
-                          <label>Kecamatan <span class="text-danger">*</span></label>
-                          <select id="edit_kecamatan" name="kecamatan" class="form-control" required>
-                            <option value="">Pilih Kecamatan</option>
-                            <option value="ASEMROWO">ASEMROWO</option>
-                            <option value="BENOWO">BENOWO</option>
-                            <option value="BUBUTAN">BUBUTAN</option>
-                            <option value="BULAK">BULAK</option>
-                            <option value="DUKUH PAKIS">DUKUH PAKIS</option>
-                            <option value="GAYUNGAN">GAYUNGAN</option>
-                            <option value="GENTENG">GENTENG</option>
-                            <option value="GUBENG">GUBENG</option>
-                            <option value="GUNUNG ANYAR">GUNUNG ANYAR</option>
-                            <option value="JAMBANGAN">JAMBANGAN</option>
-                            <option value="KARANG PILANG">KARANG PILANG</option>
-                            <option value="KENJERAN">KENJERAN</option>
-                            <option value="KREMBANGAN">KREMBANGAN</option>
-                            <option value="LAKARSANTRI">LAKARSANTRI</option>
-                            <option value="MULYOREJO">MULYOREJO</option>
-                            <option value="PABEAN CANTIAN">PABEAN CANTIAN</option>
-                            <option value="PAKAL">PAKAL</option>
-                            <option value="RUNGKUT">RUNGKUT</option>
-                            <option value="SAMBIKEREP">SAMBIKEREP</option>
-                            <option value="SAWAHAN">SAWAHAN</option>
-                            <option value="SEMAMPIR">SEMAMPIR</option>
-                            <option value="SIMOKERTO">SIMOKERTO</option>
-                            <option value="SUKOLILO">SUKOLILO</option>
-                            <option value="SUKOMANUNGGAL">SUKOMANUNGGAL</option>
-                            <option value="TAMBAKSARI">TAMBAKSARI</option>
-                            <option value="TANDES">TANDES</option>
-                            <option value="TEGALSARI">TEGALSARI</option>
-                            <option value="TENGGILIS MEJOYO">TENGGILIS MEJOYO</option>
-                            <option value="WIYUNG">WIYUNG</option>
-                            <option value="WONOCOLO">WONOCOLO</option>
-                            <option value="WONOKROMO">WONOKROMO</option>
-                          </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label>Status <span class="text-danger">*</span></label>
-                          <select id="edit_status" name="status" class="form-control" required>
-                            <option value="">Pilih Status</option>
-                            <option value="Aktif">Aktif</option>
-                            <option value="Non-Aktif">Non-Aktif</option>
-                          </select>
+                        <div class="col-md-12">
+                          <label>Preview Peta</label>
+                          <div id="editMapPreview" class="map-preview"></div>
+                          <small class="text-muted">Peta akan muncul jika latitude dan longitude diisi</small>
                         </div>
                       </div>
                     </div>
@@ -783,29 +631,38 @@
               </div>
             </div>
 
-            <!-- Modal View Password -->
-            <div class="modal fade" id="viewPasswordModal" tabindex="-1">
+            <!-- Modal View Koordinat -->
+            <div class="modal fade" id="viewKoordinatModal" tabindex="-1">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title">
-                      <i class="fas fa-key me-2"></i>Password Pengguna
+                      <i class="fas fa-map-marker-alt me-2"></i>Detail Koordinat RPU
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                   </div>
                   <div class="modal-body">
                     <div class="mb-3">
-                      <label class="form-label">Username</label>
-                      <input type="text" id="view_username" class="form-control" readonly>
+                      <label class="form-label">Nama RPU/Pejagal</label>
+                      <input type="text" id="view_pejagal" class="form-control" readonly>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label">Latitude</label>
+                        <input type="text" id="view_latitude" class="form-control" readonly>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label">Longitude</label>
+                        <input type="text" id="view_longitude" class="form-control" readonly>
+                      </div>
                     </div>
                     <div class="mb-3">
-                      <label class="form-label">Password</label>
-                      <div class="input-group">
-                        <input type="password" id="view_password" class="form-control" readonly>
-                        <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('view_password')">
-                          <i class="fas fa-eye"></i>
-                        </button>
-                      </div>
+                      <label class="form-label">Preview Lokasi</label>
+                      <div id="viewMapPreview" class="map-preview" style="height: 250px;"></div>
+                    </div>
+                    <div class="alert alert-info">
+                      <i class="fas fa-info-circle me-2"></i>
+                      Koordinat ini dapat digunakan untuk menandai lokasi RPU pada peta.
                     </div>
                   </div>
                   <div class="modal-footer">
@@ -822,79 +679,74 @@
                   <div class="card-body">
                     <div class="table-responsive">
                       <table
-                        id="aksesPenggunaTable"
+                        id="rpuTable"
                         class="table table-hover w-100"
                       >
                         <thead>
                           <tr>
                             <th width="50">No</th>
-                            <th>Username</th>
-                            <th>Level</th>
-                            <th>Telepon</th>
-                            <th>Kecamatan</th>
-                            <th>Status</th>
-                            <th width="130">Aksi</th>
+                            <th>Nama RPU/Pejagal</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                            <th width="150">Aksi</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <?php if(!empty($akses)): ?>
+                          <?php if(!empty($rpu)): ?>
                             <?php $no = 1; ?>
-                            <?php foreach($akses as $row): ?>
+                            <?php foreach($rpu as $row): ?>
                               <tr>
                                 <td><?= $no++; ?></td>
-                                <td><?= htmlspecialchars($row->username ?? ''); ?></td>
+                                <td><?= htmlspecialchars($row->pejagal ?? ''); ?></td>
                                 <td>
-                                  <span class="badge-peran 
-                                    <?php 
-                                      if(isset($row->level)) {
-                                        if($row->level == 'Administrator') echo 'badge-admin';
-                                        elseif($row->level == 'Kepala Dinas') echo 'badge-kepala';
-                                        else echo 'badge-petugas';
-                                      }
-                                    ?>">
-                                    <?= htmlspecialchars($row->level ?? ''); ?>
-                                  </span>
-                                </td>
-                                <td><?= htmlspecialchars($row->telepon ?? ''); ?></td>
-                                <td><?= htmlspecialchars($row->kecamatan ?? ''); ?></td>
-                                <td>
-                                  <span class="badge-peran 
-                                    <?php 
-                                      if(isset($row->status)) {
-                                        if($row->status == 'Aktif') echo 'badge-aktif';
-                                        else echo 'badge-nonaktif';
-                                      }
-                                    ?>">
-                                    <?= htmlspecialchars($row->status ?? ''); ?>
-                                  </span>
+                                  <?php if(!empty($row->latitude)): ?>
+                                    <span class="coordinate-badge">
+                                      <i class="fas fa-map-pin me-1"></i><?= htmlspecialchars($row->latitude); ?>
+                                    </span>
+                                  <?php else: ?>
+                                    <span class="text-muted">-</span>
+                                  <?php endif; ?>
                                 </td>
                                 <td>
-                                  <button class="btn btn-action btn-view" title="Lihat Password"
-                                          data-id="<?= $row->id ?? ''; ?>"
-                                          data-username="<?= htmlspecialchars($row->username ?? ''); ?>"
-                                          data-password="<?= htmlspecialchars($row->password ?? ''); ?>">
-                                    <i class="fas fa-key"></i>
-                                  </button>
-                                  <button class="btn btn-action btn-edit" title="Edit"
-                                          data-id="<?= $row->id ?? ''; ?>"
-                                          data-username="<?= htmlspecialchars($row->username ?? ''); ?>"
-                                          data-level="<?= htmlspecialchars($row->level ?? ''); ?>"
-                                          data-telepon="<?= htmlspecialchars($row->telepon ?? ''); ?>"
-                                          data-kecamatan="<?= htmlspecialchars($row->kecamatan ?? ''); ?>"
-                                          data-status="<?= htmlspecialchars($row->status ?? ''); ?>">
-                                    <i class="fas fa-edit"></i>
-                                  </button>
-                                  <button class="btn btn-action btn-delete" title="Hapus"
-                                          data-id="<?= $row->id ?? ''; ?>"
-                                          data-username="<?= htmlspecialchars($row->username ?? ''); ?>">
-                                    <i class="fas fa-trash"></i>
-                                  </button>
+                                  <?php if(!empty($row->longitude)): ?>
+                                    <span class="coordinate-badge">
+                                      <i class="fas fa-map-pin me-1"></i><?= htmlspecialchars($row->longitude); ?>
+                                    </span>
+                                  <?php else: ?>
+                                    <span class="text-muted">-</span>
+                                  <?php endif; ?>
+                                </td>
+                                <td>
+                                  <!-- Cari bagian ini di modal view koordinat -->
+<button class="btn btn-action btn-view" title="Lihat Koordinat"
+        data-id="<?= $row->id ?? ''; ?>"  <!-- Ganti id_rpu menjadi id -->
+        data-pejagal="<?= htmlspecialchars($row->pejagal ?? ''); ?>"
+        data-latitude="<?= htmlspecialchars($row->latitude ?? ''); ?>"
+        data-longitude="<?= htmlspecialchars($row->longitude ?? ''); ?>">
+    <i class="fas fa-map-marker-alt"></i>
+</button>
+
+<!-- Cari bagian ini untuk tombol edit -->
+<button class="btn btn-action btn-edit" title="Edit"
+        data-id="<?= $row->id ?? ''; ?>"  <!-- Ganti id_rpu menjadi id -->
+        data-pejagal="<?= htmlspecialchars($row->pejagal ?? ''); ?>"
+        data-latitude="<?= htmlspecialchars($row->latitude ?? ''); ?>"
+        data-longitude="<?= htmlspecialchars($row->longitude ?? ''); ?>">
+    <i class="fas fa-edit"></i>
+</button>
+
+<!-- Cari bagian ini untuk tombol hapus -->
+<button class="btn btn-action btn-delete" title="Hapus"
+        data-id="<?= $row->id ?? ''; ?>"  <!-- Ganti id_rpu menjadi id -->
+        data-pejagal="<?= htmlspecialchars($row->pejagal ?? ''); ?>">
+    <i class="fas fa-trash"></i>
+</button>
                                 </td>
                               </tr>
                             <?php endforeach; ?>
                           <?php else: ?>
                             <tr>
-                              <td colspan="7" class="text-center">Tidak ada data</td>
+                              <td colspan="5" class="text-center">Tidak ada data</td>
                             </tr>
                           <?php endif; ?>
                         </tbody>
@@ -924,43 +776,63 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-      // Fungsi toggle password visibility
-      function togglePassword(inputId) {
-        const input = document.getElementById(inputId);
-        const button = input.parentElement.querySelector('.password-toggle');
-        
-        if (input.type === 'password') {
-          input.type = 'text';
-          button.innerHTML = '<i class="fas fa-eye-slash"></i>';
-        } else {
-          input.type = 'password';
-          button.innerHTML = '<i class="fas fa-eye"></i>';
+      // Variabel untuk menyimpan instance map
+      let map, editMap, viewMap;
+      let marker, editMarker, viewMarker;
+
+      // Fungsi untuk inisialisasi map
+      function initMap(containerId, lat, lng, mapRef) {
+        if (mapRef) {
+          mapRef.remove();
         }
+        
+        const defaultLat = -7.2574719; // Default Surabaya
+        const defaultLng = 112.7520883; // Default Surabaya
+        
+        const mapLat = (lat && !isNaN(parseFloat(lat))) ? parseFloat(lat) : defaultLat;
+        const mapLng = (lng && !isNaN(parseFloat(lng))) ? parseFloat(lng) : defaultLng;
+        
+        const newMap = L.map(containerId).setView([mapLat, mapLng], 13);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors'
+        }).addTo(newMap);
+        
+        if (lat && lng && !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lng))) {
+          const newMarker = L.marker([parseFloat(lat), parseFloat(lng)]).addTo(newMap);
+          return { map: newMap, marker: newMarker };
+        }
+        
+        return { map: newMap, marker: null };
       }
 
-      // Password validation
-      function validatePassword() {
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirm_password').value;
+      // Fungsi untuk update marker
+      function updateMarker(mapInstance, markerRef, lat, lng) {
+        if (!mapInstance) return null;
         
-        if (password !== confirmPassword) {
-          alert('Password dan Konfirmasi Password tidak sama!');
-          return false;
+        const latNum = parseFloat(lat);
+        const lngNum = parseFloat(lng);
+        
+        if (isNaN(latNum) || isNaN(lngNum)) return markerRef;
+        
+        mapInstance.setView([latNum, lngNum], 15);
+        
+        if (markerRef) {
+          markerRef.setLatLng([latNum, lngNum]);
+          return markerRef;
+        } else {
+          return L.marker([latNum, lngNum]).addTo(mapInstance);
         }
-        
-        if (password.length < 6) {
-          alert('Password minimal 6 karakter!');
-          return false;
-        }
-        
-        return true;
       }
 
       $(document).ready(function () {
-        // Inisialisasi DataTable dengan tampilan seperti pelaku usaha
-        var table = $("#aksesPenggunaTable").DataTable({
+        // Inisialisasi DataTable
+        var table = $("#rpuTable").DataTable({
           dom: "Bfrtip",
           buttons: [
             {
@@ -1010,31 +882,40 @@
           order: [[0, 'asc']]
         });
 
-        // Event untuk tombol lihat password
+        // Event untuk tombol lihat koordinat
         $(document).on("click", ".btn-view", function () {
-          var username = $(this).data('username');
-          var password = $(this).data('password');
+          var pejagal = $(this).data('pejagal');
+          var latitude = $(this).data('latitude');
+          var longitude = $(this).data('longitude');
           
-          $('#view_username').val(username);
-          $('#view_password').val(password);
-          $('#viewPasswordModal').modal('show');
+          $('#view_pejagal').val(pejagal);
+          $('#view_latitude').val(latitude || '-');
+          $('#view_longitude').val(longitude || '-');
+          
+          $('#viewKoordinatModal').modal('show');
+          
+          // Inisialisasi map di modal view setelah modal ditampilkan
+          setTimeout(function() {
+            if (viewMap) {
+              viewMap.remove();
+            }
+            const result = initMap('viewMapPreview', latitude, longitude, viewMap);
+            viewMap = result.map;
+            viewMarker = result.marker;
+          }, 500);
         });
 
         // Event untuk tombol edit
         $(document).on("click", ".btn-edit", function () {
           var id = $(this).data('id');
-          var username = $(this).data('username');
-          var level = $(this).data('level');
-          var telepon = $(this).data('telepon');
-          var kecamatan = $(this).data('kecamatan');
-          var status = $(this).data('status');
+          var pejagal = $(this).data('pejagal');
+          var latitude = $(this).data('latitude');
+          var longitude = $(this).data('longitude');
           
           $('#edit_id').val(id);
-          $('#edit_username').val(username);
-          $('#edit_level').val(level);
-          $('#edit_telepon').val(telepon);
-          $('#edit_kecamatan').val(kecamatan);
-          $('#edit_status').val(status);
+          $('#edit_pejagal').val(pejagal);
+          $('#edit_latitude').val(latitude);
+          $('#edit_longitude').val(longitude);
           
           $('#editDataModal').modal('show');
         });
@@ -1042,34 +923,76 @@
         // Event untuk tombol hapus
         $(document).on("click", ".btn-delete", function () {
           var id = $(this).data('id');
-          var username = $(this).data('username');
+          var pejagal = $(this).data('pejagal');
           
-          if (confirm("Apakah Anda yakin ingin menghapus data pengguna: " + username + "?")) {
-            // Redirect langsung ke controller hapus
-            window.location.href = "<?= base_url('akses_pengguna/hapus/'); ?>" + id;
+          if (confirm("Apakah Anda yakin ingin menghapus data RPU: " + pejagal + "?")) {
+            window.location.href = "<?= base_url('rpu/hapus/'); ?>" + id;
           }
         });
 
-        // Form validation untuk tambah data
-        $('form').submit(function(e) {
-          const formId = $(this).attr('id') || '';
-          
-          if (formId.includes('tambah') || $(this).attr('action').includes('simpan')) {
-            const password = $('#password').val();
-            const confirmPassword = $('#confirm_password').val();
-            
-            if (password !== confirmPassword) {
-              e.preventDefault();
-              alert('Password dan Konfirmasi Password tidak sama!');
-              return false;
+        // Event ketika modal tambah ditampilkan
+        $('#tambahDataModal').on('shown.bs.modal', function () {
+          setTimeout(function() {
+            if (map) {
+              map.remove();
             }
-            
-            if (password.length < 6) { 
-              e.preventDefault();
-              alert('Password minimal 6 karakter!');
-              return false;
+            const lat = $('#latitude').val();
+            const lng = $('#longitude').val();
+            const result = initMap('mapPreview', lat, lng, map);
+            map = result.map;
+            marker = result.marker;
+          }, 500);
+        });
+
+        // Event ketika modal edit ditampilkan
+        $('#editDataModal').on('shown.bs.modal', function () {
+          setTimeout(function() {
+            if (editMap) {
+              editMap.remove();
             }
+            const lat = $('#edit_latitude').val();
+            const lng = $('#edit_longitude').val();
+            const result = initMap('editMapPreview', lat, lng, editMap);
+            editMap = result.map;
+            editMarker = result.marker;
+          }, 500);
+        });
+
+        // Update map preview saat latitude/longitude berubah di modal tambah
+        $('#latitude, #longitude').on('input', function() {
+          if (map) {
+            const lat = $('#latitude').val();
+            const lng = $('#longitude').val();
+            marker = updateMarker(map, marker, lat, lng);
           }
+        });
+
+        // Update map preview saat latitude/longitude berubah di modal edit
+        $('#edit_latitude, #edit_longitude').on('input', function() {
+          if (editMap) {
+            const lat = $('#edit_latitude').val();
+            const lng = $('#edit_longitude').val();
+            editMarker = updateMarker(editMap, editMarker, lat, lng);
+          }
+        });
+
+        // Validasi input koordinat (hanya angka, titik, dan minus)
+        $('input[name="latitude"], input[name="longitude"], #edit_latitude, #edit_longitude').on('input', function() {
+          let value = $(this).val();
+          value = value.replace(/[^0-9.-]/g, '');
+          
+          // Pastikan hanya satu titik desimal
+          const parts = value.split('.');
+          if (parts.length > 2) {
+            value = parts[0] + '.' + parts.slice(1).join('');
+          }
+          
+          // Pastikan minus hanya di awal
+          if (value.indexOf('-') > 0) {
+            value = value.replace(/-/g, '');
+          }
+          
+          $(this).val(value);
         });
 
         // Auto close alerts

@@ -10,7 +10,7 @@ class P_Dashboard_Petugas extends CI_Controller {
         $this->load->library('session');
         $this->load->model('P_Input_Pengobatan_Model');
         $this->load->model('P_Input_Vaksinasi_Model');
-        $this->load->model('P_Input_Pelaku_Usaha_Model');
+        $this->load->model('P_Input_Jenis_Usaha_Model');
         
         // Cek apakah user sudah login
         if(!$this->session->userdata('username')) {
@@ -36,40 +36,40 @@ class P_Dashboard_Petugas extends CI_Controller {
         $total_vaksinasi = $this->P_Input_Vaksinasi_Model->count_all($kecamatan);
         $total_ternak_divaksin = $this->P_Input_Vaksinasi_Model->sum_jumlah($kecamatan);
         
-        // Statistik Pelaku Usaha
-        $total_peternak = $this->P_Input_Pelaku_Usaha_Model->count_unique_peternak($kecamatan);
-        $total_tambah = $this->P_Input_Pelaku_Usaha_Model->sum_tambah($kecamatan);
-        $total_kurang = $this->P_Input_Pelaku_Usaha_Model->sum_kurang($kecamatan);
-        $total_ternak_saat_ini = $total_tambah - $total_kurang;
+        // Statistik Jenis Usaha
+        $total_pemilik_usaha = $this->P_Input_Jenis_Usaha_Model->count_unique_pemilik($kecamatan);
+        $total_jumlah_ternak = $this->P_Input_Jenis_Usaha_Model->get_total_ternak_saat_ini($kecamatan);
+        $total_usaha = $this->P_Input_Jenis_Usaha_Model->count_all($kecamatan);
         
-        // Data komoditas untuk chart
-        $komoditas = $this->P_Input_Pelaku_Usaha_Model->get_statistik_komoditas($kecamatan);
-        $jumlah_komoditas = count($komoditas);
+        // Data komoditas ternak untuk chart
+        $komoditas_ternak = $this->P_Input_Jenis_Usaha_Model->get_statistik_jenis_usaha($kecamatan);
+        $jumlah_jenis_usaha = count($komoditas_ternak);
         
         // Data untuk chart
         $chart_labels = [];
         $chart_data = [];
-        $chart_colors = ['#1a73e8', '#34a853', '#fbbc05', '#ea4335', '#9334e6'];
+        $chart_colors = ['#1a73e8', '#34a853', '#fbbc05', '#ea4335', '#9334e6', '#ff6d00', '#00acc1', '#8e24aa'];
         
-        foreach ($komoditas as $index => $item) {
-            $chart_labels[] = $item['komoditas_ternak'];
-            $chart_data[] = (int)$item['total_ternak'];
+        foreach ($komoditas_ternak as $index => $item) {
+            $chart_labels[] = $item['jenis_usaha']; // Ini akan berisi nilai dari komoditas_ternak
+            $chart_data[] = (int)$item['total_jumlah'];
         }
         
         // Jika tidak ada data, gunakan default
         if (empty($chart_labels)) {
             $chart_labels = ['Sapi Potong', 'Kambing', 'Ayam Ras Petelur', 'Ayam Kampung', 'Itik'];
             $chart_data = [0, 0, 0, 0, 0];
-            $jumlah_komoditas = 5;
+            $jumlah_jenis_usaha = 5;
         }
         
         // Kirim data ke view
-        $data['total_peternak'] = $total_peternak;
-        $data['jumlah_komoditas'] = $jumlah_komoditas;
-        $data['total_ternak'] = $total_ternak_saat_ini;
+        $data['total_pemilik_usaha'] = $total_pemilik_usaha;
+        $data['jumlah_jenis_usaha'] = $jumlah_jenis_usaha;
+        $data['total_ternak'] = $total_jumlah_ternak;
+        $data['total_usaha'] = $total_usaha;
         $data['total_pengobatan'] = $total_pengobatan;
         $data['total_ternak_diobati'] = $total_ternak_diobati;
-        $data['total_vaksinasi'] = $total_vaksinasi;
+        $data['total_vaksinasi'] = $total_vaksinasi; 
         $data['total_ternak_divaksin'] = $total_ternak_divaksin; 
         $data['chart_labels'] = $chart_labels;
         $data['chart_data'] = $chart_data;
