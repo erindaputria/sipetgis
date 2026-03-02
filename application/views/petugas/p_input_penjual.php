@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Input Penjual Pakan Ternak - SIPETGIS</title>
+    <title>Input Penjual - SIPETGIS</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/kaiadmin/favicon.ico" type="image/x-icon" />
 
@@ -159,7 +159,7 @@
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
         }
         
-        /* PERBAIKAN UTAMA - FORM CONTAINER */
+        /* Form container */
         .form-container {
             display: none;
             overflow: hidden;
@@ -203,7 +203,7 @@
             text-align: center;
             padding: 20px;
         }
-        /* Tambahan style untuk profile */
+        /* Profile style */
         .profile-username {
             display: flex;
             align-items: center;
@@ -228,7 +228,7 @@
             display: none;
         }
         
-        /* Style untuk filter periode */
+        /* Filter section */
         .filter-section {
             background: #f8f9fa;
             border-radius: 8px;
@@ -237,7 +237,7 @@
             border: 1px solid #dee2e6;
         }
         
-        /* Style untuk tombol DataTables */
+        /* DataTables buttons */
         .dt-buttons .btn {
             border-radius: 5px;
             margin-right: 5px;
@@ -268,7 +268,7 @@
             color: white !important;
         }
         
-        /* Pagination styling */
+        /* Pagination */
         .pagination .page-link {
             border: none;
             color: #495057;
@@ -287,29 +287,73 @@
         .foto-link { color: #1a73e8; text-decoration: none; cursor: pointer; }
         .foto-link:hover { text-decoration: underline; color: #0d47a1; }
         
+        /* Badge for surat ijin */
+        .badge-ijin-y {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+        .badge-ijin-n {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+        
+        /* Badge for dagangan */
+        .badge-dagangan-obat {
+            background-color: #cce5ff;
+            color: #004085;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+        .badge-dagangan-pakan {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+        .badge-dagangan-peralatan {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+        
         /* Layout */
         .dataTables_filter { float: right !important; }
         .dataTables_length { float: left !important; }
         .dt-buttons { float: left !important; margin-right: 10px; }
         
-        /* Badge untuk surat ijin */
-        .badge-ijin-y {
-            background-color: #28a745;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            display: inline-block;
+        /* Obat fields container */
+        .obat-fields {
+            display: none;
+            transition: all 0.3s ease;
         }
-        .badge-ijin-n {
-            background-color: #dc3545;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            display: inline-block;
+        .obat-fields.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -369,27 +413,26 @@
                             </a>
                         </li>
 
-
-                         <!-- Pelaku Usaha -->
-                        <li class="nav-item active">
+                        <!-- Pelaku Usaha -->
+                        <li class="nav-item">
                             <a href="<?php echo base_url(); ?>P_Input_Pelaku_Usaha">
                                 <i class="fas fa-users"></i>
                                 <p>Pelaku Usaha</p>
                             </a>
                         </li>
                         
-                       <li class="nav-item active">
-        <a href="<?php echo base_url(); ?>P_Input_Jenis_Usaha">
-            <i class="fas fa-store"></i>
-            <p>Jenis Usaha</p>
-        </a>
-    </li>
+                        <li class="nav-item">
+                            <a href="<?php echo base_url(); ?>P_Input_Jenis_Usaha">
+                                <i class="fas fa-store"></i>
+                                <p>Jenis Usaha</p>
+                            </a>
+                        </li>
 
-                        <!-- Penjual Pakan -->
+                        <!-- Penjual (Gabungan) -->
                         <li class="nav-item active">
-                            <a href="<?php echo base_url(); ?>P_Input_Penjual_Pakan">
-                                <i class="fas fa-seedling"></i>
-                                <p>Penjual Pakan</p>
+                            <a href="<?php echo base_url(); ?>P_Input_Penjual">
+                                <i class="fas fa-store-alt"></i>
+                                <p>Penjual</p>
                             </a>
                         </li>
 
@@ -401,19 +444,13 @@
                             </a>
                         </li>
 
-                        <!-- Penjual Obat Hewan -->
+                        <!-- RPU -->
                         <li class="nav-item">
-                            <a href="<?php echo base_url(); ?>P_Input_Penjual_Obat_Hewan">
-                                <i class="fas fa-pills"></i>
-                                <p>Penjual Obat Hewan</p>
+                            <a href="<?php echo base_url(); ?>p_input_rpu">
+                                <i class="fas fa-cut"></i>
+                                <p>RPU</p>
                             </a>
                         </li>
-                         <li class="nav-item">
-                <a href="<?php echo base_url(); ?>p_input_rpu">
-                 <i class="fas fa-cut"></i>
-                  <p>RPU</p>
-                </a>
-              </li>
                     </ul>
                 </div>
             </div>
@@ -477,7 +514,7 @@
                     <!-- Page Header dengan data dari session -->
                     <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                         <div class="flex-grow-1">
-                            <h3 class="fw-bold mb-1">Penjual Pakan Ternak</h3>
+                            <h3 class="fw-bold mb-1">Data Penjual</h3>
                             <h6 class="op-7 mb-0">Kecamatan <?php echo $this->session->userdata('kecamatan') ?: 'Benowo'; ?>, Surabaya</h6>
                         </div>
                     </div>
@@ -485,14 +522,14 @@
                     <!-- Alert Section -->
                     <div id="alert-container"></div>
 
-                     <!-- Action Card + Input Penjual Pakan -->
+                    <!-- Action Card + Input Penjual -->
                     <div class="row mt-4">
                         <div class="col-md-12">
                             <!-- Card untuk Tombol Input -->
                             <div class="card action-card">
                                 <div class="card-body text-center p-4">
                                     <button type="button" class="btn btn-toggle-form" id="toggleFormBtn" onclick="toggleForm()">
-                                        <i class="fas fa-plus-circle me-2"></i> INPUT PENJUAL PAKAN
+                                        <i class="fas fa-plus-circle me-2"></i> INPUT DATA PENJUAL
                                     </button>
                                 </div>
                             </div>
@@ -501,12 +538,12 @@
                             <div class="form-container" id="formContainer">
                                 <div class="card form-card">
                                     <div class="card-header">
-                                        <h4 class="card-title">INPUT DATA PENJUAL PAKAN BARU</h4>
+                                        <h4 class="card-title">INPUT DATA PENJUAL BARU</h4>
                                     </div>
                                     <div class="card-body">
-                                        <form id="formPenjualPakan" enctype="multipart/form-data">
+                                        <form id="formPenjual" enctype="multipart/form-data">
                                             <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
-                                            <!-- Tambahkan hidden input untuk kecamatan dari session -->
+                                            <!-- Hidden input untuk kecamatan dari session -->
                                             <input type="hidden" name="kecamatan_session" id="kecamatan_session" value="<?php echo $this->session->userdata('kecamatan') ?: 'Benowo'; ?>">
                                             
                                             <div class="row">
@@ -517,10 +554,10 @@
                                                     <div class="invalid-feedback">Nama toko harus diisi</div>
                                                 </div>
 
-                                                <!-- Pemilik -->
+                                                <!-- Nama Pemilik -->
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label required-field">Nama Pemilik</label>
-                                                    <input type="text" class="form-control" id="pemilik" name="pemilik" placeholder="Masukkan nama pemilik" required />
+                                                    <input type="text" class="form-control" id="nama_pemilik" name="nama_pemilik" placeholder="Masukkan nama pemilik" required />
                                                     <div class="invalid-feedback">Nama pemilik harus diisi</div>
                                                 </div>
 
@@ -561,6 +598,18 @@
                                                     <div class="invalid-feedback">Tanggal input harus diisi</div>
                                                 </div>
 
+                                                <!-- JENIS DAGANGAN -->
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label required-field">Jenis Dagangan</label>
+                                                    <select class="form-control" id="dagangan" name="dagangan" required onchange="toggleObatFields()">
+                                                        <option value="">Pilih Jenis Dagangan</option>
+                                                        <option value="Obat">Obat Hewan</option>
+                                                        <option value="Pakan">Pakan Ternak</option>
+                                                        <option value="Peralatan">Peralatan Peternakan</option>
+                                                    </select>
+                                                    <div class="invalid-feedback">Jenis dagangan harus dipilih</div>
+                                                </div>
+
                                                 <!-- Surat Ijin -->
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label required-field">Surat Ijin</label>
@@ -575,13 +624,65 @@
                                                 <!-- No Telepon -->
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label">No. Telepon</label>
-                                                    <input type="text" class="form-control" id="telp" name="telp" placeholder="Masukkan telepon" />
+                                                    <input type="text" class="form-control" id="telp" name="telp" placeholder="Masukkan nomor telepon" />
                                                 </div>
 
                                                 <!-- Keterangan -->
                                                 <div class="col-md-12 mb-3">
                                                     <label class="form-label">Keterangan</label>
                                                     <textarea class="form-control" id="keterangan" name="keterangan" rows="2" placeholder="Masukkan keterangan tambahan (opsional)"></textarea>
+                                                </div>
+                                            </div>
+
+                                            <!-- FIELDS KHUSUS OBAT (Muncul jika memilih Obat) -->
+                                            <div class="obat-fields" id="obatFields">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="card address-card">
+                                                            <div class="card-header card-header-address">
+                                                                <h5 class="card-title mb-0">
+                                                                    <i class="fas fa-pills me-2 text-success"></i>DATA KHUSUS OBAT HEWAN
+                                                                </h5>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <div class="row">
+                                                                    <!-- Kategori Obat -->
+                                                                    <div class="col-md-6 mb-3">
+                                                                        <label class="form-label required-field">Kategori Obat</label>
+                                                                        <select class="form-control" id="kategori_obat" name="kategori_obat">
+                                                                            <option value="">Pilih Kategori Obat</option>
+                                                                            <option value="Obat Bebas">Obat Bebas</option>
+                                                                            <option value="Obat Bebas Terbatas">Obat Bebas Terbatas</option>
+                                                                            <option value="Obat Keras">Obat Keras</option>
+                                                                            <option value="Obat Tradisional">Obat Tradisional</option>
+                                                                            <option value="Vitamin">Vitamin</option>
+                                                                            <option value="Vaksin">Vaksin</option>
+                                                                            <option value="Antibiotik">Antibiotik</option>
+                                                                            <option value="Antiparasit">Antiparasit</option>
+                                                                        </select>
+                                                                        <div class="invalid-feedback">Kategori obat harus dipilih jika dagangan adalah Obat</div>
+                                                                    </div>
+
+                                                                    <!-- Jenis Obat -->
+                                                                    <div class="col-md-6 mb-3">
+                                                                        <label class="form-label required-field">Jenis Obat</label>
+                                                                        <select class="form-control" id="jenis_obat" name="jenis_obat">
+                                                                            <option value="">Pilih Jenis Obat</option>
+                                                                            <option value="Obat Hewan Besar">Obat Hewan Besar</option>
+                                                                            <option value="Obat Hewan Kecil">Obat Hewan Kecil</option>
+                                                                            <option value="Obat Unggas">Obat Unggas</option>
+                                                                            <option value="Obat Ikan">Obat Ikan</option>
+                                                                            <option value="Obat Anjing">Obat Anjing</option>
+                                                                            <option value="Obat Kucing">Obat Kucing</option>
+                                                                            <option value="Obat Ternak">Obat Ternak</option>
+                                                                            <option value="Obat Umum">Obat Umum</option>
+                                                                        </select>
+                                                                        <div class="invalid-feedback">Jenis obat harus dipilih jika dagangan adalah Obat</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -756,6 +857,17 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group mb-0">
+                                    <label for="filterDagangan" class="form-label fw-bold">Filter Dagangan:</label>
+                                    <select class="form-select" id="filterDagangan">
+                                        <option selected value="all">Semua Dagangan</option>
+                                        <option value="Obat">Obat Hewan</option>
+                                        <option value="Pakan">Pakan Ternak</option>
+                                        <option value="Peralatan">Peralatan</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group mb-0">
                                     <label for="filterIjin" class="form-label fw-bold">Filter Surat Ijin:</label>
                                     <select class="form-select" id="filterIjin">
                                         <option selected value="all">Semua Status</option>
@@ -778,7 +890,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-3 text-end">
+                            <div class="col-md-12 text-end mt-3">
                                 <button id="filterBtn" class="btn btn-primary" onclick="filterData()"><i class="fas fa-filter me-2"></i>Filter Data</button>
                                 <button id="resetBtn" class="btn btn-outline-secondary" onclick="resetFilter()"><i class="fas fa-redo me-2"></i>Reset</button>
                             </div>
@@ -789,12 +901,13 @@
                     <div class="card form-card mt-4">
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="penjualPakanTable" class="table table-bordered table-hover table-custom">
+                                <table id="penjualTable" class="table table-bordered table-hover table-custom">
                                     <thead>
                                         <tr>
                                             <th>No</th>
                                             <th>Nama Toko</th>
                                             <th>Pemilik</th>
+                                            <th>Dagangan</th>
                                             <th>Kelurahan</th>
                                             <th>Telepon</th>
                                             <th>Surat Ijin</th>
@@ -803,26 +916,40 @@
                                         </tr>
                                     </thead>
                                     <tbody id="dataTableBody">
-                                        <?php if (!empty($penjual_pakan_data)): ?>
+                                        <?php if (!empty($penjual_data)): ?>
                                             <?php $no = 1; ?>
-                                            <?php foreach ($penjual_pakan_data as $data): ?>
+                                            <?php foreach ($penjual_data as $data): ?>
                                                 <tr>
                                                     <td><?php echo $no++; ?></td>
                                                     <td><?php echo htmlspecialchars($data['nama_toko'] ?? '-'); ?></td>
-                                                    <td><?php echo htmlspecialchars($data['pemilik'] ?? '-'); ?></td>
+                                                    <td><?php echo htmlspecialchars($data['nama_pemilik'] ?? '-'); ?></td>
+                                                    <td>
+                                                        <?php if (isset($data['dagangan'])): ?>
+                                                            <?php if ($data['dagangan'] == 'Obat'): ?>
+                                                                <span class="badge-dagangan-obat"><i class="fas fa-pills me-1"></i>Obat</span>
+                                                                <br><small><?php echo htmlspecialchars($data['kategori_obat'] ?? ''); ?></small>
+                                                            <?php elseif ($data['dagangan'] == 'Pakan'): ?>
+                                                                <span class="badge-dagangan-pakan"><i class="fas fa-seedling me-1"></i>Pakan</span>
+                                                            <?php elseif ($data['dagangan'] == 'Peralatan'): ?>
+                                                                <span class="badge-dagangan-peralatan"><i class="fas fa-tools me-1"></i>Peralatan</span>
+                                                            <?php endif; ?>
+                                                        <?php else: ?>
+                                                            -
+                                                        <?php endif; ?>
+                                                    </td>
                                                     <td><?php echo htmlspecialchars($data['kelurahan'] ?? '-'); ?></td>
                                                     <td><?php echo htmlspecialchars($data['telp'] ?? '-'); ?></td>
                                                     <td>
                                                         <?php if (!empty($data['surat_ijin']) && $data['surat_ijin'] == 'Y'): ?>
-                                                            <span class="badge-ijin-y">Berijin</span>
+                                                            <span class="badge-ijin-y"><i class="fas fa-check-circle me-1"></i>Berijin</span>
                                                         <?php else: ?>
-                                                            <span class="badge-ijin-n">Belum Berijin</span>
+                                                            <span class="badge-ijin-n"><i class="fas fa-times-circle me-1"></i>Belum Berijin</span>
                                                         <?php endif; ?>
                                                     </td>
                                                     <td><?php echo isset($data['created_at']) ? date('d-m-Y', strtotime($data['created_at'])) : '-'; ?></td>
                                                     <td>
                                                         <?php if (!empty($data['foto_toko'])): ?>
-                                                            <a href="javascript:void(0)" class="foto-link" onclick="showFoto('<?php echo base_url(); ?>uploads/penjual_pakan/<?php echo $data['foto_toko']; ?>')">
+                                                            <a href="javascript:void(0)" class="foto-link" onclick="showFoto('<?php echo base_url(); ?>uploads/penjual/<?php echo $data['foto_toko']; ?>')">
                                                                 <i class="fas fa-image me-1"></i>Lihat
                                                             </a>
                                                         <?php else: ?>
@@ -833,7 +960,7 @@
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="8" class="text-center">Tidak ada data penjual pakan</td>
+                                                <td colspan="9" class="text-center">Tidak ada data penjual</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
@@ -879,14 +1006,14 @@
         var dataTable;
         
         $(document).ready(function() {
-            console.log('Document Ready - Penjual Pakan');
+            console.log('Document Ready - Penjual');
             
             // Set today's date as default
             const today = new Date().toISOString().split('T')[0];
             $('#tanggal_input').val(today);
             
             // Initialize DataTable
-            dataTable = $('#penjualPakanTable').DataTable({
+            dataTable = $('#penjualTable').DataTable({
                 language: {
                     search: "Cari:",
                     lengthMenu: "Tampilkan _MENU_ data",
@@ -916,7 +1043,25 @@
             });
         });
         
-        // FUNGSI TOGGLE FORM - MENGGUNAKAN JAVASCRIPT MURNI
+        // FUNGSI TOGGLE FIELDS OBAT
+        function toggleObatFields() {
+            var dagangan = document.getElementById('dagangan').value;
+            var obatFields = document.getElementById('obatFields');
+            
+            if (dagangan === 'Obat') {
+                obatFields.classList.add('show');
+                // Set required untuk field obat
+                document.getElementById('kategori_obat').setAttribute('required', 'required');
+                document.getElementById('jenis_obat').setAttribute('required', 'required');
+            } else {
+                obatFields.classList.remove('show');
+                // Hapus required untuk field obat
+                document.getElementById('kategori_obat').removeAttribute('required');
+                document.getElementById('jenis_obat').removeAttribute('required');
+            }
+        }
+        
+        // FUNGSI TOGGLE FORM
         function toggleForm() {
             console.log('Toggle button clicked');
             var formContainer = document.getElementById('formContainer');
@@ -924,11 +1069,11 @@
             
             if (formContainer.classList.contains('show')) {
                 formContainer.classList.remove('show');
-                toggleBtn.innerHTML = '<i class="fas fa-plus-circle me-2"></i> INPUT PENJUAL PAKAN';
+                toggleBtn.innerHTML = '<i class="fas fa-plus-circle me-2"></i> INPUT DATA PENJUAL';
                 console.log('Form hidden');
             } else {
                 formContainer.classList.add('show');
-                toggleBtn.innerHTML = '<i class="fas fa-minus-circle me-2"></i> TUTUP FORM INPUT PENJUAL PAKAN';
+                toggleBtn.innerHTML = '<i class="fas fa-minus-circle me-2"></i> TUTUP FORM INPUT PENJUAL';
                 console.log('Form shown');
                 
                 // Scroll ke form
@@ -942,7 +1087,7 @@
         function batalForm() {
             resetForm();
             document.getElementById('formContainer').classList.remove('show');
-            document.getElementById('toggleFormBtn').innerHTML = '<i class="fas fa-plus-circle me-2"></i> INPUT PENJUAL PAKAN';
+            document.getElementById('toggleFormBtn').innerHTML = '<i class="fas fa-plus-circle me-2"></i> INPUT DATA PENJUAL';
         }
 
         // FUNGSI GEOLOKASI
@@ -1060,6 +1205,7 @@
         // FILTER FUNCTION
         function filterData() {
             var kelurahan = document.getElementById('filterKelurahan').value;
+            var dagangan = document.getElementById('filterDagangan').value;
             var ijin = document.getElementById('filterIjin').value;
             var periode = document.getElementById('filterPeriode').value;
             
@@ -1067,6 +1213,11 @@
             
             if (kelurahan !== "all") {
                 searchTerm += kelurahan;
+            }
+            
+            if (dagangan !== "all") {
+                if (searchTerm) searchTerm += " ";
+                searchTerm += dagangan;
             }
             
             if (ijin !== "all") {
@@ -1085,21 +1236,23 @@
         // RESET FILTER
         function resetFilter() {
             document.getElementById('filterKelurahan').value = "all";
+            document.getElementById('filterDagangan').value = "all";
             document.getElementById('filterIjin').value = "all";
             document.getElementById('filterPeriode').value = "all";
             dataTable.search("").draw();
         }
 
         // FORM SUBMISSION DENGAN AJAX
-        $('#formPenjualPakan').on('submit', function(e) {
+        $('#formPenjual').on('submit', function(e) {
             e.preventDefault();
 
             // Validasi field umum
             var commonFields = [
                 'nama_toko',
-                'pemilik',
+                'nama_pemilik',
                 'nama_petugas',
                 'tanggal_input',
+                'dagangan',
                 'surat_ijin',
                 'kelurahan',
                 'latitude',
@@ -1122,6 +1275,20 @@
                 }
             });
 
+            // Validasi field obat jika dagangan = Obat
+            var dagangan = $('#dagangan').val();
+            if (dagangan === 'Obat') {
+                var obatFields = ['kategori_obat', 'jenis_obat'];
+                obatFields.forEach(function(fieldId) {
+                    $('#' + fieldId).removeClass('is-invalid');
+                    var field = $('#' + fieldId);
+                    if (!field.val() || field.val() === '') {
+                        field.addClass('is-invalid');
+                        isValid = false;
+                    }
+                });
+            }
+
             if (!isValid) {
                 showAlert('danger', 'Harap lengkapi semua field yang wajib diisi!');
                 return;
@@ -1138,7 +1305,7 @@
             var formData = new FormData(this);
 
             $.ajax({
-                url: '<?php echo base_url("P_Input_Penjual_Pakan/save"); ?>',
+                url: '<?php echo base_url("P_Input_Penjual/save"); ?>',
                 type: 'POST',
                 data: formData,
                 processData: false,
@@ -1173,13 +1340,16 @@
         // RESET FORM
         function resetForm() {
             $('#formContainer').removeClass('show');
-            $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT PENJUAL PAKAN');
-            $('#formPenjualPakan')[0].reset();
+            $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT DATA PENJUAL');
+            $('#formPenjual')[0].reset();
             
-            // Set default values - ambil dari session
+            // Set default values
             $('#kecamatan').val('<?php echo $this->session->userdata('kecamatan') ?: 'Benowo'; ?>');
             var today = new Date().toISOString().split('T')[0];
             $('#tanggal_input').val(today);
+            
+            // Hide obat fields
+            $('#obatFields').removeClass('show');
             
             // Reset UI elements
             $('#coordinateInfo').hide();

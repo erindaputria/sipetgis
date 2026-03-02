@@ -34,17 +34,6 @@ class Jenis_Usaha_Model extends CI_Model {
         return $this->db->delete($this->table);
     }
     
-    public function check_nik($nik) {
-        $this->db->where('nik', $nik);
-        return $this->db->get($this->table)->row();
-    }
-    
-    public function check_nik_except($nik, $id) {
-        $this->db->where('nik', $nik);
-        $this->db->where('id !=', $id);
-        return $this->db->get($this->table)->row();
-    }
-    
     public function get_by_kecamatan($kecamatan) {
         $this->db->where('kecamatan', $kecamatan);
         $this->db->order_by('nama_peternak', 'ASC');

@@ -107,16 +107,6 @@
             transition: all 0.2s;
         }
 
-        .btn-view {
-            background-color: rgba(13, 202, 240, 0.1);
-            color: #0dcaf0;
-        }
-
-        .btn-view:hover {
-            background-color: #0dcaf0;
-            color: white;
-        }
-
         .btn-edit {
             background-color: rgba(67, 97, 238, 0.1);
             color: #4361ee;
@@ -150,30 +140,28 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        .badge-kelompok {
-            background-color: #e3f2fd;
-            color: #1976d2;
-            font-size: 12px;
-            font-weight: 500;
-            padding: 4px 10px;
-            border-radius: 20px;
+        .dt-buttons .btn-primary {
+            background-color: #0d6efd !important;
+            border-color: #0d6efd !important;
+            color: white !important;
         }
 
-        .badge-status {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
+        .dt-buttons .btn-success {
+            background-color: #198754 !important;
+            border-color: #198754 !important;
+            color: white !important;
         }
 
-        .badge-status.active {
-            background-color: #d1e7dd;
-            color: #0f5132;
+        .dt-buttons .btn-danger {
+            background-color: #dc3545 !important;
+            border-color: #dc3545 !important;
+            color: white !important;
         }
 
-        .badge-status.inactive {
-            background-color: #f8d7da;
-            color: #842029;
+        .dt-buttons .btn-info {
+            background-color: #0dcaf0 !important;
+            border-color: #0dcaf0 !important;
+            color: white !important;
         }
 
         /* Pagination Styles */
@@ -215,20 +203,12 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
-
-        .info-row {
-            display: flex;
-            margin-bottom: 10px;
-        }
-
-        .info-label {
-            font-weight: 600;
-            width: 120px;
-            color: #6c757d;
-        }
-
-        .info-value {
-            flex: 1;
+        
+        /* Alamat column style */
+        .alamat-cell {
+            max-width: 250px;
+            white-space: normal;
+            word-wrap: break-word;
         }
     </style>
 </head>
@@ -291,7 +271,7 @@
                             </a>
                             <div class="collapse show" id="masterDataSubmenu">
                                 <ul class="list-unstyled ps-4">
-                                    <li class="nav-item">
+                                    <li class="nav-item active">
                                         <a href="<?= site_url('pelaku_usaha') ?>" class="nav-link active">Pelaku Usaha</a>
                                     </li>
                                     <li>
@@ -301,7 +281,7 @@
                                         <a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a>
                                     </li>
                                     <li>
-                                        <a href="<?= site_url('pengobatan') ?>" class="nav-link">Pengobatan</a>
+                                         <a href="<?= site_url('obat') ?>" class="nav-link">Obat</a>
                                     </li>
                                     <li>
                                         <a href="<?= site_url('vaksinasi') ?>" class="nav-link">Vaksinasi</a>
@@ -309,12 +289,12 @@
                                     <li>
                                         <a href="<?= site_url('komoditas') ?>" class="nav-link">Komoditas</a>
                                     </li>
-                                     <li>
+                                    <li>
                                         <a href="<?= site_url('layanan_klinik') ?>" class="nav-link">Layanan Klinik</a>
                                     </li>
                                     <li>
-                      <a href="<?= site_url('rpu') ?>" class="nav-link">RPU</a>
-                    </li>
+                                        <a href="<?= site_url('rpu') ?>" class="nav-link">RPU</a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
@@ -351,6 +331,9 @@
                                     </li>
                                     <li>
                                         <a href="<?= site_url('data_penjual_obat') ?>" class="nav-link">Penjual Obat Hewan</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('data_rpu') ?>" class="nav-link">RPU</a>
                                     </li>
                                 </ul>
                             </div>
@@ -504,35 +487,6 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Jenis Usaha <span class="text-danger">*</span></label>
-                                                    <select name="jenis_usaha" class="form-control" required>
-                                                        <option value="">Pilih Jenis Usaha</option>
-                                                        <option value="Peternak Sapi">Peternak Sapi</option>
-                                                        <option value="Peternak Kambing">Peternak Kambing</option>
-                                                        <option value="Peternak Domba">Peternak Domba</option>
-                                                        <option value="Peternak Ayam">Peternak Ayam</option>
-                                                        <option value="Peternak Itik">Peternak Itik</option>
-                                                        <option value="Pedagang Ternak">Pedagang Ternak</option>
-                                                        <option value="Pengolah Hasil Ternak">Pengolah Hasil Ternak</option>
-                                                        <option value="Distributor Pakan">Distributor Pakan</option>
-                                                        <option value="Lainnya">Lainnya</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label>Alamat Lengkap <span class="text-danger">*</span></label>
-                                                    <textarea name="alamat" class="form-control" rows="3" required></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
                                                     <label>Kecamatan <span class="text-danger">*</span></label>
                                                     <select name="kecamatan" class="form-control" required>
                                                         <option value="">Pilih Kecamatan</option>
@@ -570,28 +524,13 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Status</label>
-                                                    <select name="status" class="form-control">
-                                                        <option value="Aktif">Aktif</option>
-                                                        <option value="Non-Aktif">Non-Aktif</option>
-                                                    </select>
-                                                </div>
-                                            </div>
                                         </div>
                                         
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label>Latitude</label>
-                                                    <input type="text" name="latitude" class="form-control" placeholder="Contoh: -7.2575">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Longitude</label>
-                                                    <input type="text" name="longitude" class="form-control" placeholder="Contoh: 112.7521">
+                                                    <label>Alamat Lengkap <span class="text-danger">*</span></label>
+                                                    <textarea name="alamat" class="form-control" rows="3" required></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -653,35 +592,6 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Jenis Usaha <span class="text-danger">*</span></label>
-                                                    <select id="edit_jenis_usaha" name="jenis_usaha" class="form-control" required>
-                                                        <option value="">Pilih Jenis Usaha</option>
-                                                        <option value="Peternak Sapi">Peternak Sapi</option>
-                                                        <option value="Peternak Kambing">Peternak Kambing</option>
-                                                        <option value="Peternak Domba">Peternak Domba</option>
-                                                        <option value="Peternak Ayam">Peternak Ayam</option>
-                                                        <option value="Peternak Itik">Peternak Itik</option>
-                                                        <option value="Pedagang Ternak">Pedagang Ternak</option>
-                                                        <option value="Pengolah Hasil Ternak">Pengolah Hasil Ternak</option>
-                                                        <option value="Distributor Pakan">Distributor Pakan</option>
-                                                        <option value="Lainnya">Lainnya</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label>Alamat Lengkap <span class="text-danger">*</span></label>
-                                                    <textarea id="edit_alamat" name="alamat" class="form-control" rows="3" required></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
                                                     <label>Kecamatan <span class="text-danger">*</span></label>
                                                     <select id="edit_kecamatan" name="kecamatan" class="form-control" required>
                                                         <option value="">Pilih Kecamatan</option>
@@ -719,28 +629,13 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Status</label>
-                                                    <select id="edit_status" name="status" class="form-control">
-                                                        <option value="Aktif">Aktif</option>
-                                                        <option value="Non-Aktif">Non-Aktif</option>
-                                                    </select>
-                                                </div>
-                                            </div>
                                         </div>
                                         
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label>Latitude</label>
-                                                    <input type="text" id="edit_latitude" name="latitude" class="form-control" placeholder="Contoh: -7.2575">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Longitude</label>
-                                                    <input type="text" id="edit_longitude" name="longitude" class="form-control" placeholder="Contoh: 112.7521">
+                                                    <label>Alamat Lengkap <span class="text-danger">*</span></label>
+                                                    <textarea id="edit_alamat" name="alamat" class="form-control" rows="3" required></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -777,10 +672,9 @@
                                                     <th>Nama</th>
                                                     <th>NIK</th>
                                                     <th>Telepon</th>
-                                                    <th>Jenis Usaha</th>
+                                                    <th>Alamat</th>
                                                     <th>Kecamatan</th>
-                                                    <th>Status</th>
-                                                    <th width="150">Aksi</th>
+                                                    <th width="100">Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -792,34 +686,16 @@
                                                             <td><?= htmlspecialchars($row->nama ?? ''); ?></td>
                                                             <td><?= htmlspecialchars($row->nik ?? '-'); ?></td>
                                                             <td><?= htmlspecialchars($row->telepon ?? '-'); ?></td>
-                                                            <td>
-                                                                <span class="badge-kelompok">
-                                                                    <?= htmlspecialchars($row->jenis_usaha ?? '-'); ?>
-                                                                </span>
-                                                            </td>
+                                                            <td class="alamat-cell"><?= htmlspecialchars($row->alamat ?? ''); ?></td>
                                                             <td><?= htmlspecialchars($row->kecamatan ?? ''); ?></td>
                                                             <td>
-                                                                <?php if(($row->status ?? 'Aktif') == 'Aktif'): ?>
-                                                                    <span class="badge-status active">Aktif</span>
-                                                                <?php else: ?>
-                                                                    <span class="badge-status inactive">Non-Aktif</span>
-                                                                <?php endif; ?>
-                                                            </td>
-                                                            <td>
-                                                                <a href="<?= site_url('pelaku_usaha/detail/'.$row->id); ?>" class="btn btn-action btn-view" title="Detail">
-                                                                    <i class="fas fa-eye"></i>
-                                                                </a>
                                                                 <button class="btn btn-action btn-edit" title="Edit"
                                                                         data-id="<?= $row->id ?? ''; ?>"
                                                                         data-nama="<?= htmlspecialchars($row->nama ?? ''); ?>"
                                                                         data-nik="<?= htmlspecialchars($row->nik ?? ''); ?>"
                                                                         data-telepon="<?= htmlspecialchars($row->telepon ?? ''); ?>"
                                                                         data-alamat="<?= htmlspecialchars($row->alamat ?? ''); ?>"
-                                                                        data-kecamatan="<?= htmlspecialchars($row->kecamatan ?? ''); ?>"
-                                                                        data-jenis_usaha="<?= htmlspecialchars($row->jenis_usaha ?? ''); ?>"
-                                                                        data-latitude="<?= htmlspecialchars($row->latitude ?? ''); ?>"
-                                                                        data-longitude="<?= htmlspecialchars($row->longitude ?? ''); ?>"
-                                                                        data-status="<?= htmlspecialchars($row->status ?? 'Aktif'); ?>">
+                                                                        data-kecamatan="<?= htmlspecialchars($row->kecamatan ?? ''); ?>">
                                                                     <i class="fas fa-edit"></i>
                                                                 </button>
                                                                 <button class="btn btn-action btn-delete" title="Hapus"
@@ -832,7 +708,7 @@
                                                     <?php endforeach; ?>
                                                 <?php else: ?>
                                                     <tr>
-                                                        <td colspan="8" class="text-center">Tidak ada data</td>
+                                                        <td colspan="7" class="text-center">Tidak ada data</td>
                                                     </tr>
                                                 <?php endif; ?>
                                             </tbody>
@@ -871,7 +747,7 @@
 
     <script>
         $(document).ready(function () {
-            // Inisialisasi DataTable
+            // Inisialisasi DataTable dengan tampilan seperti halaman jenis usaha
             var table = $("#pelakuUsahaTable").DataTable({
                 dom: "Bfrtip",
                 buttons: [
@@ -919,7 +795,10 @@
                 lengthChange: true,
                 lengthMenu: [5, 10, 25, 50, 100],
                 responsive: true,
-                order: [[0, 'asc']]
+                order: [[0, 'asc']],
+                columnDefs: [
+                    { width: '200px', targets: 4 } // Mengatur lebar kolom alamat
+                ]
             });
 
             // Event untuk tombol edit
@@ -930,10 +809,6 @@
                 var telepon = $(this).data('telepon');
                 var alamat = $(this).data('alamat');
                 var kecamatan = $(this).data('kecamatan');
-                var jenis_usaha = $(this).data('jenis_usaha');
-                var latitude = $(this).data('latitude');
-                var longitude = $(this).data('longitude');
-                var status = $(this).data('status');
                 
                 $('#edit_id').val(id);
                 $('#edit_nama').val(nama);
@@ -941,10 +816,6 @@
                 $('#edit_telepon').val(telepon);
                 $('#edit_alamat').val(alamat);
                 $('#edit_kecamatan').val(kecamatan);
-                $('#edit_jenis_usaha').val(jenis_usaha);
-                $('#edit_latitude').val(latitude);
-                $('#edit_longitude').val(longitude);
-                $('#edit_status').val(status);
                 
                 $('#editDataModal').modal('show');
             });
@@ -975,6 +846,11 @@
             setTimeout(function() {
                 $('.alert').alert('close');
             }, 5000);
+
+            // Refresh halaman setelah modal ditutup
+            $('#tambahDataModal, #editDataModal').on('hidden.bs.modal', function () {
+                location.reload();
+            });
         });
     </script>
 </body>

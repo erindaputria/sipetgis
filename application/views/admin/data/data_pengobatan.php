@@ -342,7 +342,7 @@
                        <a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a>
                     </li>
                                     <li><a href="<?php echo base_url(); ?>akses_pengguna" class="nav-link">Akses Pengguna</a></li>
-                                    <li><a href="<?php echo base_url(); ?>pengobatan" class="nav-link">Pengobatan</a></li>
+                                    <li><a href="<?php echo base_url(); ?>obat" class="nav-link">Obat</a></li>
                                     <li><a href="<?php echo base_url(); ?>vaksinasi" class="nav-link">Vaksinasi</a></li>
                                     <li><a href="<?php echo base_url(); ?>komoditas" class="nav-link">Komoditas</a></li>
                                     <li><a href="<?php echo base_url(); ?>layanan_klinik" class="nav-link">Layanan Klinik</a></li>
@@ -367,6 +367,7 @@
                                     <li><a href="<?= site_url('data_penjual_pakan') ?>" class="nav-link">Penjual Pakan Ternak</a></li>
                                     <li><a href="<?= site_url('data_klinik') ?>" class="nav-link">Klinik Hewan</a></li>
                                     <li><a href="<?= site_url('data_penjual_obat') ?>" class="nav-link">Penjual Obat Hewan</a></li>
+                                    <li><a href="<?= site_url('data_rpu') ?>" class="nav-link">RPU</a></li>
                                 </ul>
                             </div>
                         </li>

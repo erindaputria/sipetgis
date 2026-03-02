@@ -51,24 +51,8 @@ class Pelaku_Usaha_Model extends CI_Model {
         return $this->db->get($this->table)->result();
     }
     
-    public function get_by_status($status) {
-        $this->db->where('status', $status);
-        $this->db->order_by('nama', 'ASC');
-        return $this->db->get($this->table)->result();
-    }
-    
-    public function get_by_jenis_usaha($jenis_usaha) {
-        $this->db->where('jenis_usaha', $jenis_usaha);
-        $this->db->order_by('nama', 'ASC');
-        return $this->db->get($this->table)->result();
-    }
-    
     public function count_all() {
         return $this->db->count_all($this->table);
     }
-    
-    public function count_by_status($status) {
-        $this->db->where('status', $status);
-        return $this->db->count_all_results($this->table);
-    }
 }
+?>

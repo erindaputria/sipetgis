@@ -218,24 +218,21 @@
             <p>Jenis Usaha</p>
         </a>
     </li>
-              <li class="nav-item">
-                <a href="<?php echo base_url(); ?>p_input_penjual_pakan">
-                  <i class="fas fa-seedling"></i>
-                  <p>Penjual Pakan</p>
-                </a>
-              </li>
+    <!-- Penjual (Gabungan) -->
+                        <li class="nav-item active">
+                            <a href="<?php echo base_url(); ?>P_Input_Penjual">
+                                <i class="fas fa-store-alt"></i>
+                                <p>Penjual</p>
+                            </a>
+                        </li>
+            
               <li class="nav-item">
                 <a href="<?php echo base_url(); ?>p_input_klinik_hewan">
                   <i class="fas fa-stethoscope"></i>
                   <p>Klinik Hewan</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="<?php echo base_url(); ?>p_input_penjual_obat_hewan">
-                 <i class="fas fa-pills"></i>
-                  <p>Penjual Obat Hewan</p>
-                </a>
-              </li>
+             
                <li class="nav-item">
                 <a href="<?php echo base_url(); ?>p_input_rpu">
                  <i class="fas fa-cut"></i>

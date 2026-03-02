@@ -7,6 +7,7 @@ class Layanan_Klinik extends CI_Controller {
         parent::__construct();
         $this->load->model('Layanan_Klinik_Model');
         $this->load->library('session');
+        $this->load->library('form_validation');
         $this->load->helper('security');
     }
     
@@ -18,12 +19,7 @@ class Layanan_Klinik extends CI_Controller {
     
     public function simpan() {
         // Validasi input
-        $this->load->library('form_validation');
-        
         $this->form_validation->set_rules('nama_layanan', 'Nama Layanan', 'required|min_length[3]|max_length[100]');
-        $this->form_validation->set_rules('kategori', 'Kategori', 'required');
-        $this->form_validation->set_rules('deskripsi', 'Deskripsi', 'max_length[255]');
-        $this->form_validation->set_rules('harga', 'Harga', 'numeric');
         
         if ($this->form_validation->run() == FALSE) {
             $errors = validation_errors();
@@ -60,13 +56,13 @@ class Layanan_Klinik extends CI_Controller {
     public function update() {
         $id = $this->input->post('id_layanan');
         
-        // Validasi input
-        $this->load->library('form_validation');
+        if (!$id) {
+            $this->session->set_flashdata('error', 'ID layanan tidak ditemukan');
+            redirect('layanan_klinik');
+        }
         
+        // Validasi input
         $this->form_validation->set_rules('nama_layanan', 'Nama Layanan', 'required|min_length[3]|max_length[100]');
-        $this->form_validation->set_rules('kategori', 'Kategori', 'required');
-        $this->form_validation->set_rules('deskripsi', 'Deskripsi', 'max_length[255]');
-        $this->form_validation->set_rules('harga', 'Harga', 'numeric');
         
         if ($this->form_validation->run() == FALSE) {
             $errors = validation_errors();
@@ -102,6 +98,11 @@ class Layanan_Klinik extends CI_Controller {
     }
     
     public function hapus($id) {
+        if (!$id) {
+            $this->session->set_flashdata('error', 'ID layanan tidak ditemukan');
+            redirect('layanan_klinik');
+        }
+        
         $result = $this->Layanan_Klinik_Model->delete($id);
         
         if ($result) {
@@ -114,6 +115,11 @@ class Layanan_Klinik extends CI_Controller {
     }
     
     public function toggle_status($id) {
+        if (!$id) {
+            $this->session->set_flashdata('error', 'ID layanan tidak ditemukan');
+            redirect('layanan_klinik');
+        }
+        
         $layanan = $this->Layanan_Klinik_Model->get_by_id($id);
         
         if ($layanan) {

@@ -33,7 +33,6 @@
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.bootstrap5.min.css" />
 
     <style>
         /* CSS DASAR */
@@ -45,14 +44,14 @@
             margin-bottom: 20px;
         }
         
-        /* INI YANG PENTING - Form Container */
+        /* Form Container */
         .form-container {
-            display: none !important;
+            display: none;
             transition: all 0.5s ease;
         }
         
         .form-container.show {
-            display: block !important;
+            display: block;
             animation: fadeIn 0.5s ease;
         }
         
@@ -166,21 +165,93 @@
             border: 1px solid #dee2e6;
         }
         
-        .badge-status {
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .foto-thumbnail {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+        }
+        
+        .foto-thumbnail:hover {
+            opacity: 0.8;
+        }
+        
+        .badge-no-foto {
+            background-color: #6c757d;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        
+        .alamat-cell {
+            max-width: 250px;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+        
+        /* DataTables Custom Style */
+        .dataTables_wrapper {
+            padding: 10px 0;
+        }
+
+        .dataTables_length select {
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
             padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
+        }
+
+        .dataTables_filter input {
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+            padding: 5px 10px;
+            width: 200px;
+        }
+
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_paginate {
+            padding: 10px;
         }
         
-        .badge-status.active {
-            background-color: #d1e7dd;
-            color: #0f5132;
+        .pagination .page-link {
+            border: none;
+            color: #495057;
+            margin: 0 3px;
+            border-radius: 6px !important;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #4361ee;
+            color: white;
+        }
+
+        .pagination .page-link:hover {
+            background-color: #f8f9fa;
         }
         
-        .badge-status.inactive {
-            background-color: #f8d7da;
-            color: #842029;
+        .invalid-feedback {
+            display: none;
+            width: 100%;
+            margin-top: 0.25rem;
+            font-size: 0.875em;
+            color: #dc3545;
+        }
+        
+        .is-invalid ~ .invalid-feedback {
+            display: block;
+        }
+        
+        .dataTables_empty {
+            display: none;
         }
     </style>
 </head>
@@ -236,21 +307,15 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url(); ?>P_Input_Penjual_Pakan">
-                                <i class="fas fa-seedling"></i>
-                                <p>Penjual Pakan</p>
+                            <a href="<?php echo base_url(); ?>P_Input_Penjual">
+                                <i class="fas fa-store-alt"></i>
+                                <p>Penjual</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="<?php echo base_url(); ?>P_Input_Klinik_Hewan">
                                 <i class="fas fa-stethoscope"></i>
                                 <p>Klinik Hewan</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?php echo base_url(); ?>P_Input_Penjual_Obat_Hewan">
-                                <i class="fas fa-pills"></i>
-                                <p>Penjual Obat Hewan</p>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -336,7 +401,7 @@
                                     </div>
                                     <div class="card-body">
                                         <form id="formPelakuUsaha" enctype="multipart/form-data">
-                                            <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                                            <input type="hidden" name="<?php echo $csrf_name; ?>" value="<?php echo $csrf_hash; ?>">
                                             
                                             <div class="row">
                                                 <!-- Nama -->
@@ -360,37 +425,13 @@
                                                     <label class="form-label">Telepon</label>
                                                     <input type="text" class="form-control" id="telepon" name="telepon" placeholder="Nomor telepon" maxlength="15" />
                                                 </div>
-
-                                                <!-- Jenis Usaha -->
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label required-field">Jenis Usaha</label>
-                                                    <select class="form-control" id="jenis_usaha" name="jenis_usaha" required>
-                                                        <option value="">Pilih Jenis Usaha</option>
-                                                        <option value="Peternak Sapi Potong">Peternak Sapi Potong</option>
-                                                        <option value="Peternak Sapi Perah">Peternak Sapi Perah</option>
-                                                        <option value="Peternak Kerbau">Peternak Kerbau</option>
-                                                        <option value="Peternak Kambing">Peternak Kambing</option>
-                                                        <option value="Peternak Domba">Peternak Domba</option>
-                                                        <option value="Peternak Ayam Ras Petelur">Peternak Ayam Ras Petelur</option>
-                                                        <option value="Peternak Ayam Ras Pedaging">Peternak Ayam Ras Pedaging</option>
-                                                        <option value="Peternak Ayam Kampung">Peternak Ayam Kampung</option>
-                                                        <option value="Peternak Itik">Peternak Itik</option>
-                                                        <option value="Penggemukan Sapi">Penggemukan Sapi</option>
-                                                        <option value="Pembibitan Ternak">Pembibitan Ternak</option>
-                                                        <option value="Pedagang Ternak">Pedagang Ternak</option>
-                                                        <option value="Pengolah Hasil Ternak">Pengolah Hasil Ternak</option>
-                                                        <option value="Distributor Pakan">Distributor Pakan</option>
-                                                        <option value="Lainnya">Lainnya</option>
-                                                    </select>
-                                                    <div class="invalid-feedback">Jenis usaha harus dipilih</div>
-                                                </div>
                                             </div>
 
                                             <!-- Alamat -->
                                             <div class="row mt-3">
                                                 <div class="col-md-12">
                                                     <div class="card address-card">
-                                                        <div class="card-header card-header-address">
+                                                        <div class="card-header">
                                                             <h5 class="card-title mb-0">
                                                                 <i class="fas fa-map-marker-alt me-2 text-success"></i>ALAMAT
                                                             </h5>
@@ -408,41 +449,28 @@
                                                                     <input type="text" class="form-control" id="kecamatan" name="kecamatan" value="<?php echo $this->session->userdata('kecamatan') ?: 'Benowo'; ?>" readonly />
                                                                 </div>
 
-                                                                <!-- Kelurahan Dropdown - PERBAIKAN -->
-<div class="col-md-6 mb-3">
-    <label class="form-label required-field">Kelurahan</label>
-    <select class="form-control" id="kelurahan" name="kelurahan" required>
-        <option value="">Pilih Kelurahan</option>
-        <?php 
-        $user_kec = $this->session->userdata('kecamatan') ?: 'Benowo';
-        
-        // Debug: cek apakah $kel_list ada
-        if (isset($kel_list) && !empty($kel_list)) {
-            // Cek apakah kecamatan ada di array
-            if (isset($kel_list[$user_kec]) && is_array($kel_list[$user_kec])) {
-                foreach ($kel_list[$user_kec] as $kel) {
-                    echo '<option value="' . htmlspecialchars($kel) . '">' . htmlspecialchars($kel) . '</option>';
-                }
-            } else {
-                // Fallback jika kecamatan tidak ditemukan
-                echo '<option value="Benowo">Benowo</option>';
-                echo '<option value="Kandangan">Kandangan</option>';
-                echo '<option value="Romokalisari">Romokalisari</option>';
-                echo '<option value="Sememi">Sememi</option>';
-                echo '<option value="Tambak Osowilangun">Tambak Osowilangun</option>';
-            }
-        } else {
-            // Fallback jika $kel_list kosong
-            echo '<option value="Benowo">Benowo</option>';
-            echo '<option value="Kandangan">Kandangan</option>';
-            echo '<option value="Romokalisari">Romokalisari</option>';
-            echo '<option value="Sememi">Sememi</option>';
-            echo '<option value="Tambak Osowilangun">Tambak Osowilangun</option>';
-        }
-        ?>
-    </select>
-    <div class="invalid-feedback">Kelurahan harus dipilih</div>
-</div>
+                                                                <!-- Kelurahan Dropdown -->
+                                                                <div class="col-md-6 mb-3">
+                                                                    <label class="form-label required-field">Kelurahan</label>
+                                                                    <select class="form-control" id="kelurahan" name="kelurahan" required>
+                                                                        <option value="">Pilih Kelurahan</option>
+                                                                        <?php 
+                                                                        $user_kec = $this->session->userdata('kecamatan') ?: 'Benowo';
+                                                                        
+                                                                        if (isset($kel_list) && !empty($kel_list) && isset($kel_list[$user_kec])) {
+                                                                            foreach ($kel_list[$user_kec] as $kel) {
+                                                                                echo '<option value="' . htmlspecialchars($kel) . '">' . htmlspecialchars($kel) . '</option>';
+                                                                            }
+                                                                        } else {
+                                                                            $fallback_kel = array('Benowo', 'Kandangan', 'Romokalisari', 'Sememi', 'Tambak Osowilangun');
+                                                                            foreach ($fallback_kel as $kel) {
+                                                                                echo '<option value="' . $kel . '">' . $kel . '</option>';
+                                                                            }
+                                                                        }
+                                                                        ?>
+                                                                    </select>
+                                                                    <div class="invalid-feedback">Kelurahan harus dipilih</div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -453,7 +481,7 @@
                                             <div class="row mt-3">
                                                 <div class="col-md-12">
                                                     <div class="card address-card">
-                                                        <div class="card-header card-header-address">
+                                                        <div class="card-header">
                                                             <h5 class="card-title mb-0">
                                                                 <i class="fas fa-globe me-2 text-success"></i>TITIK KOORDINAT
                                                             </h5>
@@ -463,12 +491,12 @@
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label required-field">Latitude</label>
                                                                     <input type="text" class="form-control" id="latitude" name="latitude" placeholder="Latitude akan diambil otomatis" readonly required />
-                                                                    <div class="invalid-feedback">Latitude harus diisi</div>
+                                                                    <div class="invalid-feedback">Latitude harus diisi dengan format yang benar (contoh: -7.123456)</div>
                                                                 </div>
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label required-field">Longitude</label>
                                                                     <input type="text" class="form-control" id="longitude" name="longitude" placeholder="Longitude akan diambil otomatis" readonly required />
-                                                                    <div class="invalid-feedback">Longitude harus diisi</div>
+                                                                    <div class="invalid-feedback">Longitude harus diisi dengan format yang benar (contoh: 112.123456)</div>
                                                                 </div>
                                                                 <div class="col-md-12 mb-3">
                                                                     <button class="btn btn-get-location" type="button" id="btnGetLocation">
@@ -488,30 +516,11 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Status dan Foto -->
+                                            <!-- Foto -->
                                             <div class="row mt-3">
-                                                <div class="col-md-6">
+                                                <div class="col-md-12">
                                                     <div class="card address-card">
-                                                        <div class="card-header card-header-address">
-                                                            <h5 class="card-title mb-0">
-                                                                <i class="fas fa-info-circle me-2 text-success"></i>STATUS
-                                                            </h5>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <div class="form-group">
-                                                                <label class="form-label">Status Usaha</label>
-                                                                <select class="form-control" id="status" name="status">
-                                                                    <option value="Aktif">Aktif</option>
-                                                                    <option value="Non-Aktif">Non-Aktif</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="col-md-6">
-                                                    <div class="card address-card">
-                                                        <div class="card-header card-header-address">
+                                                        <div class="card-header">
                                                             <h5 class="card-title mb-0">
                                                                 <i class="fas fa-camera me-2 text-success"></i>FOTO
                                                             </h5>
@@ -566,19 +575,21 @@
                     <!-- FILTER SECTION -->
                     <div class="filter-section">
                         <div class="row align-items-center">
-                            <div class="col-md-3">
-                                <label class="form-label fw-bold">Filter Jenis Usaha:</label>
-                                <select class="form-select" id="filterJenisUsaha">
-                                    <option value="all">Semua Jenis Usaha</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
+                            <div class="col-md-5">
                                 <label class="form-label fw-bold">Filter Kelurahan:</label>
                                 <select class="form-select" id="filterKelurahan">
                                     <option value="all">Semua Kelurahan</option>
+                                    <?php 
+                                    $user_kec = $this->session->userdata('kecamatan') ?: 'Benowo';
+                                    if (isset($kel_list[$user_kec])) {
+                                        foreach ($kel_list[$user_kec] as $kel) {
+                                            echo '<option value="' . htmlspecialchars($kel) . '">' . htmlspecialchars($kel) . '</option>';
+                                        }
+                                    }
+                                    ?>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-5">
                                 <label class="form-label fw-bold">Filter Periode:</label>
                                 <select class="form-select" id="filterPeriode">
                                     <option value="all">Semua Periode</option>
@@ -588,9 +599,9 @@
                                     <option value="2023">Tahun 2023</option>
                                 </select>
                             </div>
-                            <div class="col-md-3 text-end">
-                                <button id="filterBtn" class="btn btn-primary"><i class="fas fa-filter me-2"></i>Filter</button>
-                                <button id="resetBtn" class="btn btn-outline-secondary"><i class="fas fa-redo me-2"></i>Reset</button>
+                            <div class="col-md-2 text-end">
+                                <button id="filterBtn" class="btn btn-primary mt-4"><i class="fas fa-filter me-2"></i>Filter</button>
+                                <button id="resetBtn" class="btn btn-outline-secondary mt-4"><i class="fas fa-redo me-2"></i>Reset</button>
                             </div>
                         </div>
                     </div>
@@ -599,17 +610,16 @@
                     <div class="card form-card mt-4">
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="pelakuUsahaTable" class="table table-bordered table-hover">
+                                <table id="pelakuUsahaTable" class="table table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
+                                            <th width="50">No</th>
                                             <th>Nama</th>
                                             <th>NIK</th>
                                             <th>Telepon</th>
-                                            <th>Jenis Usaha</th>
+                                            <th>Alamat</th>
                                             <th>Kelurahan</th>
-                                            <th>Status</th>
-                                            <th>Foto</th>
+                                            <th width="80">Foto</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -621,33 +631,30 @@
                                                     <td><?php echo htmlspecialchars($data['nama'] ?? '-'); ?></td>
                                                     <td><?php echo htmlspecialchars($data['nik'] ?? '-'); ?></td>
                                                     <td><?php echo htmlspecialchars($data['telepon'] ?? '-'); ?></td>
-                                                    <td><span class="badge bg-primary"><?php echo htmlspecialchars($data['jenis_usaha'] ?? '-'); ?></span></td>
+                                                    <td class="alamat-cell"><?php echo htmlspecialchars($data['alamat'] ?? '-'); ?></td>
                                                     <td><?php echo htmlspecialchars($data['kelurahan'] ?? '-'); ?></td>
-                                                    <td>
-                                                        <?php if (($data['status'] ?? 'Aktif') == 'Aktif'): ?>
-                                                            <span class="badge-status active">Aktif</span>
-                                                        <?php else: ?>
-                                                            <span class="badge-status inactive">Non-Aktif</span>
-                                                        <?php endif; ?>
-                                                    </td>
-                                                    <td>
+                                                    <td class="text-center">
                                                         <?php if (!empty($data['foto'])): ?>
-                                                            <a href="javascript:void(0)" onclick="showFoto('<?php echo base_url(); ?>uploads/pelaku_usaha/<?php echo $data['foto']; ?>')">
-                                                                <i class="fas fa-image"></i> Lihat
-                                                            </a>
+                                                            <img src="<?php echo base_url(); ?>uploads/pelaku_usaha/<?php echo $data['foto']; ?>" 
+                                                                 class="foto-thumbnail" 
+                                                                 onclick="showFoto('<?php echo base_url(); ?>uploads/pelaku_usaha/<?php echo $data['foto']; ?>')"
+                                                                 title="Klik untuk perbesar"
+                                                                 style="cursor: pointer;">
                                                         <?php else: ?>
                                                             <span class="badge bg-secondary">No Foto</span>
                                                         <?php endif; ?>
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <tr>
-                                                <td colspan="8" class="text-center">Tidak ada data</td>
-                                            </tr>
                                         <?php endif; ?>
                                     </tbody>
                                 </table>
+                                
+                                <?php if (empty($pelaku_usaha_data)): ?>
+                                <div class="text-center py-4">
+                                    <p class="text-muted mb-0">Tidak ada data pelaku usaha</p>
+                                </div>
+                                <?php endif; ?>
                             </div> 
                         </div>
                     </div>
@@ -681,7 +688,58 @@
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 
     <script>
+    // CSRF Token
+    var csrfName = '<?php echo addslashes($csrf_name); ?>';
+    var csrfHash = '<?php echo addslashes($csrf_hash); ?>';
+    var baseUrl = '<?php echo base_url(); ?>';
+    var userKecamatan = '<?php echo addslashes($this->session->userdata('kecamatan') ?: 'Benowo'); ?>';
+
     $(document).ready(function() {
+        // Nonaktifkan error DataTables
+        $.fn.dataTable.ext.errMode = 'none';
+        
+        // Inisialisasi DataTable
+        var table;
+        
+        try {
+            // Hancurkan DataTable yang sudah ada jika ada
+            if ($.fn.DataTable.isDataTable('#pelakuUsahaTable')) {
+                $('#pelakuUsahaTable').DataTable().destroy();
+            }
+            
+            // Cek apakah ada data
+            var hasData = $('#pelakuUsahaTable tbody tr').length > 0;
+            
+            if (hasData) {
+                table = $('#pelakuUsahaTable').DataTable({
+                    language: {
+                        search: "Cari:",
+                        lengthMenu: "Tampilkan _MENU_ data per halaman",
+                        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                        infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
+                        infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
+                        zeroRecords: "Tidak ada data yang ditemukan",
+                        paginate: {
+                            first: "Pertama",
+                            last: "Terakhir",
+                            next: "Berikutnya",
+                            previous: "Sebelumnya"
+                        }
+                    },
+                    pageLength: 10,
+                    lengthMenu: [5, 10, 25, 50, 100],
+                    order: [[0, 'asc']],
+                    destroy: true,
+                    retrieve: true
+                });
+                console.log('DataTable berhasil diinisialisasi dengan ' + hasData + ' data');
+            } else {
+                console.log('Tidak ada data, DataTable tidak diinisialisasi');
+            }
+        } catch (e) {
+            console.error('Error inisialisasi DataTable:', e);
+        }
+
         // PASTIKAN FORM HIDDEN SAAT PERTAMA KALI
         $('#formContainer').removeClass('show');
         
@@ -715,27 +773,45 @@
                         let lat = position.coords.latitude.toFixed(6);
                         let lng = position.coords.longitude.toFixed(6);
                         
-                        $('#latitude, #longitude').val(lat).removeClass('is-invalid');
-                        $('#latDisplay, #lngDisplay').text(lat);
+                        // Set nilai latitude dan longitude
+                        $('#latitude').val(lat).removeClass('is-invalid');
+                        $('#longitude').val(lng).removeClass('is-invalid');
+                        
+                        // Tampilkan di display
+                        $('#latDisplay').text(lat);
+                        $('#lngDisplay').text(lng);
                         $('#accuracyInfo').text('Akurasi: ±' + Math.round(position.coords.accuracy) + ' meter');
                         $('#coordinateInfo').show();
+                        
                         btn.html('<i class="fas fa-map-marker-alt me-2"></i>Ambil Lokasi').prop('disabled', false);
                         showAlert('success', 'Lokasi berhasil diambil!');
                     },
                     function(error) {
                         let msg = 'Gagal mengambil lokasi. ';
                         switch(error.code) {
-                            case 1: msg += 'Izin ditolak'; break;
-                            case 2: msg += 'Tidak tersedia'; break;
-                            case 3: msg += 'Timeout'; break;
+                            case error.PERMISSION_DENIED:
+                                msg += 'Izin lokasi ditolak. Silakan izinkan akses lokasi.';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                msg += 'Informasi lokasi tidak tersedia.';
+                                break;
+                            case error.TIMEOUT:
+                                msg += 'Waktu pengambilan lokasi habis.';
+                                break;
+                            default:
+                                msg += 'Terjadi kesalahan tidak dikenal.';
                         }
                         showAlert('danger', msg);
                         btn.html('<i class="fas fa-map-marker-alt me-2"></i>Ambil Lokasi').prop('disabled', false);
                     },
-                    { enableHighAccuracy: true, timeout: 10000 }
+                    { 
+                        enableHighAccuracy: true, 
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
                 );
             } else {
-                showAlert('danger', 'Browser tidak mendukung geolocation');
+                showAlert('danger', 'Browser Anda tidak mendukung geolocation');
             }
         });
 
@@ -775,7 +851,40 @@
         $('#nik').on('input', function() {
             let nik = $(this).val().replace(/\D/g, '').slice(0, 16);
             $(this).val(nik);
+            
+            // Cek NIK jika panjangnya 16 digit
+            if (nik.length === 16) {
+                checkNIK(nik);
+            } else {
+                $('#nik-status').html('');
+            }
         });
+
+        // Fungsi cek NIK via AJAX
+        function checkNIK(nik) {
+            let data = {};
+            data[csrfName] = csrfHash;
+            data.nik = nik;
+            
+            $.ajax({
+                url: baseUrl + 'P_Input_Pelaku_Usaha/check_nik',
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function(res) {
+                    if (res.status === 'exist') {
+                        $('#nik-status').html('<span class="text-danger"><i class="fas fa-times-circle me-1"></i>' + res.message + '</span>');
+                        $('#nik').addClass('is-invalid');
+                    } else {
+                        $('#nik-status').html('<span class="text-success"><i class="fas fa-check-circle me-1"></i>NIK tersedia</span>');
+                        $('#nik').removeClass('is-invalid');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error checking NIK:', error);
+                }
+            });
+        }
 
         // ========== TELEPON VALIDATION ==========
         $('#telepon').on('input', function() {
@@ -791,14 +900,17 @@
             let isValid = true;
             $('.is-invalid').removeClass('is-invalid');
             
-            let fields = ['nama', 'nik', 'alamat', 'kelurahan', 'jenis_usaha', 'latitude', 'longitude'];
+            // Validasi field wajib
+            let fields = ['nama', 'nik', 'alamat', 'kelurahan', 'latitude', 'longitude'];
             fields.forEach(function(id) {
-                if (!$('#' + id).val()) {
+                let value = $('#' + id).val();
+                if (!value || value.trim() === '') {
                     $('#' + id).addClass('is-invalid');
                     isValid = false;
                 }
             });
 
+            // Validasi panjang NIK
             if ($('#nik').val().length !== 16) {
                 $('#nik').addClass('is-invalid');
                 isValid = false;
@@ -814,7 +926,7 @@
             btn.html('<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...').prop('disabled', true);
 
             $.ajax({
-                url: '<?php echo base_url("P_Input_Pelaku_Usaha/save"); ?>',
+                url: baseUrl + 'P_Input_Pelaku_Usaha/save',
                 type: 'POST',
                 data: new FormData(this),
                 processData: false,
@@ -826,13 +938,18 @@
                         resetForm();
                         $('#formContainer').removeClass('show');
                         $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT PELAKU USAHA');
-                        setTimeout(() => location.reload(), 1500);
+                        
+                        // Refresh halaman
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1500);
                     } else {
                         showAlert('danger', res.message);
                     }
                 },
-                error: function(xhr) {
-                    showAlert('danger', 'Error: ' + xhr.responseText);
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', error);
+                    showAlert('danger', 'Terjadi kesalahan server');
                 },
                 complete: function() {
                     btn.html('<i class="fas fa-save me-1"></i>Simpan Data').prop('disabled', false);
@@ -843,7 +960,7 @@
         // ========== RESET FORM ==========
         function resetForm() {
             $('#formPelakuUsaha')[0].reset();
-            $('#kecamatan').val('<?php echo $this->session->userdata('kecamatan') ?: 'Benowo'; ?>');
+            $('#kecamatan').val(userKecamatan);
             $('#coordinateInfo').hide();
             $('#photoPreview').hide();
             $('#photoPlaceholder').show();
@@ -869,21 +986,29 @@
             $('#fotoModal').modal('show');
         };
 
-        // ========== DATATABLE ==========
-        $('#pelakuUsahaTable').DataTable({
-            language: {
-                search: "Cari:",
-                lengthMenu: "Tampilkan _MENU_ data",
-                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                zeroRecords: "Tidak ada data",
-                paginate: {
-                    first: "Pertama",
-                    last: "Terakhir",
-                    next: "Berikutnya",
-                    previous: "Sebelumnya"
-                }
-            },
-            pageLength: 10
+        // ========== FILTER ==========
+        $('#filterBtn').on('click', function() {
+            let kelurahan = $('#filterKelurahan').val();
+            let periode = $('#filterPeriode').val();
+            
+            // Filter berdasarkan periode (redirect)
+            if (periode !== 'all') {
+                window.location.href = baseUrl + 'P_Input_Pelaku_Usaha/index?tahun=' + periode;
+                return;
+            }
+            
+            // Filter berdasarkan kelurahan menggunakan DataTable
+            if (kelurahan !== 'all' && table) {
+                table.column(5).search(kelurahan).draw();
+            } else if (table) {
+                table.search('').columns().search('').draw();
+            }
+        });
+
+        $('#resetBtn').on('click', function() {
+            $('#filterKelurahan').val('all');
+            $('#filterPeriode').val('all');
+            window.location.href = baseUrl + 'P_Input_Pelaku_Usaha';
         });
     });
     </script>

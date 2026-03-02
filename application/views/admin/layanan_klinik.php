@@ -83,30 +83,6 @@
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       }
 
-      .dt-buttons .btn-primary {
-        background-color: #0d6efd !important;
-        border-color: #0d6efd !important;
-        color: white !important;
-      }
-
-      .dt-buttons .btn-success {
-        background-color: #198754 !important;
-        border-color: #198754 !important;
-        color: white !important;
-      }
-
-      .dt-buttons .btn-danger {
-        background-color: #dc3545 !important;
-        border-color: #dc3545 !important;
-        color: white !important;
-      }
-
-      .dt-buttons .btn-info {
-        background-color: #0dcaf0 !important;
-        border-color: #0dcaf0 !important;
-        color: white !important;
-      }
-
       table.dataTable {
         border-collapse: separate !important;
         border-spacing: 0 8px !important;
@@ -170,97 +146,6 @@
         color: white;
       }
 
-      .btn-toggle {
-        background-color: rgba(40, 167, 69, 0.1);
-        color: #28a745;
-      }
-
-      .btn-toggle:hover {
-        background-color: #28a745;
-        color: white;
-      }
-
-      .btn-toggle.inactive {
-        background-color: rgba(108, 117, 125, 0.1);
-        color: #6c757d;
-      }
-
-      .btn-toggle.inactive:hover {
-        background-color: #6c757d;
-        color: white;
-      }
-
-      .badge-kategori {
-        font-size: 12px;
-        font-weight: 500;
-        padding: 4px 10px;
-        border-radius: 20px;
-        white-space: nowrap;
-      }
-
-      .badge-grooming {
-        background-color: #e8f5e9;
-        color: #2e7d32;
-      }
-
-      .badge-penitipan {
-        background-color: #fff3e0;
-        color: #f57c00;
-      }
-
-      .badge-vaksinasi {
-        background-color: #e3f2fd;
-        color: #1976d2;
-      }
-
-      .badge-bedah {
-        background-color: #f3e5f5;
-        color: #7b1fa2;
-      }
-
-      .badge-sterilisasi {
-        background-color: #fce4ec;
-        color: #c2185b;
-      }
-
-      .badge-perawatan {
-        background-color: #e0f7fa;
-        color: #006064;
-      }
-
-      .badge-diagnostik {
-        background-color: #fff9c4;
-        color: #f57f17;
-      }
-
-      .badge-emergensi {
-        background-color: #ffebee;
-        color: #b71c1c;
-      }
-
-      .badge-default {
-        background-color: #f5f5f5;
-        color: #616161;
-      }
-
-      .badge-status {
-        font-size: 11px;
-        font-weight: 500;
-        padding: 3px 8px;
-        border-radius: 15px;
-        white-space: nowrap;
-      }
-
-      .badge-active {
-        background-color: #e8f5e9;
-        color: #2e7d32;
-      }
-
-      .badge-inactive {
-        background-color: #ffebee;
-        color: #b71c1c;
-      }
-
       .btn-primary-custom {
         background: linear-gradient(135deg, #4361ee 0%, #3a56d4 100%);
         border: none;
@@ -283,11 +168,6 @@
         border: none;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         margin: 20px;
-      }
-
-      .harga-text {
-        font-weight: 600;
-        color: #2e7d32;
       }
     </style>
   </head>
@@ -357,7 +237,7 @@
                       <a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a>
                     </li>
                     <li>
-                      <a href="<?= site_url('pengobatan') ?>" class="nav-link">Pengobatan</a>
+                      <a href="<?= site_url('obat') ?>" class="nav-link">Obat</a>
                     </li>
                     <li>
                       <a href="<?= site_url('vaksinasi') ?>" class="nav-link">Vaksinasi</a>
@@ -420,6 +300,10 @@
                         >Penjual Obat Hewan</a
                       >
                     </li>
+                     <li>
+                        <a href="<?= site_url('data_rpu') ?>" class="nav-link"
+                          >RPU</a
+                        >
                   </ul>
                 </div>
               </li>
@@ -520,7 +404,7 @@
 
             <!-- Modal Tambah Data -->
             <div class="modal fade" id="tambahDataModal" tabindex="-1">
-              <div class="modal-dialog modal-lg">
+              <div class="modal-dialog">
                 <div class="modal-content">
                   <form action="<?= base_url('layanan_klinik/simpan'); ?>" method="post">
                     <div class="modal-header">
@@ -532,31 +416,32 @@
                     <div class="modal-body">
                       <div class="mb-3">
                         <label class="form-label">Nama Layanan <span class="text-danger">*</span></label>
-                        <input type="text" name="nama_layanan" class="form-control" required>
+                        <input type="text" name="nama_layanan" class="form-control" placeholder="Masukkan nama layanan" required>
                       </div>
-                      <div class="row">
-                        <div class="col-md-6 mb-3">
-                          <label class="form-label">Kategori <span class="text-danger">*</span></label>
-                          <select name="kategori" class="form-control" required>
-                            <option value="">Pilih Kategori</option>
-                            <?php foreach($kategori_options as $key => $value): ?>
-                              <option value="<?= $key ?>"><?= $value ?></option>
-                            <?php endforeach; ?>
-                          </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label class="form-label">Harga (Rp)</label>
-                          <input type="number" name="harga" class="form-control" min="0" step="1000" value="0">
-                        </div>
+                      <div class="mb-3">
+                        <label class="form-label">Kategori</label>
+                        <select name="kategori" class="form-control">
+                          <option value="">Pilih Kategori (Opsional)</option>
+                          <?php foreach($kategori_options as $key => $value): ?>
+                            <option value="<?= $key ?>"><?= $value ?></option>
+                          <?php endforeach; ?>
+                        </select>
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Deskripsi</label>
-                        <textarea name="deskripsi" class="form-control" rows="3"></textarea>
+                        <textarea name="deskripsi" class="form-control" rows="2" placeholder="Masukkan deskripsi (opsional)"></textarea>
                       </div>
-                      <div class="mb-3">
-                        <div class="form-check">
-                          <input type="checkbox" name="status" class="form-check-input" value="1" checked>
-                          <label class="form-check-label">Aktif</label>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Harga (Rp)</label>
+                          <input type="number" name="harga" class="form-control" min="0" step="1000" value="0" placeholder="0">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Status</label>
+                          <div class="form-check">
+                            <input type="checkbox" name="status" class="form-check-input" value="1" checked>
+                            <label class="form-check-label">Aktif</label>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -571,7 +456,7 @@
 
             <!-- Modal Edit Data -->
             <div class="modal fade" id="editDataModal" tabindex="-1">
-              <div class="modal-dialog modal-lg">
+              <div class="modal-dialog">
                 <div class="modal-content">
                   <form action="<?= base_url('layanan_klinik/update'); ?>" method="post">
                     <input type="hidden" name="id_layanan" id="edit_id">
@@ -586,29 +471,30 @@
                         <label class="form-label">Nama Layanan <span class="text-danger">*</span></label>
                         <input type="text" name="nama_layanan" id="edit_nama" class="form-control" required>
                       </div>
+                      <div class="mb-3">
+                        <label class="form-label">Kategori</label>
+                        <select name="kategori" id="edit_kategori" class="form-control">
+                          <option value="">Pilih Kategori (Opsional)</option>
+                          <?php foreach($kategori_options as $key => $value): ?>
+                            <option value="<?= $key ?>"><?= $value ?></option>
+                          <?php endforeach; ?>
+                        </select>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">Deskripsi</label>
+                        <textarea name="deskripsi" id="edit_deskripsi" class="form-control" rows="2"></textarea>
+                      </div>
                       <div class="row">
-                        <div class="col-md-6 mb-3">
-                          <label class="form-label">Kategori <span class="text-danger">*</span></label>
-                          <select name="kategori" id="edit_kategori" class="form-control" required>
-                            <option value="">Pilih Kategori</option>
-                            <?php foreach($kategori_options as $key => $value): ?>
-                              <option value="<?= $key ?>"><?= $value ?></option>
-                            <?php endforeach; ?>
-                          </select>
-                        </div>
                         <div class="col-md-6 mb-3">
                           <label class="form-label">Harga (Rp)</label>
                           <input type="number" name="harga" id="edit_harga" class="form-control" min="0" step="1000">
                         </div>
-                      </div>
-                      <div class="mb-3">
-                        <label class="form-label">Deskripsi</label>
-                        <textarea name="deskripsi" id="edit_deskripsi" class="form-control" rows="3"></textarea>
-                      </div>
-                      <div class="mb-3">
-                        <div class="form-check">
-                          <input type="checkbox" name="status" id="edit_status" class="form-check-input" value="1">
-                          <label class="form-check-label">Aktif</label>
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Status</label>
+                          <div class="form-check">
+                            <input type="checkbox" name="status" id="edit_status" class="form-check-input" value="1">
+                            <label class="form-check-label">Aktif</label>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -632,11 +518,7 @@
                           <tr>
                             <th width="50">No</th>
                             <th>Nama Layanan</th>
-                            <th>Kategori</th>
-                            <th>Deskripsi</th>
-                            <th>Harga</th>
-                            <th>Status</th>
-                            <th width="150">Aksi</th>
+                            <th width="100">Aksi</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -647,56 +529,16 @@
                                 <td><?= $no++; ?></td>
                                 <td><?= htmlspecialchars($row->nama_layanan ?? ''); ?></td>
                                 <td>
-                                  <?php
-                                    $kategori = $row->kategori ?? '';
-                                    $badge_class = 'badge-default';
-                                    
-                                    if($kategori == 'Grooming') $badge_class = 'badge-grooming';
-                                    elseif($kategori == 'Penitipan') $badge_class = 'badge-penitipan';
-                                    elseif($kategori == 'Vaksinasi') $badge_class = 'badge-vaksinasi';
-                                    elseif($kategori == 'Bedah') $badge_class = 'badge-bedah';
-                                    elseif($kategori == 'Sterilisasi') $badge_class = 'badge-sterilisasi';
-                                    elseif($kategori == 'Perawatan') $badge_class = 'badge-perawatan';
-                                    elseif($kategori == 'Diagnostik') $badge_class = 'badge-diagnostik';
-                                    elseif($kategori == 'Emergensi') $badge_class = 'badge-emergensi';
-                                  ?>
-                                  <span class="badge-kategori <?= $badge_class ?>">
-                                    <?= htmlspecialchars($kategori); ?>
-                                  </span>
-                                </td>
-                                <td><?= htmlspecialchars($row->deskripsi ?? '-'); ?></td>
-                                <td>
-                                  <span class="harga-text">
-                                    Rp <?= number_format($row->harga ?? 0, 0, ',', '.'); ?>
-                                  </span>
-                                </td>
-                                <td>
-                                  <?php if($row->status == 1): ?>
-                                    <span class="badge-status badge-active">
-                                      <i class="fas fa-check-circle me-1"></i>Aktif
-                                    </span>
-                                  <?php else: ?>
-                                    <span class="badge-status badge-inactive">
-                                      <i class="fas fa-times-circle me-1"></i>Tidak Aktif
-                                    </span>
-                                  <?php endif; ?>
-                                </td>
-                                <td>
                                   <button class="btn btn-action btn-edit" 
                                           title="Edit"
                                           data-id="<?= $row->id_layanan; ?>"
                                           data-nama="<?= htmlspecialchars($row->nama_layanan); ?>"
-                                          data-kategori="<?= htmlspecialchars($row->kategori); ?>"
-                                          data-deskripsi="<?= htmlspecialchars($row->deskripsi); ?>"
-                                          data-harga="<?= $row->harga; ?>"
-                                          data-status="<?= $row->status; ?>">
+                                          data-kategori="<?= htmlspecialchars($row->kategori ?? ''); ?>"
+                                          data-deskripsi="<?= htmlspecialchars($row->deskripsi ?? ''); ?>"
+                                          data-harga="<?= $row->harga ?? 0; ?>"
+                                          data-status="<?= $row->status ?? 1; ?>">
                                     <i class="fas fa-edit"></i>
                                   </button>
-                                  <a href="<?= base_url('layanan_klinik/toggle_status/'.$row->id_layanan); ?>" 
-                                     class="btn btn-action <?= ($row->status == 1) ? 'btn-toggle' : 'btn-toggle inactive' ?>" 
-                                     title="<?= ($row->status == 1) ? 'Nonaktifkan' : 'Aktifkan' ?>">
-                                    <i class="fas <?= ($row->status == 1) ? 'fa-toggle-on' : 'fa-toggle-off' ?>"></i>
-                                  </a>
                                   <button class="btn btn-action btn-delete" 
                                           title="Hapus"
                                           data-id="<?= $row->id_layanan; ?>"
@@ -708,7 +550,7 @@
                             <?php endforeach; ?>
                           <?php else: ?>
                             <tr>
-                              <td colspan="7" class="text-center">Tidak ada data layanan klinik</td>
+                              <td colspan="3" class="text-center">Tidak ada data layanan klinik</td>
                             </tr>
                           <?php endif; ?>
                         </tbody>
@@ -789,7 +631,7 @@
           responsive: true,
           order: [[0, 'asc']],
           columnDefs: [
-            { orderable: false, targets: [6] } // Non-aktifkan sorting untuk kolom Aksi
+            { orderable: false, targets: [2] } // Non-aktifkan sorting untuk kolom Aksi
           ]
         });
 

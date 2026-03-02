@@ -457,7 +457,7 @@
                       >
                     </li>
                     <li>
-                      <a href="pengobatan.html" class="nav-link">Pengobatan</a>
+                      <a href="<?= site_url('obat') ?>" class="nav-link">Obat</a>
                     </li>
                     <li>
                       <a href="vaksinasi.html" class="nav-link">Vaksinasi</a>
@@ -530,6 +530,11 @@
                     <li>
                       <a href="<?= site_url('data_penjual_obat') ?>" class="nav-link active"
                         >Penjual Obat Hewan</a
+                      >
+                    </li>
+                      <li>
+                      <a href="<?= site_url('data_rpu') ?>" class="nav-link"
+                        >RPU</a
                       >
                     </li>
                   </ul>

@@ -1,772 +1,676 @@
 <!doctype html>
 <html lang="id">
-  <head>
+<head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Master Data RPU - SIPETGIS</title>
-    <meta
-      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-      name="viewport"
-    />
-    <link
-      rel="icon"
-      href="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/kaiadmin/favicon.ico"
-      type="image/x-icon"
-    />
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+    <link rel="icon" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/kaiadmin/favicon.ico" type="image/x-icon" />
 
+    <!-- Fonts and icons -->
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
-      WebFont.load({
-        google: { families: ["Public Sans:300,400,500,600,700"] },
-        custom: {
-          families: [
-            "Font Awesome 5 Solid",
-            "Font Awesome 5 Regular",
-            "Font Awesome 5 Brands",
-            "simple-line-icons",
-          ],
-          urls: ["<?php echo base_url(); ?>assets/SIPETGIS/assets/css/fonts.min.css"],
-        },
-        active: function () {
-          sessionStorage.fonts = true;
-        },
-      });
+        WebFont.load({
+            google: { families: ["Public Sans:300,400,500,600,700"] },
+            custom: {
+                families: [
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["<?php echo base_url(); ?>assets/SIPETGIS/assets/css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
     </script>
 
+    <!-- CSS Files -->
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/css/plugins.min.css" />
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/css/kaiadmin.min.css" />
 
-    <link
-      rel="stylesheet"
-      href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css"
-    />
-    <!-- Leaflet CSS for Map -->
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css" />
+    
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <style>
-      .dataTables_wrapper .dataTables_length,
-      .dataTables_wrapper .dataTables_filter,
-      .dataTables_wrapper .dataTables_info,
-      .dataTables_wrapper .dataTables_paginate {
-        padding: 10px;
-      }
-      
-      .dt-buttons .btn {
-        border-radius: 5px;
-        margin-right: 5px;
-      }
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_paginate {
+            padding: 10px;
+        }
+        
+        .dt-buttons .btn {
+            border-radius: 5px;
+            margin-right: 5px;
+            font-weight: 500;
+            padding: 6px 15px;
+            transition: all 0.3s;
+        }
 
-      .dt-buttons .btn {
-        border-radius: 5px;
-        font-weight: 500;
-        padding: 6px 15px;
-        margin-right: 5px;
-        transition: all 0.3s;
-      }
+        .dt-buttons .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
 
-      .dt-buttons .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      }
+        .dt-buttons .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
 
-      .dt-buttons .btn-primary {
-        background-color: #0d6efd !important;
-        border-color: #0d6efd !important;
-        color: white !important;
-      }
+        .dt-buttons .btn-success {
+            background-color: #198754;
+            border-color: #198754;
+        }
 
-      .dt-buttons .btn-success {
-        background-color: #198754 !important;
-        border-color: #198754 !important;
-        color: white !important;
-      }
+        .dt-buttons .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
 
-      .dt-buttons .btn-danger {
-        background-color: #dc3545 !important;
-        border-color: #dc3545 !important;
-        color: white !important;
-      }
+        .dt-buttons .btn-info {
+            background-color: #0dcaf0;
+            border-color: #0dcaf0;
+        }
+        
+        table.dataTable {
+            border-collapse: separate !important;
+            border-spacing: 0 8px !important;
+        }
 
-      .dt-buttons .btn-info {
-        background-color: #0dcaf0 !important;
-        border-color: #0dcaf0 !important;
-        color: white !important;
-      }
-      
-      table.dataTable {
-        border-collapse: separate !important;
-        border-spacing: 0 8px !important;
-      }
+        table.dataTable thead th {
+            border: none !important;
+            background-color: #f8f9fa;
+            color: #495057;
+            font-weight: 600;
+            padding: 15px 10px;
+            white-space: nowrap;
+        }
 
-      table.dataTable thead th {
-        border: none !important;
-        background-color: #f8f9fa;
-        color: #495057;
-        font-weight: 600;
-        padding: 15px 10px;
-        white-space: nowrap;
-      }
+        table.dataTable tbody td {
+            background-color: white;
+            border: none !important;
+            padding: 15px 10px;
+            vertical-align: middle;
+        }
 
-      table.dataTable tbody td {
-        background-color: white;
-        border: none !important;
-        padding: 15px 10px;
-        vertical-align: middle;
-      }
+        table.dataTable tbody tr {
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
 
-      table.dataTable tbody tr {
-        border-radius: 8px;
-        margin-bottom: 8px;
-        transition: all 0.3s;
-      }
+        table.dataTable tbody tr:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
 
-      table.dataTable tbody tr:hover {
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        transform: translateY(-2px);
-      }
+        .btn-action {
+            width: 35px;
+            height: 35px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 3px;
+            transition: all 0.2s;
+        }
 
-      .btn-action {
-        width: 35px;
-        height: 35px;
-        border-radius: 6px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 3px;
-        transition: all 0.2s;
-      }
+        .btn-edit {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: #4361ee;
+        }
 
-      .btn-edit {
-        background-color: rgba(67, 97, 238, 0.1);
-        color: #4361ee;
-      }
+        .btn-edit:hover {
+            background-color: #4361ee;
+            color: white;
+        }
 
-      .btn-edit:hover {
-        background-color: #4361ee;
-        color: white;
-      }
+        .btn-delete {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
 
-      .btn-delete {
-        background-color: rgba(220, 53, 69, 0.1);
-        color: #dc3545;
-      }
+        .btn-delete:hover {
+            background-color: #dc3545;
+            color: white;
+        }
 
-      .btn-delete:hover {
-        background-color: #dc3545;
-        color: white;
-      }
+        .btn-view {
+            background-color: rgba(32, 201, 151, 0.1);
+            color: #20c997;
+        }
 
-      .btn-view {
-        background-color: rgba(32, 201, 151, 0.1);
-        color: #20c997;
-      }
+        .btn-view:hover {
+            background-color: #20c997;
+            color: white;
+        }
 
-      .btn-view:hover {
-        background-color: #20c997;
-        color: white;
-      }
+        .pagination .page-link {
+            border: none;
+            color: #495057;
+            margin: 0 3px;
+            border-radius: 6px !important;
+        }
 
-      .pagination .page-link {
-        border: none;
-        color: #495057;
-        margin: 0 3px;
-        border-radius: 6px !important;
-      }
+        .pagination .page-item.active .page-link {
+            background-color: #4361ee;
+            color: white;
+        }
 
-      .pagination .page-item.active .page-link {
-        background-color: #4361ee;
-        color: white;
-      }
+        .pagination .page-link:hover {
+            background-color: #f8f9fa;
+        }
 
-      .pagination .page-link:hover {
-        background-color: #f8f9fa;
-      }
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #4361ee 0%, #3a56d4 100%);
+            border: none;
+            border-radius: 6px;
+            padding: 8px 20px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
 
-      .btn-primary-custom {
-        background: linear-gradient(135deg, #4361ee 0%, #3a56d4 100%);
-        border: none;
-        border-radius: 6px;
-        padding: 8px 20px;
-        font-weight: 500;
-        transition: all 0.3s;
-      }
+        .btn-primary-custom:hover {
+            background: linear-gradient(135deg, #3a56d4 0%, #3046b8 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
 
-      .btn-primary-custom:hover {
-        background: linear-gradient(135deg, #3a56d4 0%, #3046b8 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-      }
+        .alert {
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
 
-      /* Flash message styles */
-      .alert {
-        border-radius: 8px;
-        border: none;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-      }
+        .map-preview {
+            height: 200px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid #dee2e6;
+            background-color: #f8f9fa;
+            z-index: 1;
+        }
 
-      /* Map preview styles */
-      .map-preview {
-        height: 200px;
-        border-radius: 8px;
-        margin-top: 10px;
-        border: 1px solid #dee2e6;
-        background-color: #f8f9fa;
-      }
+        .coordinate-badge {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            font-size: 11px;
+            font-weight: 500;
+            padding: 2px 8px;
+            border-radius: 12px;
+            display: inline-block;
+            margin: 2px 0;
+        }
 
-      .coordinate-badge {
-        background-color: #e3f2fd;
-        color: #1976d2;
-        font-size: 11px;
-        font-weight: 500;
-        padding: 2px 8px;
-        border-radius: 12px;
-        display: inline-block;
-        margin: 2px 0;
-      }
+        .text-muted-small {
+            font-size: 11px;
+            color: #6c757d;
+            margin-top: 2px;
+        }
 
-      .text-muted-small {
-        font-size: 11px;
-        color: #6c757d;
-        margin-top: 2px;
-      }
+        /* Fix for modal map display */
+        .modal .map-preview {
+            z-index: 1060;
+        }
+        
+        .leaflet-popup {
+            z-index: 1070;
+        }
     </style>
-  </head>
+</head>
 
-  <body>
+<body>
     <div class="wrapper">
-      <!-- Sidebar -->
-      <div class="sidebar" data-background-color="white">
-        <div class="sidebar-logo">
-          <!-- Logo Header -->
-          <div class="logo-header" data-background-color="white">
-            <a href="<?php echo site_url('dashboard'); ?>" class="logo" style="text-decoration: none">
-              <div
-                style="
-                  color: #1e3a8a;
-                  font-weight: 800;
-                  font-size: 24px;
-                  font-family:
-                    &quot;Segoe UI&quot;, Tahoma, Geneva, Verdana, sans-serif;
-                  letter-spacing: 0.5px;
-                  line-height: 1;
-                "
-              >
-                SIPETGIS
-              </div>
-            </a>
-            <div class="nav-toggle">
-              <button class="btn btn-toggle toggle-sidebar">
-                <i class="gg-menu-right"></i>
-              </button>
-              <button class="btn btn-toggle sidenav-toggler">
-                <i class="gg-menu-left"></i>
-              </button>
+        <!-- Sidebar -->
+        <div class="sidebar" data-background-color="white">
+            <div class="sidebar-logo">
+                <div class="logo-header" data-background-color="white">
+                    <a href="<?php echo site_url('dashboard'); ?>" class="logo" style="text-decoration: none">
+                        <div style="color: #1e3a8a; font-weight: 800; font-size: 24px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; letter-spacing: 0.5px; line-height: 1;">
+                            SIPETGIS
+                        </div>
+                    </a>
+                    <div class="nav-toggle">
+                        <button class="btn btn-toggle toggle-sidebar">
+                            <i class="gg-menu-right"></i>
+                        </button>
+                        <button class="btn btn-toggle sidenav-toggler">
+                            <i class="gg-menu-left"></i>
+                        </button>
+                    </div>
+                    <button class="topbar-toggler more">
+                        <i class="gg-more-vertical-alt"></i>
+                    </button>
+                </div>
             </div>
-            <button class="topbar-toggler more">
-              <i class="gg-more-vertical-alt"></i>
-            </button>
-          </div>
-          <!-- End Logo Header -->
+            <div class="sidebar-wrapper scrollbar scrollbar-inner">
+                <div class="sidebar-content">
+                    <ul class="nav nav-secondary">
+                        <li class="nav-item">
+                            <a href="<?php echo site_url('dashboard'); ?>">
+                                <i class="fas fa-home"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                        <li class="nav-section">
+                            <span class="sidebar-mini-icon">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </span>
+                            <h4 class="text-section">Menu Utama</h4>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#masterDataSubmenu" role="button" aria-expanded="true">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-database me-2"></i>
+                                    <span>Master Data</span>
+                                </div>
+                                <i class="fas fa-chevron-down ms-2"></i>
+                            </a>
+                            <div class="collapse show" id="masterDataSubmenu">
+                                <ul class="list-unstyled ps-4">
+                                    <li>
+                                        <a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('rpu') ?>" class="nav-link active">RPU</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('obat') ?>" class="nav-link">Obat</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('vaksinasi') ?>" class="nav-link">Vaksinasi</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('komoditas') ?>" class="nav-link">Komoditas</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('layanan_klinik') ?>" class="nav-link">Layanan Klinik</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center justify-content-between collapsed" data-bs-toggle="collapse" href="#dataSubmenu" role="button" aria-expanded="false">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-users me-2"></i>
+                                    <span>Data</span>
+                                </div>
+                                <i class="fas fa-chevron-down ms-2"></i>
+                            </a>
+                            <div class="collapse" id="dataSubmenu">
+                                <ul class="list-unstyled ps-4">
+                                    <li>
+                                        <a href="<?= site_url('data_kepemilikan') ?>" class="nav-link">Kepemilikan Ternak</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('data_history_ternak') ?>" class="nav-link">History Data Ternak</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('data_vaksinasi') ?>" class="nav-link">Vaksinasi</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('data_history_vaksinasi') ?>" class="nav-link">History Vaksinasi</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('data_pengobatan') ?>" class="nav-link">Pengobatan Ternak</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('data_penjual_pakan') ?>" class="nav-link">Penjual Pakan Ternak</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('data_klinik') ?>" class="nav-link">Klinik Hewan</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('data_penjual_obat') ?>" class="nav-link">Penjual Obat Hewan</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo base_url(); ?>laporan">
+                                <i class="fas fa-chart-bar"></i>
+                                <p>Laporan</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo base_url(); ?>peta_sebaran">
+                                <i class="fas fa-map-marked-alt"></i>
+                                <p>Peta Sebaran</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="sidebar-wrapper scrollbar scrollbar-inner">
-          <div class="sidebar-content">
-            <ul class="nav nav-secondary">
-              <li class="nav-item">
-                <a href="<?php echo site_url('dashboard'); ?>">
-                  <i class="fas fa-home"></i>
-                  <p>Dashboard</p>
-                </a>
-              </li>
-              <li class="nav-section">
-                <span class="sidebar-mini-icon">
-                  <i class="fa fa-ellipsis-h"></i>
-                </span>
-                <h4 class="text-section">Menu Utama</h4>
-              </li>
-              <li class="nav-item active">
-                <a
-                  class="nav-link d-flex align-items-center justify-content-between"
-                  data-bs-toggle="collapse"
-                  href="#masterDataSubmenu"
-                  role="button"
-                  aria-expanded="true"
-                >
-                  <div class="d-flex align-items-center">
-                    <i class="fas fa-database me-2"></i>
-                    <span>Master Data</span>
-                  </div>
-                  <i class="fas fa-chevron-down ms-2"></i>
-                </a>
-                <div class="collapse show" id="masterDataSubmenu">
-                  <ul class="list-unstyled ps-4">
-                    <li>
-                       <a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a>
-                    </li>
-                    <li>
-                       <a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a>
-                    </li>
-                    <li>
-                      <a href="<?= site_url('rpu') ?>" class="nav-link active">RPU</a>
-                    </li>
-                    <li>
-                      <a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a>
-                    </li>
-                    <li>
-                      <a href="<?= site_url('pengobatan') ?>" class="nav-link">Pengobatan</a>
-                    </li>
-                    <li>
-                      <a href="<?= site_url('vaksinasi') ?>" class="nav-link">Vaksinasi</a>
-                    </li>
-                    <li>
-                      <a href="<?= site_url('komoditas') ?>" class="nav-link">Komoditas</a>
-                    </li>
-                     <li>
-                      <a href="<?= site_url('layanan_klinik') ?>" class="nav-link">Layanan Klinik</a>
-                    </li>
-                  </ul>
-                </div>
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link d-flex align-items-center justify-content-between collapsed"
-                  data-bs-toggle="collapse"
-                  href="#dataSubmenu"
-                  role="button"
-                  aria-expanded="false"
-                >
-                  <div class="d-flex align-items-center">
-                    <i class="fas fa-users me-2"></i>
-                    <span>Data</span>
-                  </div>
-                  <i class="fas fa-chevron-down ms-2"></i>
-                </a>
-                <div class="collapse" id="dataSubmenu">
-                  <ul class="list-unstyled ps-4">
-                    <li>
-                      <a href="<?= site_url('data_kepemilikan') ?>" class="nav-link"
-                        >Kepemilikan Ternak</a
-                      >
-                    </li>
-                    <li>
-                      <a href="<?= site_url('data_history_ternak') ?>" class="nav-link"
-                        >History Data Ternak</a
-                      >
-                    </li>
-                    <li>
-                      <a href="<?= site_url('data_vaksinasi') ?>" class="nav-link"
-                        >Vaksinasi</a
-                      >
-                    </li>
-                    <li>
-                      <a href="<?= site_url('data_history_vaksinasi') ?>" class="nav-link"
-                        >History Vaksinasi</a
-                      >
-                    </li>
-                    <li>
-                      <a href="<?= site_url('data_pengobatan') ?>" class="nav-link"
-                        >Pengobatan Ternak</a
-                      >
-                    </li>
-                    <li>
-                      <a href="<?= site_url('data_penjual_pakan') ?>" class="nav-link"
-                        >Penjual Pakan Ternak</a
-                      >
-                    </li>
-                     <li>
-                      <a href="<?= site_url('data_klinik') ?>" class="nav-link"
-                        >Klinik Hewan</a
-                      >
-                    </li>
-                     <li>
-                      <a href="<?= site_url('data_penjual_obat') ?>" class="nav-link"
-                        >Penjual Obat Hewan</a
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </li>
-              <li class="nav-item">
-                <a href="<?php echo base_url(); ?>laporan">
-                  <i class="fas fa-chart-bar"></i>
-                  <p>Laporan</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="<?php echo base_url(); ?>peta_sebaran">
-                  <i class="fas fa-map-marked-alt"></i>
-                  <p>Peta Sebaran</p>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <!-- End Sidebar -->
+        <!-- End Sidebar -->
 
-      <div class="main-panel">
-        <div class="main-header">
-          <div class="main-header-logo">
-            <!-- End Logo Header -->
-          </div>
-          <!-- Navbar Header -->
-          <nav
-            class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
-          >
-            <div class="container-fluid">
-              <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
-                <li
-                  class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none"
-                >
-                  <a
-                    class="nav-link dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                    href="#"
-                    role="button"
-                    aria-expanded="false"
-                    aria-haspopup="true"
-                  >
-                    <i class="fa fa-search"></i>
-                  </a>
-                  <ul class="dropdown-menu dropdown-search animated fadeIn">
-                    <form class="navbar-left navbar-form nav-search">
-                      <div class="input-group">
-                        <input
-                          type="text"
-                          placeholder="Search ..."
-                          class="form-control"
-                        />
-                      </div>
-                    </form>
-                  </ul>
-                </li>
+        <div class="main-panel">
+            <div class="main-header">
+                <div class="main-header-logo"></div>
+                <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+                    <div class="container-fluid">
+                        <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+                            <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" aria-haspopup="true">
+                                    <i class="fa fa-search"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-search animated fadeIn">
+                                    <form class="navbar-left navbar-form nav-search">
+                                        <div class="input-group">
+                                            <input type="text" placeholder="Search ..." class="form-control" />
+                                        </div>
+                                    </form>
+                                </ul>
+                            </li>
 
-                <li class="nav-item topbar-user dropdown hidden-caret">
-                  <a
-                    class="dropdown-toggle profile-pic"
-                    data-bs-toggle="dropdown"
-                    href="#"
-                    aria-expanded="false"
-                  >
-                    <div class="avatar-sm">
-                      <img
-                        src="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/logo dkpp.png"
-                        alt="..."
-                        class="avatar-img rounded-circle"
-                      />
+                            <li class="nav-item topbar-user dropdown hidden-caret">
+                                <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
+                                    <div class="avatar-sm">
+                                        <img src="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/logo dkpp.png" alt="..." class="avatar-img rounded-circle" />
+                                    </div>
+                                    <span class="profile-username">
+                                        <span class="fw-bold">Administrator</span>
+                                    </span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user animated fadeIn">
+                                    <div class="dropdown-user-scroll scrollbar-outer">
+                                        <li>
+                                            <div class="user-box">
+                                                <div class="u-text">
+                                                    <h4>Administrator</h4>
+                                                    <p class="text-muted">admin@dkppsby.go.id</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="<?php echo base_url(); ?>login">
+                                                <i class="fas fa-sign-out-alt me-2"></i>Keluar
+                                            </a>
+                                        </li>
+                                    </div>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
-                    <span class="profile-username">
-                      <span class="fw-bold">Administrator</span>
-                    </span>
-                  </a>
-                  <ul class="dropdown-menu dropdown-user animated fadeIn">
-                    <div class="dropdown-user-scroll scrollbar-outer">
-                      <li>
-                        <div class="user-box">
-                          <div class="u-text">
-                            <h4>Administrator</h4>
-                            <p class="text-muted">admin@dkppsby.go.id</p>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="<?php echo base_url(); ?>login">
-                          <i class="fas fa-sign-out-alt me-2"></i>Keluar
-                        </a>
-                      </li>
-                    </div>
-                  </ul>
-                </li>
-              </ul>
-            </div>
-          </nav>
-          <!-- End Navbar -->
-        </div>
-
-        <div class="container">
-          <div class="page-inner">
-            <!-- Flash Messages -->
-            <?php if($this->session->flashdata('success')): ?>
-              <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check-circle me-2"></i>
-                <?php echo $this->session->flashdata('success'); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-              </div>
-            <?php endif; ?>
-            
-            <?php if($this->session->flashdata('error')): ?>
-              <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                <?php echo $this->session->flashdata('error'); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-              </div>
-            <?php endif; ?>
-
-            <!-- Page Header -->
-            <div
-              class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
-            >
-              <div>
-                <h3 class="fw-bold mb-1">Master Data</h3>
-                <h6 class="op-7 mb-0">Kelola Data Rumah Potong Unggas (RPU)</h6>
-              </div>
-              <div class="ms-md-auto py-2 py-md-0">
-                <button class="btn btn-primary-custom text-white"
-                        data-bs-toggle="modal"
-                        data-bs-target="#tambahDataModal">
-                  <i class="fas fa-plus me-2"></i>Tambah Data
-                </button>
-              </div>
+                </nav>
             </div>
 
-            <!-- Modal Tambah Data -->
-            <div class="modal fade" id="tambahDataModal" tabindex="-1">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content modal-form">
-                  <form action="<?= base_url('rpu/simpan'); ?>" method="post">
-                    <div class="modal-header">
-                      <h5 class="modal-title">
-                        <i class="fas fa-plus-circle me-2"></i>Tambah Data RPU
-                      </h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                      <div class="row">
-                        <div class="col-md-12 mb-3">
-                          <label>Nama RPU/Pejagal <span class="text-danger">*</span></label>
-                          <input type="text" name="pejagal" class="form-control" placeholder="Contoh: RPU Sumber Rejeki" required>
-                          <small class="text-muted">Nama tempat pemotongan unggas</small>
+            <div class="container">
+                <div class="page-inner">
+                    <!-- Flash Messages -->
+                    <?php if($this->session->flashdata('success')): ?>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <?php echo $this->session->flashdata('success'); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
-                      </div>
-                      
-                      <div class="row">
-                        <div class="col-md-6 mb-3">
-                          <label>Latitude</label>
-                          <input type="text" id="latitude" name="latitude" class="form-control" placeholder="Contoh: -7.2574719">
-                          <small class="text-muted">Koordinat lintang (opsional)</small>
+                    <?php endif; ?>
+                    
+                    <?php if($this->session->flashdata('error')): ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <?php echo $this->session->flashdata('error'); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
-                        <div class="col-md-6 mb-3">
-                          <label>Longitude</label>
-                          <input type="text" id="longitude" name="longitude" class="form-control" placeholder="Contoh: 112.7520883">
-                          <small class="text-muted">Koordinat bujur (opsional)</small>
-                        </div>
-                      </div>
-                      
-                      <!-- Map Preview -->
-                      <div class="row">
-                        <div class="col-md-12">
-                          <label>Preview Peta</label>
-                          <div id="mapPreview" class="map-preview"></div>
-                          <small class="text-muted">Peta akan muncul jika latitude dan longitude diisi</small>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Batal
-                      </button>
-                      <button type="submit" class="btn btn-primary">
-                        Simpan Data
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
+                    <?php endif; ?>
 
-            <!-- Modal Edit Data -->
-            <div class="modal fade" id="editDataModal" tabindex="-1">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content modal-form">
-                  <form action="<?= base_url('rpu/update'); ?>" method="post">
-                    <input type="hidden" id="edit_id" name="id">
-                    <div class="modal-header">
-                      <h5 class="modal-title">
-                        <i class="fas fa-edit me-2"></i>Edit Data RPU
-                      </h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <!-- Page Header -->
+                    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+                        <div>
+                            <h3 class="fw-bold mb-1">Master Data</h3>
+                            <h6 class="op-7 mb-0">Kelola Data Rumah Potong Unggas (RPU)</h6>
+                        </div>
+                        <div class="ms-md-auto py-2 py-md-0">
+                            <button class="btn btn-primary-custom text-white" data-bs-toggle="modal" data-bs-target="#tambahDataModal">
+                                <i class="fas fa-plus me-2"></i>Tambah Data
+                            </button>
+                        </div>
                     </div>
-                    <div class="modal-body">
-                      <div class="row">
-                        <div class="col-md-12 mb-3">
-                          <label>Nama RPU/Pejagal <span class="text-danger">*</span></label>
-                          <input type="text" id="edit_pejagal" name="pejagal" class="form-control" required>
-                        </div>
-                      </div>
-                      
-                      <div class="row">
-                        <div class="col-md-6 mb-3">
-                          <label>Latitude</label>
-                          <input type="text" id="edit_latitude" name="latitude" class="form-control" placeholder="Contoh: -7.2574719">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label>Longitude</label>
-                          <input type="text" id="edit_longitude" name="longitude" class="form-control" placeholder="Contoh: 112.7520883">
-                        </div>
-                      </div>
-                      
-                      <!-- Map Preview for Edit -->
-                      <div class="row">
-                        <div class="col-md-12">
-                          <label>Preview Peta</label>
-                          <div id="editMapPreview" class="map-preview"></div>
-                          <small class="text-muted">Peta akan muncul jika latitude dan longitude diisi</small>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Batal
-                      </button>
-                      <button type="submit" class="btn btn-primary">
-                        Update Data
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
 
-            <!-- Modal View Koordinat -->
-            <div class="modal fade" id="viewKoordinatModal" tabindex="-1">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title">
-                      <i class="fas fa-map-marker-alt me-2"></i>Detail Koordinat RPU
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                  </div>
-                  <div class="modal-body">
-                    <div class="mb-3">
-                      <label class="form-label">Nama RPU/Pejagal</label>
-                      <input type="text" id="view_pejagal" class="form-control" readonly>
+                    <!-- Modal Tambah Data -->
+                    <div class="modal fade" id="tambahDataModal" tabindex="-1">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <form action="<?= base_url('rpu/simpan'); ?>" method="post">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">
+                                            <i class="fas fa-plus-circle me-2"></i>Tambah Data RPU
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <label>Nama RPU/Pejagal <span class="text-danger">*</span></label>
+                                                <input type="text" name="pejagal" class="form-control" placeholder="Contoh: RPU Sumber Rejeki" required>
+                                                <small class="text-muted">Nama tempat pemotongan unggas (unik)</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label>Latitude</label>
+                                                <input type="text" id="latitude" name="latitude" class="form-control" placeholder="Contoh: -7.2574719">
+                                                <small class="text-muted">Koordinat lintang (opsional)</small>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label>Longitude</label>
+                                                <input type="text" id="longitude" name="longitude" class="form-control" placeholder="Contoh: 112.7520883">
+                                                <small class="text-muted">Koordinat bujur (opsional)</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Preview Peta</label>
+                                                <div id="mapPreview" class="map-preview"></div>
+                                                <small class="text-muted">Peta akan muncul jika latitude dan longitude diisi</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                        <button type="submit" class="btn btn-primary">Simpan Data</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Modal Edit Data -->
+                    <div class="modal fade" id="editDataModal" tabindex="-1">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <form action="<?= base_url('rpu/update'); ?>" method="post">
+                                    <input type="hidden" id="edit_pejagal_lama" name="pejagal_lama">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">
+                                            <i class="fas fa-edit me-2"></i>Edit Data RPU
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <label>Nama RPU/Pejagal <span class="text-danger">*</span></label>
+                                                <input type="text" id="edit_pejagal" name="pejagal" class="form-control" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label>Latitude</label>
+                                                <input type="text" id="edit_latitude" name="latitude" class="form-control" placeholder="Contoh: -7.2574719">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label>Longitude</label>
+                                                <input type="text" id="edit_longitude" name="longitude" class="form-control" placeholder="Contoh: 112.7520883">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Preview Peta</label>
+                                                <div id="editMapPreview" class="map-preview"></div>
+                                                <small class="text-muted">Peta akan muncul jika latitude dan longitude diisi</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                        <button type="submit" class="btn btn-primary">Update Data</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal View Koordinat -->
+                    <div class="modal fade" id="viewKoordinatModal" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">
+                                        <i class="fas fa-map-marker-alt me-2"></i>Detail Koordinat RPU
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nama RPU/Pejagal</label>
+                                        <input type="text" id="view_pejagal" class="form-control" readonly>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Latitude</label>
+                                            <input type="text" id="view_latitude" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Longitude</label>
+                                            <input type="text" id="view_longitude" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Preview Lokasi</label>
+                                        <div id="viewMapPreview" class="map-preview" style="height: 250px;"></div>
+                                    </div>
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        Koordinat ini dapat digunakan untuk menandai lokasi RPU pada peta.
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content -->
                     <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <label class="form-label">Latitude</label>
-                        <input type="text" id="view_latitude" class="form-control" readonly>
-                      </div>
-                      <div class="col-md-6 mb-3">
-                        <label class="form-label">Longitude</label>
-                        <input type="text" id="view_longitude" class="form-control" readonly>
-                      </div>
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table id="rpuTable" class="table table-hover w-100">
+                                            <thead>
+                                                <tr>
+                                                    <th width="50">No</th>
+                                                    <th>Nama RPU/Pejagal</th>
+                                                    <th>Latitude</th>
+                                                    <th>Longitude</th>
+                                                    <th width="150">Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php if(!empty($rpu)): ?>
+                                                    <?php $no = 1; ?>
+                                                    <?php foreach($rpu as $row): ?>
+                                                        <tr>
+                                                            <td><?= $no++; ?></td>
+                                                            <td><?= htmlspecialchars($row->pejagal ?? ''); ?></td>
+                                                            <td>
+                                                                <?php if(!empty($row->latitude)): ?>
+                                                                    <span class="coordinate-badge">
+                                                                        <i class="fas fa-map-pin me-1"></i><?= htmlspecialchars($row->latitude); ?>
+                                                                    </span>
+                                                                <?php else: ?>
+                                                                    <span class="text-muted">-</span>
+                                                                <?php endif; ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php if(!empty($row->longitude)): ?>
+                                                                    <span class="coordinate-badge">
+                                                                        <i class="fas fa-map-pin me-1"></i><?= htmlspecialchars($row->longitude); ?>
+                                                                    </span>
+                                                                <?php else: ?>
+                                                                    <span class="text-muted">-</span>
+                                                                <?php endif; ?>
+                                                            </td>
+                                                            <td>
+                                                                <button class="btn btn-action btn-view" title="Lihat Koordinat"
+                                                                        data-pejagal="<?= htmlspecialchars($row->pejagal ?? ''); ?>"
+                                                                        data-latitude="<?= htmlspecialchars($row->latitude ?? ''); ?>"
+                                                                        data-longitude="<?= htmlspecialchars($row->longitude ?? ''); ?>">
+                                                                    <i class="fas fa-map-marker-alt"></i>
+                                                                </button>
+                                                                <button class="btn btn-action btn-edit" title="Edit"
+                                                                        data-pejagal="<?= htmlspecialchars($row->pejagal ?? ''); ?>"
+                                                                        data-latitude="<?= htmlspecialchars($row->latitude ?? ''); ?>"
+                                                                        data-longitude="<?= htmlspecialchars($row->longitude ?? ''); ?>">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </button>
+                                                                <button class="btn btn-action btn-delete" title="Hapus"
+                                                                        data-pejagal="<?= htmlspecialchars($row->pejagal ?? ''); ?>">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                <?php else: ?>
+                                                    <tr>
+                                                        <td colspan="5" class="text-center">Tidak ada data</td>
+                                                    </tr>
+                                                <?php endif; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                      <label class="form-label">Preview Lokasi</label>
-                      <div id="viewMapPreview" class="map-preview" style="height: 250px;"></div>
-                    </div>
-                    <div class="alert alert-info">
-                      <i class="fas fa-info-circle me-2"></i>
-                      Koordinat ini dapat digunakan untuk menandai lokasi RPU pada peta.
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                  </div>
                 </div>
-              </div>
             </div>
-
-            <!-- Content -->
-            <div class="row">
-              <div class="col-md-12">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="table-responsive">
-                      <table
-                        id="rpuTable"
-                        class="table table-hover w-100"
-                      >
-                        <thead>
-                          <tr>
-                            <th width="50">No</th>
-                            <th>Nama RPU/Pejagal</th>
-                            <th>Latitude</th>
-                            <th>Longitude</th>
-                            <th width="150">Aksi</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <?php if(!empty($rpu)): ?>
-                            <?php $no = 1; ?>
-                            <?php foreach($rpu as $row): ?>
-                              <tr>
-                                <td><?= $no++; ?></td>
-                                <td><?= htmlspecialchars($row->pejagal ?? ''); ?></td>
-                                <td>
-                                  <?php if(!empty($row->latitude)): ?>
-                                    <span class="coordinate-badge">
-                                      <i class="fas fa-map-pin me-1"></i><?= htmlspecialchars($row->latitude); ?>
-                                    </span>
-                                  <?php else: ?>
-                                    <span class="text-muted">-</span>
-                                  <?php endif; ?>
-                                </td>
-                                <td>
-                                  <?php if(!empty($row->longitude)): ?>
-                                    <span class="coordinate-badge">
-                                      <i class="fas fa-map-pin me-1"></i><?= htmlspecialchars($row->longitude); ?>
-                                    </span>
-                                  <?php else: ?>
-                                    <span class="text-muted">-</span>
-                                  <?php endif; ?>
-                                </td>
-                                <td>
-                                  <!-- Cari bagian ini di modal view koordinat -->
-<button class="btn btn-action btn-view" title="Lihat Koordinat"
-        data-id="<?= $row->id ?? ''; ?>"  <!-- Ganti id_rpu menjadi id -->
-        data-pejagal="<?= htmlspecialchars($row->pejagal ?? ''); ?>"
-        data-latitude="<?= htmlspecialchars($row->latitude ?? ''); ?>"
-        data-longitude="<?= htmlspecialchars($row->longitude ?? ''); ?>">
-    <i class="fas fa-map-marker-alt"></i>
-</button>
-
-<!-- Cari bagian ini untuk tombol edit -->
-<button class="btn btn-action btn-edit" title="Edit"
-        data-id="<?= $row->id ?? ''; ?>"  <!-- Ganti id_rpu menjadi id -->
-        data-pejagal="<?= htmlspecialchars($row->pejagal ?? ''); ?>"
-        data-latitude="<?= htmlspecialchars($row->latitude ?? ''); ?>"
-        data-longitude="<?= htmlspecialchars($row->longitude ?? ''); ?>">
-    <i class="fas fa-edit"></i>
-</button>
-
-<!-- Cari bagian ini untuk tombol hapus -->
-<button class="btn btn-action btn-delete" title="Hapus"
-        data-id="<?= $row->id ?? ''; ?>"  <!-- Ganti id_rpu menjadi id -->
-        data-pejagal="<?= htmlspecialchars($row->pejagal ?? ''); ?>">
-    <i class="fas fa-trash"></i>
-</button>
-                                </td>
-                              </tr>
-                            <?php endforeach; ?>
-                          <?php else: ?>
-                            <tr>
-                              <td colspan="5" class="text-center">Tidak ada data</td>
-                            </tr>
-                          <?php endif; ?>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
     
+    <!-- Core JS Files -->
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/popper.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/bootstrap.min.js"></script>
 
+    <!-- jQuery Scrollbar -->
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
 
+    <!-- Kaiadmin JS -->
+    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/kaiadmin.min.js"></script>
+    
+    <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
@@ -781,225 +685,220 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-      // Variabel untuk menyimpan instance map
-      let map, editMap, viewMap;
-      let marker, editMarker, viewMarker;
+        // Variabel untuk menyimpan instance map
+        let map, editMap, viewMap;
+        let marker, editMarker, viewMarker;
 
-      // Fungsi untuk inisialisasi map
-      function initMap(containerId, lat, lng, mapRef) {
-        if (mapRef) {
-          mapRef.remove();
+        // Fungsi untuk inisialisasi map
+        function initMap(containerId, lat, lng, mapRef) {
+            if (mapRef) {
+                mapRef.remove();
+            }
+            
+            const defaultLat = -7.2574719;
+            const defaultLng = 112.7520883;
+            
+            const mapLat = (lat && !isNaN(parseFloat(lat))) ? parseFloat(lat) : defaultLat;
+            const mapLng = (lng && !isNaN(parseFloat(lng))) ? parseFloat(lng) : defaultLng;
+            
+            const newMap = L.map(containerId).setView([mapLat, mapLng], 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(newMap);
+            
+            if (lat && lng && !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lng))) {
+                const newMarker = L.marker([parseFloat(lat), parseFloat(lng)]).addTo(newMap);
+                return { map: newMap, marker: newMarker };
+            }
+            
+            return { map: newMap, marker: null };
         }
-        
-        const defaultLat = -7.2574719; // Default Surabaya
-        const defaultLng = 112.7520883; // Default Surabaya
-        
-        const mapLat = (lat && !isNaN(parseFloat(lat))) ? parseFloat(lat) : defaultLat;
-        const mapLng = (lng && !isNaN(parseFloat(lng))) ? parseFloat(lng) : defaultLng;
-        
-        const newMap = L.map(containerId).setView([mapLat, mapLng], 13);
-        
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '© OpenStreetMap contributors'
-        }).addTo(newMap);
-        
-        if (lat && lng && !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lng))) {
-          const newMarker = L.marker([parseFloat(lat), parseFloat(lng)]).addTo(newMap);
-          return { map: newMap, marker: newMarker };
+
+        // Fungsi untuk update marker
+        function updateMarker(mapInstance, markerRef, lat, lng) {
+            if (!mapInstance) return null;
+            
+            const latNum = parseFloat(lat);
+            const lngNum = parseFloat(lng);
+            
+            if (isNaN(latNum) || isNaN(lngNum)) return markerRef;
+            
+            mapInstance.setView([latNum, lngNum], 15);
+            
+            if (markerRef) {
+                markerRef.setLatLng([latNum, lngNum]);
+                return markerRef;
+            } else {
+                return L.marker([latNum, lngNum]).addTo(mapInstance);
+            }
         }
-        
-        return { map: newMap, marker: null };
-      }
 
-      // Fungsi untuk update marker
-      function updateMarker(mapInstance, markerRef, lat, lng) {
-        if (!mapInstance) return null;
-        
-        const latNum = parseFloat(lat);
-        const lngNum = parseFloat(lng);
-        
-        if (isNaN(latNum) || isNaN(lngNum)) return markerRef;
-        
-        mapInstance.setView([latNum, lngNum], 15);
-        
-        if (markerRef) {
-          markerRef.setLatLng([latNum, lngNum]);
-          return markerRef;
-        } else {
-          return L.marker([latNum, lngNum]).addTo(mapInstance);
-        }
-      }
+        $(document).ready(function () {
+            // Inisialisasi DataTable
+            var table = $("#rpuTable").DataTable({
+                dom: "Bfrtip",
+                buttons: [
+                    {
+                        extend: "copy",
+                        text: '<i class="fas fa-copy"></i> Copy',
+                        className: 'btn btn-sm btn-primary'
+                    },
+                    {
+                        extend: "csv",
+                        text: '<i class="fas fa-file-csv"></i> CSV',
+                        className: 'btn btn-sm btn-success'
+                    },
+                    {
+                        extend: "excel",
+                        text: '<i class="fas fa-file-excel"></i> Excel',
+                        className: 'btn btn-sm btn-success'
+                    },
+                    {
+                        extend: "pdf",
+                        text: '<i class="fas fa-file-pdf"></i> PDF',
+                        className: 'btn btn-sm btn-danger'
+                    },
+                    {
+                        extend: "print",
+                        text: '<i class="fas fa-print"></i> Print',
+                        className: 'btn btn-sm btn-info'
+                    }
+                ],
+                language: {
+                    search: "Cari:",
+                    lengthMenu: "Tampilkan _MENU_ data",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                    infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
+                    infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
+                    zeroRecords: "Tidak ada data yang ditemukan",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Berikutnya",
+                        previous: "Sebelumnya"
+                    }
+                },
+                pageLength: 10,
+                lengthChange: true,
+                lengthMenu: [5, 10, 25, 50, 100],
+                responsive: true,
+                order: [[1, 'asc']]
+            });
 
-      $(document).ready(function () {
-        // Inisialisasi DataTable
-        var table = $("#rpuTable").DataTable({
-          dom: "Bfrtip",
-          buttons: [
-            {
-              extend: "copy",
-              text: '<i class="fas fa-copy"></i> Copy',
-              className: 'btn btn-sm btn-primary'
-            },
-            {
-              extend: "csv",
-              text: '<i class="fas fa-file-csv"></i> CSV',
-              className: 'btn btn-sm btn-success'
-            },
-            {
-              extend: "excel",
-              text: '<i class="fas fa-file-excel"></i> Excel',
-              className: 'btn btn-sm btn-success'
-            },
-            {
-              extend: "pdf",
-              text: '<i class="fas fa-file-pdf"></i> PDF',
-              className: 'btn btn-sm btn-danger'
-            },
-            {
-              extend: "print",
-              text: '<i class="fas fa-print"></i> Print',
-              className: 'btn btn-sm btn-info'
-            }
-          ],
-          language: {
-            search: "Cari:",
-            lengthMenu: "Tampilkan _MENU_ data",
-            info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-            infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
-            infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
-            zeroRecords: "Tidak ada data yang ditemukan",
-            paginate: {
-              first: "Pertama",
-              last: "Terakhir",
-              next: "Berikutnya",
-              previous: "Sebelumnya"
-            }
-          },
-          pageLength: 10,
-          lengthChange: true,
-          lengthMenu: [5, 10, 25, 50, 100],
-          responsive: true,
-          order: [[0, 'asc']]
+            // Event untuk tombol lihat koordinat
+            $(document).on("click", ".btn-view", function () {
+                var pejagal = $(this).data('pejagal');
+                var latitude = $(this).data('latitude');
+                var longitude = $(this).data('longitude');
+                
+                $('#view_pejagal').val(pejagal);
+                $('#view_latitude').val(latitude || '-');
+                $('#view_longitude').val(longitude || '-');
+                
+                $('#viewKoordinatModal').modal('show');
+                
+                setTimeout(function() {
+                    if (viewMap) {
+                        viewMap.remove();
+                    }
+                    const result = initMap('viewMapPreview', latitude, longitude, viewMap);
+                    viewMap = result.map;
+                    viewMarker = result.marker;
+                }, 500);
+            });
+
+            // Event untuk tombol edit
+            $(document).on("click", ".btn-edit", function () {
+                var pejagal = $(this).data('pejagal');
+                var latitude = $(this).data('latitude');
+                var longitude = $(this).data('longitude');
+                
+                $('#edit_pejagal_lama').val(pejagal);
+                $('#edit_pejagal').val(pejagal);
+                $('#edit_latitude').val(latitude);
+                $('#edit_longitude').val(longitude);
+                
+                $('#editDataModal').modal('show');
+            });
+
+            // Event untuk tombol hapus
+            $(document).on("click", ".btn-delete", function () {
+                var pejagal = $(this).data('pejagal');
+                
+                if (confirm("Apakah Anda yakin ingin menghapus data RPU: " + pejagal + "?")) {
+                    window.location.href = "<?= base_url('rpu/hapus/'); ?>" + encodeURIComponent(pejagal);
+                }
+            });
+
+            // Event ketika modal tambah ditampilkan
+            $('#tambahDataModal').on('shown.bs.modal', function () {
+                setTimeout(function() {
+                    if (map) {
+                        map.remove();
+                    }
+                    const lat = $('#latitude').val();
+                    const lng = $('#longitude').val();
+                    const result = initMap('mapPreview', lat, lng, map);
+                    map = result.map;
+                    marker = result.marker;
+                }, 500);
+            });
+
+            // Event ketika modal edit ditampilkan
+            $('#editDataModal').on('shown.bs.modal', function () {
+                setTimeout(function() {
+                    if (editMap) {
+                        editMap.remove();
+                    }
+                    const lat = $('#edit_latitude').val();
+                    const lng = $('#edit_longitude').val();
+                    const result = initMap('editMapPreview', lat, lng, editMap);
+                    editMap = result.map;
+                    editMarker = result.marker;
+                }, 500);
+            });
+
+            // Update map preview saat latitude/longitude berubah di modal tambah
+            $('#latitude, #longitude').on('input', function() {
+                if (map) {
+                    const lat = $('#latitude').val();
+                    const lng = $('#longitude').val();
+                    marker = updateMarker(map, marker, lat, lng);
+                }
+            });
+
+            // Update map preview saat latitude/longitude berubah di modal edit
+            $('#edit_latitude, #edit_longitude').on('input', function() {
+                if (editMap) {
+                    const lat = $('#edit_latitude').val();
+                    const lng = $('#edit_longitude').val();
+                    editMarker = updateMarker(editMap, editMarker, lat, lng);
+                }
+            });
+
+            // Validasi input koordinat (hanya angka, titik, dan minus)
+            $('input[name="latitude"], input[name="longitude"], #edit_latitude, #edit_longitude').on('input', function() {
+                let value = $(this).val();
+                value = value.replace(/[^0-9.-]/g, '');
+                
+                const parts = value.split('.');
+                if (parts.length > 2) {
+                    value = parts[0] + '.' + parts.slice(1).join('');
+                }
+                
+                if (value.indexOf('-') > 0) {
+                    value = value.replace(/-/g, '');
+                }
+                
+                $(this).val(value);
+            });
+
+            // Auto close alerts
+            setTimeout(function() {
+                $('.alert').alert('close');
+            }, 5000);
         });
-
-        // Event untuk tombol lihat koordinat
-        $(document).on("click", ".btn-view", function () {
-          var pejagal = $(this).data('pejagal');
-          var latitude = $(this).data('latitude');
-          var longitude = $(this).data('longitude');
-          
-          $('#view_pejagal').val(pejagal);
-          $('#view_latitude').val(latitude || '-');
-          $('#view_longitude').val(longitude || '-');
-          
-          $('#viewKoordinatModal').modal('show');
-          
-          // Inisialisasi map di modal view setelah modal ditampilkan
-          setTimeout(function() {
-            if (viewMap) {
-              viewMap.remove();
-            }
-            const result = initMap('viewMapPreview', latitude, longitude, viewMap);
-            viewMap = result.map;
-            viewMarker = result.marker;
-          }, 500);
-        });
-
-        // Event untuk tombol edit
-        $(document).on("click", ".btn-edit", function () {
-          var id = $(this).data('id');
-          var pejagal = $(this).data('pejagal');
-          var latitude = $(this).data('latitude');
-          var longitude = $(this).data('longitude');
-          
-          $('#edit_id').val(id);
-          $('#edit_pejagal').val(pejagal);
-          $('#edit_latitude').val(latitude);
-          $('#edit_longitude').val(longitude);
-          
-          $('#editDataModal').modal('show');
-        });
-
-        // Event untuk tombol hapus
-        $(document).on("click", ".btn-delete", function () {
-          var id = $(this).data('id');
-          var pejagal = $(this).data('pejagal');
-          
-          if (confirm("Apakah Anda yakin ingin menghapus data RPU: " + pejagal + "?")) {
-            window.location.href = "<?= base_url('rpu/hapus/'); ?>" + id;
-          }
-        });
-
-        // Event ketika modal tambah ditampilkan
-        $('#tambahDataModal').on('shown.bs.modal', function () {
-          setTimeout(function() {
-            if (map) {
-              map.remove();
-            }
-            const lat = $('#latitude').val();
-            const lng = $('#longitude').val();
-            const result = initMap('mapPreview', lat, lng, map);
-            map = result.map;
-            marker = result.marker;
-          }, 500);
-        });
-
-        // Event ketika modal edit ditampilkan
-        $('#editDataModal').on('shown.bs.modal', function () {
-          setTimeout(function() {
-            if (editMap) {
-              editMap.remove();
-            }
-            const lat = $('#edit_latitude').val();
-            const lng = $('#edit_longitude').val();
-            const result = initMap('editMapPreview', lat, lng, editMap);
-            editMap = result.map;
-            editMarker = result.marker;
-          }, 500);
-        });
-
-        // Update map preview saat latitude/longitude berubah di modal tambah
-        $('#latitude, #longitude').on('input', function() {
-          if (map) {
-            const lat = $('#latitude').val();
-            const lng = $('#longitude').val();
-            marker = updateMarker(map, marker, lat, lng);
-          }
-        });
-
-        // Update map preview saat latitude/longitude berubah di modal edit
-        $('#edit_latitude, #edit_longitude').on('input', function() {
-          if (editMap) {
-            const lat = $('#edit_latitude').val();
-            const lng = $('#edit_longitude').val();
-            editMarker = updateMarker(editMap, editMarker, lat, lng);
-          }
-        });
-
-        // Validasi input koordinat (hanya angka, titik, dan minus)
-        $('input[name="latitude"], input[name="longitude"], #edit_latitude, #edit_longitude').on('input', function() {
-          let value = $(this).val();
-          value = value.replace(/[^0-9.-]/g, '');
-          
-          // Pastikan hanya satu titik desimal
-          const parts = value.split('.');
-          if (parts.length > 2) {
-            value = parts[0] + '.' + parts.slice(1).join('');
-          }
-          
-          // Pastikan minus hanya di awal
-          if (value.indexOf('-') > 0) {
-            value = value.replace(/-/g, '');
-          }
-          
-          $(this).val(value);
-        });
-
-        // Auto close alerts
-        setTimeout(function() {
-          $('.alert').alert('close');
-        }, 5000);
-      });
     </script>
-  </body>
+</body>
 </html>

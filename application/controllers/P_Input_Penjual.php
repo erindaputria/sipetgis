@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class P_Input_Penjual_Pakan extends CI_Controller {
+class P_Input_Penjual extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -16,16 +16,20 @@ class P_Input_Penjual_Pakan extends CI_Controller {
             redirect('login');
         }
         
-        $this->load->model('P_Input_Penjual_Pakan_Model');
+        $this->load->model('P_Input_Penjual_Model');
     }
 
     public function index() {
         $user_kecamatan = $this->session->userdata('kecamatan');
-        $data['penjual_pakan_data'] = $this->P_Input_Penjual_Pakan_Model->get_penjual_pakan_by_kecamatan($user_kecamatan);
+        $data['penjual_data'] = $this->P_Input_Penjual_Model->get_penjual_by_kecamatan($user_kecamatan);
         $data['kel_list'] = $this->get_all_kelurahan();
         $data['user_kecamatan'] = $user_kecamatan;
         
-        $this->load->view('petugas/p_input_penjual_pakan', $data);
+        // Ambil data untuk filter
+        $data['filter_kelurahan'] = $this->P_Input_Penjual_Model->get_distinct_kelurahan($user_kecamatan);
+        $data['filter_dagangan'] = $this->P_Input_Penjual_Model->get_distinct_dagangan($user_kecamatan);
+        
+        $this->load->view('petugas/p_input_penjual', $data);
     }
     
     private function get_all_kelurahan() {
@@ -65,34 +69,39 @@ class P_Input_Penjual_Pakan extends CI_Controller {
     }
 
     public function save() {
-        header('Content-Type: application/json');
-        
         // Set validation rules
         $this->form_validation->set_rules('nama_toko', 'Nama Toko', 'required|trim');
-        $this->form_validation->set_rules('pemilik', 'Nama Pemilik', 'required|trim');
+        $this->form_validation->set_rules('nama_pemilik', 'Nama Pemilik', 'required|trim');
         $this->form_validation->set_rules('nama_petugas', 'Nama Petugas', 'required|trim');
         $this->form_validation->set_rules('tanggal_input', 'Tanggal Input', 'required');
         $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required|trim');
         $this->form_validation->set_rules('latitude', 'Latitude', 'required|trim');
         $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim');
+        $this->form_validation->set_rules('surat_ijin', 'Surat Ijin', 'required|trim');
+        $this->form_validation->set_rules('dagangan', 'Jenis Dagangan', 'required|trim');
 
         if ($this->form_validation->run() == FALSE) {
-            echo json_encode(['status' => 'error', 'message' => validation_errors()]);
+            $response = array(
+                'status' => 'error',
+                'message' => validation_errors()
+            );
+            echo json_encode($response);
             return;
         }
 
-        // Upload foto
-        $foto_name = '';
-        $upload_path = './uploads/penjual_pakan/';
+        // Upload foto toko
+        $foto_name = null;
+        $upload_path = './uploads/penjual/';
         
         if (!is_dir($upload_path)) {
             mkdir($upload_path, 0777, TRUE);
         }
 
         if (isset($_FILES['foto_toko']) && $_FILES['foto_toko']['error'] != 4) {
+            
             $config['upload_path'] = $upload_path;
             $config['allowed_types'] = 'jpg|jpeg|png';
-            $config['max_size'] = 5120;
+            $config['max_size'] = 5120; // 5MB
             $config['encrypt_name'] = TRUE;
             
             $this->upload->initialize($config);
@@ -101,45 +110,58 @@ class P_Input_Penjual_Pakan extends CI_Controller {
                 $upload_data = $this->upload->data();
                 $foto_name = $upload_data['file_name'];
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Gagal upload foto: ' . strip_tags($this->upload->display_errors())]);
+                $error = $this->upload->display_errors();
+                $response = array(
+                    'status' => 'error',
+                    'message' => 'Gagal upload foto: ' . strip_tags($error)
+                );
+                echo json_encode($response);
                 return;
             }
         }
 
-        // Siapkan data
+        // Data untuk disimpan
         $data = array(
             'nama_toko' => $this->input->post('nama_toko'),
-            'keterangan' => $this->input->post('keterangan') ?: null,
+            'nama_pemilik' => $this->input->post('nama_pemilik'),
+            'nik' => $this->input->post('nik'),
+            'nama_petugas' => $this->input->post('nama_petugas'),
+            'tanggal_input' => $this->input->post('tanggal_input'),
+            'keterangan' => $this->input->post('keterangan'),
             'kecamatan' => $this->session->userdata('kecamatan'),
             'kelurahan' => $this->input->post('kelurahan'),
-            'rt' => $this->input->post('rt') ?: null,
-            'rw' => $this->input->post('rw') ?: null,
+            'rt' => $this->input->post('rt'),
+            'rw' => $this->input->post('rw'),
             'latitude' => $this->input->post('latitude'),
             'longitude' => $this->input->post('longitude'),
-            'telp' => $this->input->post('telp') ?: null,
-            'foto_toko' => $foto_name ?: null,
-            'surat_ijin' => $this->input->post('surat_ijin') ?: 'N',
+            'telp' => $this->input->post('telp'),
+            'dagangan' => $this->input->post('dagangan'),
+            'kategori_obat' => $this->input->post('kategori_obat'),
+            'jenis_obat' => $this->input->post('jenis_obat'),
+            'foto_toko' => $foto_name,
+            'surat_ijin' => $this->input->post('surat_ijin'),
             'created_at' => date('Y-m-d H:i:s')
         );
 
-        // Simpan ke database
-        if ($this->P_Input_Penjual_Pakan_Model->save_penjual_pakan($data)) {
-            echo json_encode(['status' => 'success', 'message' => 'Data penjual pakan berhasil disimpan']);
+        if ($this->P_Input_Penjual_Model->save_penjual($data)) {
+            $foto_msg = $foto_name ? ' dan 1 foto' : ' (tanpa foto)';
+            $response = array(
+                'status' => 'success',
+                'message' => 'Data penjual berhasil disimpan' . $foto_msg
+            );
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan data']);
+            $response = array(
+                'status' => 'error',
+                'message' => 'Gagal menyimpan data penjual. Silakan cek kembali data Anda.'
+            );
         }
+
+        echo json_encode($response);
     }
 
     public function get_all_data() {
         $user_kecamatan = $this->session->userdata('kecamatan');
-        $data = $this->P_Input_Penjual_Pakan_Model->get_penjual_pakan_by_kecamatan($user_kecamatan);
-        echo json_encode($data);
-    }
-
-    public function get_by_periode() {
-        $tahun = $this->input->post('tahun');
-        $kecamatan = $this->session->userdata('kecamatan');
-        $data = $this->P_Input_Penjual_Pakan_Model->get_by_periode($tahun ?: date('Y'), $kecamatan);
+        $data = $this->P_Input_Penjual_Model->get_penjual_by_kecamatan($user_kecamatan);
         echo json_encode($data);
     }
 
@@ -152,5 +174,37 @@ class P_Input_Penjual_Pakan extends CI_Controller {
         } else {
             echo json_encode([]);
         }
+    }
+    
+    public function get_by_periode() {
+        $tahun = $this->input->post('tahun');
+        $kecamatan = $this->session->userdata('kecamatan');
+        
+        if (!$tahun) {
+            $tahun = date('Y');
+        }
+        
+        $data = $this->P_Input_Penjual_Model->get_by_periode($tahun, $kecamatan);
+        
+        if (!empty($data)) {
+            $response = array(
+                'status' => 'success',
+                'data' => $data
+            );
+        } else {
+            $response = array(
+                'status' => 'empty',
+                'data' => [],
+                'message' => 'Tidak ada data untuk tahun ' . $tahun . ' di kecamatan ' . $kecamatan
+            );
+        }
+        
+        echo json_encode($response);
+    }
+    
+    public function get_statistik() {
+        $kecamatan = $this->session->userdata('kecamatan');
+        $data = $this->P_Input_Penjual_Model->get_statistik_per_kelurahan($kecamatan);
+        echo json_encode($data);
     }
 }

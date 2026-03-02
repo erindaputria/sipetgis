@@ -381,13 +381,13 @@
         </a>
     </li>
 
-    <!-- Penjual Pakan -->
-    <li class="nav-item">
-        <a href="<?php echo base_url(); ?>P_Input_Penjual_Pakan">
-            <i class="fas fa-seedling"></i>
-            <p>Penjual Pakan</p>
-        </a>
-    </li>
+    <!-- Penjual (Gabungan) -->
+                        <li class="nav-item active">
+                            <a href="<?php echo base_url(); ?>P_Input_Penjual">
+                                <i class="fas fa-store-alt"></i>
+                                <p>Penjual</p>
+                            </a>
+                        </li>
 
     <!-- Klinik Hewan -->
     <li class="nav-item">
@@ -397,13 +397,7 @@
         </a>
     </li>
 
-    <!-- Penjual Obat Hewan -->
-    <li class="nav-item">
-        <a href="<?php echo base_url(); ?>P_Input_Penjual_Obat_Hewan">
-            <i class="fas fa-pills"></i>
-            <p>Penjual Obat Hewan</p>
-        </a>
-    </li>
+   
      <li class="nav-item">
                 <a href="<?php echo base_url(); ?>p_input_rpu">
                  <i class="fas fa-cut"></i>

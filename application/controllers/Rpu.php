@@ -5,14 +5,14 @@ class Rpu extends CI_Controller {
     
     public function __construct() {
         parent::__construct();
-        $this->load->model('Rpu_Model'); // Panggil Rpu_Model (dengan underscore)
+        $this->load->model('Rpu_Model');
         $this->load->library('session');
         $this->load->helper('url');
     }
     
     public function index() {
-        $data['rpu'] = $this->Rpu_Model->get_all(); // Panggil method dari Rpu_Model
-        $this->load->view('rpu', $data);
+        $data['rpu'] = $this->Rpu_Model->get_all();
+        $this->load->view('admin/rpu', $data); // Load dari folder admin
     }
     
     public function simpan() {
@@ -24,13 +24,20 @@ class Rpu extends CI_Controller {
             redirect('rpu');
         }
         
+        // Cek apakah pejagal sudah ada
+        $existing = $this->Rpu_Model->check_pejagal($pejagal);
+        if ($existing) {
+            $this->session->set_flashdata('error', 'Nama RPU/Pejagal sudah terdaftar');
+            redirect('rpu');
+        }
+        
         $data = array(
             'pejagal' => $pejagal,
             'latitude' => $this->input->post('latitude') ?: null,
             'longitude' => $this->input->post('longitude') ?: null
         );
         
-        $result = $this->Rpu_Model->insert($data); // Panggil method dari Rpu_Model
+        $result = $this->Rpu_Model->insert($data);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data RPU berhasil disimpan');
@@ -42,15 +49,30 @@ class Rpu extends CI_Controller {
     }
     
     public function update() {
-        $id = $this->input->post('id');
+        $pejagal_lama = $this->input->post('pejagal_lama');
+        $pejagal_baru = $this->input->post('pejagal');
+        
+        if (empty($pejagal_baru)) {
+            $this->session->set_flashdata('error', 'Nama RPU/Pejagal tidak boleh kosong');
+            redirect('rpu');
+        }
+        
+        // Jika nama pejagal diubah, cek apakah nama baru sudah ada
+        if ($pejagal_lama != $pejagal_baru) {
+            $existing = $this->Rpu_Model->check_pejagal($pejagal_baru);
+            if ($existing) {
+                $this->session->set_flashdata('error', 'Nama RPU/Pejagal sudah terdaftar');
+                redirect('rpu');
+            }
+        }
         
         $data = array(
-            'pejagal' => $this->input->post('pejagal'),
+            'pejagal' => $pejagal_baru,
             'latitude' => $this->input->post('latitude') ?: null,
             'longitude' => $this->input->post('longitude') ?: null
         );
         
-        $result = $this->Rpu_Model->update($id, $data); // Panggil method dari Rpu_Model
+        $result = $this->Rpu_Model->update($pejagal_lama, $data);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data RPU berhasil diperbarui');
@@ -61,8 +83,11 @@ class Rpu extends CI_Controller {
         redirect('rpu');
     }
     
-    public function hapus($id) {
-        $result = $this->Rpu_Model->delete($id); // Panggil method dari Rpu_Model
+    public function hapus($pejagal) {
+        // Decode URL encoding
+        $pejagal = urldecode($pejagal);
+        
+        $result = $this->Rpu_Model->delete($pejagal);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data RPU berhasil dihapus');
@@ -73,3 +98,4 @@ class Rpu extends CI_Controller {
         redirect('rpu');
     }
 }
+?>

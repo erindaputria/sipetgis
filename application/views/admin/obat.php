@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="id_obat">
+<html lang="id">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Master Data Pengobatan - SIPETGIS</title>
+    <title>Master Data Obat - SIPETGIS</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="<?php echo base_url('assets/SIPETGIS/assets/img/kaiadmin/favicon.ico'); ?>" type="image/x-icon" />
 
@@ -30,28 +30,12 @@
     <link rel="stylesheet" href="<?php echo base_url('assets/SIPETGIS/assets/css/bootstrap.min.css'); ?>" />
     <link rel="stylesheet" href="<?php echo base_url('assets/SIPETGIS/assets/css/plugins.min.css'); ?>" />
     <link rel="stylesheet" href="<?php echo base_url('assets/SIPETGIS/assets/css/kaiadmin.min.css'); ?>" />
+
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css" />
+    
     <style>
-        /* DataTables Custom Style */
-        .dataTables_wrapper {
-            padding: 20px;
-        }
-
-        .dataTables_length select {
-            border-radius: 5px;
-            border: 1px solid #dee2e6;
-            padding: 5px 10px;
-        }
-
-        .dataTables_filter input {
-            border-radius: 5px;
-            border: 1px solid #dee2e6;
-            padding: 5px 10px;
-            width: 200px;
-        }
-
         .dataTables_wrapper .dataTables_length,
         .dataTables_wrapper .dataTables_filter,
         .dataTables_wrapper .dataTables_info,
@@ -61,6 +45,8 @@
         
         .dt-buttons .btn {
             border-radius: 5px;
+            font-weight: 500;
+            padding: 6px 15px;
             margin-right: 5px;
             transition: all 0.3s;
         }
@@ -93,7 +79,7 @@
             border-color: #0dcaf0 !important;
             color: white !important;
         }
-
+        
         table.dataTable {
             border-collapse: separate !important;
             border-spacing: 0 8px !important;
@@ -157,9 +143,18 @@
             color: white;
         }
 
-        .badge-kelompok {
+        .badge-jenis {
             background-color: #e3f2fd;
             color: #1976d2;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .badge-dosis {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
             font-size: 12px;
             font-weight: 500;
             padding: 4px 10px;
@@ -197,63 +192,12 @@
             box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
         }
 
-        /* Badge untuk jenis obat */
-        .badge-jenis-obat {
-            font-size: 11px;
-            font-weight: 500;
-            padding: 3px 8px;
-            border-radius: 15px;
-            white-space: nowrap;
-        }
-
-        .badge-antibiotik {
-            background-color: #ffeaea;
-            color: #d32f2f;
-        }
-
-        .badge-vitamin {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .badge-vaksin {
-            background-color: #e3f2fd;
-            color: #1976d2;
-        }
-
-        .badge-antiparasit {
-            background-color: #f3e5f5;
-            color: #7b1fa2;
-        }
-
-        .badge-lainnya {
-            background-color: #fff3e0;
-            color: #f57c00;
-        }
-
-        /* Badge untuk tahun */
-        .badge-tahun {
-            background-color: #e0f7fa;
-            color: #006064;
-            font-size: 11px;
-            font-weight: 500;
-            padding: 3px 8px;
-            border-radius: 15px;
-            white-space: nowrap;
-        }
-
-        /* Responsif untuk mobile */
-        @media (max-width: 768px) {
-            .pagination-cards {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .pagination-card {
-                justify-content: space-between;
-                min-width: auto;
-                width: 100%;
-            }
+        /* Flash message styles */
+        .alert {
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -265,7 +209,7 @@
             <div class="sidebar-logo">
                 <!-- Logo Header -->
                 <div class="logo-header" data-background-color="white">
-                    <a href="index.html" class="logo" style="text-decoration: none">
+                    <a href="<?php echo site_url('dashboard'); ?>" class="logo" style="text-decoration: none">
                         <div style="
                             color: #1e3a8a;
                             font-weight: 800;
@@ -317,16 +261,16 @@
                             <div class="collapse show" id="masterDataSubmenu">
                                 <ul class="list-unstyled ps-4">
                                     <li>
-                       <a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a>
-                    </li>
-                                     <li>
-                       <a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a>
-                    </li>
+                                        <a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a>
+                                    </li>
                                     <li>
                                         <a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a>
                                     </li>
                                     <li>
-                                        <a href="<?= site_url('pengobatan') ?>" class="nav-link active">Pengobatan</a>
+                                        <a href="<?= site_url('obat') ?>" class="nav-link active">Obat</a>
                                     </li>
                                     <li>
                                         <a href="<?= site_url('vaksinasi') ?>" class="nav-link">Vaksinasi</a>
@@ -334,12 +278,12 @@
                                     <li>
                                         <a href="<?= site_url('komoditas') ?>" class="nav-link">Komoditas</a>
                                     </li>
-                                     <li>
-                      <a href="<?= site_url('layanan_klinik') ?>" class="nav-link">Layanan Klinik</a>
-                    </li>
-                    <li>
-                      <a href="<?= site_url('rpu') ?>" class="nav-link">RPU</a>
-                    </li>
+                                    <li>
+                                        <a href="<?= site_url('layanan_klinik') ?>" class="nav-link">Layanan Klinik</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('rpu') ?>" class="nav-link">RPU</a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
@@ -366,7 +310,7 @@
                                         <a href="<?= site_url('data_history_vaksinasi') ?>" class="nav-link">History Vaksinasi</a>
                                     </li>
                                     <li>
-                                        <a href="<?= site_url('data_nama_pengobatan') ?>" class="nav-link">Pengobatan Ternak</a>
+                                        <a href="<?= site_url('data_pengobatan') ?>" class="nav-link">Pengobatan Ternak</a>
                                     </li>
                                     <li>
                                         <a href="<?= site_url('data_penjual_pakan') ?>" class="nav-link">Penjual Pakan Ternak</a>
@@ -376,6 +320,9 @@
                                     </li>
                                     <li>
                                         <a href="<?= site_url('data_penjual_obat') ?>" class="nav-link">Penjual Obat Hewan</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('data_rpu') ?>" class="nav-link">RPU</a>
                                     </li>
                                 </ul>
                             </div>
@@ -406,10 +353,6 @@
                 <!-- Navbar Header -->
                 <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
                     <div class="container-fluid">
-                        <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
-                            <!-- Search bar here -->
-                        </nav>
-
                         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
                             <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" aria-haspopup="true">
@@ -445,7 +388,7 @@
                                         </li>
                                         <li>
                                             <div class="dropdown-divider"></div>
-                                           <a class="dropdown-item" href="<?php echo base_url(); ?>login">
+                                            <a class="dropdown-item" href="<?php echo base_url(); ?>login">
                                                 <i class="fas fa-sign-out-alt me-2"></i>Keluar
                                             </a>
                                         </li>
@@ -460,11 +403,28 @@
 
             <div class="container">
                 <div class="page-inner">
-                    <!-- Page Header -->
+                    <!-- Flash Messages - SAMA PERSIS DENGAN AKSES PENGGUNA -->
+                    <?php if($this->session->flashdata('success')): ?>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <?php echo $this->session->flashdata('success'); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <?php if($this->session->flashdata('error')): ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <?php echo $this->session->flashdata('error'); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Page Header - SAMA PERSIS DENGAN AKSES PENGGUNA -->
                     <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                         <div>
                             <h3 class="fw-bold mb-1">Master Data</h3>
-                            <h6 class="op-7 mb-0">Kelola Data Pengobatan</h6>
+                            <h6 class="op-7 mb-0">Kelola Data Obat</h6>
                         </div>
                         <div class="ms-md-auto py-2 py-md-0">
                             <button class="btn btn-primary-custom text-white"
@@ -475,61 +435,168 @@
                         </div>
                     </div>
 
+                    <!-- Modal Tambah Data -->
+                    <div class="modal fade" id="tambahDataModal" tabindex="-1">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content modal-form">
+                                <form action="<?= base_url('obat/simpan'); ?>" method="post">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">
+                                            <i class="fas fa-plus me-2"></i>Tambah Data Obat
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <div class="form-group">
+                                                    <label>Nama Obat <span class="text-danger">*</span></label>
+                                                    <input type="text" name="obat" class="form-control" placeholder="Masukkan nama obat" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <div class="form-group">
+                                                    <label>Jenis Pengobatan <span class="text-danger">*</span></label>
+                                                    <select name="jenis_pengobatan" class="form-control" required>
+                                                        <option value="">Pilih Jenis Pengobatan</option>
+                                                        <option value="Antibiotik">Antibiotik</option>
+                                                        <option value="Vitamin">Vitamin</option>
+                                                        <option value="Vaksin">Vaksin</option>
+                                                        <option value="Antiparasit">Antiparasit</option>
+                                                        <option value="Obat Cacing">Obat Cacing</option>
+                                                        <option value="Desinfektan">Desinfektan</option>
+                                                        <option value="Lainnya">Lainnya</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <div class="form-group">
+                                                    <label>Dosis <span class="text-danger">*</span></label>
+                                                    <input type="text" name="dosis" class="form-control" placeholder="Contoh: 500 mg, 10 ml, dll" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                            Batal
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">
+                                            Simpan Data
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Edit Data -->
+                    <div class="modal fade" id="editDataModal" tabindex="-1">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content modal-form">
+                                <form action="<?= base_url('obat/update'); ?>" method="post">
+                                    <input type="hidden" id="edit_id" name="id_obat">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">
+                                            <i class="fas fa-edit me-2"></i>Edit Data Obat
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <div class="form-group">
+                                                    <label>Nama Obat <span class="text-danger">*</span></label>
+                                                    <input type="text" id="edit_obat" name="obat" class="form-control" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <div class="form-group">
+                                                    <label>Jenis Pengobatan <span class="text-danger">*</span></label>
+                                                    <select id="edit_jenis" name="jenis_pengobatan" class="form-control" required>
+                                                        <option value="">Pilih Jenis Pengobatan</option>
+                                                        <option value="Antibiotik">Antibiotik</option>
+                                                        <option value="Vitamin">Vitamin</option>
+                                                        <option value="Vaksin">Vaksin</option>
+                                                        <option value="Antiparasit">Antiparasit</option>
+                                                        <option value="Obat Cacing">Obat Cacing</option>
+                                                        <option value="Desinfektan">Desinfektan</option>
+                                                        <option value="Lainnya">Lainnya</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <div class="form-group">
+                                                    <label>Dosis <span class="text-danger">*</span></label>
+                                                    <input type="text" id="edit_dosis" name="dosis" class="form-control" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                            Batal
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">
+                                            Update Data
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Content -->
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table id="pengobatanTable" class="table table-hover w-100">
+                                        <!-- TABLE DENGAN BUTTON EXPORT SAMA PERSIS AKSES PENGGUNA -->
+                                        <table id="obatTable" class="table table-hover w-100">
                                             <thead>
                                                 <tr>
                                                     <th width="50">No</th>
-                                                    <th>Nama Pengobatan</th>
-                                                    <th>Jenis Obat</th>
-                                                    <th>Tahun</th>
-                                                    <th>Bantuan Provinsi</th>
-                                                    <th>Keterangan</th>
+                                                    <th>Obat</th>
+                                                    <th>Jenis Pengobatan</th>
+                                                    <th>Dosis</th>
                                                     <th width="100">Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php if(!empty($pengobatan)): ?>
+                                                <?php if(!empty($obat)): ?>
                                                     <?php $no = 1; ?>
-                                                    <?php foreach($pengobatan as $row): ?>
+                                                    <?php foreach($obat as $row): ?>
                                                         <tr>
                                                             <td><?= $no++; ?></td>
-                                                            <td><?= htmlspecialchars($row->nama_pengobatan ?? ''); ?></td>
+                                                            <td><?= htmlspecialchars($row->obat ?? ''); ?></td>
                                                             <td>
-                                                                <span class="badge-jenis-obat 
-                                                                    <?php 
-                                                                        $jenis = strtolower($row->jenis_obat ?? '');
-                                                                        if(strpos($jenis, 'antibiotik') !== false) echo 'badge-antibiotik';
-                                                                        elseif(strpos($jenis, 'vitamin') !== false) echo 'badge-vitamin';
-                                                                        elseif(strpos($jenis, 'vaksin') !== false) echo 'badge-vaksin';
-                                                                        elseif(strpos($jenis, 'antiparasit') !== false || strpos($jenis, 'parasit') !== false) echo 'badge-antiparasit';
-                                                                        else echo 'badge-lainnya';
-                                                                    ?>">
-                                                                    <?= htmlspecialchars($row->jenis_obat ?? ''); ?>
+                                                                <span class="badge-jenis">
+                                                                    <?= htmlspecialchars($row->jenis_pengobatan ?? ''); ?>
                                                                 </span>
                                                             </td>
                                                             <td>
-                                                                <span class="badge-tahun"><?= htmlspecialchars($row->tahun ?? ''); ?></span>
+                                                                <span class="badge-dosis">
+                                                                    <?= htmlspecialchars($row->dosis ?? ''); ?>
+                                                                </span>
                                                             </td>
-                                                            <td><?= htmlspecialchars($row->bantuan_prov ?? ''); ?></td>
-                                                            <td><?= htmlspecialchars($row->keterangan ?? ''); ?></td>
                                                             <td>
                                                                 <button class="btn btn-action btn-edit" title="Edit"
                                                                         data-id="<?= $row->id_obat ?? ''; ?>"
-                                                                        data-pengobatan="<?= htmlspecialchars($row->nama_pengobatan ?? ''); ?>"
-                                                                        data-jenis="<?= htmlspecialchars($row->jenis_obat ?? ''); ?>"
-                                                                        data-tahun="<?= htmlspecialchars($row->tahun ?? ''); ?>"
-                                                                        data-bantuan="<?= htmlspecialchars($row->bantuan_prov ?? ''); ?>"
-                                                                        data-keterangan="<?= htmlspecialchars($row->keterangan ?? ''); ?>">
+                                                                        data-obat="<?= htmlspecialchars($row->obat ?? ''); ?>"
+                                                                        data-jenis="<?= htmlspecialchars($row->jenis_pengobatan ?? ''); ?>"
+                                                                        data-dosis="<?= htmlspecialchars($row->dosis ?? ''); ?>">
                                                                     <i class="fas fa-edit"></i>
                                                                 </button>
                                                                 <button class="btn btn-action btn-delete" title="Hapus"
-                                                                        data-id="<?= $row->id_obat ?? ''; ?>">
+                                                                        data-id="<?= $row->id_obat ?? ''; ?>"
+                                                                        data-obat="<?= htmlspecialchars($row->obat ?? ''); ?>">
                                                                     <i class="fas fa-trash"></i>
                                                                 </button>
                                                             </td>
@@ -537,7 +604,7 @@
                                                     <?php endforeach; ?>
                                                 <?php else: ?>
                                                     <tr>
-                                                        <td colspan="7" class="text-center">Tidak ada data</td>
+                                                        <td colspan="5" class="text-center">Tidak ada data</td>
                                                     </tr>
                                                 <?php endif; ?>
                                             </tbody>
@@ -552,183 +619,6 @@
         </div>
     </div>
 
-    <!-- Modal Tambah Data -->
-    <div class="modal fade" id="tambahDataModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content modal-form">
-                <form action="<?= base_url('pengobatan/simpan'); ?>" method="post">
-                    <div class="modal-header">
-                        <h5 class="modal-title">
-                            <i class="fas fa-plus me-2"></i>Tambah Data Pengobatan
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <div class="form-group">
-                                    <label>Nama Pengobatan <span class="text-danger">*</span></label>
-                                    <textarea name="nama_pengobatan" class="form-control" rows="3" required></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    <label>Jenis Obat <span class="text-danger">*</span></label>
-                                    <select name="jenis_obat" class="form-control" required>
-                                        <option value="">Pilih Jenis Obat</option>
-                                        <option value="Antibiotik">Antibiotik</option>
-                                        <option value="Vitamin">Vitamin</option>
-                                        <option value="Vaksin">Vaksin</option>
-                                        <option value="Antiparasit">Antiparasit</option>
-                                        <option value="Obat Cacing">Obat Cacing</option>
-                                        <option value="Desinfektan">Desinfektan</option>
-                                        <option value="Lainnya">Lainnya</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    <label>Tahun <span class="text-danger">*</span></label>
-                                    <select name="tahun" class="form-control" required>
-                                        <option value="">Pilih Tahun</option>
-                                        <?php 
-                                        $current_year = date('Y');
-                                        for($i = $current_year; $i >= 2020; $i--): 
-                                        ?>
-                                            <option value="<?= $i; ?>"><?= $i; ?></option>
-                                        <?php endfor; ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    <label>Bantuan Provinsi <span class="text-danger">*</span></label>
-                                    <select name="bantuan_prov" class="form-control" required>
-                                        <option value="">Pilih Bantuan Provinsi</option>
-                                        <option value="Ya">Ya</option>
-                                        <option value="Tidak">Tidak</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <div class="form-group">
-                                    <label>Keterangan <span class="text-danger">*</span></label>
-                                    <textarea name="keterangan" class="form-control" rows="3" required></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            Batal
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            Simpan Data
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Edit Data -->
-    <div class="modal fade" id="editDataModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content modal-form">
-                <form action="<?= base_url('pengobatan/update'); ?>" method="post">
-                    <input type="hidden" id="edit_id" name="id_obat">
-                    <div class="modal-header">
-                        <h5 class="modal-title">
-                            <i class="fas fa-edit me-2"></i>Edit Data Pengobatan
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <div class="form-group">
-                                    <label>Nama Pengobatan <span class="text-danger">*</span></label>
-                                    <textarea id="edit_pengobatan" name="nama_pengobatan" class="form-control" rows="3" required></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    <label>Jenis Obat <span class="text-danger">*</span></label>
-                                    <select id="edit_jenis" name="jenis_obat" class="form-control" required>
-                                        <option value="">Pilih Jenis Obat</option>
-                                        <option value="Antibiotik">Antibiotik</option>
-                                        <option value="Vitamin">Vitamin</option>
-                                        <option value="Vaksin">Vaksin</option>
-                                        <option value="Antiparasit">Antiparasit</option>
-                                        <option value="Obat Cacing">Obat Cacing</option>
-                                        <option value="Desinfektan">Desinfektan</option>
-                                        <option value="Lainnya">Lainnya</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    <label>Tahun <span class="text-danger">*</span></label>
-                                    <select id="edit_tahun" name="tahun" class="form-control" required>
-                                        <option value="">Pilih Tahun</option>
-                                        <?php 
-                                        $current_year = date('Y');
-                                        for($i = $current_year; $i >= 2020; $i--): 
-                                        ?>
-                                            <option value="<?= $i; ?>"><?= $i; ?></option>
-                                        <?php endfor; ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    <label>Bantuan Provinsi <span class="text-danger">*</span></label>
-                                    <select id="edit_bantuan" name="bantuan_prov" class="form-control" required>
-                                        <option value="">Pilih Bantuan Provinsi</option>
-                                        <option value="Ya">Ya</option>
-                                        <option value="Tidak">Tidak</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <div class="form-group">
-                                    <label>Keterangan <span class="text-danger">*</span></label>
-                                    <textarea id="edit_keterangan" name="keterangan" class="form-control" rows="3" required></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            Batal
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            Update Data
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <!-- Core JS Files -->
     <script src="<?php echo base_url('assets/SIPETGIS/assets/js/core/jquery-3.7.1.min.js'); ?>"></script>
     <script src="<?php echo base_url('assets/SIPETGIS/assets/js/core/popper.min.js'); ?>"></script>
@@ -737,10 +627,7 @@
     <!-- jQuery Scrollbar -->
     <script src="<?php echo base_url('assets/SIPETGIS/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js'); ?>"></script>
 
-    <!-- Kaiadmin JS -->
-    <script src="<?php echo base_url('assets/SIPETGIS/assets/js/kaiadmin.min.js'); ?>"></script>
-    
-    <!-- DataTables JS -->
+    <!-- DataTables JS - SAMA PERSIS DENGAN AKSES PENGGUNA -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
@@ -753,8 +640,8 @@
 
     <script>
         $(document).ready(function () {
-            // Inisialisasi DataTable dengan tampilan seperti halaman lainnya
-            var table = $("#pengobatanTable").DataTable({
+            // Inisialisasi DataTable dengan BUTTONS SAMA PERSIS AKSES PENGGUNA
+            var table = $("#obatTable").DataTable({
                 dom: "Bfrtip",
                 buttons: [
                     {
@@ -807,56 +694,35 @@
             // Event untuk tombol edit
             $(document).on("click", ".btn-edit", function () {
                 var id = $(this).data('id');
-                var pengobatan = $(this).data('pengobatan');
+                var obat = $(this).data('obat');
                 var jenis = $(this).data('jenis');
-                var tahun = $(this).data('tahun');
-                var bantuan = $(this).data('bantuan');
-                var keterangan = $(this).data('keterangan');
+                var dosis = $(this).data('dosis');
                 
                 // Isi form edit
                 $('#edit_id').val(id);
-                $('#edit_pengobatan').val(pengobatan);
+                $('#edit_obat').val(obat);
                 $('#edit_jenis').val(jenis);
-                $('#edit_tahun').val(tahun);
-                $('#edit_bantuan').val(bantuan);
-                $('#edit_keterangan').val(keterangan);
+                $('#edit_dosis').val(dosis);
                 
                 // Tampilkan modal edit
                 $('#editDataModal').modal('show');
             });
             
-            // Event untuk tombol hapus
+            // Event untuk tombol hapus - SAMA PERSIS DENGAN AKSES PENGGUNA
             $(document).on("click", ".btn-delete", function () {
                 var id = $(this).data('id');
-                var row = $(this).closest('tr');
+                var obat = $(this).data('obat');
                 
-                if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-                    // Kirim request hapus ke server
-                    $.ajax({
-                        url: "<?= base_url('pengobatan/hapus'); ?>",
-                        method: "POST",
-                        data: { id: id },
-                        success: function(response) {
-                            alert("Data berhasil dihapus");
-                            // Hapus row dari DataTable
-                            table.row(row).remove().draw();
-                        },
-                        error: function() {
-                            alert("Terjadi kesalahan saat menghapus data");
-                        }
-                    });
+                if (confirm("Apakah Anda yakin ingin menghapus data obat: " + obat + "?")) {
+                    // Redirect langsung ke controller hapus
+                    window.location.href = "<?= base_url('obat/hapus/'); ?>" + id;
                 }
             });
-            
-            // Auto close alerts
+
+            // Auto close alerts - SAMA PERSIS DENGAN AKSES PENGGUNA
             setTimeout(function() {
                 $('.alert').alert('close');
             }, 5000);
-            
-            // Refresh halaman setelah modal ditutup
-            $('#tambahDataModal, #editDataModal').on('hidden.bs.modal', function () {
-                location.reload();
-            });
         });
     </script>
 </body>

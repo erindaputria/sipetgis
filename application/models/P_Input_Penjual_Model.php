@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class P_Input_Penjual_Obat_Hewan_Model extends CI_Model {
+class P_Input_Penjual_Model extends CI_Model {
     
-    protected $table = 'input_penjual_obat_hewan';
+    protected $table = 'penjual';
     
     public function __construct() {
         parent::__construct();
@@ -11,17 +11,17 @@ class P_Input_Penjual_Obat_Hewan_Model extends CI_Model {
     }
     
     /**
-     * Save penjual obat record
+     * Save penjual record
      */
-    public function save_penjual_obat($data) {
+    public function save_penjual($data) {
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();
     }
     
     /**
-     * Get penjual obat by kecamatan (untuk petugas)
+     * Get penjual by kecamatan
      */
-    public function get_penjual_obat_by_kecamatan($kecamatan) {
+    public function get_penjual_by_kecamatan($kecamatan) {
         if (empty($kecamatan)) {
             return array();
         }
@@ -36,9 +36,9 @@ class P_Input_Penjual_Obat_Hewan_Model extends CI_Model {
     }
     
     /**
-     * Get all penjual obat (untuk admin)
+     * Get all penjual (untuk admin)
      */
-    public function get_all_penjual_obat() {
+    public function get_all_penjual() {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->order_by('created_at', 'DESC');
@@ -62,11 +62,31 @@ class P_Input_Penjual_Obat_Hewan_Model extends CI_Model {
     }
     
     /**
-     * Count all penjual obat data by kecamatan
+     * Count all penjual data by kecamatan
      */
     public function count_all($kecamatan) {
         $this->db->from($this->table);
         $this->db->where('kecamatan', $kecamatan);
+        return $this->db->count_all_results();
+    }
+    
+    /**
+     * Count by surat ijin status
+     */
+    public function count_surat_ijin($kecamatan, $status = 'Y') {
+        $this->db->from($this->table);
+        $this->db->where('kecamatan', $kecamatan);
+        $this->db->where('surat_ijin', $status);
+        return $this->db->count_all_results();
+    }
+    
+    /**
+     * Count by dagangan type
+     */
+    public function count_by_dagangan($kecamatan, $dagangan) {
+        $this->db->from($this->table);
+        $this->db->where('kecamatan', $kecamatan);
+        $this->db->where('dagangan', $dagangan);
         return $this->db->count_all_results();
     }
     
@@ -87,32 +107,35 @@ class P_Input_Penjual_Obat_Hewan_Model extends CI_Model {
     }
     
     /**
-     * Get distinct kategori obat by kecamatan
+     * Get distinct dagangan by kecamatan
      */
-    public function get_distinct_kategori_obat($kecamatan) {
+    public function get_distinct_dagangan($kecamatan) {
         $this->db->distinct();
-        $this->db->select('kategori_obat');
+        $this->db->select('dagangan');
         $this->db->from($this->table);
         $this->db->where('kecamatan', $kecamatan);
-        $this->db->where('kategori_obat IS NOT NULL');
-        $this->db->where('kategori_obat !=', '');
-        $this->db->order_by('kategori_obat', 'ASC');
+        $this->db->where('dagangan IS NOT NULL');
+        $this->db->where('dagangan !=', '');
+        $this->db->order_by('dagangan', 'ASC');
         $query = $this->db->get();
         
         return $query->result_array();
     }
     
     /**
-     * Get distinct jenis obat by kecamatan
+     * Get statistik per kelurahan
      */
-    public function get_distinct_jenis_obat($kecamatan) {
-        $this->db->distinct();
-        $this->db->select('jenis_obat');
+    public function get_statistik_per_kelurahan($kecamatan) {
+        $this->db->select('kelurahan, 
+                          COUNT(*) as total_toko,
+                          SUM(CASE WHEN surat_ijin = "Y" THEN 1 ELSE 0 END) as berijin,
+                          SUM(CASE WHEN dagangan = "Obat" THEN 1 ELSE 0 END) as penjual_obat,
+                          SUM(CASE WHEN dagangan = "Pakan" THEN 1 ELSE 0 END) as penjual_pakan,
+                          SUM(CASE WHEN dagangan = "Peralatan" THEN 1 ELSE 0 END) as penjual_peralatan');
         $this->db->from($this->table);
         $this->db->where('kecamatan', $kecamatan);
-        $this->db->where('jenis_obat IS NOT NULL');
-        $this->db->where('jenis_obat !=', '');
-        $this->db->order_by('jenis_obat', 'ASC');
+        $this->db->group_by('kelurahan');
+        $this->db->order_by('total_toko', 'DESC');
         $query = $this->db->get();
         
         return $query->result_array();

@@ -345,7 +345,7 @@
                       <a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a>
                     </li>
                     <li>
-                      <a href="<?= site_url('pengobatan') ?>" class="nav-link">Pengobatan</a>
+                       <a href="<?= site_url('obat') ?>" class="nav-link">Obat</a>
                     </li>
                     <li>
                       <a href="<?= site_url('vaksinasi') ?>" class="nav-link">Vaksinasi</a>
@@ -408,6 +408,10 @@
                         >Penjual Obat Hewan</a
                       >
                     </li>
+                     <li>
+                        <a href="<?= site_url('data_rpu') ?>" class="nav-link"
+                          >RPU</a
+                        >
                   </ul>
                 </div>
               </li>

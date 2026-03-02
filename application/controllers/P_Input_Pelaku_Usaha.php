@@ -21,9 +21,21 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
 
     public function index() {
         $user_kecamatan = $this->session->userdata('kecamatan') ?: 'Benowo';
-        $data['pelaku_usaha_data'] = $this->P_Input_Pelaku_Usaha_Model->get_pelaku_usaha_by_kecamatan($user_kecamatan);
+        
+        // Cek apakah ada parameter tahun
+        $tahun = $this->input->get('tahun');
+        if ($tahun && $tahun != 'all') {
+            $data['pelaku_usaha_data'] = $this->P_Input_Pelaku_Usaha_Model->get_by_periode($tahun, $user_kecamatan);
+        } else {
+            $data['pelaku_usaha_data'] = $this->P_Input_Pelaku_Usaha_Model->get_pelaku_usaha_by_kecamatan($user_kecamatan);
+        }
+        
         $data['kel_list'] = $this->get_all_kelurahan();
         $data['user_kecamatan'] = $user_kecamatan;
+        
+        // CSRF token
+        $data['csrf_name'] = $this->security->get_csrf_token_name();
+        $data['csrf_hash'] = $this->security->get_csrf_hash();
         
         $this->load->view('petugas/p_input_pelaku_usaha', $data);
     }
@@ -68,22 +80,21 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
         // Set response header
         header('Content-Type: application/json');
         
-        // Set validation rules
+        // Validasi form
         $this->form_validation->set_rules('nama', 'Nama Pelaku Usaha', 'required|trim|min_length[3]|max_length[255]');
         $this->form_validation->set_rules('nik', 'NIK', 'required|trim|exact_length[16]|numeric');
         $this->form_validation->set_rules('telepon', 'Telepon', 'trim|min_length[10]|max_length[15]|numeric');
         $this->form_validation->set_rules('alamat', 'Alamat', 'required|trim');
         $this->form_validation->set_rules('kecamatan', 'Kecamatan', 'required|trim');
         $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required|trim');
-        $this->form_validation->set_rules('jenis_usaha', 'Jenis Usaha', 'required|trim');
-        $this->form_validation->set_rules('latitude', 'Latitude', 'required|trim|numeric');
-        $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim|numeric');
-        $this->form_validation->set_rules('status', 'Status', 'trim');
+        $this->form_validation->set_rules('latitude', 'Latitude', 'required|trim');
+        $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim');
 
         if ($this->form_validation->run() == FALSE) {
+            $errors = validation_errors();
             echo json_encode(array(
                 'status' => 'error',
-                'message' => validation_errors()
+                'message' => strip_tags($errors)
             ));
             return;
         }
@@ -101,16 +112,15 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
         }
 
         // Upload foto
-        $uploaded_files = array();
-        $upload_path = './uploads/pelaku_usaha/';
-        
-        if (!is_dir($upload_path)) {
-            mkdir($upload_path, 0777, TRUE);
-        }
-
         $foto_name = NULL;
         if (isset($_FILES['foto']) && $_FILES['foto']['error'] != 4) {
             
+            $upload_path = './uploads/pelaku_usaha/';
+            
+            if (!is_dir($upload_path)) {
+                mkdir($upload_path, 0777, TRUE);
+            }
+
             $config['upload_path'] = $upload_path;
             $config['allowed_types'] = 'jpg|jpeg|png';
             $config['max_size'] = 5120; // 5MB
@@ -139,11 +149,9 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
             'alamat' => $this->input->post('alamat'),
             'kecamatan' => $this->input->post('kecamatan'),
             'kelurahan' => $this->input->post('kelurahan'),
-            'jenis_usaha' => $this->input->post('jenis_usaha'),
             'latitude' => $this->input->post('latitude'),
             'longitude' => $this->input->post('longitude'),
             'foto' => $foto_name,
-            'status' => $this->input->post('status') ?: 'Aktif',
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         );
@@ -155,9 +163,10 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
                 'message' => 'Data pelaku usaha berhasil disimpan' . $foto_msg
             ));
         } else {
+            $db_error = $this->db->error();
             echo json_encode(array(
                 'status' => 'error',
-                'message' => 'Gagal menyimpan data pelaku usaha'
+                'message' => 'Gagal menyimpan data ke database: ' . $db_error['message']
             ));
         }
     }
@@ -207,7 +216,7 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
         $nik = $this->input->post('nik');
         $existing = $this->P_Input_Pelaku_Usaha_Model->check_nik($nik);
         
-        if ($existing) {
+        if ($existing) { 
             echo json_encode(array(
                 'status' => 'exist',
                 'message' => 'NIK sudah terdaftar atas nama ' . $existing['nama']

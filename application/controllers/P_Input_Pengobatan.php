@@ -74,6 +74,15 @@ class P_Input_Pengobatan extends CI_Controller {
         $this->form_validation->set_rules('latitude', 'Latitude', 'required|trim');
         $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim');
 
+        if ($this->form_validation->run() == FALSE) {
+            $response = array(
+                'status' => 'error',
+                'message' => validation_errors()
+            );
+            echo json_encode($response);
+            return;
+        }
+
         // Validasi array data (multiple komoditas)
         $komoditas = $this->input->post('komoditas_ternak');
         $gejala_klinis = $this->input->post('gejala_klinis');
@@ -127,17 +136,8 @@ class P_Input_Pengobatan extends CI_Controller {
             }
         }
 
-        if ($this->form_validation->run() == FALSE) {
-            $response = array(
-                'status' => 'error',
-                'message' => validation_errors()
-            );
-            echo json_encode($response);
-            return;
-        }
-
         // Upload foto
-        $uploaded_files = array();
+        $uploaded_file = null;
         $upload_path = './uploads/pengobatan/';
         
         if (!is_dir($upload_path)) {
@@ -155,7 +155,7 @@ class P_Input_Pengobatan extends CI_Controller {
             
             if ($this->upload->do_upload('foto_pengobatan')) {
                 $upload_data = $this->upload->data();
-                $uploaded_files[] = $upload_data['file_name'];
+                $uploaded_file = $upload_data['file_name'];
             } else {
                 $error = $this->upload->display_errors();
                 $response = array(
@@ -167,45 +167,49 @@ class P_Input_Pengobatan extends CI_Controller {
             }
         }
 
-        // Karena ini multiple komoditas dalam SATU tabel, kita perlu menyimpan setiap baris sebagai record terpisah
-        $success_count = 0;
+        // Siapkan data dasar yang sama untuk semua baris
+        $nik_val = $this->input->post('nik');
+        $telp_val = $this->input->post('telp');
+        $keterangan_val = $this->input->post('keterangan');
+        $rt_val = $this->input->post('rt');
+        $rw_val = $this->input->post('rw');
+        
+        // Data dasar
+        $base_data = array(
+            'nama_petugas' => $this->input->post('nama_petugas'),
+            'nama_peternak' => $this->input->post('nama_peternak'),
+            'nik' => (!empty($nik_val)) ? $nik_val : NULL,
+            'tanggal_pengobatan' => $this->input->post('tanggal_pengobatan'),
+            'keterangan' => (!empty($keterangan_val)) ? $keterangan_val : NULL,
+            'bantuan_prov' => $this->input->post('bantuan_prov'),
+            'kecamatan' => $this->session->userdata('kecamatan'),
+            'kelurahan' => $this->input->post('kelurahan'),
+            'rt' => (!empty($rt_val)) ? $rt_val : NULL,
+            'rw' => (!empty($rw_val)) ? $rw_val : NULL,
+            'latitude' => $this->input->post('latitude'),
+            'longitude' => $this->input->post('longitude'),
+            'telp' => (!empty($telp_val)) ? $telp_val : NULL,
+            'foto_pengobatan' => $uploaded_file
+        );
+
+        // Buat array data untuk multiple rows
+        $data_array = array();
         
         foreach ($komoditas as $index => $k) {
-            $nik_val = $this->input->post('nik');
-            $telp_val = $this->input->post('telp');
-            $keterangan_val = $this->input->post('keterangan');
-            $rt_val = $this->input->post('rt');
-            $rw_val = $this->input->post('rw');
+            $data_row = $base_data;
+            $data_row['komoditas_ternak'] = $k;
+            $data_row['gejala_klinis'] = $gejala_klinis[$index];
+            $data_row['jenis_pengobatan'] = $jenis[$index];
+            $data_row['jumlah'] = $jumlah[$index];
             
-            // Data untuk setiap baris komoditas
-            $data = array(
-                'nama_petugas' => $this->input->post('nama_petugas'),
-                'nama_peternak' => $this->input->post('nama_peternak'),
-                'nik' => (!empty($nik_val)) ? $nik_val : NULL,
-                'tanggal_pengobatan' => $this->input->post('tanggal_pengobatan'),
-                'keterangan' => (!empty($keterangan_val)) ? $keterangan_val : NULL,
-                'bantuan_prov' => $this->input->post('bantuan_prov'),
-                'kecamatan' => $this->session->userdata('kecamatan'),
-                'kelurahan' => $this->input->post('kelurahan'),
-                'rt' => (!empty($rt_val)) ? $rt_val : NULL,
-                'rw' => (!empty($rw_val)) ? $rw_val : NULL,
-                'latitude' => $this->input->post('latitude'),
-                'longitude' => $this->input->post('longitude'),
-                'telp' => (!empty($telp_val)) ? $telp_val : NULL,
-                'foto_pengobatan' => !empty($uploaded_files) ? $uploaded_files[0] : NULL,
-                'komoditas_ternak' => $k,
-                'gejala_klinis' => $gejala_klinis[$index],
-                'jenis_pengobatan' => $jenis[$index],
-                'jumlah' => $jumlah[$index]
-            );
-            
-            if ($this->P_Input_Pengobatan_Model->save_pengobatan($data)) {
-                $success_count++;
-            }
+            $data_array[] = $data_row;
         }
 
+        // Simpan multiple data
+        $success_count = $this->P_Input_Pengobatan_Model->save_multiple_pengobatan($data_array);
+
         if ($success_count > 0) {
-            $foto_msg = !empty($uploaded_files) ? ' dan 1 foto' : ' (tanpa foto)';
+            $foto_msg = $uploaded_file ? ' dan 1 foto' : ' (tanpa foto)';
             $response = array(
                 'status' => 'success',
                 'message' => $success_count . ' data pengobatan berhasil disimpan' . $foto_msg
@@ -225,12 +229,6 @@ class P_Input_Pengobatan extends CI_Controller {
         $data = $this->P_Input_Pengobatan_Model->get_pengobatan_by_kecamatan($user_kecamatan);
         echo json_encode($data);
     }
-
-    // HAPUS method get_detail karena tidak ada kolom id
-    // public function get_detail($id) {
-    //     $data = $this->P_Input_Pengobatan_Model->get_pengobatan_by_id($id);
-    //     echo json_encode($data);
-    // }
 
     public function get_by_periode() {
         $tahun = $this->input->post('tahun');
@@ -258,24 +256,23 @@ class P_Input_Pengobatan extends CI_Controller {
         echo json_encode($response);
     }
 
-    // HAPUS method delete karena tidak ada kolom id
-    // public function delete($id) {
-    //     $result = $this->P_Input_Pengobatan_Model->delete_pengobatan($id);
-    //     
-    //     if ($result) {
-    //         $response = array(
-    //             'status' => 'success',
-    //             'message' => 'Data berhasil dihapus'
-    //         );
-    //     } else {
-    //         $response = array(
-    //             'status' => 'error',
-    //             'message' => 'Gagal menghapus data'
-    //         );
-    //     }
-    //     
-    //     echo json_encode($response);
-    // }
+    public function delete($id) {
+        $result = $this->P_Input_Pengobatan_Model->delete_pengobatan($id);
+        
+        if ($result) {
+            $response = array(
+                'status' => 'success',
+                'message' => 'Data berhasil dihapus'
+            );
+        } else {
+            $response = array(
+                'status' => 'error',
+                'message' => 'Gagal menghapus data'
+            );
+        }
+        
+        echo json_encode($response);
+    }
 
     public function get_kelurahan_by_kecamatan() {
         $kecamatan = $this->input->post('kecamatan');
@@ -311,4 +308,28 @@ class P_Input_Pengobatan extends CI_Controller {
             echo json_encode(['status' => 'new']);
         }
     }
-} 
+    
+    /**
+     * Cek apakah telp sudah pernah digunakan
+     */
+    public function cek_telp() {
+        $telp = $this->input->post('telp');
+        $kecamatan = $this->session->userdata('kecamatan');
+        
+        if (empty($telp)) {
+            echo json_encode(['status' => 'empty']);
+            return;
+        }
+        
+        $cek = $this->P_Input_Pengobatan_Model->cek_telp_exists($telp, $kecamatan);
+        
+        if ($cek) {
+            echo json_encode([
+                'status' => 'exists',
+                'message' => 'Nomor telepon ini sudah pernah digunakan sebanyak ' . $cek . ' kali di kecamatan ini'
+            ]);
+        } else {
+            echo json_encode(['status' => 'new']);
+        }
+    }
+}

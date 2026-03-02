@@ -19,7 +19,8 @@ class P_Input_Pelaku_Usaha_Model extends CI_Model {
         $this->db->from($this->table);
         $this->db->where('kecamatan', $kecamatan);
         $this->db->order_by('created_at', 'DESC');
-        return $this->db->get()->result_array();
+        $query = $this->db->get();
+        return $query->result_array();
     }
     
     public function get_all_pelaku_usaha($kecamatan = null) {
@@ -29,7 +30,8 @@ class P_Input_Pelaku_Usaha_Model extends CI_Model {
             $this->db->where('kecamatan', $kecamatan);
         }
         $this->db->order_by('created_at', 'DESC');
-        return $this->db->get()->result_array();
+        $query = $this->db->get();
+        return $query->result_array();
     }
     
     public function get_by_periode($tahun, $kecamatan) {
@@ -38,7 +40,8 @@ class P_Input_Pelaku_Usaha_Model extends CI_Model {
         $this->db->where('kecamatan', $kecamatan);
         $this->db->where("YEAR(created_at)", $tahun);
         $this->db->order_by('created_at', 'DESC');
-        return $this->db->get()->result_array();
+        $query = $this->db->get();
+        return $query->result_array();
     }
     
     public function count_all($kecamatan = null) {
@@ -49,11 +52,9 @@ class P_Input_Pelaku_Usaha_Model extends CI_Model {
         return $this->db->count_all_results();
     }
     
-    /**
-     * Cek NIK sudah terdaftar atau belum
-     */
     public function check_nik($nik) {
         $this->db->where('nik', $nik);
-        return $this->db->get($this->table)->row_array();
+        $query = $this->db->get($this->table);
+        return $query->row_array();
     }
 }

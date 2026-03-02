@@ -380,13 +380,13 @@
         </a>
     </li>
 
-    <!-- Penjual Pakan -->
-    <li class="nav-item">
-        <a href="<?php echo base_url(); ?>P_Input_Penjual_Pakan">
-            <i class="fas fa-seedling"></i>
-            <p>Penjual Pakan</p>
-        </a>
-    </li>
+    <!-- Penjual (Gabungan) -->
+                        <li class="nav-item active">
+                            <a href="<?php echo base_url(); ?>P_Input_Penjual">
+                                <i class="fas fa-store-alt"></i>
+                                <p>Penjual</p>
+                            </a>
+                        </li>
 
     <!-- Klinik Hewan -->
     <li class="nav-item">
@@ -396,13 +396,7 @@
         </a>
     </li>
 
-    <!-- Penjual Obat Hewan -->
-    <li class="nav-item">
-        <a href="<?php echo base_url(); ?>P_Input_Penjual_Obat_Hewan">
-            <i class="fas fa-pills"></i>
-            <p>Penjual Obat Hewan</p>
-        </a>
-    </li>
+   
      <li class="nav-item">
                 <a href="<?php echo base_url(); ?>p_input_rpu">
                  <i class="fas fa-cut"></i>
@@ -566,10 +560,11 @@
                                                     <input type="text" class="form-control" id="telp" name="telp" placeholder="Masukkan telepon" />
                                                 </div>
 
-                                                <!-- Keterangan -->
+                                               <!-- Keterangan -->
                                                 <div class="col-md-12 mb-3">
-                                                    <label class="form-label">Keterangan</label>
-                                                    <textarea class="form-control" id="keterangan" name="keterangan" rows="2" placeholder="Masukkan keterangan tambahan (opsional)"></textarea>
+                                                    <label class="form-label required-field">Keterangan</label>
+                                                    <textarea class="form-control" id="keterangan" name="keterangan" rows="2" placeholder="Masukkan nama obat dan dosis" required></textarea>
+                                                    <div class="invalid-feedback">Keterangan nama obat dan dosis harus diisi</div>
                                                 </div>
                                             </div>
 
@@ -590,7 +585,7 @@
                                                                             <th width="20%">Komoditas Ternak <span class="text-danger">*</span></th>
                                                                             <th width="25%">Gejala Klinis/Diagnosa <span class="text-danger">*</span></th>
                                                                             <th width="20%">Jenis Pengobatan <span class="text-danger">*</span></th>
-                                                                            <th width="10%">Jumlah <span class="text-danger">*</span></th>
+                                                                            <th width="10%">Jumlah Ternak <span class="text-danger">*</span></th>
                                                                             <th width="10%">Aksi</th>
                                                                         </tr>
                                                                     </thead>
@@ -884,7 +879,7 @@
                         <th>Komoditas</th>
                         <th>Gejala Klinis</th>
                         <th>Jenis Pengobatan</th>
-                        <th>Jumlah</th>
+                        <th>Jumlah Ternak</th>
                         <th>Kelurahan</th>
                         <th>Tanggal</th>
                         <th>Foto</th>

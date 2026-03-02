@@ -198,7 +198,6 @@
             text-align: center;
             padding: 20px;
         }
-        /* Tambahan style untuk profile */
         .profile-username {
             display: flex;
             align-items: center;
@@ -222,7 +221,6 @@
         .topbar-user .dropdown-toggle::after {
             display: none;
         }
-        /* Style untuk multiple jenis usaha */
         .jenis-usaha-table th {
             background-color: #e9f0fa;
             font-size: 0.9rem;
@@ -243,8 +241,6 @@
             background-color: #c82333;
             color: white;
         }
-        
-        /* Style untuk filter periode */
         .filter-section {
             background: #f8f9fa;
             border-radius: 8px;
@@ -252,8 +248,6 @@
             margin-bottom: 20px;
             border: 1px solid #dee2e6;
         }
-        
-        /* Style untuk tombol DataTables */
         .dt-buttons .btn {
             border-radius: 5px;
             margin-right: 5px;
@@ -283,8 +277,6 @@
             border-color: #0dcaf0 !important;
             color: white !important;
         }
-        
-        /* Pagination styling */
         .pagination .page-link {
             border: none;
             color: #495057;
@@ -298,12 +290,9 @@
         .pagination .page-link:hover {
             background-color: #f8f9fa;
         }
-        
         .btn-action { margin: 0 2px; }
         .foto-link { color: #1a73e8; text-decoration: none; cursor: pointer; }
         .foto-link:hover { text-decoration: underline; color: #0d47a1; }
-        
-        /* Layout */
         .dataTables_filter { float: right !important; }
         .dataTables_length { float: left !important; }
         .dt-buttons { float: left !important; margin-right: 10px; }
@@ -352,31 +341,27 @@
                             </a>
                         </li>
 
-                        <!-- Pelaku Usaha -->
-                        <li class="nav-item active">
+                        <li class="nav-item">
                             <a href="<?php echo base_url(); ?>P_Input_Pelaku_Usaha">
                                 <i class="fas fa-users"></i>
                                 <p>Pelaku Usaha</p>
                             </a>
                         </li>
 
-                        <!-- Jenis Usaha -->
                         <li class="nav-item active">
                             <a href="<?php echo base_url(); ?>P_Input_Jenis_Usaha">
                                 <i class="fas fa-store"></i>
                                 <p>Jenis Usaha</p>
                             </a>
                         </li>
-
-                        <!-- Penjual Pakan -->
+                        
                         <li class="nav-item">
-                            <a href="<?php echo base_url(); ?>P_Input_Penjual_Pakan">
-                                <i class="fas fa-seedling"></i>
-                                <p>Penjual Pakan</p>
+                            <a href="<?php echo base_url(); ?>P_Input_Penjual">
+                                <i class="fas fa-store-alt"></i> 
+                                <p>Penjual</p>
                             </a>
                         </li>
 
-                        <!-- Klinik Hewan -->
                         <li class="nav-item">
                             <a href="<?php echo base_url(); ?>P_Input_Klinik_Hewan">
                                 <i class="fas fa-stethoscope"></i>
@@ -384,13 +369,6 @@
                             </a>
                         </li>
 
-                        <!-- Penjual Obat Hewan -->
-                        <li class="nav-item">
-                            <a href="<?php echo base_url(); ?>P_Input_Penjual_Obat_Hewan">
-                                <i class="fas fa-pills"></i>
-                                <p>Penjual Obat Hewan</p>
-                            </a>
-                        </li>
                         <li class="nav-item">
                             <a href="<?php echo base_url(); ?>p_input_rpu">
                                 <i class="fas fa-cut"></i>
@@ -485,6 +463,19 @@
                                                     <div class="invalid-feedback">Nama pemilik harus diisi</div>
                                                 </div>
 
+                                                <!-- NIK -->
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">NIK</label>
+                                                    <input type="text" class="form-control" id="nik" name="nik" placeholder="Masukkan NIK (16 digit)" maxlength="16" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                                                    <small class="text-muted">Masukkan 16 digit angka</small>
+                                                </div>
+
+                                                <!-- Telepon -->
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Telepon</label>
+                                                    <input type="text" class="form-control" id="telepon" name="telepon" placeholder="Masukkan nomor telepon" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                                                </div>
+
                                                 <!-- NAMA PETUGAS -->
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label required-field">Nama Petugas</label>
@@ -520,7 +511,7 @@
                                                     <div class="card address-card">
                                                         <div class="card-header card-header-address">
                                                             <h5 class="card-title mb-0">
-                                                                <i class="fas fa-list me-2 text-success"></i>DATA JENIS USAHA
+                                                                <i class="fas fa-list me-2 text-success"></i>DATA KOMODITAS TERNAK
                                                             </h5>
                                                         </div>
                                                         <div class="card-body">
@@ -528,9 +519,10 @@
                                                                 <table class="table table-bordered jenis-usaha-table" id="jenisUsahaTable">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th width="25%">Jenis Usaha <span class="text-danger">*</span></th>
-                                                                            <th width="15%">Jumlah <span class="text-danger">*</span></th>
-                                                                            <th width="15%">Aksi</th>
+                                                                            <th width="30%">Jenis Usaha <span class="text-danger">*</span></th>
+                                                                            <th width="30%">Komoditas <span class="text-danger">*</span></th>
+                                                                            <th width="20%">Jumlah <span class="text-danger">*</span></th>
+                                                                            <th width="20%">Aksi</th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody id="jenisUsahaBody">
@@ -538,23 +530,36 @@
                                                                             <td>
                                                                                 <select class="form-control jenis_usaha" name="jenis_usaha[]" required>
                                                                                     <option value="">Pilih Jenis Usaha</option>
-                                                                                    <option value="Peternak Sapi Potong">Peternak Sapi Potong</option>
-                                                                                    <option value="Peternak Sapi Perah">Peternak Sapi Perah</option>
-                                                                                    <option value="Peternak Kerbau">Peternak Kerbau</option>
-                                                                                    <option value="Peternak Kambing">Peternak Kambing</option>
-                                                                                    <option value="Peternak Domba">Peternak Domba</option>
-                                                                                    <option value="Peternak Babi">Peternak Babi</option>
-                                                                                    <option value="Peternak Kuda">Peternak Kuda</option>
-                                                                                    <option value="Peternak Kelinci">Peternak Kelinci</option>
-                                                                                    <option value="Peternak Ayam Ras Petelur">Peternak Ayam Ras Petelur</option>
-                                                                                    <option value="Peternak Ayam Ras Pedaging">Peternak Ayam Ras Pedaging</option>
-                                                                                    <option value="Peternak Ayam Kampung">Peternak Ayam Kampung</option>
-                                                                                    <option value="Peternak Itik">Peternak Itik</option>
-                                                                                    <option value="Peternak Entok">Peternak Entok</option>
-                                                                                    <option value="Peternak Burung Puyuh">Peternak Burung Puyuh</option>
-                                                                                    <option value="Penggemukan Sapi">Penggemukan Sapi</option>
-                                                                                    <option value="Pembibitan Ternak">Pembibitan Ternak</option>
-                                                                                    <option value="Peternak Campuran">Peternak Campuran</option>
+                                                                                    <option value="Peternakan">Peternakan</option>
+                                                                                    <option value="Perdagangan Ternak">Perdagangan Ternak</option>
+                                                                                    <option value="Penggemukan">Penggemukan</option>
+                                                                                    <option value="Pembibitan">Pembibitan</option>
+                                                                                    <option value="Pemotongan">Pemotongan</option>
+                                                                                    <option value="Distributor Pakan">Distributor Pakan</option>
+                                                                                    <option value="Distributor Obat Hewan">Distributor Obat Hewan</option>
+                                                                                    <option value="Klinik Hewan">Klinik Hewan</option>
+                                                                                    <option value="Peternakan dan Perdagangan">Peternakan dan Perdagangan</option>
+                                                                                    <option value="Lainnya">Lainnya</option>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <select class="form-control komoditas_ternak" name="komoditas_ternak[]" required>
+                                                                                    <option value="">Pilih Komoditas Ternak</option>
+                                                                                    <option value="Sapi Potong">Sapi Potong</option>
+                                                                                    <option value="Sapi Perah">Sapi Perah</option>
+                                                                                    <option value="Kerbau">Kerbau</option>
+                                                                                    <option value="Kambing">Kambing</option>
+                                                                                    <option value="Domba">Domba</option>
+                                                                                    <option value="Babi">Babi</option>
+                                                                                    <option value="Kuda">Kuda</option>
+                                                                                    <option value="Kelinci">Kelinci</option>
+                                                                                    <option value="Ayam Ras Petelur">Ayam Ras Petelur</option>
+                                                                                    <option value="Ayam Ras Pedaging">Ayam Ras Pedaging</option>
+                                                                                    <option value="Ayam Kampung">Ayam Kampung</option>
+                                                                                    <option value="Itik">Itik</option>
+                                                                                    <option value="Entok">Entok</option>
+                                                                                    <option value="Burung Puyuh">Burung Puyuh</option>
+                                                                                    <option value="Campuran">Campuran</option>
                                                                                 </select>
                                                                             </td>
                                                                             <td>
@@ -726,61 +731,7 @@
                         </div>
                     </div>
 
-                    <!-- FILTER SECTION -->
-                    <div class="filter-section">
-                        <div class="row align-items-center">
-                            <div class="col-md-3">
-                                <div class="form-group mb-0">
-                                    <label for="filterJenisUsaha" class="form-label fw-bold">Filter Jenis Usaha:</label>
-                                    <select class="form-select" id="filterJenisUsaha">
-                                        <option selected value="all">Semua Jenis Usaha</option>
-                                        <?php 
-                                        if (!empty($jenis_usaha_data)) {
-                                            $jenis_list = array_unique(array_column($jenis_usaha_data, 'jenis_usaha'));
-                                            sort($jenis_list);
-                                            foreach ($jenis_list as $jenis): 
-                                                if (!empty($jenis)): ?>
-                                                    <option value="<?php echo $jenis; ?>"><?php echo $jenis; ?></option>
-                                                <?php endif;
-                                            endforeach;
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group mb-0">
-                                    <label for="filterKelurahan" class="form-label fw-bold">Filter Kelurahan:</label>
-                                    <select class="form-select" id="filterKelurahan">
-                                        <option selected value="all">Semua Kelurahan</option>
-                                        <?php 
-                                        if (isset($kel_list[$user_kec]) && is_array($kel_list[$user_kec])): 
-                                            foreach ($kel_list[$user_kec] as $kel): ?>
-                                            <option value="<?php echo $kel; ?>"><?php echo $kel; ?></option>
-                                        <?php endforeach; 
-                                        endif; ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group mb-0">
-                                    <label for="filterPeriode" class="form-label fw-bold">Filter Periode:</label>
-                                    <select class="form-select" id="filterPeriode">
-                                        <option selected value="all">Semua Periode</option>
-                                        <option value="2026">Tahun 2026</option>
-                                        <option value="2025">Tahun 2025</option>
-                                        <option value="2024">Tahun 2024</option>
-                                        <option value="2023">Tahun 2023</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3 text-end">
-                                <button id="filterBtn" class="btn btn-primary"><i class="fas fa-filter me-2"></i>Filter Data</button>
-                                <button id="resetBtn" class="btn btn-outline-secondary"><i class="fas fa-redo me-2"></i>Reset</button>
-                            </div>
-                        </div>
-                    </div>
-
+                 
                     <!-- Data Table -->
                     <div class="card form-card mt-4">
                         <div class="card-body">
@@ -789,8 +740,9 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Nama Pemilik</th>
+                                            <th>Nama Peternak</th>
                                             <th>Jenis Usaha</th>
+                                            <th>Komoditas</th>
                                             <th>Jumlah</th>
                                             <th>Kelurahan</th>
                                             <th>Tanggal Input</th>
@@ -805,6 +757,7 @@
                                                     <td><?php echo $no++; ?></td>
                                                     <td><?php echo htmlspecialchars($data['nama_peternak'] ?? '-'); ?></td>
                                                     <td><?php echo htmlspecialchars($data['jenis_usaha'] ?? '-'); ?></td>
+                                                    <td><?php echo htmlspecialchars($data['komoditas_ternak'] ?? '-'); ?></td>
                                                     <td><?php echo htmlspecialchars($data['jumlah'] ?? '0'); ?></td>
                                                     <td><?php echo htmlspecialchars($data['kelurahan'] ?? '-'); ?></td>
                                                     <td><?php echo isset($data['tanggal_input']) ? date('d-m-Y', strtotime($data['tanggal_input'])) : '-'; ?></td>
@@ -821,7 +774,7 @@
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="7" class="text-center">Tidak ada data jenis usaha</td>
+                                                <td colspan="8" class="text-center">Tidak ada data jenis usaha</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
@@ -995,28 +948,32 @@
                 let reader = new FileReader();
                 reader.onload = function(e) {
                     $('#photoPreview').attr('src', e.target.result).show();
-                    $('#photoPlaceholder, #btnRemovePhoto').toggle();
+                    $('#photoPlaceholder').hide();
+                    $('#btnRemovePhoto').show();
                 };
                 reader.readAsDataURL(file);
             }
         });
 
         $('#btnRemovePhoto').click(function() {
-            $('#foto_usaha, #photoPreview').val('').hide();
-            $('#photoPlaceholder, #btnRemovePhoto').toggle();
+            $('#foto_usaha').val('');
+            $('#photoPreview').attr('src', '').hide();
+            $('#photoPlaceholder').show();
+            $(this).hide();
         });
 
         // Filter
         $('#filterBtn').click(function() {
             let search = [];
             if ($('#filterJenisUsaha').val() != 'all') search.push($('#filterJenisUsaha').val());
+            if ($('#filterKomoditas').val() != 'all') search.push($('#filterKomoditas').val());
             if ($('#filterKelurahan').val() != 'all') search.push($('#filterKelurahan').val());
             if ($('#filterPeriode').val() != 'all') search.push($('#filterPeriode').val());
             dataTable.search(search.join(' ')).draw();
         });
 
         $('#resetBtn').click(function() {
-            $('#filterJenisUsaha, #filterKelurahan, #filterPeriode').val('all');
+            $('#filterJenisUsaha, #filterKomoditas, #filterKelurahan, #filterPeriode').val('all');
             dataTable.search('').draw();
         });
 
@@ -1028,27 +985,56 @@
             let isValid = true;
             $('.is-invalid').removeClass('is-invalid');
             
-            ['nama_pemilik', 'nama_petugas', 'tanggal_input', 'kelurahan', 'latitude', 'longitude'].forEach(id => {
-                if (!$('#' + id).val()) $('#' + id).addClass('is-invalid'), isValid = false;
+            // Cek field wajib
+            let requiredFields = ['nama_pemilik', 'nama_petugas', 'tanggal_input', 'kelurahan', 'latitude', 'longitude'];
+            requiredFields.forEach(id => {
+                if (!$('#' + id).val()) {
+                    $('#' + id).addClass('is-invalid');
+                    isValid = false;
+                }
             });
 
-            $('.jenis-usaha-row').each(function(i) {
+            // Cek baris jenis usaha
+            let rows = $('.jenis-usaha-row');
+            if (rows.length === 0) {
+                showAlert('danger', 'Minimal 1 data komoditas harus diisi');
+                return;
+            }
+            
+            rows.each(function(i) {
                 let jenis = $(this).find('.jenis_usaha').val();
+                let komoditas = $(this).find('.komoditas_ternak').val();
                 let jumlah = $(this).find('.jumlah').val();
                 
-                if (!jenis) $(this).find('.jenis_usaha').addClass('is-invalid'), isValid = false;
-                if (jumlah === '') $(this).find('.jumlah').addClass('is-invalid'), isValid = false;
+                if (!jenis) {
+                    $(this).find('.jenis_usaha').addClass('is-invalid');
+                    isValid = false;
+                }
+                if (!komoditas) {
+                    $(this).find('.komoditas_ternak').addClass('is-invalid');
+                    isValid = false;
+                }
+                if (jumlah === '' || parseInt(jumlah) <= 0) {
+                    $(this).find('.jumlah').addClass('is-invalid');
+                    isValid = false;
+                }
             });
 
             if (!isValid) {
-                showAlert('danger', 'Harap lengkapi semua field wajib');
+                showAlert('danger', 'Harap lengkapi semua field wajib dengan benar');
                 return;
             }
 
-            // Submit AJAX
-            let btn = $(this).find('button[type="submit"]');
-            btn.html('<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...').prop('disabled', true);
+            // Hitung jumlah baris yang akan diinsert
+            let totalRows = rows.length;
+            console.log('Total rows to insert: ' + totalRows);
 
+            // Tampilkan loading
+            let btn = $(this).find('button[type="submit"]');
+            let originalText = btn.html();
+            btn.html('<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan ' + totalRows + ' data...').prop('disabled', true);
+
+            // Kirim data
             $.ajax({
                 url: '<?php echo base_url("P_Input_Jenis_Usaha/save"); ?>',
                 type: 'POST',
@@ -1057,21 +1043,26 @@
                 contentType: false,
                 dataType: 'json',
                 success: function(res) {
+                    console.log('Response:', res);
                     if (res.status === 'success') {
                         showAlert('success', res.message);
                         resetForm();
-                        $('#formContainer, #toggleFormBtn').removeClass('show');
+                        $('#formContainer').removeClass('show');
                         $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT JENIS USAHA');
-                        setTimeout(() => location.reload(), 1500);
+                        
+                        // Reload halaman setelah 2 detik untuk melihat data baru
+                        setTimeout(() => location.reload(), 2000);
                     } else {
                         showAlert('danger', res.message);
                     }
                 },
-                error: function(xhr) {
-                    showAlert('danger', 'Error: ' + xhr.responseText);
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error);
+                    console.error('Response Text:', xhr.responseText);
+                    showAlert('danger', 'Terjadi kesalahan: ' + error);
                 },
                 complete: function() {
-                    btn.html('<i class="fas fa-save me-1"></i>Simpan Data').prop('disabled', false);
+                    btn.html(originalText).prop('disabled', false);
                 }
             });
         });
@@ -1082,22 +1073,38 @@
             $('#kecamatan').val('<?php echo $this->session->userdata('kecamatan') ?: 'Benowo'; ?>');
             $('#tanggal_input').val(new Date().toISOString().split('T')[0]);
             
+            // Reset ke 1 baris saja
             $('#jenisUsahaBody').empty().html(`
                 <tr class="jenis-usaha-row">
-                    <td><select class="form-control jenis_usaha" name="jenis_usaha[]" required>
-                        <option value="">Pilih Jenis Usaha</option>
-                        <option value="Peternak Sapi Potong">Peternak Sapi Potong</option>
-                        <option value="Peternak Sapi Perah">Peternak Sapi Perah</option>
-                        <option value="Peternak Kerbau">Peternak Kerbau</option>
-                        <option value="Peternak Kambing">Peternak Kambing</option>
-                        <option value="Peternak Domba">Peternak Domba</option>
-                        <option value="Peternak Ayam Ras Petelur">Peternak Ayam Ras Petelur</option>
-                        <option value="Peternak Ayam Ras Pedaging">Peternak Ayam Ras Pedaging</option>
-                        <option value="Peternak Ayam Kampung">Peternak Ayam Kampung</option>
-                        <option value="Peternak Itik">Peternak Itik</option>
-                        <option value="Penggemukan Sapi">Penggemukan Sapi</option>
-                        <option value="Pembibitan Ternak">Pembibitan Ternak</option>
-                    </select></td>
+                    <td>
+                        <select class="form-control jenis_usaha" name="jenis_usaha[]" required>
+                            <option value="">Pilih Jenis Usaha</option>
+                            <option value="Peternakan">Peternakan</option>
+                            <option value="Perdagangan Ternak">Perdagangan Ternak</option>
+                            <option value="Penggemukan">Penggemukan</option>
+                            <option value="Pembibitan">Pembibitan</option>
+                            <option value="Pemotongan">Pemotongan</option>
+                            <option value="Distributor Pakan">Distributor Pakan</option>
+                            <option value="Distributor Obat Hewan">Distributor Obat Hewan</option>
+                            <option value="Klinik Hewan">Klinik Hewan</option>
+                            <option value="Peternakan dan Perdagangan">Peternakan dan Perdagangan</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control komoditas_ternak" name="komoditas_ternak[]" required>
+                            <option value="">Pilih Komoditas Ternak</option>
+                            <option value="Sapi Potong">Sapi Potong</option>
+                            <option value="Sapi Perah">Sapi Perah</option>
+                            <option value="Kerbau">Kerbau</option>
+                            <option value="Kambing">Kambing</option>
+                            <option value="Domba">Domba</option>
+                            <option value="Ayam Ras Petelur">Ayam Ras Petelur</option>
+                            <option value="Ayam Ras Pedaging">Ayam Ras Pedaging</option>
+                            <option value="Ayam Kampung">Ayam Kampung</option>
+                            <option value="Itik">Itik</option>
+                        </select>
+                    </td>
                     <td><input type="number" class="form-control jumlah" name="jumlah[]" min="0" required></td>
                     <td class="text-center">
                         <button type="button" class="btn btn-success btn-sm btn-add-row"><i class="fas fa-plus"></i></button>
@@ -1107,8 +1114,10 @@
             `);
             updateRemoveButtons();
             
-            $('#coordinateInfo, #photoPreview, #btnRemovePhoto').hide();
+            $('#coordinateInfo').hide();
+            $('#photoPreview').attr('src', '').hide();
             $('#photoPlaceholder').show();
+            $('#btnRemovePhoto').hide();
             $('.is-invalid').removeClass('is-invalid');
         }
 
@@ -1116,7 +1125,8 @@
         function showAlert(type, message) {
             $('#alert-container').html(`
                 <div class="alert alert-${type} alert-dismissible fade show">
-                    ${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             `);
             setTimeout(() => $('.alert').alert('close'), 5000);

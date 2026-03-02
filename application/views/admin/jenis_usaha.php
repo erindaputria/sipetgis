@@ -164,15 +164,6 @@
             color: white !important;
         }
 
-        .badge-kelompok {
-            background-color: #e3f2fd;
-            color: #1976d2;
-            font-size: 12px;
-            font-weight: 500;
-            padding: 4px 10px;
-            border-radius: 20px;
-        }
-
         /* Pagination Styles */
         .pagination .page-link {
             border: none;
@@ -274,8 +265,8 @@
                             <div class="collapse show" id="masterDataSubmenu">
                                 <ul class="list-unstyled ps-4">
                                     <li>
-                       <a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a>
-                    </li>
+                                        <a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a>
+                                    </li>
                                     <li class="nav-item">
                                         <a href="<?= site_url('jenis_usaha') ?>" class="nav-link active">Jenis Usaha</a>
                                     </li>
@@ -283,7 +274,7 @@
                                         <a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a>
                                     </li>
                                     <li>
-                                        <a href="<?= site_url('pengobatan') ?>" class="nav-link">Pengobatan</a>
+                                       <a href="<?= site_url('obat') ?>" class="nav-link">Obat</a>
                                     </li>
                                     <li>
                                         <a href="<?= site_url('vaksinasi') ?>" class="nav-link">Vaksinasi</a>
@@ -291,12 +282,12 @@
                                     <li>
                                         <a href="<?= site_url('komoditas') ?>" class="nav-link">Komoditas</a>
                                     </li>
-                                     <li>
+                                    <li>
                                         <a href="<?= site_url('layanan_klinik') ?>" class="nav-link">Layanan Klinik</a>
                                     </li>
                                     <li>
-                      <a href="<?= site_url('rpu') ?>" class="nav-link">RPU</a>
-                    </li>
+                                        <a href="<?= site_url('rpu') ?>" class="nav-link">RPU</a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
@@ -333,6 +324,9 @@
                                     </li>
                                     <li>
                                         <a href="<?= site_url('data_penjual_obat') ?>" class="nav-link">Penjual Obat Hewan</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= site_url('data_rpu') ?>" class="nav-link">RPU</a>
                                     </li>
                                 </ul>
                             </div>
@@ -470,8 +464,17 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>NIK</label>
-                                                    <input type="text" name="nik" class="form-control" required>
+                                                    <label>Jenis Usaha</label>
+                                                    <input type="text" name="jenis_usaha" class="form-control" required placeholder="Contoh: Peternak Sapi, Pedagang Ternak, dll">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Jumlah</label>
+                                                    <input type="number" name="jumlah" class="form-control" required placeholder="Jumlah ternak/usaha">
                                                 </div>
                                             </div>
                                         </div>
@@ -486,67 +489,46 @@
                                         </div>
                                         
                                         <div class="row">
-                                           <div class="col-md-6">
-                                            <div class="form-group">
-                                                  <label>Kecamatan</label>
-                                                  <select name="kecamatan" class="form-control" required>
-                                                    <option value="">Pilih Kecamatan</option>
-                                                    <option value="ASEMROWO">ASEMROWO</option>
-                                                    <option value="BENOWO">BENOWO</option>
-                                                    <option value="BUBUTAN">BUBUTAN</option>
-                                                    <option value="BULAK">BULAK</option>
-                                                    <option value="DUKUH PAKIS">DUKUH PAKIS</option>
-                                                    <option value="GAYUNGAN">GAYUNGAN</option>
-                                                    <option value="GENTENG">GENTENG</option>
-                                                    <option value="GUBENG">GUBENG</option>
-                                                    <option value="GUNUNG ANYAR">GUNUNG ANYAR</option>
-                                                    <option value="JAMBANGAN">JAMBANGAN</option>
-                                                    <option value="KARANG PILANG">KARANG PILANG</option>
-                                                    <option value="KENJERAN">KENJERAN</option>
-                                                    <option value="KREMBANGAN">KREMBANGAN</option>
-                                                    <option value="LAKARSANTRI">LAKARSANTRI</option>
-                                                    <option value="MULYOREJO">MULYOREJO</option>
-                                                    <option value="PABEAN CANTIAN">PABEAN CANTIAN</option>
-                                                    <option value="PAKAL">PAKAL</option>
-                                                    <option value="RUNGKUT">RUNGKUT</option>
-                                                    <option value="SAMBIKEREP">SAMBIKEREP</option>
-                                                    <option value="SAWAHAN">SAWAHAN</option>
-                                                    <option value="SEMAMPIR">SEMAMPIR</option>
-                                                    <option value="SIMOKERTO">SIMOKERTO</option>
-                                                    <option value="SUKOLILO">SUKOLILO</option>
-                                                    <option value="SUKOMANUNGGAL">SUKOMANUNGGAL</option>
-                                                    <option value="TAMBAKSARI">TAMBAKSARI</option>
-                                                    <option value="TANDES">TANDES</option>
-                                                    <option value="TEGALSARI">TEGALSARI</option>
-                                                    <option value="TENGGILIS MEJOYO">TENGGILIS MEJOYO</option>
-                                                    <option value="WIYUNG">WIYUNG</option>
-                                                    <option value="WONOCOLO">WONOCOLO</option>
-                                                    <option value="WONOKROMO">WONOKROMO</option>
-                                                  </select>
-                                                  </div>
-                                            </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Kelurahan</label>
-                                                    <select name="kelurahan" class="form-control" required>
-                                                        <option value="">Pilih Kelurahan</option>
-                                                        <option value="Bendul Merisi">Bendul Merisi</option>
-                                                        <option value="Jemur Wonosari">Jemur Wonosari</option>
-                                                        <option value="Margorejo">Margorejo</option>
-                                                        <option value="Sidosermo">Sidosermo</option>
-                                                        <option value="Siwalankerto">Siwalankerto</option>
-                                                        <option value="Kebraon">Kebraon</option>
-                                                        <option value="Kedurus">Kedurus</option>
-                                                        <option value="Warugunung">Warugunung</option>
-                                                        <option value="Karangpilang">Karangpilang</option>
-                                                        <option value="Karang Poh">Karang Poh</option>
-                                                        <option value="Balongsari">Balongsari</option>
+                                                    <label>Kecamatan</label>
+                                                    <select name="kecamatan" class="form-control" required>
+                                                        <option value="">Pilih Kecamatan</option>
+                                                        <option value="ASEMROWO">ASEMROWO</option>
+                                                        <option value="BENOWO">BENOWO</option>
+                                                        <option value="BUBUTAN">BUBUTAN</option>
+                                                        <option value="BULAK">BULAK</option>
+                                                        <option value="DUKUH PAKIS">DUKUH PAKIS</option>
+                                                        <option value="GAYUNGAN">GAYUNGAN</option>
+                                                        <option value="GENTENG">GENTENG</option>
+                                                        <option value="GUBENG">GUBENG</option>
+                                                        <option value="GUNUNG ANYAR">GUNUNG ANYAR</option>
+                                                        <option value="JAMBANGAN">JAMBANGAN</option>
+                                                        <option value="KARANG PILANG">KARANG PILANG</option>
+                                                        <option value="KENJERAN">KENJERAN</option>
+                                                        <option value="KREMBANGAN">KREMBANGAN</option>
+                                                        <option value="LAKARSANTRI">LAKARSANTRI</option>
+                                                        <option value="MULYOREJO">MULYOREJO</option>
+                                                        <option value="PABEAN CANTIAN">PABEAN CANTIAN</option>
+                                                        <option value="PAKAL">PAKAL</option>
+                                                        <option value="RUNGKUT">RUNGKUT</option>
+                                                        <option value="SAMBIKEREP">SAMBIKEREP</option>
+                                                        <option value="SAWAHAN">SAWAHAN</option>
+                                                        <option value="SEMAMPIR">SEMAMPIR</option>
+                                                        <option value="SIMOKERTO">SIMOKERTO</option>
+                                                        <option value="SUKOLILO">SUKOLILO</option>
+                                                        <option value="SUKOMANUNGGAL">SUKOMANUNGGAL</option>
+                                                        <option value="TAMBAKSARI">TAMBAKSARI</option>
+                                                        <option value="TANDES">TANDES</option>
+                                                        <option value="TEGALSARI">TEGALSARI</option>
+                                                        <option value="TENGGILIS MEJOYO">TENGGILIS MEJOYO</option>
+                                                        <option value="WIYUNG">WIYUNG</option>
+                                                        <option value="WONOCOLO">WONOCOLO</option>
+                                                        <option value="WONOKROMO">WONOKROMO</option>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
-                                        
-                                       
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -583,8 +565,17 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>NIK</label>
-                                                    <input type="text" id="edit_nik" name="nik" class="form-control" required>
+                                                    <label>Jenis Usaha</label>
+                                                    <input type="text" id="edit_jenis_usaha" name="jenis_usaha" class="form-control" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Jumlah</label>
+                                                    <input type="number" id="edit_jumlah" name="jumlah" class="form-control" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -638,28 +629,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Kelurahan</label>
-                                                    <select id="edit_kelurahan" name="kelurahan" class="form-control" required>
-                                                        <option value="">Pilih Kelurahan</option>
-                                                        <option value="Bendul Merisi">Bendul Merisi</option>
-                                                        <option value="Jemur Wonosari">Jemur Wonosari</option>
-                                                        <option value="Margorejo">Margorejo</option>
-                                                        <option value="Sidosermo">Sidosermo</option>
-                                                        <option value="Siwalankerto">Siwalankerto</option>
-                                                        <option value="Kebraon">Kebraon</option>
-                                                        <option value="Kedurus">Kedurus</option>
-                                                        <option value="Warugunung">Warugunung</option>
-                                                        <option value="Karangpilang">Karangpilang</option>
-                                                        <option value="Karang Poh">Karang Poh</option>
-                                                        <option value="Balongsari">Balongsari</option>
-                                                    </select>
-                                                </div>
-                                            </div>
                                         </div>
-                                        
-                                      
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -685,10 +655,10 @@
                                                 <tr>
                                                     <th width="50">No</th>
                                                     <th>Nama Peternak</th>
-                                                    <th>Alamat</th>
+                                                    <th>Jenis Usaha</th>
+                                                    <th>Jumlah</th>
+                                                    <th>Alamat Lengkap</th>
                                                     <th>Kecamatan</th>
-                                                    <th>Kelurahan</th>
-                                                    <th>NIK</th>
                                                     <th width="100">Aksi</th>
                                                 </tr>
                                             </thead>
@@ -699,19 +669,18 @@
                                                         <tr>
                                                             <td><?= $no++; ?></td>
                                                             <td><?= htmlspecialchars($row->nama_peternak ?? ''); ?></td>
+                                                            <td><?= htmlspecialchars($row->jenis_usaha ?? ''); ?></td>
+                                                            <td><?= htmlspecialchars($row->jumlah ?? ''); ?></td>
                                                             <td><?= htmlspecialchars($row->alamat ?? ''); ?></td>
                                                             <td><?= htmlspecialchars($row->kecamatan ?? ''); ?></td>
-                                                            <td><?= htmlspecialchars($row->kelurahan ?? ''); ?></td>
-                                                            <td><?= htmlspecialchars($row->nik ?? '-'); ?></td>
                                                             <td>
                                                                 <button class="btn btn-action btn-edit" title="Edit"
                                                                         data-id="<?= $row->id ?? ''; ?>"
                                                                         data-nama="<?= htmlspecialchars($row->nama_peternak ?? ''); ?>"
-                                                                        data-nik="<?= htmlspecialchars($row->nik ?? ''); ?>"
+                                                                        data-jenis_usaha="<?= htmlspecialchars($row->jenis_usaha ?? ''); ?>"
+                                                                        data-jumlah="<?= htmlspecialchars($row->jumlah ?? ''); ?>"
                                                                         data-alamat="<?= htmlspecialchars($row->alamat ?? ''); ?>"
-                                                                        data-kecamatan="<?= htmlspecialchars($row->kecamatan ?? ''); ?>"
-                                                                        data-kelurahan="<?= htmlspecialchars($row->kelurahan ?? ''); ?>"
-                                                                        data-telepon="<?= htmlspecialchars($row->telepon ?? ''); ?>">
+                                                                        data-kecamatan="<?= htmlspecialchars($row->kecamatan ?? ''); ?>">
                                                                     <i class="fas fa-edit"></i>
                                                                 </button>
                                                                 <button class="btn btn-action btn-delete" title="Hapus"
@@ -763,15 +732,15 @@
 
     <script>
         $(document).ready(function () {
-            // Inisialisasi DataTable dengan tampilan seperti halaman akses pengguna
-            var table = $("#jenisUsahaTable").DataTable({
+            // Inisialisasi DataTable
+            $("#jenisUsahaTable").DataTable({
                 dom: "Bfrtip",
                 buttons: [
                     {
                         extend: "copy",
                         text: '<i class="fas fa-copy"></i> Copy',
                         className: 'btn btn-sm btn-primary'
-                    },
+                    }, 
                     {
                         extend: "csv",
                         text: '<i class="fas fa-file-csv"></i> CSV',
@@ -811,64 +780,44 @@
                 lengthChange: true,
                 lengthMenu: [5, 10, 25, 50, 100],
                 responsive: true,
-                order: [[0, 'asc']]
+                order: [[0, 'asc']],
+                columnDefs: [
+                    { width: "5%", targets: 0 },
+                    { width: "15%", targets: 1 },
+                    { width: "15%", targets: 2 },
+                    { width: "10%", targets: 3 },
+                    { width: "30%", targets: 4 },
+                    { width: "15%", targets: 5 },
+                    { width: "10%", targets: 6 }
+                ]
             });
 
-            // Event untuk tombol edit - SAMA SEPERTI DI AKSES PENGGUNA
+            // Event untuk tombol edit
             $(document).on("click", ".btn-edit", function () {
-                var id = $(this).data('id');
-                var nama = $(this).data('nama');
-                var nik = $(this).data('nik');
-                var alamat = $(this).data('alamat');
-                var kecamatan = $(this).data('kecamatan');
-                var kelurahan = $(this).data('kelurahan');
-                var telepon = $(this).data('telepon');
-                
-                $('#edit_id').val(id);
-                $('#edit_nama_peternak').val(nama);
-                $('#edit_nik').val(nik);
-                $('#edit_alamat').val(alamat);
-                $('#edit_kecamatan').val(kecamatan);
-                $('#edit_kelurahan').val(kelurahan);
-                $('#edit_telepon').val(telepon);
+                $('#edit_id').val($(this).data('id'));
+                $('#edit_nama_peternak').val($(this).data('nama'));
+                $('#edit_jenis_usaha').val($(this).data('jenis_usaha'));
+                $('#edit_jumlah').val($(this).data('jumlah'));
+                $('#edit_alamat').val($(this).data('alamat'));
+                $('#edit_kecamatan').val($(this).data('kecamatan'));
                 
                 $('#editDataModal').modal('show');
             });
 
-            // Event untuk tombol hapus - SAMA SEPERTI DI AKSES PENGGUNA
+            // Event untuk tombol hapus
             $(document).on("click", ".btn-delete", function () {
                 var id = $(this).data('id');
                 var nama = $(this).data('nama');
                 
                 if (confirm("Apakah Anda yakin ingin menghapus data jenis usaha: " + nama + "?")) {
-                    // Redirect langsung ke controller hapus - SAMA SEPERTI DI AKSES PENGGUNA
                     window.location.href = "<?= base_url('jenis_usaha/hapus/'); ?>" + id;
                 }
-            });
-
-            // Event untuk validasi NIK (16 digit)
-            $("input[name='nik'], #edit_nik").on("input", function () {
-                var nikValue = $(this).val();
-                // Hanya angka dan maksimal 16 digit
-                $(this).val(nikValue.replace(/\D/g, '').slice(0, 16));
-            });
-            
-            // Event untuk validasi telepon
-            $("input[name='telepon'], #edit_telepon").on("input", function () {
-                var phoneValue = $(this).val();
-                // Hanya angka
-                $(this).val(phoneValue.replace(/\D/g, ''));
             });
 
             // Auto close alerts
             setTimeout(function() {
                 $('.alert').alert('close');
             }, 5000);
-
-            // Refresh halaman setelah modal ditutup - SAMA SEPERTI DI AKSES PENGGUNA
-            $('#tambahDataModal, #editDataModal').on('hidden.bs.modal', function () {
-                location.reload();
-            });
         });
     </script>
 </body>

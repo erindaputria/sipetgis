@@ -19,6 +19,25 @@ class P_Input_Pengobatan_Model extends CI_Model {
     }
     
     /**
+     * Save multiple pengobatan records (untuk multiple komoditas)
+     */
+    public function save_multiple_pengobatan($data_array) {
+        if (empty($data_array)) {
+            return 0;
+        }
+        
+        $success_count = 0;
+        
+        foreach ($data_array as $data) {
+            if ($this->db->insert($this->table, $data)) {
+                $success_count++;
+            }
+        }
+        
+        return $success_count;
+    }
+    
+    /**
      * Get pengobatan by kecamatan (untuk petugas)
      */
     public function get_pengobatan_by_kecamatan($kecamatan) {
@@ -30,8 +49,6 @@ class P_Input_Pengobatan_Model extends CI_Model {
         $this->db->from($this->table);
         $this->db->where('kecamatan', $kecamatan);
         $this->db->order_by('tanggal_pengobatan', 'DESC');
-        // Hapus order by id_obat karena kolomnya tidak ada
-        // $this->db->order_by('id_obat', 'DESC');
         $query = $this->db->get();
         
         return $query->result_array();
@@ -44,8 +61,6 @@ class P_Input_Pengobatan_Model extends CI_Model {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->order_by('tanggal_pengobatan', 'DESC');
-        // Hapus order by id_obat karena kolomnya tidak ada
-        // $this->db->order_by('id_obat', 'DESC');
         $query = $this->db->get();
         
         return $query->result_array();
@@ -53,16 +68,14 @@ class P_Input_Pengobatan_Model extends CI_Model {
     
     /**
      * Get pengobatan by ID
-     * PERHATIAN: Jika tidak ada kolom id, method ini perlu disesuaikan
-     * Mungkin menggunakan kombinasi field lain untuk identifikasi unik
      */
     public function get_pengobatan_by_id($id) {
-        // Jika tidak ada kolom id, kita perlu menggunakan field lain
-        // Misalnya menggunakan kombinasi nama_peternak + tanggal + komoditas
-        // Atau tambahkan kolom id kembali ke database
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('id', $id);
+        $query = $this->db->get();
         
-        // Untuk sementara, kembalikan array kosong
-        return array();
+        return $query->row_array();
     }
     
     /**
@@ -74,8 +87,6 @@ class P_Input_Pengobatan_Model extends CI_Model {
         $this->db->where('kecamatan', $kecamatan);
         $this->db->where("YEAR(tanggal_pengobatan)", $tahun);
         $this->db->order_by('tanggal_pengobatan', 'DESC');
-        // Hapus order by id_obat karena kolomnya tidak ada
-        // $this->db->order_by('id_obat', 'DESC');
         $query = $this->db->get();
         
         return $query->result_array();
@@ -83,12 +94,10 @@ class P_Input_Pengobatan_Model extends CI_Model {
     
     /**
      * Delete pengobatan
-     * PERHATIAN: Jika tidak ada kolom id, method ini perlu disesuaikan
      */
     public function delete_pengobatan($id) {
-        // Jika tidak ada kolom id, kita tidak bisa menghapus berdasarkan id
-        // Kembalikan false untuk sementara
-        return false;
+        $this->db->where('id', $id);
+        return $this->db->delete($this->table);
     }
 
     /**
@@ -133,6 +142,20 @@ class P_Input_Pengobatan_Model extends CI_Model {
     public function cek_nik_exists($nik, $kecamatan) {
         $this->db->from($this->table);
         $this->db->where('nik', $nik);
+        $this->db->where('kecamatan', $kecamatan);
+        return $this->db->count_all_results();
+    }
+    
+    /**
+     * Cek apakah telp sudah pernah digunakan
+     */
+    public function cek_telp_exists($telp, $kecamatan) {
+        if (empty($telp)) {
+            return 0;
+        }
+        
+        $this->db->from($this->table);
+        $this->db->where('telp', $telp);
         $this->db->where('kecamatan', $kecamatan);
         return $this->db->count_all_results();
     }
