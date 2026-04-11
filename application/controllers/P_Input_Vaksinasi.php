@@ -65,18 +65,10 @@ class P_Input_Vaksinasi extends CI_Controller {
     }
 
     public function save() {
-        // Set validation rules
-        $this->form_validation->set_rules('nama_peternak', 'Nama Peternak', 'required|trim');
-        $this->form_validation->set_rules('nama_petugas', 'Nama Petugas', 'required|trim');
-        $this->form_validation->set_rules('tanggal_vaksinasi', 'Tanggal Vaksinasi', 'required');
-        $this->form_validation->set_rules('bantuan_prov', 'Bantuan Provinsi', 'required|trim');
-        $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required|trim');
-        $this->form_validation->set_rules('latitude', 'Latitude', 'required|trim');
-        $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim');
-
         // Validasi array data (multiple komoditas)
         $komoditas = $this->input->post('komoditas_ternak');
         $jenis = $this->input->post('jenis_vaksinasi');
+        $dosis = $this->input->post('dosis');
         $jumlah = $this->input->post('jumlah');
 
         if (empty($komoditas) || !is_array($komoditas)) {
@@ -92,7 +84,7 @@ class P_Input_Vaksinasi extends CI_Controller {
             if (empty($k)) {
                 $response = array(
                     'status' => 'error',
-                    'message' => 'Komoditas ternak baris ke-' . ($index + 1) . ' harus diisi'
+                    'message' => 'Jenis hewan baris ke-' . ($index + 1) . ' harus diisi'
                 );
                 echo json_encode($response);
                 return;
@@ -102,6 +94,15 @@ class P_Input_Vaksinasi extends CI_Controller {
                 $response = array(
                     'status' => 'error',
                     'message' => 'Jenis vaksinasi baris ke-' . ($index + 1) . ' harus dipilih'
+                );
+                echo json_encode($response);
+                return;
+            }
+            
+            if (empty($dosis[$index])) {
+                $response = array(
+                    'status' => 'error',
+                    'message' => 'Dosis baris ke-' . ($index + 1) . ' harus dipilih'
                 );
                 echo json_encode($response);
                 return;
@@ -117,17 +118,8 @@ class P_Input_Vaksinasi extends CI_Controller {
             }
         }
 
-        if ($this->form_validation->run() == FALSE) {
-            $response = array(
-                'status' => 'error',
-                'message' => validation_errors()
-            );
-            echo json_encode($response);
-            return;
-        }
-
         // Upload foto
-        $uploaded_files = array();
+        $uploaded_file = null;
         $upload_path = './uploads/vaksinasi/';
         
         if (!is_dir($upload_path)) {
@@ -145,7 +137,7 @@ class P_Input_Vaksinasi extends CI_Controller {
             
             if ($this->upload->do_upload('foto_vaksinasi')) {
                 $upload_data = $this->upload->data();
-                $uploaded_files[] = $upload_data['file_name'];
+                $uploaded_file = $upload_data['file_name'];
             } else {
                 $error = $this->upload->display_errors();
                 $response = array(
@@ -157,34 +149,29 @@ class P_Input_Vaksinasi extends CI_Controller {
             }
         }
 
-        // Karena ini multiple komoditas dalam SATU tabel, kita perlu menyimpan setiap baris sebagai record terpisah
+        // Simpan setiap baris komoditas sebagai record terpisah
         $success_count = 0;
         
         foreach ($komoditas as $index => $k) {
-            $nik_val = $this->input->post('nik');
-            $telp_val = $this->input->post('telp');
-            $keterangan_val = $this->input->post('keterangan');
-            $rt_val = $this->input->post('rt');
-            $rw_val = $this->input->post('rw');
-            
-            // Data untuk setiap baris komoditas
             $data = array(
                 'nama_petugas' => $this->input->post('nama_petugas'),
                 'nama_peternak' => $this->input->post('nama_peternak'),
-                'nik' => (!empty($nik_val)) ? $nik_val : NULL,
+                'nik' => $this->input->post('nik') ?: NULL,
                 'tanggal_vaksinasi' => $this->input->post('tanggal_vaksinasi'),
-                'keterangan' => (!empty($keterangan_val)) ? $keterangan_val : NULL,
+                'alamat' => $this->input->post('alamat'),
+                'keterangan' => $this->input->post('keterangan') ?: NULL,
                 'bantuan_prov' => $this->input->post('bantuan_prov'),
                 'kecamatan' => $this->session->userdata('kecamatan'),
                 'kelurahan' => $this->input->post('kelurahan'),
-                'rt' => (!empty($rt_val)) ? $rt_val : NULL,
-                'rw' => (!empty($rw_val)) ? $rw_val : NULL,
+                'rt' => $this->input->post('rt') ?: NULL,
+                'rw' => $this->input->post('rw') ?: NULL,
                 'latitude' => $this->input->post('latitude'),
                 'longitude' => $this->input->post('longitude'),
-                'telp' => (!empty($telp_val)) ? $telp_val : NULL,
-                'foto_vaksinasi' => !empty($uploaded_files) ? $uploaded_files[0] : NULL,
+                'telp' => $this->input->post('telp') ?: NULL,
+                'foto_vaksinasi' => $uploaded_file,
                 'komoditas_ternak' => $k,
                 'jenis_vaksinasi' => $jenis[$index],
+                'dosis' => $dosis[$index],
                 'jumlah' => $jumlah[$index]
             );
             
@@ -194,7 +181,7 @@ class P_Input_Vaksinasi extends CI_Controller {
         }
 
         if ($success_count > 0) {
-            $foto_msg = !empty($uploaded_files) ? ' dan 1 foto' : ' (tanpa foto)';
+            $foto_msg = $uploaded_file ? ' dan 1 foto' : '';
             $response = array(
                 'status' => 'success',
                 'message' => $success_count . ' data vaksinasi berhasil disimpan' . $foto_msg
@@ -252,9 +239,6 @@ class P_Input_Vaksinasi extends CI_Controller {
         }
     }
     
-    /**
-     * Cek apakah NIK sudah pernah digunakan
-     */
     public function cek_nik() {
         $nik = $this->input->post('nik');
         $kecamatan = $this->session->userdata('kecamatan');
@@ -262,7 +246,7 @@ class P_Input_Vaksinasi extends CI_Controller {
         if (empty($nik)) {
             echo json_encode(['status' => 'empty']);
             return;
-        }
+        } 
         
         $cek = $this->P_Input_Vaksinasi_Model->cek_nik_exists($nik, $kecamatan);
         

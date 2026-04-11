@@ -18,7 +18,7 @@ class P_Input_Penjual extends CI_Controller {
         
         $this->load->model('P_Input_Penjual_Model');
     }
-
+ 
     public function index() {
         $user_kecamatan = $this->session->userdata('kecamatan');
         $data['penjual_data'] = $this->P_Input_Penjual_Model->get_penjual_by_kecamatan($user_kecamatan);
@@ -79,6 +79,7 @@ class P_Input_Penjual extends CI_Controller {
         $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim');
         $this->form_validation->set_rules('surat_ijin', 'Surat Ijin', 'required|trim');
         $this->form_validation->set_rules('dagangan', 'Jenis Dagangan', 'required|trim');
+        $this->form_validation->set_rules('obat_hewan', 'Obat Hewan', 'required|trim');
 
         if ($this->form_validation->run() == FALSE) {
             $response = array(
@@ -128,6 +129,8 @@ class P_Input_Penjual extends CI_Controller {
             'nama_petugas' => $this->input->post('nama_petugas'),
             'tanggal_input' => $this->input->post('tanggal_input'),
             'keterangan' => $this->input->post('keterangan'),
+            'nib' => $this->input->post('nib'),
+            'alamat' => $this->input->post('alamat'),
             'kecamatan' => $this->session->userdata('kecamatan'),
             'kelurahan' => $this->input->post('kelurahan'),
             'rt' => $this->input->post('rt'),
@@ -140,6 +143,7 @@ class P_Input_Penjual extends CI_Controller {
             'jenis_obat' => $this->input->post('jenis_obat'),
             'foto_toko' => $foto_name,
             'surat_ijin' => $this->input->post('surat_ijin'),
+            'obat_hewan' => $this->input->post('obat_hewan'),
             'created_at' => date('Y-m-d H:i:s')
         );
 

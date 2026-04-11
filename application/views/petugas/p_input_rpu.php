@@ -311,6 +311,41 @@
             padding: 2px 8px;
             border-radius: 12px;
         }
+        
+        .foto-thumbnail {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            transition: transform 0.2s;
+        }
+        .foto-thumbnail:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .no-foto-badge {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            border: 1px dashed #ddd;
+        }
+        
+        /* DataTables loading fix */
+        .dataTables_processing {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,255,255,0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            z-index: 9999;
+        }
     </style>
 </head>
 
@@ -383,8 +418,7 @@
                             </a>
                         </li>
 
-                        <!-- Penjual (Gabungan) -->
-                        <li class="nav-item active">
+                        <li class="nav-item">
                             <a href="<?php echo base_url(); ?>P_Input_Penjual">
                                 <i class="fas fa-store-alt"></i>
                                 <p>Penjual</p>
@@ -397,13 +431,32 @@
                                 <p>Klinik Hewan</p>
                             </a>
                         </li>
-
-                     
-                        
-                        <li class="nav-item active">
+                      
+                        <li class="nav-item">
                             <a href="<?php echo base_url(); ?>p_input_rpu">
-                                <i class="fas fa-cut"></i>
+                                <i class="fas fa-chart-line"></i>
                                 <p>RPU</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<?php echo base_url(); ?>p_input_pemotongan_unggas">
+                                <i class="fas fa-cut"></i>
+                                <p>Pemotongan Unggas</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<?php echo base_url(); ?>p_input_demplot">
+                                <i class="fas fa-seedling"></i>
+                                <p>Demplot</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<?php echo base_url(); ?>p_input_stok_pakan">
+                                <i class="fas fa-warehouse"></i>
+                                <p>Stok Pakan</p>
                             </a>
                         </li>
                     </ul>
@@ -430,7 +483,6 @@
                                 </ul>
                             </li>
 
-                            <!-- User Dropdown dengan data dari session -->
                             <li class="nav-item topbar-user dropdown hidden-caret">
                                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                                     <div class="avatar-sm">
@@ -466,7 +518,6 @@
 
             <div class="container">
                 <div class="page-inner">
-                    <!-- Page Header dengan data dari session -->
                     <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                         <div class="flex-grow-1">
                             <h3 class="fw-bold mb-1">Rumah Potong Unggas (RPU)</h3>
@@ -474,13 +525,10 @@
                         </div>
                     </div>
 
-                    <!-- Alert Section -->
                     <div id="alert-container"></div>
 
-                    <!-- Action Card + Input RPU -->
                     <div class="row mt-4">
                         <div class="col-md-12">
-                            <!-- Card untuk Tombol Input -->
                             <div class="card action-card">
                                 <div class="card-body text-center p-4">
                                     <button type="button" class="btn btn-toggle-form" id="toggleFormBtn" onclick="toggleForm()">
@@ -489,7 +537,6 @@
                                 </div>
                             </div>
 
-                            <!-- Form Container (Awalnya Tersembunyi) -->
                             <div class="form-container" id="formContainer">
                                 <div class="card form-card">
                                     <div class="card-header">
@@ -502,14 +549,14 @@
                                             
                                             <div class="row">
                                                 <!-- Tanggal RPU -->
-                                                <div class="col-md-6 mb-3">
+                                                <div class="col-md-4 mb-3">
                                                     <label class="form-label required-field">Tanggal RPU</label>
                                                     <input type="date" class="form-control" id="tanggal_rpu" name="tanggal_rpu" required />
                                                     <div class="invalid-feedback">Tanggal RPU harus diisi</div>
                                                 </div>
 
                                                 <!-- Nama RPU/Pejagal -->
-                                                <div class="col-md-6 mb-3">
+                                                <div class="col-md-4 mb-3">
                                                     <label class="form-label required-field">Nama RPU/Pejagal</label>
                                                     <select class="form-control" id="pejagal" name="pejagal" required>
                                                         <option value="">Pilih RPU/Pejagal</option>
@@ -523,34 +570,51 @@
                                                     <div class="invalid-feedback">Nama RPU/Pejagal harus dipilih</div>
                                                 </div>
                                                 
-                                                <!-- Input untuk RPU baru (muncul jika pilih RPU Baru) -->
                                                 <div class="col-md-12 mb-3" id="rpuBaruContainer" style="display: none;">
                                                     <input type="text" class="form-control" id="pejagal_baru" name="pejagal_baru" placeholder="Masukkan nama RPU/Pejagal baru">
                                                     <small class="text-muted">Nama RPU/Pejagal baru akan ditambahkan ke database</small>
                                                 </div>
 
+                                                <!-- Perizinan/NIB -->
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label">Perizinan/NIB</label>
+                                                    <input type="text" class="form-control" id="perizinan" name="perizinan" placeholder="Masukkan Nomor Perizinan/NIB" />
+                                                    <small class="text-muted">Masukkan nomor izin atau NIB jika ada</small>
+                                                </div>
+
+                                                <!-- Tersedia Juleha -->
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label">Tersedia Juleha</label>
+                                                    <select class="form-control" id="tersedia_juleha" name="tersedia_juleha">
+                                                        <option value="">-- Pilih --</option>
+                                                        <option value="Ya">Ya</option>
+                                                        <option value="Tidak">Tidak</option>
+                                                    </select>
+                                                    <small class="text-muted">Apakah tersedia Juru Sembelih Halal?</small>
+                                                </div>
+
                                                 <!-- Nama Penanggung Jawab -->
-                                                <div class="col-md-6 mb-3">
+                                                <div class="col-md-4 mb-3">
                                                     <label class="form-label required-field">Nama Penanggung Jawab</label>
                                                     <input type="text" class="form-control" id="nama_pj" name="nama_pj" placeholder="Masukkan nama penanggung jawab" required />
                                                     <div class="invalid-feedback">Nama penanggung jawab harus diisi</div>
                                                 </div>
 
                                                 <!-- NIK Penanggung Jawab -->
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label">NIK</label>
-                                                    <input type="text" class="form-control" id="nik_pj" name="nik_pj" placeholder="Masukkan NIK" onblur="cekNik()" />
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label">NIK Penanggung Jawab</label>
+                                                    <input type="text" class="form-control" id="nik_pj" name="nik_pj" placeholder="Masukkan NIK" maxlength="16" onblur="cekNik()" />
                                                     <small id="nik_info" class="text-muted"></small>
                                                 </div>
 
                                                 <!-- No Telepon Penanggung Jawab -->
-                                                <div class="col-md-6 mb-3">
+                                                <div class="col-md-4 mb-3">
                                                     <label class="form-label">No. Telepon</label>
                                                     <input type="text" class="form-control" id="telp_pj" name="telp_pj" placeholder="Masukkan nomor telepon" />
                                                 </div>
 
-                                                <!-- NAMA PETUGAS - DROPDOWN -->
-                                                <div class="col-md-6 mb-3">
+                                                <!-- NAMA PETUGAS -->
+                                                <div class="col-md-4 mb-3">
                                                     <label class="form-label required-field">Nama Petugas</label>
                                                     <select class="form-control" id="nama_petugas" name="nama_petugas" required>
                                                         <option value="">Pilih Petugas</option>
@@ -600,30 +664,27 @@
                                                                             <td>
                                                                                 <select class="form-control komoditas" name="komoditas[]" required>
                                                                                     <option value="">Pilih Komoditas</option>
-                                                                                    <option value="Ayam Ras Pedaging">Ayam Ras Pedaging</option>
-                                                                                    <option value="Ayam Ras Petelur">Ayam Ras Petelur (Afkir)</option>
                                                                                     <option value="Ayam Kampung">Ayam Kampung</option>
+                                                                                    <option value="Ayam Broiler">Ayam Broiler</option>
+                                                                                    <option value="Layer Afkir">Layer Afkir</option>
+                                                                                    <option value="Layer Jantan">Layer Jantan</option>
                                                                                     <option value="Itik">Itik</option>
                                                                                     <option value="Entok">Entok</option>
-                                                                                    <option value="Burung Puyuh">Burung Puyuh</option>
-                                                                                    <option value="Mentok">Mentok</option>
-                                                                                    <option value="Angsa">Angsa</option>
-                                                                                    <option value="Merpati">Merpati</option>
                                                                                 </select>
-                                                                            </td>
+                                                                            </th>
                                                                             <td>
                                                                                 <input type="number" class="form-control jumlah_ekor" name="jumlah_ekor[]" min="1" placeholder="Ekor" required />
-                                                                            </td>
+                                                                            </th>
                                                                             <td>
                                                                                 <input type="number" step="0.1" class="form-control berat_kg" name="berat_kg[]" min="0.1" placeholder="Kg" required />
-                                                                            </td>
+                                                                            </th>
                                                                             <td>
                                                                                 <select class="form-control asal_unggas" name="asal_unggas[]" required>
                                                                                     <option value="">Pilih Asal</option>
                                                                                     <option value="Surabaya">Surabaya</option>
                                                                                     <option value="Luar Surabaya">Luar Surabaya</option>
                                                                                 </select>
-                                                                            </td>
+                                                                            </th>
                                                                             <td class="text-center">
                                                                                 <button type="button" class="btn btn-success btn-sm btn-add-row" title="Tambah baris">
                                                                                     <i class="fas fa-plus"></i>
@@ -631,7 +692,7 @@
                                                                                 <button type="button" class="btn btn-danger btn-sm btn-remove-row" title="Hapus baris" style="display: none;">
                                                                                     <i class="fas fa-trash"></i>
                                                                                 </button>
-                                                                            </td>
+                                                                             </th>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
@@ -659,7 +720,7 @@
                                                                     <div class="invalid-feedback">Alamat/lokasi harus diisi</div>
                                                                 </div>
 
-                                                                <!-- Kecamatan - Diambil dari session -->
+                                                                <!-- Kecamatan -->
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label required-field">Kecamatan</label>
                                                                     <input type="text" class="form-control" id="kecamatan" name="kecamatan" value="<?php echo $this->session->userdata('kecamatan') ?: 'Benowo'; ?>" readonly />
@@ -790,7 +851,6 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Submit Button -->
                                             <div class="row mt-4">
                                                 <div class="col-md-12">
                                                     <div class="text-end">
@@ -810,7 +870,6 @@
                         </div>
                     </div>
 
-                    <!-- FILTER SECTION -->
                     <div class="filter-section">
                         <div class="row align-items-center">
                             <div class="col-md-3">
@@ -833,22 +892,9 @@
                                     <select class="form-select" id="filterKomoditas">
                                         <option selected value="all">Semua Komoditas</option>
                                         <?php 
-                                        if (!empty($rpu_data)) {
-                                            $komoditas_list = array();
-                                            foreach ($rpu_data as $row) {
-                                                if (!empty($row['komoditas_list'])) {
-                                                    $items = explode(' | ', $row['komoditas_list']);
-                                                    foreach ($items as $item) {
-                                                        $kom = explode(':', $item)[0];
-                                                        if (!in_array($kom, $komoditas_list)) {
-                                                            $komoditas_list[] = $kom;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            sort($komoditas_list);
+                                        if (!empty($komoditas_list)) {
                                             foreach ($komoditas_list as $kom): ?>
-                                                <option value="<?php echo $kom; ?>"><?php echo $kom; ?></option>
+                                                <option value="<?php echo $kom['komoditas']; ?>"><?php echo $kom['komoditas']; ?></option>
                                             <?php endforeach;
                                         } ?>
                                     </select>
@@ -860,6 +906,7 @@
                                     <select class="form-select" id="filterKelurahan">
                                         <option selected value="all">Semua Kelurahan</option>
                                         <?php 
+                                        $user_kec = $this->session->userdata('kecamatan') ?: 'Benowo';
                                         if (isset($kel_list[$user_kec]) && is_array($kel_list[$user_kec])): 
                                             foreach ($kel_list[$user_kec] as $kel): ?>
                                             <option value="<?php echo $kel; ?>"><?php echo $kel; ?></option>
@@ -875,23 +922,21 @@
                         </div>
                     </div>
 
-                    <!-- Data Table -->
                     <div class="card form-card mt-4">
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="rpuTable" class="table table-bordered table-hover table-custom">
+                                <table id="rpuTable" class="table table-bordered table-hover table-custom" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Tanggal</th>
-                                            <th>RPU/Pejagal</th>
-                                            <th>Penanggung Jawab</th>
+                                            <th>Tanggal RPU</th>
+                                            <th>Pejagal</th>
+                                            <th>Perizinan/NIB</th>
                                             <th>Komoditas</th>
                                             <th>Total Ekor</th>
+                                            <th>Juleha</th>
                                             <th>Kelurahan</th>
-                                            <th>Petugas</th>
                                             <th>Foto</th>
-                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="dataTableBody">
@@ -902,50 +947,50 @@
                                                     <td><?php echo $no++; ?></td>
                                                     <td><?php echo isset($data['tanggal_rpu']) ? date('d-m-Y', strtotime($data['tanggal_rpu'])) : '-'; ?></td>
                                                     <td><?php echo htmlspecialchars($data['pejagal'] ?? '-'); ?></td>
-                                                    <td><?php echo htmlspecialchars($data['nama_pj'] ?? '-'); ?></td>
+                                                    <td><?php echo htmlspecialchars($data['perizinan'] ?? '-'); ?></td>
                                                     <td>
-                                                        <?php if (!empty($data['komoditas_list'])): ?>
-                                                            <small><?php echo htmlspecialchars($data['komoditas_list']); ?></small>
+                                                        <?php if (!empty($data['komoditas_badges'])): ?>
+                                                            <?php foreach ($data['komoditas_badges'] as $kom): ?>
+                                                                <span class="badge bg-info text-white mb-1 d-inline-block me-1"><?php echo htmlspecialchars($kom); ?></span>
+                                                            <?php endforeach; ?>
                                                         <?php else: ?>
                                                             <span class="badge bg-secondary">-</span>
                                                         <?php endif; ?>
                                                     </td>
                                                     <td>
+                                                        <span class="badge-ekor"><?php echo number_format($data['total_ekor'] ?? 0); ?> ekor</span>
+                                                    </td>
+                                                    <td>
                                                         <?php 
-                                                        // Hitung total ekor dari komoditas list
-                                                        $total_ekor = 0;
-                                                        if (!empty($data['komoditas_list'])) {
-                                                            $items = explode(' | ', $data['komoditas_list']);
-                                                            foreach ($items as $item) {
-                                                                if (preg_match('/(\d+) ekor/', $item, $matches)) {
-                                                                    $total_ekor += (int)$matches[1];
-                                                                }
-                                                            }
-                                                        }
+                                                        $juleha = $data['tersedia_juleha'] ?? '-';
+                                                        $badge_class = ($juleha == 'Ya') ? 'bg-success' : (($juleha == 'Tidak') ? 'bg-danger' : 'bg-secondary');
                                                         ?>
-                                                        <span class="badge-ekor"><?php echo $total_ekor; ?> ekor</span>
+                                                        <span class="badge <?php echo $badge_class; ?>"><?php echo htmlspecialchars($juleha); ?></span>
                                                     </td>
                                                     <td><?php echo htmlspecialchars($data['kelurahan'] ?? '-'); ?></td>
-                                                    <td><?php echo htmlspecialchars($data['nama_petugas'] ?? '-'); ?></td>
-                                                    <td>
-                                                        <?php if (!empty($data['foto_kegiatan'])): ?>
-                                                            <a href="javascript:void(0)" class="foto-link" onclick="showFoto('<?php echo base_url(); ?>uploads/rpu/<?php echo $data['foto_kegiatan']; ?>')">
-                                                                <i class="fas fa-image me-1"></i>Lihat
-                                                            </a>
+                                                    <td class="text-center">
+                                                        <?php 
+                                                        $foto_path = base_url() . 'uploads/rpu/' . ($data['foto_kegiatan'] ?? '');
+                                                        $foto_file = FCPATH . 'uploads/rpu/' . ($data['foto_kegiatan'] ?? '');
+                                                        
+                                                        if (!empty($data['foto_kegiatan']) && file_exists($foto_file)): ?>
+                                                            <img src="<?php echo $foto_path; ?>" 
+                                                                 class="foto-thumbnail" 
+                                                                 alt="Foto RPU"
+                                                                 onclick="showFoto('<?php echo $foto_path; ?>')"
+                                                                 title="Klik untuk lihat foto"
+                                                                 style="cursor: pointer;">
                                                         <?php else: ?>
-                                                            <span class="badge bg-secondary">No Foto</span>
+                                                            <span class="no-foto-badge">
+                                                                <i class="fas fa-image me-1"></i>No Foto
+                                                            </span>
                                                         <?php endif; ?>
-                                                    </td>
-                                                    <td>
-                                                        <button class="btn btn-sm btn-info btn-action" onclick="viewDetail(<?php echo $data['id']; ?>)" title="Detail">
-                                                            <i class="fas fa-eye"></i>
-                                                        </button>
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="10" class="text-center">Tidak ada data RPU</td>
+                                                <td colspan="9" class="text-center">Tidak ada data RPU</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
@@ -954,28 +999,6 @@
                         </div>
                     </div>
 
-                    <!-- Modal Detail RPU -->
-                    <div class="modal fade" id="detailModal" tabindex="-1">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Detail RPU</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body" id="detailModalBody">
-                                    <div class="text-center">
-                                        <i class="fas fa-spinner fa-spin fa-2x"></i>
-                                        <p>Loading...</p>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Modal Foto -->
                     <div class="modal fade modal-foto" id="fotoModal" tabindex="-1">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
@@ -994,81 +1017,116 @@
         </div>
     </div>
 
-    <!-- Core JS Files -->
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/popper.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/bootstrap.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
     
-    <!-- DataTables JS -->
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.bootstrap5.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
     
-    <!-- Kaiadmin JS -->
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/kaiadmin.min.js"></script>
 
     <script>
-        // VARIABEL GLOBAL UNTUK DATATABLE
         var dataTable;
         
+        // Function to update remove buttons visibility
+        function updateRemoveButtons() {
+            const rowCount = $('.komoditas-row').length;
+            if (rowCount > 1) {
+                $('.btn-remove-row').show();
+            } else {
+                $('.btn-remove-row').hide();
+            }
+        }
+        
+        // Safe DataTable initialization
+        function initDataTable() {
+            try {
+                // Destroy existing DataTable if it exists
+                if ($.fn.DataTable.isDataTable('#rpuTable')) {
+                    $('#rpuTable').DataTable().destroy();
+                    $('#rpuTable tbody').empty();
+                }
+                
+                // Reinitialize DataTable with proper settings
+                dataTable = $('#rpuTable').DataTable({
+                    language: {
+                        search: "Cari:",
+                        lengthMenu: "Tampilkan _MENU_ data",
+                        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                        infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
+                        infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
+                        zeroRecords: "Tidak ada data yang ditemukan",
+                        paginate: {
+                            first: "Pertama",
+                            last: "Terakhir",
+                            next: "Berikutnya",
+                            previous: "Sebelumnya"
+                        }
+                    },
+                    pageLength: 10,
+                    lengthChange: true,
+                    lengthMenu: [5, 10, 25, 50, 100],
+                    responsive: true,
+                    dom: 'Bfrtip',
+                    buttons: [
+                        { extend: 'copy', text: '<i class="fas fa-copy"></i> Copy', className: 'btn btn-sm btn-primary' },
+                        { extend: 'csv', text: '<i class="fas fa-file-csv"></i> CSV', className: 'btn btn-sm btn-success' },
+                        { extend: 'excel', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-sm btn-success' },
+                        { extend: 'pdf', text: '<i class="fas fa-file-pdf"></i> PDF', className: 'btn btn-sm btn-danger' },
+                        { extend: 'print', text: '<i class="fas fa-print"></i> Print', className: 'btn btn-sm btn-info' }
+                    ],
+                    columnDefs: [
+                        { orderable: false, targets: [8] },
+                        { orderable: true, targets: [0,1,2,3,4,5,6,7] }
+                    ],
+                    order: [[1, 'desc']],
+                    // Handle any potential HTML issues
+                    createdRow: function(row, data, dataIndex) {
+                        $(row).find('td').each(function(i) {
+                            if ($(this).html() === undefined || $(this).html() === null) {
+                                $(this).html('-');
+                            }
+                        });
+                    }
+                });
+            } catch(e) {
+                console.error('DataTable initialization error:', e);
+                // Fallback: simple table without DataTables features
+                $('#rpuTable').addClass('table table-bordered');
+            }
+        }
+
         $(document).ready(function() {
             console.log('Document Ready - RPU');
             
-            // Set today's date
             const today = new Date().toISOString().split('T')[0];
             $('#tanggal_rpu').val(today);
             
             // Initialize DataTable
-            dataTable = $('#rpuTable').DataTable({
-                language: {
-                    search: "Cari:",
-                    lengthMenu: "Tampilkan _MENU_ data",
-                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                    infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
-                    infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
-                    zeroRecords: "Tidak ada data yang ditemukan",
-                    paginate: {
-                        first: "Pertama",
-                        last: "Terakhir",
-                        next: "Berikutnya",
-                        previous: "Sebelumnya"
-                    }
-                },
-                pageLength: 10,
-                lengthChange: true,
-                lengthMenu: [5, 10, 25, 50, 100],
-                responsive: true,
-                dom: 'Bfrtip',
-                buttons: [
-                    { extend: 'copy', text: '<i class="fas fa-copy"></i> Copy', className: 'btn btn-sm btn-primary' },
-                    { extend: 'csv', text: '<i class="fas fa-file-csv"></i> CSV', className: 'btn btn-sm btn-success' },
-                    { extend: 'excel', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-sm btn-success' },
-                    { extend: 'pdf', text: '<i class="fas fa-file-pdf"></i> PDF', className: 'btn btn-sm btn-danger' },
-                    { extend: 'print', text: '<i class="fas fa-print"></i> Print', className: 'btn btn-sm btn-info' }
-                ]
-            });
-            
-            // Variable untuk counter baris
-            let rowCount = 1;
+            initDataTable();
 
-            // Fungsi untuk menambah baris komoditas baru
+            // Function to add komoditas row
             function addKomoditasRow() {
-                rowCount++;
-                
                 const newRow = `
                     <tr class="komoditas-row">
                         <td>
                             <select class="form-control komoditas" name="komoditas[]" required>
                                 <option value="">Pilih Komoditas</option>
-                                <option value="Ayam Ras Pedaging">Ayam Ras Pedaging</option>
-                                <option value="Ayam Ras Petelur">Ayam Ras Petelur (Afkir)</option>
                                 <option value="Ayam Kampung">Ayam Kampung</option>
+                                <option value="Ayam Broiler">Ayam Broiler</option>
+                                <option value="Layer Afkir">Layer Afkir</option>
+                                <option value="Layer Jantan">Layer Jantan</option>
                                 <option value="Itik">Itik</option>
                                 <option value="Entok">Entok</option>
-                                <option value="Burung Puyuh">Burung Puyuh</option>
-                                <option value="Mentok">Mentok</option>
-                                <option value="Angsa">Angsa</option>
-                                <option value="Merpati">Merpati</option>
                             </select>
                         </td>
                         <td>
@@ -1094,46 +1152,32 @@
                         </td>
                     </tr>
                 `;
-                
                 $('#komoditasBody').append(newRow);
                 updateRemoveButtons();
             }
 
-            // Fungsi untuk menghapus baris komoditas
             function removeKomoditasRow(btn) {
                 if ($('.komoditas-row').length > 1) {
                     $(btn).closest('tr').remove();
                     updateRemoveButtons();
-                }
-            }
-
-            // Fungsi untuk mengupdate tampilan tombol remove
-            function updateRemoveButtons() {
-                const rowCount = $('.komoditas-row').length;
-                
-                if (rowCount > 1) {
-                    $('.btn-remove-row').show();
                 } else {
-                    $('.btn-remove-row').hide();
+                    showAlert('warning', 'Minimal harus ada satu data komoditas!');
                 }
             }
 
-            // Event handler untuk tombol tambah (di dalam tabel)
+            // Event delegation untuk tombol dinamis
             $(document).on('click', '.btn-add-row', function(e) {
                 e.preventDefault();
                 addKomoditasRow();
             });
 
-            // Event handler untuk tombol hapus
             $(document).on('click', '.btn-remove-row', function(e) {
                 e.preventDefault();
                 removeKomoditasRow(this);
             });
 
-            // Inisialisasi tombol remove pada baris pertama
             updateRemoveButtons();
 
-            // Event untuk RPU Baru
             $('#pejagal').on('change', function() {
                 if ($(this).val() === 'RPU Baru') {
                     $('#rpuBaruContainer').show();
@@ -1144,7 +1188,6 @@
                 }
             });
 
-            // Fungsi validasi komoditas rows
             function validateKomoditasRows() {
                 let isValid = true;
                 let errorMessages = [];
@@ -1155,7 +1198,6 @@
                     const berat = $(this).find('.berat_kg').val();
                     const asal = $(this).find('.asal_unggas').val();
                     
-                    // Reset error style
                     $(this).find('.komoditas, .jumlah_ekor, .berat_kg, .asal_unggas').removeClass('is-invalid');
                     
                     if (!komoditas || komoditas === '') {
@@ -1190,30 +1232,14 @@
                 return isValid;
             }
 
-            // Form Submission dengan AJAX
             $('#formRpu').on('submit', function(e) {
                 e.preventDefault();
 
-                // Validasi field umum
-                const commonFields = [
-                    'tanggal_rpu',
-                    'nama_pj',
-                    'nama_petugas',
-                    'lokasi',
-                    'kelurahan',
-                    'latitude',
-                    'longitude'
-                ];
-                
+                const commonFields = ['tanggal_rpu', 'nama_pj', 'nama_petugas', 'lokasi', 'kelurahan', 'latitude', 'longitude'];
                 let isValid = true;
 
-                // Reset error pada field umum
                 commonFields.forEach(function(fieldId) {
                     $('#' + fieldId).removeClass('is-invalid');
-                });
-
-                // Cek field umum yang kosong
-                commonFields.forEach(function(fieldId) {
                     const field = $('#' + fieldId);
                     if (!field.val() || field.val() === '') {
                         field.addClass('is-invalid');
@@ -1221,14 +1247,12 @@
                     }
                 });
 
-                // Cek pejagal
                 const pejagal = $('#pejagal').val();
                 if (!pejagal || pejagal === '') {
                     $('#pejagal').addClass('is-invalid');
                     isValid = false;
                 }
                 
-                // Jika pilih RPU Baru, cek inputan
                 if (pejagal === 'RPU Baru') {
                     const pejagalBaru = $('#pejagal_baru').val();
                     if (!pejagalBaru || pejagalBaru === '') {
@@ -1237,7 +1261,6 @@
                     }
                 }
 
-                // Validasi komoditas rows
                 if (!validateKomoditasRows()) {
                     isValid = false;
                 }
@@ -1247,17 +1270,14 @@
                     return;
                 }
 
-                // Tampilkan loading
                 const submitBtn = $(this).find('button[type="submit"]');
                 const originalText = submitBtn.html();
 
                 submitBtn.html('<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...');
                 submitBtn.prop('disabled', true);
 
-                // Kirim data dengan AJAX
                 var formData = new FormData(this);
                 
-                // Jika ada RPU baru, ganti nilai pejagal
                 if (pejagal === 'RPU Baru') {
                     formData.set('pejagal', $('#pejagal_baru').val());
                 }
@@ -1272,15 +1292,10 @@
                     success: function(response) {
                         if (response.status === 'success') {
                             showAlert('success', response.message);
-                            
-                            // Reset form
                             resetForm();
-                            
-                            // Tutup form
                             $('#formContainer').removeClass('show');
                             $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT RPU');
                             
-                            // Reload page setelah 1.5 detik
                             setTimeout(function() {
                                 location.reload();
                             }, 1500);
@@ -1300,7 +1315,6 @@
             });
         });
         
-        // FUNGSI TOGGLE FORM
         function toggleForm() {
             console.log('Toggle button clicked');
             var formContainer = document.getElementById('formContainer');
@@ -1309,27 +1323,21 @@
             if (formContainer.classList.contains('show')) {
                 formContainer.classList.remove('show');
                 toggleBtn.innerHTML = '<i class="fas fa-plus-circle me-2"></i> INPUT RPU';
-                console.log('Form hidden');
             } else {
                 formContainer.classList.add('show');
                 toggleBtn.innerHTML = '<i class="fas fa-minus-circle me-2"></i> TUTUP FORM INPUT RPU';
-                console.log('Form shown');
-                
-                // Scroll ke form
                 setTimeout(function() {
                     formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }, 100);
             }
         }
 
-        // FUNGSI BATAL
         function batalForm() {
             resetForm();
             document.getElementById('formContainer').classList.remove('show');
             document.getElementById('toggleFormBtn').innerHTML = '<i class="fas fa-plus-circle me-2"></i> INPUT RPU';
         }
 
-        // FUNGSI GEOLOKASI
         function ambilLokasi() {
             if (navigator.geolocation) {
                 var btn = document.getElementById('btnGetLocation');
@@ -1344,25 +1352,20 @@
                         var lng = position.coords.longitude;
                         var accuracy = position.coords.accuracy;
 
-                        // Format koordinat
                         var formattedLat = lat.toFixed(6);
                         var formattedLng = lng.toFixed(6);
 
-                        // Set nilai ke input
                         document.getElementById('latitude').value = formattedLat;
                         document.getElementById('longitude').value = formattedLng;
                         
-                        // Hapus class invalid
                         document.getElementById('latitude').classList.remove('is-invalid');
                         document.getElementById('longitude').classList.remove('is-invalid');
 
-                        // Tampilkan informasi
                         document.getElementById('latDisplay').innerText = formattedLat;
                         document.getElementById('lngDisplay').innerText = formattedLng;
                         document.getElementById('accuracyInfo').innerText = 'Akurasi: ±' + Math.round(accuracy) + ' meter';
                         document.getElementById('coordinateInfo').style.display = 'block';
 
-                        // Reset button
                         btn.innerHTML = originalText;
                         btn.disabled = false;
 
@@ -1370,7 +1373,6 @@
                     },
                     function(error) {
                         var errorMessage = 'Gagal mendapatkan lokasi. ';
-
                         switch(error.code) {
                             case error.PERMISSION_DENIED:
                                 errorMessage += 'Izin lokasi ditolak. Harap izinkan akses lokasi di browser Anda.';
@@ -1384,24 +1386,17 @@
                             default:
                                 errorMessage += 'Terjadi kesalahan yang tidak diketahui.';
                         }
-
                         btn.innerHTML = originalText;
                         btn.disabled = false;
-
                         showAlert('danger', errorMessage);
                     },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 10000,
-                        maximumAge: 0
-                    }
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
                 );
             } else {
                 showAlert('danger', 'Browser Anda tidak mendukung geolocation.');
             }
         }
 
-        // CEK NIK
         function cekNik() {
             var nik = $('#nik_pj').val();
             if (nik && nik.length >= 16) {
@@ -1421,19 +1416,16 @@
             }
         }
 
-        // PREVIEW FOTO
         function previewFoto(input) {
             if (input.files && input.files[0]) {
                 var file = input.files[0];
                 
-                // Validasi file size (max 5MB)
                 if (file.size > 5 * 1024 * 1024) {
                     showAlert('danger', 'Ukuran file maksimal 5MB');
                     input.value = '';
                     return;
                 }
 
-                // Validasi file type
                 var validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
                 if (!validTypes.includes(file.type)) {
                     showAlert('danger', 'Format file harus JPG atau PNG');
@@ -1441,7 +1433,6 @@
                     return;
                 }
 
-                // Create preview
                 var reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('photoPreview').src = e.target.result;
@@ -1453,7 +1444,6 @@
             }
         }
 
-        // HAPUS FOTO
         function hapusFoto() {
             document.getElementById('foto_kegiatan').value = '';
             document.getElementById('photoPreview').style.display = 'none';
@@ -1461,61 +1451,50 @@
             document.getElementById('btnRemovePhoto').style.display = 'none';
         }
 
-        // FILTER FUNCTION
         function filterData() {
-            var pejagal = document.getElementById('filterPejagal').value;
-            var komoditas = document.getElementById('filterKomoditas').value;
-            var kelurahan = document.getElementById('filterKelurahan').value;
-            
-            var searchTerm = "";
-            
-            if (pejagal !== "all") {
-                searchTerm += pejagal;
+            if (dataTable) {
+                var pejagal = document.getElementById('filterPejagal').value;
+                var komoditas = document.getElementById('filterKomoditas').value;
+                var kelurahan = document.getElementById('filterKelurahan').value;
+                var searchTerm = "";
+                
+                if (pejagal !== "all") searchTerm += pejagal;
+                if (komoditas !== "all") {
+                    if (searchTerm) searchTerm += " ";
+                    searchTerm += komoditas;
+                }
+                if (kelurahan !== "all") {
+                    if (searchTerm) searchTerm += " ";
+                    searchTerm += kelurahan;
+                }
+                dataTable.search(searchTerm).draw();
             }
-            
-            if (komoditas !== "all") {
-                if (searchTerm) searchTerm += " ";
-                searchTerm += komoditas;
-            }
-            
-            if (kelurahan !== "all") {
-                if (searchTerm) searchTerm += " ";
-                searchTerm += kelurahan;
-            }
-            
-            dataTable.search(searchTerm).draw();
         }
 
-        // RESET FILTER
         function resetFilter() {
-            document.getElementById('filterPejagal').value = "all";
-            document.getElementById('filterKomoditas').value = "all";
-            document.getElementById('filterKelurahan').value = "all";
-            dataTable.search("").draw();
+            if (dataTable) {
+                document.getElementById('filterPejagal').value = "all";
+                document.getElementById('filterKomoditas').value = "all";
+                document.getElementById('filterKelurahan').value = "all";
+                dataTable.search("").draw();
+            }
         }
 
-        // RESET FORM
         function resetForm() {
-            $('#formContainer').removeClass('show');
-            $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT RPU');
             $('#formRpu')[0].reset();
             
-            // Reset hanya menyisakan 1 baris komoditas
             $('#komoditasBody').empty();
             const defaultRow = `
                 <tr class="komoditas-row">
                     <td>
                         <select class="form-control komoditas" name="komoditas[]" required>
                             <option value="">Pilih Komoditas</option>
-                            <option value="Ayam Ras Pedaging">Ayam Ras Pedaging</option>
-                            <option value="Ayam Ras Petelur">Ayam Ras Petelur (Afkir)</option>
                             <option value="Ayam Kampung">Ayam Kampung</option>
+                            <option value="Ayam Broiler">Ayam Broiler</option>
+                            <option value="Layer Afkir">Layer Afkir</option>
+                            <option value="Layer Jantan">Layer Jantan</option>
                             <option value="Itik">Itik</option>
                             <option value="Entok">Entok</option>
-                            <option value="Burung Puyuh">Burung Puyuh</option>
-                            <option value="Mentok">Mentok</option>
-                            <option value="Angsa">Angsa</option>
-                            <option value="Merpati">Merpati</option>
                         </select>
                     </td>
                     <td>
@@ -1542,26 +1521,21 @@
                 </tr>
             `;
             $('#komoditasBody').html(defaultRow);
-            updateRemoveButtons();
             
-            // Set default values
             $('#kecamatan').val('<?php echo $this->session->userdata('kecamatan') ?: 'Benowo'; ?>');
             const today = new Date().toISOString().split('T')[0];
             $('#tanggal_rpu').val(today);
             
-            // Reset UI elements
             $('#rpuBaruContainer').hide();
             $('#coordinateInfo').hide();
             $('#photoPreview').hide();
             $('#photoPlaceholder').show();
             $('#btnRemovePhoto').hide();
             $('#nik_info').html('');
-            
-            // Remove invalid class
             $('.is-invalid').removeClass('is-invalid');
+            updateRemoveButtons();
         }
 
-        // ALERT FUNCTION
         function showAlert(type, message) {
             var alertHtml = `
                 <div class="alert alert-${type} alert-dismissible fade show" role="alert">
@@ -1569,110 +1543,15 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             `;
-
             $('#alert-container').html(alertHtml);
-
-            // Auto dismiss after 5 seconds
             setTimeout(function() {
                 $('.alert-dismissible').alert('close');
             }, 5000);
         }
 
-        // SHOW FOTO MODAL
-        function showFoto(url) {
+        function showFoto(url) { 
             $('#fotoModalImg').attr('src', url);
             $('#fotoModal').modal('show');
-        }
-        
-        // VIEW DETAIL
-        function viewDetail(id) {
-            $('#detailModal').modal('show');
-            $('#detailModalBody').html('<div class="text-center"><i class="fas fa-spinner fa-spin fa-2x"></i><p>Loading...</p></div>');
-            
-            $.ajax({
-                url: '<?php echo base_url("p_input_rpu/get_detail/"); ?>' + id,
-                type: 'GET',
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status === 'success') {
-                        var data = response.data;
-                        var komoditasHtml = '';
-                        
-                        if (data.komoditas && data.komoditas.length > 0) {
-                            komoditasHtml = '<table class="table table-sm table-bordered"><thead><tr><th>Komoditas</th><th>Jumlah (Ekor)</th><th>Berat (Kg)</th><th>Asal Unggas</th></tr></thead><tbody>';
-                            $.each(data.komoditas, function(i, k) {
-                                komoditasHtml += '<tr>' +
-                                    '<td>' + k.komoditas + '</td>' +
-                                    '<td>' + k.jumlah_ekor + '</td>' +
-                                    '<td>' + k.berat_kg + '</td>' +
-                                    '<td>' + k.asal_unggas + '</td>' +
-                                '</tr>';
-                            });
-                            komoditasHtml += '</tbody></table>';
-                        } else {
-                            komoditasHtml = '<p class="text-muted">Tidak ada data komoditas</p>';
-                        }
-                        
-                        var fotoHtml = data.foto_kegiatan ? 
-                            '<img src="<?php echo base_url(); ?>uploads/rpu/' + data.foto_kegiatan + '" class="img-fluid" style="max-height:200px">' : 
-                            '<span class="badge bg-secondary">Tidak ada foto</span>';
-                        
-                        var html = `
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p><strong>Tanggal RPU:</strong> ${data.tanggal_rpu || '-'}</p>
-                                    <p><strong>RPU/Pejagal:</strong> ${data.pejagal || '-'}</p>
-                                    <p><strong>Penanggung Jawab:</strong> ${data.nama_pj || '-'}</p>
-                                    <p><strong>NIK:</strong> ${data.nik_pj || '-'}</p>
-                                    <p><strong>No. Telepon:</strong> ${data.telp_pj || '-'}</p>
-                                    <p><strong>Petugas:</strong> ${data.nama_petugas || '-'}</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <p><strong>Lokasi:</strong> ${data.lokasi || '-'}</p>
-                                    <p><strong>Kecamatan:</strong> ${data.kecamatan || '-'}</p>
-                                    <p><strong>Kelurahan:</strong> ${data.kelurahan || '-'}</p>
-                                    <p><strong>RT/RW:</strong> ${data.rt || '-'}/${data.rw || '-'}</p>
-                                    <p><strong>Koordinat:</strong> ${data.latitude || '-'}, ${data.longitude || '-'}</p>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-12">
-                                    <h6 class="fw-bold">Data Komoditas:</h6>
-                                    ${komoditasHtml}
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-12">
-                                    <h6 class="fw-bold">Foto Kegiatan:</h6>
-                                    ${fotoHtml}
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-12">
-                                    <p><strong>Keterangan:</strong> ${data.keterangan || '-'}</p>
-                                </div>
-                            </div>
-                        `;
-                        $('#detailModalBody').html(html);
-                    } else {
-                        $('#detailModalBody').html('<p class="text-danger text-center">Data tidak ditemukan</p>');
-                    }
-                },
-                error: function() {
-                    $('#detailModalBody').html('<p class="text-danger text-center">Gagal memuat data</p>');
-                }
-            });
-        }
-
-        // Update remove buttons function (global)
-        function updateRemoveButtons() {
-            const rowCount = $('.komoditas-row').length;
-            
-            if (rowCount > 1) {
-                $('.btn-remove-row').show();
-            } else {
-                $('.btn-remove-row').hide();
-            }
         }
     </script>
 </body>

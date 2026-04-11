@@ -19,9 +19,28 @@ class P_Input_Klinik_Hewan_Model extends CI_Model {
     }
     
     /**
+     * Update klinik hewan record
+     */
+    public function update_klinik($id, $data) {
+        $this->db->where('id', $id);
+        return $this->db->update($this->table, $data);
+    }
+    
+    /**
+     * Get klinik by ID
+     */
+    public function get_klinik_by_id($id) {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+    
+    /**
      * Get klinik by kecamatan (untuk petugas)
      */
-    public function get_klinik_by_kecamatan($kecamatan) {
+    public function get_klinik_by_kecamatan($kecamatan) { 
         if (empty($kecamatan)) {
             return array();
         }
@@ -91,7 +110,7 @@ class P_Input_Klinik_Hewan_Model extends CI_Model {
      */
     public function get_distinct_jenis_layanan($kecamatan) {
         $this->db->distinct();
-        $this->db->select('jenis_layanan');
+        $this->db->select('jenis_layanan'); 
         $this->db->from($this->table);
         $this->db->where('kecamatan', $kecamatan);
         $this->db->where('jenis_layanan IS NOT NULL');
@@ -112,4 +131,13 @@ class P_Input_Klinik_Hewan_Model extends CI_Model {
         $result = $this->db->get()->row();
         return $result->total ? (int)$result->total : 0;
     }
+    
+    /**
+     * Delete klinik by ID
+     */
+    public function delete_klinik($id) {
+        $this->db->where('id', $id);
+        return $this->db->delete($this->table);
+    }
 }
+?>

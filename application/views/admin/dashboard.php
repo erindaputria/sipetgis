@@ -194,8 +194,8 @@
                       <a href="<?= site_url('obat') ?>" class="nav-link">Obat</a>
                     </li>
                     <li>
-                      <a href="<?= site_url('vaksinasi') ?>" class="nav-link"
-                        >Vaksinasi</a
+                      <a href="<?= site_url('vaksin') ?>" class="nav-link"
+                        >Vaksin</a
                       >
                     </li>
                     <li>
@@ -266,19 +266,53 @@
                         >Penjual Obat Hewan</a
                       >
                     </li>
-                       <li>
-                        <a href="<?= site_url('data_rpu') ?>" class="nav-link"
-                          >RPU</a
-                        >
+                      <li>
+                      <a href="<?= site_url('data_rpu') ?>" class="nav-link active"
+                        >TPU/RPU</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_pemotongan_unggas') ?>" class="nav-link active"
+                        >Pemotongan Unggas</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_demplot') ?>" class="nav-link active"
+                        >Demplot</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_stok_pakan') ?>" class="nav-link active"
+                        >Stok Pakan</a
+                      >
+                    </li>
                   </ul>
                 </div>
               </li>
-              <li class="nav-item">
-                <a href="<?= site_url('laporan') ?>" class="nav-link">
-                  <i class="fas fa-chart-bar"></i>
-                  <p>Laporan</p>
-                </a>
-              </li>
+             <li class="nav-item active">
+                            <a class="nav-link d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#laporanSubmenu" role="button" aria-expanded="true">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-chart-bar me-2"></i>
+                                    <span>Laporan</span>
+                                </div>
+                                <i class="fas fa-chevron-down ms-2"></i> 
+                            </a>
+                            <div class="collapse show" id="laporanSubmenu"> 
+                                <ul class="list-unstyled ps-4">
+                                    <li><a href="<?= site_url('laporan_kepemilikan_ternak') ?>" class="nav-link">Kepemilikan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_history_data_ternak') ?>" class="nav-link">History Data Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_vaksinasi') ?>" class="nav-link">Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('laporan_history_data_vaksinasi') ?>" class="nav-link">History Data Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('laporan_pengobatan_ternak') ?>" class="nav-link">Pengobatan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_penjual_pakan_ternak') ?>" class="nav-link">Penjual Pakan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_data_klinik_hewan') ?>" class="nav-link active">Data Klinik Hewan</a></li>
+                                    <li><a href="<?= site_url('laporan_penjual_obat_hewan') ?>" class="nav-link">Penjual Obat Hewan</a></li>
+                                    <li><a href="<?= site_url('laporan_data_tpu_rpu') ?>" class="nav-link">Data TPU / RPU</a></li>
+                                    <li><a href="<?= site_url('laporan_demplot_peternakan') ?>" class="nav-link">Demplot Peternakan</a></li>
+                                    <li><a href="<?= site_url('laporan_stok_pakan') ?>" class="nav-link">Stok Pakan</a></li>
+                                </ul>
+                            </div>
+                        </li>
               <li class="nav-item">
                 <a href="<?= site_url('peta_sebaran') ?>" class="nav-link">
                   <i class="fas fa-map-marked-alt"></i>
@@ -384,74 +418,52 @@
               </div>
             </div>
 
-            <!-- Statistics Cards -->
-            <div class="row">
-              <!-- Kotak 1: Jumlah Peternak -->
-              <div class="col-md-4">
-                <div class="card card-stats card-round stat-card">
-                  <div class="card-body">
-                    <div class="row align-items-center">
-                      <div class="col-icon">
-                        <div class="icon-big text-center icon-primary">
-                          <i class="fas fa-users stat-icon"></i>
-                        </div>
-                      </div>
-                      <div class="col col-stats ms-3 ms-sm-0">
-                        <div class="numbers">
-                          <p class="card-category">Jumlah Peternak</p>
-                          <h4 class="card-title">12</h4>
-                          <p class="card-subtitle">Peternak</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Kotak 2: Komoditas Ternak -->
-              <div class="col-md-4">
-                <div class="card card-stats card-round stat-card">
-                  <div class="card-body">
-                    <div class="row align-items-center">
-                      <div class="col-icon">
-                        <div class="icon-big text-center icon-success">
-                          <i class="fas fa-paw stat-icon"></i>
-                        </div>
-                      </div>
-                      <div class="col col-stats ms-3 ms-sm-0">
-                        <div class="numbers">
-                          <p class="card-category">Komoditas Ternak</p>
-                          <h4 class="card-title">5</h4>
-                          <p class="card-subtitle">Jenis Ternak</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Kotak 3: Total Ternak -->
-              <div class="col-md-4">
-                <div class="card card-stats card-round stat-card">
-                  <div class="card-body">
-                    <div class="row align-items-center">
-                      <div class="col-icon">
-                        <div class="icon-big text-center icon-warning">
-                          <i class="fas fa-warehouse stat-icon"></i>
-                        </div>
-                      </div>
-                      <div class="col col-stats ms-3 ms-sm-0">
-                        <div class="numbers">
-                          <p class="card-category">Total Ternak</p>
-                          <h4 class="card-title">1,225</h4>
-                          <p class="card-subtitle">Ekor</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+           <!-- Statistics Cards - 2 Card Tanpa Renggang (Gutter 0) -->
+<div class="row g-0">
+  <!-- Kotak 1: Pelaku Usaha -->
+  <div class="col-md-6">
+    <div class="card card-stats card-round stat-card me-1">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-icon">
+            <div class="icon-big text-center icon-primary">
+              <i class="fas fa-users stat-icon"></i>
             </div>
+          </div>
+          <div class="col col-stats ms-3 ms-sm-0">
+            <div class="numbers">
+              <p class="card-category">Pelaku Usaha</p>
+              <h4 class="card-title">147</h4>
+              <p class="card-subtitle">Peternak</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kotak 2: Jenis Ternak -->
+  <div class="col-md-6">
+    <div class="card card-stats card-round stat-card ms-1">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-icon">
+            <div class="icon-big text-center icon-success">
+              <i class="fas fa-paw stat-icon"></i>
+            </div>
+          </div>
+          <div class="col col-stats ms-3 ms-sm-0">
+            <div class="numbers">
+              <p class="card-category">Jenis Ternak</p>
+              <h4 class="card-title">13</h4>
+              <p class="card-subtitle">Komoditas</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
             <!-- Main Content -->
             <div class="row">
@@ -464,55 +476,96 @@
               <div class="col-md-12">
                 <div class="card-body">
                   <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                       <!-- Card untuk tabel kecamatan -->
                       <div class="card stat-card">
                         <div class="card-header">
                           <h6 class="mb-0">Data Kecamatan</h6>
                         </div>
                         <div class="card-body p-0">
-                          <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                              <thead>
-                                <tr>
-                                  <th>Kecamatan</th>
-                                  <th class="text-end">Jumlah Peternak</th>
-                                  <th class="text-end">Jumlah Ternak</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>Genteng</td>
-                                  <td class="text-end">42</td>
-                                  <td class="text-end">520</td>
-                                </tr>
-                                <tr>
-                                  <td>Sawahan</td>
-                                  <td class="text-end">38</td>
-                                  <td class="text-end">420</td>
-                                </tr>
-                                <tr>
-                                  <td>Tambaksari</td>
-                                  <td class="text-end">32</td>
-                                  <td class="text-end">380</td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                        <div class="card-footer bg-transparent border-top-0">
-                          <div class="text-end">
-                            <a href="#" class="btn btn-link text-primary">
-                              Lihat Selengkapnya
-                              <i class="fas fa-arrow-right ms-1"></i>
-                            </a>
-                          </div>
-                        </div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th class="text-center">No</th>
+          <th>Kecamatan</th>
+          <th class="text-end">Jumlah Peternak</th>
+          <th class="text-end">Sapi Potong</th>
+          <th class="text-end">Sapi Perah</th>
+          <th class="text-end">Kambing</th>
+          <th class="text-end">Domba</th>
+          <th class="text-end">Ayam Buras</th>
+          <th class="text-end">Ayam Broiler</th>
+          <th class="text-end">Ayam Layer</th>
+          <th class="text-end">Itik</th>
+          <th class="text-end">Angsa</th>
+          <th class="text-end">Kalkun</th>
+          <th class="text-end">Burung</th>
+          <th class="text-end">Kerbau</th>
+          <th class="text-end">Kuda</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="text-center">1</td><td>Karang Pilang</td><td class="text-end">15</td><td class="text-end">45</td><td class="text-end">12</td><td class="text-end">38</td><td class="text-end">25</td><td class="text-end">120</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">50</td><td class="text-end">5</td><td class="text-end">2</td><td class="text-end">15</td><td class="text-end">8</td><td class="text-end">3</td></tr>
+        <tr><td class="text-center">2</td><td>Jambangan</td><td class="text-end">12</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">25</td><td class="text-end">18</td><td class="text-end">200</td><td class="text-end">0</td><td class="text-end">8500</td><td class="text-end">30</td><td class="text-end">3</td><td class="text-end">0</td><td class="text-end">20</td><td class="text-end">0</td><td class="text-end">0</td></tr>
+        <tr><td class="text-center">3</td><td>Gayungan</td><td class="text-end">10</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">30</td><td class="text-end">22</td><td class="text-end">350</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">180</td><td class="text-end">8</td><td class="text-end">0</td><td class="text-end">45</td><td class="text-end">0</td><td class="text-end">0</td></tr>
+        <tr><td class="text-center">4</td><td>Wonocolo</td><td class="text-end">18</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">20</td><td class="text-end">15</td><td class="text-end">0</td><td class="text-end">12500</td><td class="text-end">0</td><td class="text-end">25</td><td class="text-end">2</td><td class="text-end">0</td><td class="text-end">10</td><td class="text-end">0</td><td class="text-end">0</td></tr>
+        <tr><td class="text-center">5</td><td>Tenggilis Mejoyo</td><td class="text-end">14</td><td class="text-end">28</td><td class="text-end">35</td><td class="text-end">15</td><td class="text-end">10</td><td class="text-end">80</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">20</td><td class="text-end">4</td><td class="text-end">1</td><td class="text-end">8</td><td class="text-end">5</td><td class="text-end">2</td></tr>
+        <tr><td class="text-center">6</td><td>Gunung Anyar</td><td class="text-end">20</td><td class="text-end">52</td><td class="text-end">18</td><td class="text-end">45</td><td class="text-end">30</td><td class="text-end">150</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">35</td><td class="text-end">6</td><td class="text-end">2</td><td class="text-end">12</td><td class="text-end">10</td><td class="text-end">4</td></tr>
+        <tr><td class="text-center">7</td><td>Rungkut</td><td class="text-end">22</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">35</td><td class="text-end">28</td><td class="text-end">420</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">95</td><td class="text-end">10</td><td class="text-end">3</td><td class="text-end">25</td><td class="text-end">0</td><td class="text-end">0</td></tr>
+        <tr><td class="text-center">8</td><td>Sukolilo</td><td class="text-end">19</td><td class="text-end">38</td><td class="text-end">0</td><td class="text-end">22</td><td class="text-end">18</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">15</td><td class="text-end">3</td><td class="text-end">0</td><td class="text-end">8</td><td class="text-end">6</td><td class="text-end">1</td></tr>
+        <tr><td class="text-center">9</td><td>Mulyorejo</td><td class="text-end">16</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">18</td><td class="text-end">12</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">11200</td><td class="text-end">22</td><td class="text-end">2</td><td class="text-end">0</td><td class="text-end">15</td><td class="text-end">0</td><td class="text-end">0</td></tr>
+        <tr><td class="text-center">10</td><td>Gubeng</td><td class="text-end">28</td><td class="text-end">65</td><td class="text-end">42</td><td class="text-end">38</td><td class="text-end">25</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">8</td><td class="text-end">4</td><td class="text-end">30</td><td class="text-end">12</td><td class="text-end">8</td></tr>
+        <tr><td class="text-center">11</td><td>Wonokromo</td><td class="text-end">25</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">28</td><td class="text-end">20</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">6500</td><td class="text-end">18</td><td class="text-end">5</td><td class="text-end">2</td><td class="text-end">22</td><td class="text-end">0</td><td class="text-end">0</td></tr>
+        <tr><td class="text-center">12</td><td>Dukuh Pakis</td><td class="text-end">13</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">32</td><td class="text-end">20</td><td class="text-end">95</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">12</td><td class="text-end">2</td><td class="text-end">0</td><td class="text-end">8</td><td class="text-end">0</td><td class="text-end">0</td></tr>
+        <tr><td class="text-center">13</td><td>Wiyung</td><td class="text-end">17</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">25</td><td class="text-end">18</td><td class="text-end">0</td><td class="text-end">14800</td><td class="text-end">0</td><td class="text-end">28</td><td class="text-end">4</td><td class="text-end">1</td><td class="text-end">12</td><td class="text-end">0</td><td class="text-end">0</td></tr>
+        <tr><td class="text-center">14</td><td>Lakarsantri</td><td class="text-end">21</td><td class="text-end">48</td><td class="text-end">15</td><td class="text-end">35</td><td class="text-end">28</td><td class="text-end">180</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">25</td><td class="text-end">6</td><td class="text-end">2</td><td class="text-end">18</td><td class="text-end">8</td><td class="text-end">3</td></tr>
+        <tr><td class="text-center">15</td><td>Sambikerep</td><td class="text-end">11</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">22</td><td class="text-end">15</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">85</td><td class="text-end">12</td><td class="text-end">3</td><td class="text-end">8</td><td class="text-end">0</td><td class="text-end">0</td></tr>
+        <tr><td class="text-center">16</td><td>Tandes</td><td class="text-end">23</td><td class="text-end">12</td><td class="text-end">0</td><td class="text-end">28</td><td class="text-end">20</td><td class="text-end">320</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">22</td><td class="text-end">5</td><td class="text-end">1</td><td class="text-end">15</td><td class="text-end">5</td><td class="text-end">2</td></tr>
+        <tr><td class="text-center">17</td><td>Sukomanunggal</td><td class="text-end">14</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">28</td><td class="text-end">18</td><td class="text-end">75</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">10</td><td class="text-end">2</td><td class="text-end">0</td><td class="text-end">6</td><td class="text-end">0</td><td class="text-end">0</td></tr>
+        <tr><td class="text-center">18</td><td>Sawahan</td><td class="text-end">38</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">45</td><td class="text-end">32</td><td class="text-end">0</td><td class="text-end">11280</td><td class="text-end">0</td><td class="text-end">42</td><td class="text-end">8</td><td class="text-end">2</td><td class="text-end">20</td><td class="text-end">0</td><td class="text-end">0</td></tr>
+        <tr><td class="text-center">19</td><td>Tegalsari</td><td class="text-end">19</td><td class="text-end">42</td><td class="text-end">8</td><td class="text-end">22</td><td class="text-end">15</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">4</td><td class="text-end">1</td><td class="text-end">12</td><td class="text-end">5</td><td class="text-end">2</td></tr>
+        <tr><td class="text-center">20</td><td>Genteng</td><td class="text-end">42</td><td class="text-end">520</td><td class="text-end">42</td><td class="text-end">520</td><td class="text-end">42</td><td class="text-end">520</td><td class="text-end">42</td><td class="text-end">520</td><td class="text-end">42</td><td class="text-end">520</td><td class="text-end">42</td><td class="text-end">520</td><td class="text-end">42</td><td class="text-end">520</td></tr>
+        <tr><td class="text-center">21</td><td>Bubutan</td><td class="text-end">15</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">18</td><td class="text-end">12</td><td class="text-end">0</td><td class="text-end">11500</td><td class="text-end">0</td><td class="text-end">15</td><td class="text-end">3</td><td class="text-end">0</td><td class="text-end">10</td><td class="text-end">0</td><td class="text-end">0</td></tr>
+        <tr><td class="text-center">22</td><td>Krembangan</td><td class="text-end">12</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">20</td><td class="text-end">14</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">65</td><td class="text-end">5</td><td class="text-end">1</td><td class="text-end">8</td><td class="text-end">0</td><td class="text-end">0</td></tr>
+        <tr><td class="text-center">23</td><td>Semampir</td><td class="text-end">24</td><td class="text-end">18</td><td class="text-end">0</td><td class="text-end">35</td><td class="text-end">22</td><td class="text-end">280</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">28</td><td class="text-end">6</td><td class="text-end">2</td><td class="text-end">15</td><td class="text-end">4</td><td class="text-end">1</td></tr>
+        <tr><td class="text-center">24</td><td>Kenjeran</td><td class="text-end">27</td><td class="text-end">58</td><td class="text-end">12</td><td class="text-end">32</td><td class="text-end">25</td><td class="text-end">150</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">45</td><td class="text-end">8</td><td class="text-end">3</td><td class="text-end">18</td><td class="text-end">6</td><td class="text-end">2</td></tr>
+        <tr><td class="text-center">25</td><td>Bulak</td><td class="text-end">18</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">15</td><td class="text-end">10</td><td class="text-end">0</td><td class="text-end">14500</td><td class="text-end">0</td><td class="text-end">20</td><td class="text-end">4</td><td class="text-end">0</td><td class="text-end">8</td><td class="text-end">0</td><td class="text-end">0</td></tr>
+        <tr><td class="text-center">26</td><td>Tambaksari</td><td class="text-end">32</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">48</td><td class="text-end">35</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">10</td><td class="text-end">4</td><td class="text-end">25</td><td class="text-end">8</td><td class="text-end">3</td></tr>
+        <tr><td class="text-center">27</td><td>Simokerto</td><td class="text-end">16</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">28</td><td class="text-end">18</td><td class="text-end">85</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">12</td><td class="text-end">3</td><td class="text-end">0</td><td class="text-end">10</td><td class="text-end">0</td><td class="text-end">0</td></tr>
+        <tr><td class="text-center">28</td><td>Pabean Cantian</td><td class="text-end">10</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">12</td><td class="text-end">8</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">25</td><td class="text-end">15</td><td class="text-end">5</td><td class="text-end">20</td><td class="text-end">0</td><td class="text-end">0</td></tr>
+        <tr><td class="text-center">29</td><td>Kandangan</td><td class="text-end">13</td><td class="text-end">25</td><td class="text-end">18</td><td class="text-end">20</td><td class="text-end">14</td><td class="text-end">60</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">15</td><td class="text-end">3</td><td class="text-end">1</td><td class="text-end">10</td><td class="text-end">5</td><td class="text-end">2</td></tr>
+        <tr><td class="text-center">30</td><td>Benowo</td><td class="text-end">20</td><td class="text-end">8</td><td class="text-end">0</td><td class="text-end">25</td><td class="text-end">18</td><td class="text-end">0</td><td class="text-end">17000</td><td class="text-end">0</td><td class="text-end">15</td><td class="text-end">4</td><td class="text-end">0</td><td class="text-end">12</td><td class="text-end">3</td><td class="text-end">6</td></tr>
+        <tr><td class="text-center">31</td><td>Pakal</td><td class="text-end">17</td><td class="text-end">35</td><td class="text-end">10</td><td class="text-end">28</td><td class="text-end">20</td><td class="text-end">95</td><td class="text-end">0</td><td class="text-end">0</td><td class="text-end">18</td><td class="text-end">5</td><td class="text-end">2</td><td class="text-end">14</td><td class="text-end">7</td><td class="text-end">3</td></tr>
+      </tbody>
+      <tfoot class="table-light">
+        <tr class="fw-bold">
+          <td class="text-center" colspan="2">Total 31 Kecamatan</td>
+          <td class="text-end">648</td>
+          <td class="text-end">929</td>
+          <td class="text-end">212</td>
+          <td class="text-end">849</td>
+          <td class="text-end">598</td>
+          <td class="text-end">2.905</td>
+          <td class="text-end">74.000</td>
+          <td class="text-end">26.720</td>
+          <td class="text-end">1.032</td>
+          <td class="text-end">135</td>
+          <td class="text-end">39</td>
+          <td class="text-end">402</td>
+          <td class="text-end">77</td>
+          <td class="text-end">62</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+                        
                       </div>
                     </div>
 
-                    <div class="col-md-6">
-                      <!-- Peta Surabaya - Lebih lebar -->
+                    <!-- <div class="col-md-12">
+                      Peta Surabaya - Lebih lebar
                       <div class="mapcontainer">
                         <div
                           style="
@@ -522,16 +575,16 @@
                             background: #f8f9fa;
                           "
                         >
-                          <!-- Gambar peta Surabaya -->
+                          Gambar peta Surabaya
                           <div class="position-relative w-100 h-100">
-                            <!-- Jika punya gambar peta Surabaya -->
+                            Jika punya gambar peta Surabaya
                             <img
                               src="assets/SIPETGIS/assets/img/peta surabaya.jpeg"
                               alt="Peta Surabaya"
                               class="w-100 h-100 object-fit-cover"
                             />
 
-                            <!-- Fallback jika gambar tidak ada -->
+                            Fallback jika gambar tidak ada
                             <div
                               id="map-fallback"
                               class="d-none flex-column align-items-center justify-content-center position-absolute top-0 start-0 w-100 h-100 bg-white"
@@ -546,7 +599,7 @@
                                 31 Kecamatan
                               </p>
 
-                              <!-- Mini peta dengan dots -->
+                              Mini peta dengan dots
                               <div
                                 class="d-flex flex-wrap justify-content-center gap-2 mb-3"
                               >
@@ -561,7 +614,7 @@
                               </div>
                             </div>
 
-                            <!-- Overlay info -->
+                            Overlay info
                             <div
                               class="position-absolute bottom-0 start-0 w-100 p-3 bg-dark bg-opacity-75 text-white"
                             >
@@ -586,7 +639,7 @@
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                   </div>
 
                   <script>

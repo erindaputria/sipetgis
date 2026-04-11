@@ -9,7 +9,7 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
         $this->load->library('session');
         $this->load->library('upload');
         $this->load->library('form_validation');
-        $this->load->helper(array('form', 'url', 'file'));
+        $this->load->helper(array('form', 'url', 'file')); 
         
         // CEK SESSION LOGIN
         if (!$this->session->userdata('logged_in')) {
@@ -17,6 +17,10 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
         }
         
         $this->load->model('P_Input_Pelaku_Usaha_Model');
+        
+        // Enable error reporting untuk debug
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
     }
 
     public function index() {
@@ -80,93 +84,122 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
         // Set response header
         header('Content-Type: application/json');
         
-        // Validasi form
-        $this->form_validation->set_rules('nama', 'Nama Pelaku Usaha', 'required|trim|min_length[3]|max_length[255]');
-        $this->form_validation->set_rules('nik', 'NIK', 'required|trim|exact_length[16]|numeric');
-        $this->form_validation->set_rules('telepon', 'Telepon', 'trim|min_length[10]|max_length[15]|numeric');
-        $this->form_validation->set_rules('alamat', 'Alamat', 'required|trim');
-        $this->form_validation->set_rules('kecamatan', 'Kecamatan', 'required|trim');
-        $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required|trim');
-        $this->form_validation->set_rules('latitude', 'Latitude', 'required|trim');
-        $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim');
-
-        if ($this->form_validation->run() == FALSE) {
-            $errors = validation_errors();
-            echo json_encode(array(
-                'status' => 'error',
-                'message' => strip_tags($errors)
-            ));
-            return;
-        }
-
-        // Cek NIK sudah terdaftar atau belum
-        $nik = $this->input->post('nik');
-        $existing = $this->P_Input_Pelaku_Usaha_Model->check_nik($nik);
-        
-        if ($existing) {
-            echo json_encode(array(
-                'status' => 'error',
-                'message' => 'NIK ' . $nik . ' sudah terdaftar atas nama ' . $existing['nama']
-            ));
-            return;
-        }
-
-        // Upload foto
-        $foto_name = NULL;
-        if (isset($_FILES['foto']) && $_FILES['foto']['error'] != 4) {
+        try {
+            // Skip CSRF verification for this method
+            $this->security->csrf_verify = false;
             
-            $upload_path = './uploads/pelaku_usaha/';
+            // Debug: Log received data
+            log_message('debug', 'POST Data: ' . print_r($this->input->post(), true));
+            log_message('debug', 'FILES Data: ' . print_r($_FILES, true));
             
-            if (!is_dir($upload_path)) {
-                mkdir($upload_path, 0777, TRUE);
-            }
+            // Validasi form
+            $this->form_validation->set_rules('nama', 'Nama Pelaku Usaha', 'required|trim|min_length[3]|max_length[255]');
+            $this->form_validation->set_rules('nik', 'NIK', 'required|trim|exact_length[16]|numeric');
+            $this->form_validation->set_rules('telepon', 'Telepon', 'trim|min_length[10]|max_length[15]|numeric');
+            $this->form_validation->set_rules('alamat', 'Alamat', 'required|trim');
+            $this->form_validation->set_rules('kecamatan', 'Kecamatan', 'required|trim');
+            $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required|trim');
+            $this->form_validation->set_rules('latitude', 'Latitude', 'required|trim');
+            $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim');
 
-            $config['upload_path'] = $upload_path;
-            $config['allowed_types'] = 'jpg|jpeg|png';
-            $config['max_size'] = 5120; // 5MB
-            $config['encrypt_name'] = TRUE;
-            
-            $this->upload->initialize($config);
-            
-            if ($this->upload->do_upload('foto')) {
-                $upload_data = $this->upload->data();
-                $foto_name = $upload_data['file_name'];
-            } else {
-                $error = $this->upload->display_errors();
+            if ($this->form_validation->run() == FALSE) {
+                $errors = validation_errors();
                 echo json_encode(array(
                     'status' => 'error',
-                    'message' => 'Gagal upload foto: ' . strip_tags($error)
+                    'message' => strip_tags($errors)
                 ));
                 return;
             }
-        }
 
-        // Data sesuai dengan struktur tabel pelaku_usaha
-        $data = array(
-            'nama' => $this->input->post('nama'),
-            'nik' => $nik,
-            'telepon' => $this->input->post('telepon') ?: NULL,
-            'alamat' => $this->input->post('alamat'),
-            'kecamatan' => $this->input->post('kecamatan'),
-            'kelurahan' => $this->input->post('kelurahan'),
-            'latitude' => $this->input->post('latitude'),
-            'longitude' => $this->input->post('longitude'),
-            'foto' => $foto_name,
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
-        );
+            // Cek NIK sudah terdaftar atau belum
+            $nik = $this->input->post('nik');
+            $existing = $this->P_Input_Pelaku_Usaha_Model->check_nik($nik);
+            
+            if ($existing) {
+                echo json_encode(array(
+                    'status' => 'error',
+                    'message' => 'NIK ' . $nik . ' sudah terdaftar atas nama ' . $existing['nama']
+                ));
+                return;
+            }
 
-        if ($this->P_Input_Pelaku_Usaha_Model->save_pelaku_usaha($data)) {
-            $foto_msg = $foto_name ? ' dan 1 foto' : ' (tanpa foto)';
-            echo json_encode(array(
-                'status' => 'success',
-                'message' => 'Data pelaku usaha berhasil disimpan' . $foto_msg
-            ));
-        } else {
-            $db_error = $this->db->error();
+            // Upload foto
+            $foto_name = NULL;
+            if (isset($_FILES['foto']) && $_FILES['foto']['error'] != 4) {
+                
+                $upload_path = './uploads/pelaku_usaha/';
+                
+                if (!is_dir($upload_path)) {
+                    mkdir($upload_path, 0777, TRUE);
+                }
+
+                $config['upload_path'] = $upload_path;
+                $config['allowed_types'] = 'jpg|jpeg|png';
+                $config['max_size'] = 5120; // 5MB
+                $config['encrypt_name'] = TRUE;
+                
+                $this->upload->initialize($config);
+                
+                if ($this->upload->do_upload('foto')) {
+                    $upload_data = $this->upload->data();
+                    $foto_name = $upload_data['file_name'];
+                } else {
+                    $error = $this->upload->display_errors();
+                    echo json_encode(array(
+                        'status' => 'error',
+                        'message' => 'Gagal upload foto: ' . strip_tags($error)
+                    ));
+                    return;
+                }
+            }
+
+            // Ambil nama petugas dari session
+            $nama_petugas = $this->session->userdata('nama');
+            if (empty($nama_petugas)) {
+                $nama_petugas = $this->session->userdata('username');
+            }
+            if (empty($nama_petugas)) {
+                $nama_petugas = 'Petugas Lapangan';
+            }
+
+            // Data sesuai dengan struktur tabel
+            $data = array(
+                'nama' => $this->input->post('nama'),
+                'nik' => $nik,
+                'telepon' => $this->input->post('telepon') ?: NULL,
+                'alamat' => $this->input->post('alamat'),
+                'nama_petugas' => $nama_petugas,
+                'tanggal_input' => date('Y-m-d'),
+                'kecamatan' => $this->input->post('kecamatan'),
+                'kelurahan' => $this->input->post('kelurahan'),
+                'latitude' => $this->input->post('latitude'),
+                'longitude' => $this->input->post('longitude'),
+                'foto' => $foto_name
+            );
+
+            // Debug: Log data yang akan disimpan
+            log_message('debug', 'Data to save: ' . print_r($data, true));
+
+            if ($this->P_Input_Pelaku_Usaha_Model->save_pelaku_usaha($data)) {
+                $foto_msg = $foto_name ? ' dan 1 foto' : ' (tanpa foto)';
+                echo json_encode(array(
+                    'status' => 'success',
+                    'message' => 'Data pelaku usaha berhasil disimpan' . $foto_msg
+                ));
+            } else {
+                $db_error = $this->db->error();
+                log_message('error', 'Database error: ' . print_r($db_error, true));
+                echo json_encode(array(
+                    'status' => 'error',
+                    'message' => 'Gagal menyimpan data: ' . $db_error['message']
+                ));
+            }
+            
+        } catch (Exception $e) {
+            log_message('error', 'Exception in save: ' . $e->getMessage());
             echo json_encode(array(
                 'status' => 'error',
-                'message' => 'Gagal menyimpan data ke database: ' . $db_error['message']
+                'message' => 'Error: ' . $e->getMessage()
             ));
         }
     }
@@ -196,7 +229,7 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
             echo json_encode(array(
                 'status' => 'empty',
                 'data' => [],
-                'message' => 'Tidak ada data untuk tahun ' . $tahun . ' di kecamatan ' . $kecamatan
+                'message' => 'Tidak ada data untuk tahun ' . $tahun
             ));
         }
     }

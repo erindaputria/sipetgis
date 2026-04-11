@@ -323,7 +323,7 @@ class P_Input_Pengobatan extends CI_Controller {
         
         $cek = $this->P_Input_Pengobatan_Model->cek_telp_exists($telp, $kecamatan);
         
-        if ($cek) {
+        if ($cek) { 
             echo json_encode([
                 'status' => 'exists',
                 'message' => 'Nomor telepon ini sudah pernah digunakan sebanyak ' . $cek . ' kali di kecamatan ini'

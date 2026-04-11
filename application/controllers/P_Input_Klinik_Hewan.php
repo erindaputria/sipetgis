@@ -18,7 +18,7 @@ class P_Input_Klinik_Hewan extends CI_Controller {
         
         $this->load->model('P_Input_Klinik_Hewan_Model');
     }
-
+ 
     public function index() {
         $user_kecamatan = $this->session->userdata('kecamatan');
         $data['klinik_data'] = $this->P_Input_Klinik_Hewan_Model->get_klinik_by_kecamatan($user_kecamatan);
@@ -67,12 +67,16 @@ class P_Input_Klinik_Hewan extends CI_Controller {
     public function save() {
         // Set validation rules
         $this->form_validation->set_rules('nama_klinik', 'Nama Klinik', 'required|trim');
+        $this->form_validation->set_rules('nama_pemilik', 'Nama Pemilik', 'trim');
+        $this->form_validation->set_rules('alamat', 'Alamat', 'required|trim');
         $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required|trim');
         $this->form_validation->set_rules('latitude', 'Latitude', 'required|trim');
         $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim');
         $this->form_validation->set_rules('jumlah_dokter', 'Jumlah Dokter', 'numeric');
         $this->form_validation->set_rules('jenis_layanan', 'Jenis Layanan', 'required|trim');
         $this->form_validation->set_rules('surat_ijin', 'Surat Ijin', 'required|trim');
+        $this->form_validation->set_rules('nib', 'NIB', 'trim|max_length[50]');
+        $this->form_validation->set_rules('sertifikat_standar', 'Sertifikat Standar', 'trim|max_length[50]');
 
         if ($this->form_validation->run() == FALSE) {
             $response = array(
@@ -114,10 +118,12 @@ class P_Input_Klinik_Hewan extends CI_Controller {
             }
         }
 
-        // Data untuk disimpan
+        // Data untuk disimpan (sesuai dengan struktur database)
         $data = array(
             'nama_klinik' => $this->input->post('nama_klinik'),
+            'nama_pemilik' => $this->input->post('nama_pemilik'),
             'keterangan' => $this->input->post('keterangan'),
+            'alamat' => $this->input->post('alamat'),
             'kecamatan' => $this->session->userdata('kecamatan'),
             'kelurahan' => $this->input->post('kelurahan'),
             'rt' => $this->input->post('rt'),
@@ -129,6 +135,8 @@ class P_Input_Klinik_Hewan extends CI_Controller {
             'jenis_layanan' => $this->input->post('jenis_layanan'),
             'foto_klinik' => $foto_name,
             'surat_ijin' => $this->input->post('surat_ijin'),
+            'nib' => $this->input->post('nib'),
+            'sertifikat_standar' => $this->input->post('sertifikat_standar'),
             'created_at' => date('Y-m-d H:i:s')
         );
 
@@ -146,7 +154,7 @@ class P_Input_Klinik_Hewan extends CI_Controller {
         }
 
         echo json_encode($response);
-    }
+    } 
 
     public function get_all_data() {
         $user_kecamatan = $this->session->userdata('kecamatan');
@@ -164,4 +172,28 @@ class P_Input_Klinik_Hewan extends CI_Controller {
             echo json_encode([]);
         }
     }
+    
+    public function delete($id) {
+        // Cek apakah data ada
+        $klinik = $this->P_Input_Klinik_Hewan_Model->get_klinik_by_id($id);
+        if (!$klinik) {
+            echo json_encode(['status' => 'error', 'message' => 'Data tidak ditemukan']);
+            return;
+        }
+        
+        // Hapus file foto jika ada
+        if (!empty($klinik['foto_klinik'])) {
+            $foto_path = './uploads/klinik_hewan/' . $klinik['foto_klinik'];
+            if (file_exists($foto_path)) {
+                unlink($foto_path);
+            }
+        }
+        
+        if ($this->P_Input_Klinik_Hewan_Model->delete_klinik($id)) {
+            echo json_encode(['status' => 'success', 'message' => 'Data berhasil dihapus']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus data']);
+        }
+    }
 }
+?>

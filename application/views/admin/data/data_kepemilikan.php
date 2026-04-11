@@ -256,10 +256,10 @@
                       >
                     </li>
                     <li>
-                      <a href="<?= site_url('obat') ?>" class="nav-link">Obat</a>
+                      <a href="<?php echo base_url(); ?>obat" class="nav-link">Obat</a>
                     </li>
                     <li>
-                      <a href="<?php echo base_url(); ?>vaksinasi" class="nav-link">Vaksinasi</a>
+                      <a href="<?php echo base_url(); ?>vaksin" class="nav-link">Vaksin</a>
                     </li>
                     <li>
                       <a href="<?php echo base_url(); ?>komoditas" class="nav-link">Komoditas</a>
@@ -332,20 +332,53 @@
                         >Penjual Obat Hewan</a
                       >
                     </li>
-                      <li>
-                      <a href="<?= site_url('data_rpu') ?>" class="nav-link"
-                        >RPU</a
+                     <li>
+                      <a href="<?= site_url('data_rpu') ?>" class="nav-link active"
+                        >TPU/RPU</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_pemotongan_unggas') ?>" class="nav-link active"
+                        >Pemotongan Unggas</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_demplot') ?>" class="nav-link active"
+                        >Demplot</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_stok_pakan') ?>" class="nav-link active"
+                        >Stok Pakan</a
                       >
                     </li>
                   </ul>
                 </div>
               </li>
-              <li class="nav-item">
-                <a href="<?php echo base_url(); ?>laporan">
-                  <i class="fas fa-chart-bar"></i>
-                  <p>Laporan</p>
-                </a>
-              </li>
+              <li class="nav-item active">
+                            <a class="nav-link d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#laporanSubmenu" role="button" aria-expanded="true">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-chart-bar me-2"></i>
+                                    <span>Laporan</span>
+                                </div>
+                                <i class="fas fa-chevron-down ms-2"></i>
+                            </a>
+                            <div class="collapse show" id="laporanSubmenu">
+                                <ul class="list-unstyled ps-4">
+                                    <li><a href="<?= site_url('laporan_kepemilikan_ternak') ?>" class="nav-link">Kepemilikan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_history_data_ternak') ?>" class="nav-link">History Data Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_vaksinasi') ?>" class="nav-link">Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('laporan_history_data_vaksinasi') ?>" class="nav-link">History Data Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('laporan_pengobatan_ternak') ?>" class="nav-link">Pengobatan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_penjual_pakan_ternak') ?>" class="nav-link">Penjual Pakan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_data_klinik_hewan') ?>" class="nav-link active">Data Klinik Hewan</a></li>
+                                    <li><a href="<?= site_url('laporan_penjual_obat_hewan') ?>" class="nav-link">Penjual Obat Hewan</a></li>
+                                    <li><a href="<?= site_url('laporan_data_tpu_rpu') ?>" class="nav-link">Data TPU / RPU</a></li>
+                                    <li><a href="<?= site_url('laporan_demplot_peternakan') ?>" class="nav-link">Demplot Peternakan</a></li>
+                                    <li><a href="<?= site_url('laporan_stok_pakan') ?>" class="nav-link">Stok Pakan</a></li>
+                                </ul>
+                            </div>
+                        </li>
               <li class="nav-item">
                 <a href="<?php echo base_url(); ?>peta_sebaran">
                   <i class="fas fa-map-marked-alt"></i>
@@ -368,7 +401,6 @@
             class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
           >
             <div class="container-fluid">
-
               <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
                 <li
                   class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none"
@@ -459,16 +491,15 @@
                 <div class="col-md-6">
                   <div class="form-group mb-0">
                     <label for="filterKomoditas" class="form-label fw-bold">
-                      Filter Komoditas Ternak:
+                      Filter Jenis Usaha:
                     </label>
                     <select class="form-select" id="filterKomoditas">
-                      <option selected>- Pilih Komoditas Ternak -</option>
-                      <option value="all">Semua Komoditas</option>
-                      <option value="sapi_potong">Sapi Potong</option>
-                      <option value="ayam_petelur">Ayam Ras Petelur</option>
-                      <option value="ayam_kampung">Ayam Kampung</option>
-                      <option value="kambing">Kambing</option>
-                      <option value="itik">Itik</option>
+                      <option selected>- Pilih Jenis Usaha -</option>
+                      <option value="all">Semua Jenis Usaha</option>
+                      <option value="Peternak Sapi">Peternak Sapi</option>
+                      <option value="Peternak Kambing">Peternak Kambing</option>
+                      <option value="Peternak Domba">Peternak Domba</option>
+                      <option value="Peternak Ayam">Peternak Ayam</option>
                     </select>
                   </div>
                 </div>
@@ -488,22 +519,46 @@
                     <thead>
                       <tr>
                         <th>No</th>
-                        <th>Jenis Ternak</th>
-                        <th>Komoditas Ternak</th>
-                        <th>Jumlah</th>
+                        <th>Jenis Usaha</th>
+                        <th>Jumlah Peternak</th>
+                        <th>Total Ternak</th>
                         <th>Aksi</th>
                       </tr>
                     </thead>
                     <tbody>
+                      <?php 
+                      // Data dinamis dari controller
+                      if(isset($data_ternak) && !empty($data_ternak)): 
+                        foreach($data_ternak as $index => $dt): 
+                      ?>
                       <tr>
-                        <td>1</td>
-                        <td>Ternak Besar</td>
-                        <td>Sapi Potong</td>
-                        <td>5 <span class="">Ekor</span></td>
+                        <td><?= $index + 1 ?></td>
+                        <td><?= htmlspecialchars($dt->jenis_ternak ?? $dt->jenis_usaha ?? '-') ?></td>
+                        <td><?= $dt->total_peternak ?? 0 ?> <span class="text-muted">Peternak</span></td>
+                        <td><?= number_format($dt->jumlah ?? $dt->total_ekor ?? 0, 0, ',', '.') ?> <span class="badge-ternak">Ekor</span></td>
                         <td>
                           <button
                             class="btn btn-detail btn-sm"
-                            onclick="showDetail('Sapi Potong', 'Ternak Besar')"
+                            onclick="showDetail('<?= htmlspecialchars($dt->jenis_ternak ?? $dt->jenis_usaha ?? '') ?>')"
+                          >
+                            <i class="fas fa-eye me-1"></i>Detail
+                          </button>
+                        </td>
+                      </tr>
+                      <?php 
+                        endforeach;
+                      else: 
+                      ?>
+                      <!-- Data dummy jika tidak ada data dari database -->
+                      <tr>
+                        <td>1</td>
+                        <td>Peternak Sapi</td>
+                        <td>2 <span class="text-muted">Peternak</span></td>
+                        <td>3 <span class="badge-ternak">Ekor</span></td>
+                        <td>
+                          <button
+                            class="btn btn-detail btn-sm"
+                            onclick="showDetail('Peternak Sapi')"
                           >
                             <i class="fas fa-eye me-1"></i>Detail
                           </button>
@@ -511,64 +566,19 @@
                       </tr>
                       <tr>
                         <td>2</td>
-                        <td>Ternak Unggas</td>
-                        <td>Ayam Ras Petelur</td>
-                        <td>1,225 <span class="">Ekor</span></td>
+                        <td>Peternak Kambing</td>
+                        <td>1 <span class="text-muted">Peternak</span></td>
+                        <td>2 <span class="badge-ternak">Ekor</span></td>
                         <td>
                           <button
                             class="btn btn-detail btn-sm"
-                            onclick="
-                              showDetail('Ayam Ras Petelur', 'Ternak Unggas')
-                            "
+                            onclick="showDetail('Peternak Kambing')"
                           >
                             <i class="fas fa-eye me-1"></i>Detail
                           </button>
                         </td>
                       </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>Ternak Unggas</td>
-                        <td>Ayam Kampung</td>
-                        <td>350 <span class="">Ekor</span></td>
-                        <td>
-                          <button
-                            class="btn btn-detail btn-sm"
-                            onclick="
-                              showDetail('Ayam Kampung', 'Ternak Unggas')
-                            "
-                          >
-                            <i class="fas fa-eye me-1"></i>Detail
-                          </button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>Ternak Kecil</td>
-                        <td>Kambing</td>
-                        <td>120 <span class="">Ekor</span></td>
-                        <td>
-                          <button
-                            class="btn btn-detail btn-sm"
-                            onclick="showDetail('Kambing', 'Ternak Kecil')"
-                          >
-                            <i class="fas fa-eye me-1"></i>Detail
-                          </button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>Ternak Unggas</td>
-                        <td>Itik</td>
-                        <td>80 <span class="">Ekor</span></td>
-                        <td>
-                          <button
-                            class="btn btn-detail btn-sm"
-                            onclick="showDetail('Itik', 'Ternak Unggas')"
-                          >
-                            <i class="fas fa-eye me-1"></i>Detail
-                          </button>
-                        </td>
-                      </tr>
+                      <?php endif; ?>
                     </tbody>
                   </table>
                 </div>
@@ -582,7 +592,7 @@
               style="display: none"
             >
               <div class="detail-header">
-                <h5 class="fw-bold mb-0">Daftar Rincian Transaksi Ternak</h5>
+                <h5 class="fw-bold mb-0">Daftar Rincian Peternak</h5>
                 <div id="detailInfo" class="text-muted mt-2">
                   <!-- Detail info will be inserted here -->
                 </div>
@@ -594,10 +604,11 @@
                     <tr>
                       <th>No</th>
                       <th>Nama Peternak</th>
-                      <th>Kec / Desa</th>
-                      <th>Jumlah Masuk</th>
-                      <th>Jumlah Keluar</th>
-                      <th>Tanggal Transaksi</th>
+                      <th>NIK</th>
+                      <th>Kecamatan</th>
+                      <th>Alamat</th>
+                      <th>Jumlah Ternak</th>
+                      <th>Telepon</th>
                     </tr>
                   </thead>
                   <tbody id="detailTableBody">
@@ -676,98 +687,39 @@
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/kaiadmin.min.js"></script>
 
     <script>
-      // Data untuk detail transaksi
+      // Data untuk detail (dummy data - akan diganti dengan data dari database)
       const detailData = {
-        "Sapi Potong": [
+        "Peternak Sapi": [
           {
             no: 1,
-            nama: "Peternak Sapi Maju",
-            kecamatan: "Genteng / Sudiroprajan",
-            masuk: 2,
-            keluar: 0,
-            tanggal: "15-10-2022",
+            nama: "Erin",
+            nik: "3515085606040003",
+            kecamatan: "SAWAHAN",
+            alamat: "Simo Sidomulyo X - 80, Surabaya",
+            jumlah: 2,
+            telepon: "085895644674"
           },
           {
             no: 2,
-            nama: "Mekar Sari Farm",
-            kecamatan: "Tambaksari / Rangkah",
-            masuk: 3,
-            keluar: 0,
-            tanggal: "20-10-2022",
-          },
+            nama: "Kartika",
+            nik: "3515085606040001",
+            kecamatan: "BENOWO",
+            alamat: "Romokalisari, 2 Utara No 08, Surabaya",
+            jumlah: 1,
+            telepon: "085895644671"
+          }
         ],
-        "Ayam Ras Petelur": [
+        "Peternak Kambing": [
           {
             no: 1,
-            nama: "Berdikari (Kandang Jaya)",
-            kecamatan: "Lampihong / Kandang Jaya",
-            masuk: 500,
-            keluar: 0,
-            tanggal: "27-10-2022",
-          },
-          {
-            no: 2,
-            nama: "LUKAH BANUA BARU",
-            kecamatan: "Paringin / Paringin Kota",
-            masuk: 725,
-            keluar: 0,
-            tanggal: "28-10-2022",
-          },
-        ],
-        "Ayam Kampung": [
-          {
-            no: 1,
-            nama: "Peternak Mandiri",
-            kecamatan: "Sawahan / Putat Jaya",
-            masuk: 200,
-            keluar: 0,
-            tanggal: "05-11-2022",
-          },
-          {
-            no: 2,
-            nama: "Karya Tani",
-            kecamatan: "Genteng / Embong Kaliasin",
-            masuk: 150,
-            keluar: 0,
-            tanggal: "10-11-2022",
-          },
-        ],
-        Kambing: [
-          {
-            no: 1,
-            nama: "Ternak Sejahtera",
-            kecamatan: "Tambaksari / Tanjungsari",
-            masuk: 50,
-            keluar: 0,
-            tanggal: "01-11-2022",
-          },
-          {
-            no: 2,
-            nama: "Makmur Farm",
-            kecamatan: "Sawahan / Bendul Merisi",
-            masuk: 70,
-            keluar: 0,
-            tanggal: "03-11-2022",
-          },
-        ],
-        Itik: [
-          {
-            no: 1,
-            nama: "Bebek Unggul",
-            kecamatan: "Genteng / Kapasari",
-            masuk: 40,
-            keluar: 0,
-            tanggal: "08-11-2022",
-          },
-          {
-            no: 2,
-            nama: "Maju Jaya Farm",
-            kecamatan: "Tambaksari / Kedungdoro",
-            masuk: 40,
-            keluar: 0,
-            tanggal: "12-11-2022",
-          },
-        ],
+            nama: "Budi Santoso",
+            nik: "3515085606040005",
+            kecamatan: "TAMBAKSARI",
+            alamat: "Jl. Rangkah No. 45, Surabaya",
+            jumlah: 2,
+            telepon: "081234567890"
+          }
+        ]
       };
 
       // Inisialisasi DataTable
@@ -827,29 +779,11 @@
 
           if (
             selectedValue === "all" ||
-            selectedValue === "- Pilih Komoditas Ternak -"
+            selectedValue === "- Pilih Jenis Usaha -"
           ) {
             $("#dataTernakTable").DataTable().search("").draw();
           } else {
-            let searchTerm = "";
-            switch (selectedValue) {
-              case "sapi_potong":
-                searchTerm = "Sapi Potong";
-                break;
-              case "ayam_petelur":
-                searchTerm = "Ayam Ras Petelur";
-                break;
-              case "ayam_kampung":
-                searchTerm = "Ayam Kampung";
-                break;
-              case "kambing":
-                searchTerm = "Kambing";
-                break;
-              case "itik":
-                searchTerm = "Itik";
-                break;
-            }
-            $("#dataTernakTable").DataTable().search(searchTerm).draw();
+            $("#dataTernakTable").DataTable().search(selectedValue).draw();
           }
         });
 
@@ -860,30 +794,36 @@
       });
 
       // Function to show detail
-      function showDetail(komoditas, jenisTernak) {
+      function showDetail(jenisUsaha) {
         // Update detail info
         $("#detailInfo").html(`
-          <span class="fw-bold">Jenis Ternak:</span> ${jenisTernak}<br>
-          <span class="fw-bold">Komoditas Ternak:</span> ${komoditas}
+          <span class="fw-bold">Jenis Usaha:</span> ${jenisUsaha}
         `);
 
         // Clear and populate detail table
         const detailTableBody = $("#detailTableBody");
         detailTableBody.empty();
 
-        if (detailData[komoditas]) {
-          detailData[komoditas].forEach((item) => {
+        if (detailData[jenisUsaha]) {
+          detailData[jenisUsaha].forEach((item) => {
             detailTableBody.append(`
               <tr>
                 <td>${item.no}</td>
                 <td>${item.nama}</td>
+                <td>${item.nik}</td>
                 <td>${item.kecamatan}</td>
-                <td>${item.masuk}</td>
-                <td>${item.keluar}</td>
-                <td>${item.tanggal}</td>
+                <td>${item.alamat}</td>
+                <td>${item.jumlah} <span class="text-muted">Ekor</span></td>
+                <td>${item.telepon}</td>
               </tr>
             `);
           });
+        } else {
+          detailTableBody.append(`
+            <tr>
+              <td colspan="7" class="text-center">Tidak ada data detail</td>
+            </tr>
+          `);
         }
 
         // Show detail section

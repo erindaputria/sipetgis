@@ -362,7 +362,7 @@
                        <a href="<?= site_url('obat') ?>" class="nav-link">Obat</a>
                     </li>
                     <li>
-                      <a href="vaksinasi.html" class="nav-link">Vaksinasi</a>
+                      <a href="vaksin.html" class="nav-link">Vaksin</a>
                     </li>
                     <li>
                       <a href="komoditas.html" class="nav-link">Komoditas</a>
@@ -435,19 +435,52 @@
                       >
                     </li>
                       <li>
-                      <a href="<?= site_url('data_rpu') ?>" class="nav-link"
-                        >RPU</a
+                      <a href="<?= site_url('data_rpu') ?>" class="nav-link active"
+                        >TPU/RPU</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_pemotongan_unggas') ?>" class="nav-link active"
+                        >Pemotongan Unggas</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_demplot') ?>" class="nav-link active"
+                        >Demplot</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_stok_pakan') ?>" class="nav-link active"
+                        >Stok Pakan</a
                       >
                     </li>
                   </ul>
                 </div>
               </li>
-              <li class="nav-item">
-                 <a href="<?php echo base_url(); ?>laporan">
-                  <i class="fas fa-chart-bar"></i>
-                  <p>Laporan</p>
-                </a>
-              </li>
+               <li class="nav-item active">
+                            <a class="nav-link d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#laporanSubmenu" role="button" aria-expanded="true">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-chart-bar me-2"></i>
+                                    <span>Laporan</span>
+                                </div>
+                                <i class="fas fa-chevron-down ms-2"></i>
+                            </a>
+                            <div class="collapse show" id="laporanSubmenu">
+                                <ul class="list-unstyled ps-4">
+                                    <li><a href="<?= site_url('laporan_kepemilikan_ternak') ?>" class="nav-link">Kepemilikan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_history_data_ternak') ?>" class="nav-link">History Data Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_vaksinasi') ?>" class="nav-link">Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('laporan_history_data_vaksinasi') ?>" class="nav-link">History Data Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('laporan_pengobatan_ternak') ?>" class="nav-link">Pengobatan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_penjual_pakan_ternak') ?>" class="nav-link">Penjual Pakan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_data_klinik_hewan') ?>" class="nav-link active">Data Klinik Hewan</a></li>
+                                    <li><a href="<?= site_url('laporan_penjual_obat_hewan') ?>" class="nav-link">Penjual Obat Hewan</a></li>
+                                    <li><a href="<?= site_url('laporan_data_tpu_rpu') ?>" class="nav-link">Data TPU / RPU</a></li>
+                                    <li><a href="<?= site_url('laporan_demplot_peternakan') ?>" class="nav-link">Demplot Peternakan</a></li>
+                                    <li><a href="<?= site_url('laporan_stok_pakan') ?>" class="nav-link">Stok Pakan</a></li>
+                                </ul>
+                            </div>
+                        </li>
               <li class="nav-item">
                 <a href="<?php echo base_url(); ?>peta_sebaran">
                   <i class="fas fa-map-marked-alt"></i>

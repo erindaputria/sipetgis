@@ -48,9 +48,9 @@
         
         .dt-buttons .btn {
             border-radius: 5px;
-            margin-right: 5px;
             font-weight: 500;
             padding: 6px 15px;
+            margin-right: 5px;
             transition: all 0.3s;
         }
 
@@ -60,23 +60,27 @@
         }
 
         .dt-buttons .btn-primary {
-            background-color: #0d6efd;
-            border-color: #0d6efd;
+            background-color: #0d6efd !important;
+            border-color: #0d6efd !important;
+            color: white !important;
         }
 
         .dt-buttons .btn-success {
-            background-color: #198754;
-            border-color: #198754;
+            background-color: #198754 !important;
+            border-color: #198754 !important;
+            color: white !important;
         }
 
         .dt-buttons .btn-danger {
-            background-color: #dc3545;
-            border-color: #dc3545;
+            background-color: #dc3545 !important;
+            border-color: #dc3545 !important;
+            color: white !important;
         }
 
         .dt-buttons .btn-info {
-            background-color: #0dcaf0;
-            border-color: #0dcaf0;
+            background-color: #0dcaf0 !important;
+            border-color: #0dcaf0 !important;
+            color: white !important;
         }
         
         table.dataTable {
@@ -276,14 +280,11 @@
                             </a>
                             <div class="collapse show" id="masterDataSubmenu">
                                 <ul class="list-unstyled ps-4">
-                                    <li>
+                                    <li> 
                                         <a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a>
                                     </li>
                                     <li>
                                         <a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('rpu') ?>" class="nav-link active">RPU</a>
                                     </li>
                                     <li>
                                         <a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a>
@@ -292,13 +293,16 @@
                                         <a href="<?= site_url('obat') ?>" class="nav-link">Obat</a>
                                     </li>
                                     <li>
-                                        <a href="<?= site_url('vaksinasi') ?>" class="nav-link">Vaksinasi</a>
+                                        <a href="<?= site_url('vaksin') ?>" class="nav-link">Vaksin</a>
                                     </li>
                                     <li>
                                         <a href="<?= site_url('komoditas') ?>" class="nav-link">Komoditas</a>
                                     </li>
                                     <li>
                                         <a href="<?= site_url('layanan_klinik') ?>" class="nav-link">Layanan Klinik</a>
+                                    </li>
+                                     <li>
+                                        <a href="<?= site_url('rpu') ?>" class="nav-link active">RPU</a>
                                     </li>
                                 </ul>
                             </div>
@@ -337,14 +341,52 @@
                                     <li>
                                         <a href="<?= site_url('data_penjual_obat') ?>" class="nav-link">Penjual Obat Hewan</a>
                                     </li>
+                                    <li>
+                      <a href="<?= site_url('data_rpu') ?>" class="nav-link active"
+                        >TPU/RPU</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_pemotongan_unggas') ?>" class="nav-link active"
+                        >Pemotongan Unggas</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_demplot') ?>" class="nav-link active"
+                        >Demplot</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_stok_pakan') ?>" class="nav-link active"
+                        >Stok Pakan</a
+                      >
+                    </li>
                                 </ul>
                             </div>
                         </li>
-                        <li class="nav-item">
-                            <a href="<?php echo base_url(); ?>laporan">
-                                <i class="fas fa-chart-bar"></i>
-                                <p>Laporan</p>
+                         <li class="nav-item active">
+                            <a class="nav-link d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#laporanSubmenu" role="button" aria-expanded="true">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-chart-bar me-2"></i>
+                                    <span>Laporan</span>
+                                </div>
+                                <i class="fas fa-chevron-down ms-2"></i>
                             </a>
+                            <div class="collapse show" id="laporanSubmenu">
+                                <ul class="list-unstyled ps-4">
+                                    <li><a href="<?= site_url('laporan_kepemilikan_ternak') ?>" class="nav-link">Kepemilikan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_history_data_ternak') ?>" class="nav-link">History Data Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_vaksinasi') ?>" class="nav-link">Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('laporan_history_data_vaksinasi') ?>" class="nav-link">History Data Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('laporan_pengobatan_ternak') ?>" class="nav-link">Pengobatan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_penjual_pakan_ternak') ?>" class="nav-link">Penjual Pakan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_data_klinik_hewan') ?>" class="nav-link active">Data Klinik Hewan</a></li>
+                                    <li><a href="<?= site_url('laporan_penjual_obat_hewan') ?>" class="nav-link">Penjual Obat Hewan</a></li>
+                                    <li><a href="<?= site_url('laporan_data_tpu_rpu') ?>" class="nav-link">Data TPU / RPU</a></li>
+                                    <li><a href="<?= site_url('laporan_demplot_peternakan') ?>" class="nav-link">Demplot Peternakan</a></li>
+                                    <li><a href="<?= site_url('laporan_stok_pakan') ?>" class="nav-link">Stok Pakan</a></li>
+                                </ul>
+                            </div>
                         </li>
                         <li class="nav-item">
                             <a href="<?php echo base_url(); ?>peta_sebaran">
@@ -735,7 +777,7 @@
         }
 
         $(document).ready(function () {
-            // Inisialisasi DataTable
+            // Inisialisasi DataTable dengan warna tombol yang sama seperti referensi
             var table = $("#rpuTable").DataTable({
                 dom: "Bfrtip",
                 buttons: [
@@ -890,7 +932,7 @@
                 if (value.indexOf('-') > 0) {
                     value = value.replace(/-/g, '');
                 }
-                
+                 
                 $(this).val(value);
             });
 

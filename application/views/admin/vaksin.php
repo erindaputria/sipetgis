@@ -2,7 +2,7 @@
 <html lang="id">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Master Data Vaksinasi - SIPETGIS</title>
+    <title>Master Data Vaksin - SIPETGIS</title>
     <meta
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
       name="viewport"
@@ -329,7 +329,7 @@
                      <a href="<?= site_url('obat') ?>" class="nav-link">Obat</a>
                     </li>
                     <li>
-                      <a href="<?= site_url('vaksinasi') ?>" class="nav-link active">Vaksinasi</a>
+                      <a href="<?= site_url('vaksin') ?>" class="nav-link active">Vaksin</a>
                     </li>
                     <li>
                       <a href="<?= site_url('komoditas') ?>" class="nav-link">Komoditas</a>
@@ -400,18 +400,52 @@
                       >
                     </li>
                      <li>
-                        <a href="<?= site_url('data_rpu') ?>" class="nav-link"
-                          >RPU</a
-                        >
+                      <a href="<?= site_url('data_rpu') ?>" class="nav-link active"
+                        >TPU/RPU</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_pemotongan_unggas') ?>" class="nav-link active"
+                        >Pemotongan Unggas</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_demplot') ?>" class="nav-link active"
+                        >Demplot</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_stok_pakan') ?>" class="nav-link active"
+                        >Stok Pakan</a
+                      >
+                    </li>
                   </ul>
                 </div>
               </li>
-              <li class="nav-item">
-                <a href="<?php echo base_url(); ?>laporan">
-                  <i class="fas fa-chart-bar"></i>
-                  <p>Laporan</p>
-                </a>
-              </li>
+              <li class="nav-item active">
+                            <a class="nav-link d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#laporanSubmenu" role="button" aria-expanded="true">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-chart-bar me-2"></i>
+                                    <span>Laporan</span>
+                                </div>
+                                <i class="fas fa-chevron-down ms-2"></i>
+                            </a>
+                            <div class="collapse show" id="laporanSubmenu">
+                                <ul class="list-unstyled ps-4">
+                                    <li><a href="<?= site_url('laporan_kepemilikan_ternak') ?>" class="nav-link">Kepemilikan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_history_data_ternak') ?>" class="nav-link">History Data Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_vaksinasi') ?>" class="nav-link">Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('laporan_history_data_vaksinasi') ?>" class="nav-link">History Data Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('laporan_pengobatan_ternak') ?>" class="nav-link">Pengobatan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_penjual_pakan_ternak') ?>" class="nav-link">Penjual Pakan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_data_klinik_hewan') ?>" class="nav-link active">Data Klinik Hewan</a></li>
+                                    <li><a href="<?= site_url('laporan_penjual_obat_hewan') ?>" class="nav-link">Penjual Obat Hewan</a></li>
+                                    <li><a href="<?= site_url('laporan_data_tpu_rpu') ?>" class="nav-link">Data TPU / RPU</a></li>
+                                    <li><a href="<?= site_url('laporan_demplot_peternakan') ?>" class="nav-link">Demplot Peternakan</a></li>
+                                    <li><a href="<?= site_url('laporan_stok_pakan') ?>" class="nav-link">Stok Pakan</a></li>
+                                </ul>
+                            </div>
+                        </li>
               <li class="nav-item">
                 <a href="<?php echo base_url(); ?>peta-sebaran">
                   <i class="fas fa-map-marked-alt"></i>
@@ -529,7 +563,7 @@
             >
               <div>
                 <h3 class="fw-bold mb-1">Master Data</h3>
-                <h6 class="op-7 mb-0">Kelola Data Vaksinasi</h6>
+                <h6 class="op-7 mb-0">Kelola Data Master Vaksin</h6>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                 <button class="btn btn-primary-custom text-white"
@@ -544,10 +578,10 @@
             <div class="modal fade" id="tambahDataModal" tabindex="-1">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content modal-form">
-                  <form action="<?= base_url(); ?>vaksinasi/simpan" method="post">
+                  <form action="<?= base_url(); ?>vaksin/simpan" method="post">
                     <div class="modal-header">
                       <h5 class="modal-title">
-                        <i class="fas fa-syringe me-2"></i>Tambah Data Vaksinasi
+                        <i class="fas fa-syringe me-2"></i>Tambah Data Master Vaksin
                       </h5>
                       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
@@ -555,8 +589,8 @@
                     <div class="modal-body">
                       <div class="row">
                         <div class="col-md-12 mb-3">
-                          <label>Nama Vaksinasi</label>
-                          <input type="text" name="nama_vaksin" class="form-control" required>
+                          <label>Jenis Vaksin</label>
+                          <input type="text" name="jenis_vaksin" class="form-control" required>
                         </div>
                       </div>
                       
@@ -612,11 +646,11 @@
             <div class="modal fade" id="editDataModal" tabindex="-1">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content modal-form">
-                  <form action="<?= base_url(); ?>vaksinasi/update" method="post">
+                  <form action="<?= base_url(); ?>vaksin/update" method="post">
                     <input type="hidden" name="id_vaksin" id="edit_id">
                     <div class="modal-header">
                       <h5 class="modal-title">
-                        <i class="fas fa-edit me-2"></i>Edit Data Vaksinasi
+                        <i class="fas fa-edit me-2"></i>Edit Data Master Vaksin
                       </h5>
                       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
@@ -624,8 +658,8 @@
                     <div class="modal-body">
                       <div class="row">
                         <div class="col-md-12 mb-3">
-                          <label>Nama Vaksinasi</label>
-                          <input type="text" name="nama_vaksin" id="edit_nama" class="form-control" required>
+                          <label>Jenis Vaksin</label>
+                          <input type="text" name="jenis_vaksin" id="edit_jenis" class="form-control" required>
                         </div>
                       </div>
                       
@@ -684,13 +718,13 @@
                   <div class="card-body">
                     <div class="table-responsive">
                       <table
-                        id="vaksinasiTable"
+                        id="vaksinTable"
                         class="table table-hover w-100"
                       >
                         <thead>
                           <tr>
                             <th width="50">No</th>
-                            <th>Nama Vaksinasi</th>
+                            <th>Jenis Vaksin</th>
                             <th>Tahun</th>
                             <th>Status Perolehan</th>
                             <th>Bantuan Provinsi</th>
@@ -698,12 +732,12 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <?php if(!empty($vaksinasi)): ?>
+                          <?php if(!empty($vaksin)): ?>
                             <?php $no = 1; ?>
-                            <?php foreach($vaksinasi as $row): ?>
+                            <?php foreach($vaksin as $row): ?>
                               <tr>
                                 <td><?= $no++; ?></td>
-                                <td><?= htmlspecialchars($row->nama_vaksin ?? ''); ?></td>
+                                <td><?= htmlspecialchars($row->jenis_vaksin ?? ''); ?></td>
                                 <td><?= htmlspecialchars($row->tahun ?? ''); ?></td>
                                 <td>
                                   <span class="badge-status 
@@ -731,7 +765,7 @@
                                   <button class="btn btn-action btn-edit" 
                                           title="Edit"
                                           data-id="<?= $row->id_vaksin; ?>"
-                                          data-nama="<?= htmlspecialchars($row->nama_vaksin); ?>"
+                                          data-jenis="<?= htmlspecialchars($row->jenis_vaksin); ?>"
                                           data-tahun="<?= htmlspecialchars($row->tahun); ?>"
                                           data-status="<?= htmlspecialchars($row->status_perolehan); ?>"
                                           data-bantuan="<?= htmlspecialchars($row->bantuan_prov); ?>">
@@ -740,7 +774,7 @@
                                   <button class="btn btn-action btn-delete" 
                                           title="Hapus"
                                           data-id="<?= $row->id_vaksin; ?>"
-                                          data-nama="<?= htmlspecialchars($row->nama_vaksin); ?>">
+                                          data-jenis="<?= htmlspecialchars($row->jenis_vaksin); ?>">
                                     <i class="fas fa-trash"></i>
                                   </button>
                                 </td>
@@ -748,7 +782,7 @@
                             <?php endforeach; ?>
                           <?php else: ?>
                             <tr>
-                              <td colspan="6" class="text-center">Tidak ada data vaksinasi</td>
+                              <td colspan="6" class="text-center">Tidak ada data master vaksin</td>
                             </tr>
                           <?php endif; ?>
                         </tbody>
@@ -791,7 +825,7 @@
     <script>
       $(document).ready(function () {
         // Inisialisasi DataTable dengan tampilan seperti halaman lainnya
-        var table = $("#vaksinasiTable").DataTable({
+        var table = $("#vaksinTable").DataTable({
           dom: "Bfrtip",
           buttons: [
             {
@@ -844,14 +878,14 @@
         // Fungsi untuk edit data
         $(document).on("click", ".btn-edit", function () {
           var id = $(this).data('id');
-          var nama = $(this).data('nama');
+          var jenis = $(this).data('jenis');
           var tahun = $(this).data('tahun');
           var status = $(this).data('status');
           var bantuan = $(this).data('bantuan');
           
           // Isi data ke modal edit
           $('#edit_id').val(id);
-          $('#edit_nama').val(nama);
+          $('#edit_jenis').val(jenis);
           $('#edit_tahun').val(tahun);
           $('#edit_status').val(status);
           $('#edit_bantuan').val(bantuan);
@@ -863,10 +897,10 @@
         // Fungsi untuk hapus data
         $(document).on("click", ".btn-delete", function () {
           var id = $(this).data('id');
-          var nama = $(this).data('nama');
+          var jenis = $(this).data('jenis');
           
-          if (confirm("Apakah Anda yakin ingin menghapus data vaksinasi: " + nama + "?")) {
-            window.location.href = "<?= base_url('vaksinasi/hapus/'); ?>" + id;
+          if (confirm("Apakah Anda yakin ingin menghapus data master vaksin: " + jenis + "?")) {
+            window.location.href = "<?= base_url('vaksin/hapus/'); ?>" + id;
           }
         });
 

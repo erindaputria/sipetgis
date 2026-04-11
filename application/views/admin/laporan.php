@@ -310,7 +310,7 @@
                        <a href="<?= site_url('obat') ?>" class="nav-link">Obat</a>
                     </li>
                     <li>
-                      <a href="<?php echo base_url(); ?>vaksinasi" class="nav-link">Vaksinasi</a>
+                      <a href="<?php echo base_url(); ?>vaksin" class="nav-link">Vaksin</a>
                     </li>
                     <li>
                       <a href="<?php echo base_url(); ?>komoditas" class="nav-link">Komoditas</a>
@@ -381,10 +381,26 @@
                         >Penjual Obat Hewan</a
                       >
                     </li>
-                     <li>
-                        <a href="<?= site_url('data_rpu') ?>" class="nav-link"
-                          >RPU</a
-                        >
+                    <li>
+                      <a href="<?= site_url('data_rpu') ?>" class="nav-link active"
+                        >TPU/RPU</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_pemotongan_unggas') ?>" class="nav-link active"
+                        >Pemotongan Unggas</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_demplot') ?>" class="nav-link active"
+                        >Demplot</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_stok_pakan') ?>" class="nav-link active"
+                        >Stok Pakan</a
+                      >
+                    </li>
                   </ul>
                 </div>
               </li>

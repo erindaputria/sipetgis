@@ -152,7 +152,7 @@ class P_Input_Pengobatan_Model extends CI_Model {
     public function cek_telp_exists($telp, $kecamatan) {
         if (empty($telp)) {
             return 0;
-        }
+        } 
         
         $this->db->from($this->table);
         $this->db->where('telp', $telp);

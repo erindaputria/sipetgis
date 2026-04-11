@@ -715,58 +715,61 @@
                                 <p>Dashboard</p>
                             </a>
                         </li>
-                        <li class="nav-section">
-                            <span class="sidebar-mini-icon">
-                                <i class="fa fa-ellipsis-h"></i>
-                            </span>
-                            <h4 class="text-section">Menu Utama</h4>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center justify-content-between collapsed" data-bs-toggle="collapse" href="#masterDataSubmenu">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-database me-2"></i>
-                                    <span>Master Data</span>
-                                </div>
-                                <i class="fas fa-chevron-down ms-2"></i>
-                            </a>
-                            <div class="collapse" id="masterDataSubmenu">
-                                <ul class="list-unstyled ps-4">
-                                    <li><a href="<?php echo base_url(); ?>pelaku_usaha" class="nav-link">Pelaku Usaha</a></li>
-                                    <li><a href="<?php echo base_url(); ?>akses_pengguna" class="nav-link">Akses Pengguna</a></li>
-                                    <li><a href="<?php echo base_url(); ?>pengobatan" class="nav-link">Pengobatan</a></li>
-                                    <li><a href="<?php echo base_url(); ?>vaksinasi" class="nav-link">Vaksinasi</a></li>
-                                    <li><a href="<?php echo base_url(); ?>komoditas" class="nav-link">Komoditas</a></li>
-                                    <li><a href="<?= site_url('layanan_klinik') ?>" class="nav-link">Layanan Klinik</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center justify-content-between collapsed" data-bs-toggle="collapse" href="#dataSubmenu">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-users me-2"></i>
-                                    <span>Data</span>
-                                </div>
-                                <i class="fas fa-chevron-down ms-2"></i>
-                            </a>
-                            <div class="collapse" id="dataSubmenu">
-                                <ul class="list-unstyled ps-4">
-                                    <li><a href="<?php echo base_url(); ?>data_kepemilikan" class="nav-link">Kepemilikan Ternak</a></li>
-                                    <li><a href="<?php echo base_url(); ?>data_history_ternak" class="nav-link">History Data Ternak</a></li>
-                                    <li><a href="<?php echo base_url(); ?>data_vaksinasi" class="nav-link">Vaksinasi</a></li>
-                                    <li><a href="<?php echo base_url(); ?>data_history_vaksinasi" class="nav-link">History Vaksinasi</a></li>
-                                    <li><a href="<?php echo base_url(); ?>data_pengobatan" class="nav-link">Pengobatan Ternak</a></li>
-                                    <li><a href="<?= site_url('data_penjual_pakan') ?>" class="nav-link">Penjual Pakan Ternak</a></li>
-                                    <li><a href="<?= site_url('data_klinik') ?>" class="nav-link">Klinik Hewan</a></li>
-                                    <li><a href="<?= site_url('data_penjual_obat') ?>" class="nav-link">Penjual Obat Hewan</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?php echo base_url(); ?>laporan">
-                                <i class="fas fa-chart-bar"></i>
-                                <p>Laporan</p>
-                            </a>
-                        </li>
+                        
+                         <!-- Dropdown Laporan -->
+              <li class="nav-item">
+                <a
+                  class="nav-link d-flex align-items-center justify-content-between collapsed"
+                  data-bs-toggle="collapse"
+                  href="#laporanSubmenu"
+                  role="button"
+                  aria-expanded="false"
+                >
+                  <div class="d-flex align-items-center">
+                    <i class="fas fa-chart-bar me-2"></i>
+                    <span>Laporan</span>
+                  </div>
+                  <i class="fas fa-chevron-down ms-2"></i>
+                </a>
+                <div class="collapse" id="laporanSubmenu">
+                  <ul class="list-unstyled ps-4">
+                    <li>
+                      <a href="<?php echo site_url('k_laporan_kepala/kepemilikan_ternak'); ?>" class="nav-link">Kepemilikan Ternak</a>
+                    </li>
+                    <li>
+                      <a href="<?php echo site_url('k_laporan_kepala/history_data_ternak'); ?>" class="nav-link">History Data Ternak</a>
+                    </li>
+                    <li>
+                      <a href="<?php echo site_url('k_laporan_kepala/vaksinasi'); ?>" class="nav-link">Vaksinasi</a>
+                    </li>
+                    <li>
+                      <a href="<?php echo site_url('k_laporan_kepala/history_vaksinasi'); ?>" class="nav-link">History Data Vaksinasi</a>
+                    </li>
+                    <li>
+                      <a href="<?php echo site_url('k_laporan_kepala/pengobatan_ternak'); ?>" class="nav-link">Pengobatan Ternak</a>
+                    </li>
+                    <li>
+                      <a href="<?php echo site_url('k_laporan_kepala/penjual_pakan'); ?>" class="nav-link">Penjual Pakan Ternak</a>
+                    </li>
+                    <li>
+                      <a href="<?php echo site_url('k_laporan_kepala/data_klinik_hewan'); ?>" class="nav-link">Data Klinik Hewan</a>
+                    </li>
+                    <li>
+                      <a href="<?php echo site_url('k_laporan_kepala/penjual_obat_hewan'); ?>" class="nav-link">Penjual Obat Hewan</a>
+                    </li>
+                    <li>
+                      <a href="<?php echo site_url('k_laporan_kepala/data_tpu_rpu'); ?>" class="nav-link">Data TPU / RPU</a>
+                    </li>
+                    <li>
+                      <a href="<?php echo site_url('k_laporan_kepala/demplot_peternakan'); ?>" class="nav-link">Demplot Peternakan</a>
+                    </li>
+                    <li>
+                      <a href="<?php echo site_url('k_laporan_kepala/stok_pakan'); ?>" class="nav-link">Stok Pakan</a>
+                    </li>
+                    
+                  </ul>
+                </div>
+              </li>
                         <li class="nav-item active">
                             <a href="<?= site_url('peta_sebaran') ?>">
                                 <i class="fas fa-map-marked-alt"></i>

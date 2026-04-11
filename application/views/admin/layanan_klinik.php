@@ -83,6 +83,30 @@
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       }
 
+      .dt-buttons .btn-primary {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+        color: white !important;
+      }
+
+      .dt-buttons .btn-success {
+        background-color: #198754 !important;
+        border-color: #198754 !important;
+        color: white !important;
+      }
+
+      .dt-buttons .btn-danger {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+        color: white !important;
+      }
+
+      .dt-buttons .btn-info {
+        background-color: #0dcaf0 !important;
+        border-color: #0dcaf0 !important;
+        color: white !important;
+      }
+
       table.dataTable {
         border-collapse: separate !important;
         border-spacing: 0 8px !important;
@@ -144,6 +168,22 @@
       .btn-delete:hover {
         background-color: #dc3545;
         color: white;
+      }
+
+      .pagination .page-link {
+        border: none;
+        color: #495057;
+        margin: 0 3px;
+        border-radius: 6px !important;
+      }
+
+      .pagination .page-item.active .page-link {
+        background-color: #4361ee;
+        color: white;
+      }
+
+      .pagination .page-link:hover {
+        background-color: #f8f9fa;
       }
 
       .btn-primary-custom {
@@ -230,22 +270,22 @@
                     <li>
                        <a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a>
                     </li>
-                    <li>
+                     <li>
                        <a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a>
                     </li>
                     <li>
                       <a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a>
                     </li>
                     <li>
-                      <a href="<?= site_url('obat') ?>" class="nav-link">Obat</a>
+                       <a href="<?= site_url('obat') ?>" class="nav-link">Obat</a>
                     </li>
                     <li>
-                      <a href="<?= site_url('vaksinasi') ?>" class="nav-link">Vaksinasi</a>
+                      <a href="<?= site_url('vaksin') ?>" class="nav-link">Vaksin</a>
                     </li>
                     <li>
                       <a href="<?= site_url('komoditas') ?>" class="nav-link">Komoditas</a>
                     </li>
-                    <li>
+                     <li>
                       <a href="<?= site_url('layanan_klinik') ?>" class="nav-link active">Layanan Klinik</a>
                     </li>
                     <li>
@@ -300,19 +340,53 @@
                         >Penjual Obat Hewan</a
                       >
                     </li>
-                     <li>
-                        <a href="<?= site_url('data_rpu') ?>" class="nav-link"
-                          >RPU</a
-                        >
+                    <li>
+                      <a href="<?= site_url('data_rpu') ?>" class="nav-link active"
+                        >TPU/RPU</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_pemotongan_unggas') ?>" class="nav-link active"
+                        >Pemotongan Unggas</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_demplot') ?>" class="nav-link active"
+                        >Demplot</a
+                      >
+                    </li>
+                    <li>
+                      <a href="<?= site_url('data_stok_pakan') ?>" class="nav-link active"
+                        >Stok Pakan</a
+                      >
+                    </li>
                   </ul>
                 </div>
               </li>
-              <li class="nav-item">
-                <a href="<?php echo base_url(); ?>laporan">
-                  <i class="fas fa-chart-bar"></i>
-                  <p>Laporan</p>
-                </a>
-              </li>
+              <li class="nav-item active">
+                            <a class="nav-link d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#laporanSubmenu" role="button" aria-expanded="true">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-chart-bar me-2"></i>
+                                    <span>Laporan</span>
+                                </div>
+                                <i class="fas fa-chevron-down ms-2"></i>
+                            </a>
+                            <div class="collapse show" id="laporanSubmenu">
+                                <ul class="list-unstyled ps-4">
+                                    <li><a href="<?= site_url('laporan_kepemilikan_ternak') ?>" class="nav-link">Kepemilikan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_history_data_ternak') ?>" class="nav-link">History Data Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_vaksinasi') ?>" class="nav-link">Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('laporan_history_data_vaksinasi') ?>" class="nav-link">History Data Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('laporan_pengobatan_ternak') ?>" class="nav-link">Pengobatan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_penjual_pakan_ternak') ?>" class="nav-link">Penjual Pakan Ternak</a></li>
+                                    <li><a href="<?= site_url('laporan_data_klinik_hewan') ?>" class="nav-link active">Data Klinik Hewan</a></li>
+                                    <li><a href="<?= site_url('laporan_penjual_obat_hewan') ?>" class="nav-link">Penjual Obat Hewan</a></li>
+                                    <li><a href="<?= site_url('laporan_data_tpu_rpu') ?>" class="nav-link">Data TPU / RPU</a></li>
+                                    <li><a href="<?= site_url('laporan_demplot_peternakan') ?>" class="nav-link">Demplot Peternakan</a></li>
+                                    <li><a href="<?= site_url('laporan_stok_pakan') ?>" class="nav-link">Stok Pakan</a></li>
+                                </ul>
+                            </div>
+                        </li>
              <li class="nav-item">
                 <a href="<?php echo base_url(); ?>peta_sebaran">
                   <i class="fas fa-map-marked-alt"></i>
@@ -418,32 +492,6 @@
                         <label class="form-label">Nama Layanan <span class="text-danger">*</span></label>
                         <input type="text" name="nama_layanan" class="form-control" placeholder="Masukkan nama layanan" required>
                       </div>
-                      <div class="mb-3">
-                        <label class="form-label">Kategori</label>
-                        <select name="kategori" class="form-control">
-                          <option value="">Pilih Kategori (Opsional)</option>
-                          <?php foreach($kategori_options as $key => $value): ?>
-                            <option value="<?= $key ?>"><?= $value ?></option>
-                          <?php endforeach; ?>
-                        </select>
-                      </div>
-                      <div class="mb-3">
-                        <label class="form-label">Deskripsi</label>
-                        <textarea name="deskripsi" class="form-control" rows="2" placeholder="Masukkan deskripsi (opsional)"></textarea>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-6 mb-3">
-                          <label class="form-label">Harga (Rp)</label>
-                          <input type="number" name="harga" class="form-control" min="0" step="1000" value="0" placeholder="0">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label class="form-label">Status</label>
-                          <div class="form-check">
-                            <input type="checkbox" name="status" class="form-check-input" value="1" checked>
-                            <label class="form-check-label">Aktif</label>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -470,32 +518,6 @@
                       <div class="mb-3">
                         <label class="form-label">Nama Layanan <span class="text-danger">*</span></label>
                         <input type="text" name="nama_layanan" id="edit_nama" class="form-control" required>
-                      </div>
-                      <div class="mb-3">
-                        <label class="form-label">Kategori</label>
-                        <select name="kategori" id="edit_kategori" class="form-control">
-                          <option value="">Pilih Kategori (Opsional)</option>
-                          <?php foreach($kategori_options as $key => $value): ?>
-                            <option value="<?= $key ?>"><?= $value ?></option>
-                          <?php endforeach; ?>
-                        </select>
-                      </div>
-                      <div class="mb-3">
-                        <label class="form-label">Deskripsi</label>
-                        <textarea name="deskripsi" id="edit_deskripsi" class="form-control" rows="2"></textarea>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-6 mb-3">
-                          <label class="form-label">Harga (Rp)</label>
-                          <input type="number" name="harga" id="edit_harga" class="form-control" min="0" step="1000">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label class="form-label">Status</label>
-                          <div class="form-check">
-                            <input type="checkbox" name="status" id="edit_status" class="form-check-input" value="1">
-                            <label class="form-check-label">Aktif</label>
-                          </div>
-                        </div>
                       </div>
                     </div>
                     <div class="modal-footer">
@@ -532,11 +554,7 @@
                                   <button class="btn btn-action btn-edit" 
                                           title="Edit"
                                           data-id="<?= $row->id_layanan; ?>"
-                                          data-nama="<?= htmlspecialchars($row->nama_layanan); ?>"
-                                          data-kategori="<?= htmlspecialchars($row->kategori ?? ''); ?>"
-                                          data-deskripsi="<?= htmlspecialchars($row->deskripsi ?? ''); ?>"
-                                          data-harga="<?= $row->harga ?? 0; ?>"
-                                          data-status="<?= $row->status ?? 1; ?>">
+                                          data-nama="<?= htmlspecialchars($row->nama_layanan); ?>">
                                     <i class="fas fa-edit"></i>
                                   </button>
                                   <button class="btn btn-action btn-delete" 
@@ -639,17 +657,9 @@
         $(document).on('click', '.btn-edit', function() {
           var id = $(this).data('id');
           var nama = $(this).data('nama');
-          var kategori = $(this).data('kategori');
-          var deskripsi = $(this).data('deskripsi');
-          var harga = $(this).data('harga');
-          var status = $(this).data('status');
           
           $('#edit_id').val(id);
           $('#edit_nama').val(nama);
-          $('#edit_kategori').val(kategori);
-          $('#edit_deskripsi').val(deskripsi);
-          $('#edit_harga').val(harga);
-          $('#edit_status').prop('checked', status == 1);
           
           $('#editDataModal').modal('show');
         });

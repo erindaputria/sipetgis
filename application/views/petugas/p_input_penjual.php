@@ -331,6 +331,24 @@
             font-size: 11px;
         }
         
+        /* Badge for obat hewan */
+        .badge-obat-y {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+        .badge-obat-n {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+        
         /* Layout */
         .dataTables_filter { float: right !important; }
         .dataTables_length { float: left !important; }
@@ -446,11 +464,32 @@
 
                         <!-- RPU -->
                         <li class="nav-item">
-                            <a href="<?php echo base_url(); ?>p_input_rpu">
-                                <i class="fas fa-cut"></i>
-                                <p>RPU</p>
-                            </a>
-                        </li>
+                  <a href="<?php echo base_url(); ?>p_input_rpu">
+                      <i class="fas fa-chart-line"></i>
+                      <p>RPU</p>
+                  </a>
+              </li>
+
+              <li class="nav-item">
+                  <a href="<?php echo base_url(); ?>p_input_pemotongan_unggas">
+                      <i class="fas fa-cut"></i>
+                      <p>Pemotongan Unggas</p>
+                  </a>
+              </li>
+
+              <li class="nav-item">
+                  <a href="<?php echo base_url(); ?>p_input_demplot">
+                      <i class="fas fa-seedling"></i> 
+                      <p>Demplot</p>
+                  </a>
+              </li>
+
+              <li class="nav-item">
+                  <a href="<?php echo base_url(); ?>p_input_stok_pakan">
+                      <i class="fas fa-warehouse"></i>
+                      <p>Stok Pakan</p>
+                  </a>
+              </li>
                     </ul>
                 </div>
             </div>
@@ -567,12 +606,19 @@
                                                     <input type="text" class="form-control" id="nik" name="nik" placeholder="Masukkan NIK" />
                                                 </div>
 
+                                                <!-- NIB/SIUP -->
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">NIB/SIUP</label>
+                                                    <input type="text" class="form-control" id="nib" name="nib" placeholder="Masukkan Nomor NIB/SIUP" />
+                                                    <div class="invalid-feedback">NIB/SIUP harus diisi</div>
+                                                </div>
+
                                                 <!-- NAMA PETUGAS - DROPDOWN -->
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label required-field">Nama Petugas</label>
                                                     <select class="form-control" id="nama_petugas" name="nama_petugas" required>
                                                         <option value="">Pilih Petugas</option>
-                                                        <option value="Drh. Sunarno Aristono, M.Si">Drh. Sunarno Aristono, M.Si </option>
+                                                        <option value="Drh. Sunarno Aristono, M.Si">Drh. Sunarno Aristono, M.Si</option>
                                                         <option value="Drh. Gagat Rahino H S, M.SI">Drh. Gagat Rahino H S, M.SI</option>
                                                         <option value="Drh. Wafiroh">Drh. Wafiroh</option>
                                                         <option value="Samsul Arifin">Samsul Arifin</option>
@@ -621,10 +667,28 @@
                                                     <div class="invalid-feedback">Status surat ijin harus dipilih</div>
                                                 </div>
 
+                                                <!-- Obat Hewan -->
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label required-field">Apakah Menjual Obat Hewan?</label>
+                                                    <select class="form-control" id="obat_hewan" name="obat_hewan" required>
+                                                        <option value="">Pilih</option>
+                                                        <option value="Y">Ya</option>
+                                                        <option value="N">Tidak</option>
+                                                    </select>
+                                                    <div class="invalid-feedback">Pilihan obat hewan harus dipilih</div>
+                                                </div>
+
                                                 <!-- No Telepon -->
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label">No. Telepon</label>
                                                     <input type="text" class="form-control" id="telp" name="telp" placeholder="Masukkan nomor telepon" />
+                                                </div>
+
+                                                <!-- Alamat Lengkap -->
+                                                <div class="col-md-12 mb-3">
+                                                    <label class="form-label required-field">Alamat Lengkap</label>
+                                                    <textarea class="form-control" id="alamat" name="alamat" rows="2" placeholder="Masukkan alamat lengkap toko" required></textarea>
+                                                    <div class="invalid-feedback">Alamat lengkap harus diisi</div>
                                                 </div>
 
                                                 <!-- Keterangan -->
@@ -686,13 +750,13 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Card Alamat -->
+                                            <!-- Card Alamat (Detail) -->
                                             <div class="row mt-3">
                                                 <div class="col-md-12">
                                                     <div class="card address-card">
                                                         <div class="card-header card-header-address">
                                                             <h5 class="card-title mb-0">
-                                                                <i class="fas fa-map-marker-alt me-2 text-success"></i>ALAMAT TOKO
+                                                                <i class="fas fa-map-marker-alt me-2 text-success"></i>DETAIL ALAMAT TOKO
                                                             </h5>
                                                         </div>
                                                         <div class="card-body">
@@ -878,6 +942,16 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group mb-0">
+                                    <label for="filterObatHewan" class="form-label fw-bold">Filter Obat Hewan:</label>
+                                    <select class="form-select" id="filterObatHewan">
+                                        <option selected value="all">Semua</option>
+                                        <option value="Y">Menjual Obat Hewan</option>
+                                        <option value="N">Tidak Menjual Obat Hewan</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mt-2">
+                                <div class="form-group mb-0">
                                     <label for="filterPeriode" class="form-label fw-bold">Filter Periode:</label>
                                     <select class="form-select" id="filterPeriode">
                                         <option selected value="all">Semua Periode</option>
@@ -907,7 +981,9 @@
                                             <th>No</th>
                                             <th>Nama Toko</th>
                                             <th>Pemilik</th>
+                                            <th>NIB/SIUP</th>
                                             <th>Dagangan</th>
+                                            <th>Obat Hewan</th>
                                             <th>Kelurahan</th>
                                             <th>Telepon</th>
                                             <th>Surat Ijin</th>
@@ -923,16 +999,28 @@
                                                     <td><?php echo $no++; ?></td>
                                                     <td><?php echo htmlspecialchars($data['nama_toko'] ?? '-'); ?></td>
                                                     <td><?php echo htmlspecialchars($data['nama_pemilik'] ?? '-'); ?></td>
+                                                    <td><?php echo htmlspecialchars($data['nib'] ?? '-'); ?></td>
                                                     <td>
                                                         <?php if (isset($data['dagangan'])): ?>
                                                             <?php if ($data['dagangan'] == 'Obat'): ?>
                                                                 <span class="badge-dagangan-obat"><i class="fas fa-pills me-1"></i>Obat</span>
-                                                                <br><small><?php echo htmlspecialchars($data['kategori_obat'] ?? ''); ?></small>
+                                                                <?php if (!empty($data['kategori_obat'])): ?>
+                                                                    <br><small><?php echo htmlspecialchars($data['kategori_obat'] ?? ''); ?></small>
+                                                                <?php endif; ?>
                                                             <?php elseif ($data['dagangan'] == 'Pakan'): ?>
                                                                 <span class="badge-dagangan-pakan"><i class="fas fa-seedling me-1"></i>Pakan</span>
                                                             <?php elseif ($data['dagangan'] == 'Peralatan'): ?>
                                                                 <span class="badge-dagangan-peralatan"><i class="fas fa-tools me-1"></i>Peralatan</span>
                                                             <?php endif; ?>
+                                                        <?php else: ?>
+                                                            -
+                                                        <?php endif; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php if (!empty($data['obat_hewan']) && $data['obat_hewan'] == 'Y'): ?>
+                                                            <span class="badge-obat-y"><i class="fas fa-check-circle me-1"></i>Ya</span>
+                                                        <?php elseif (!empty($data['obat_hewan']) && $data['obat_hewan'] == 'N'): ?>
+                                                            <span class="badge-obat-n"><i class="fas fa-times-circle me-1"></i>Tidak</span>
                                                         <?php else: ?>
                                                             -
                                                         <?php endif; ?>
@@ -960,7 +1048,7 @@
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="9" class="text-center">Tidak ada data penjual</td>
+                                                <td colspan="11" class="text-center">Tidak ada data penjual</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
@@ -1207,6 +1295,7 @@
             var kelurahan = document.getElementById('filterKelurahan').value;
             var dagangan = document.getElementById('filterDagangan').value;
             var ijin = document.getElementById('filterIjin').value;
+            var obatHewan = document.getElementById('filterObatHewan').value;
             var periode = document.getElementById('filterPeriode').value;
             
             var searchTerm = "";
@@ -1225,6 +1314,11 @@
                 searchTerm += (ijin === 'Y') ? 'Berijin' : 'Belum Berijin';
             }
             
+            if (obatHewan !== "all") {
+                if (searchTerm) searchTerm += " ";
+                searchTerm += (obatHewan === 'Y') ? 'Ya' : 'Tidak';
+            }
+            
             if (periode !== "all") {
                 if (searchTerm) searchTerm += " ";
                 searchTerm += periode;
@@ -1238,6 +1332,7 @@
             document.getElementById('filterKelurahan').value = "all";
             document.getElementById('filterDagangan').value = "all";
             document.getElementById('filterIjin').value = "all";
+            document.getElementById('filterObatHewan').value = "all";
             document.getElementById('filterPeriode').value = "all";
             dataTable.search("").draw();
         }
@@ -1254,6 +1349,8 @@
                 'tanggal_input',
                 'dagangan',
                 'surat_ijin',
+                'obat_hewan',
+                'alamat',
                 'kelurahan',
                 'latitude',
                 'longitude'

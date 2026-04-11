@@ -56,18 +56,4 @@ class Layanan_Klinik_Model extends CI_Model {
         $this->db->where('id_layanan !=', $id);
         return $this->db->get($this->table)->num_rows() > 0;
     }
-    
-    public function get_kategori_options() {
-        return [
-            'Grooming' => 'Grooming',
-            'Penitipan' => 'Penitipan',
-            'Vaksinasi' => 'Vaksinasi',
-            'Bedah' => 'Bedah',
-            'Sterilisasi' => 'Sterilisasi',
-            'Perawatan' => 'Perawatan',
-            'Diagnostik' => 'Diagnostik',
-            'Emergensi' => 'Emergensi',
-            'Lainnya' => 'Lainnya'
-        ];
-    }
 }

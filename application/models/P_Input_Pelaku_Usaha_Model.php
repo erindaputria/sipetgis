@@ -11,12 +11,34 @@ class P_Input_Pelaku_Usaha_Model extends CI_Model {
     }
     
     public function save_pelaku_usaha($data) {
-        return $this->db->insert($this->table, $data);
+        // Hanya simpan field yang ada di tabel
+        $allowed_fields = array('nama', 'nik', 'telepon', 'alamat', 'nama_petugas', 'tanggal_input', 'kecamatan', 'kelurahan', 'latitude', 'longitude', 'foto');
+        $filtered_data = array();
+        
+        foreach ($allowed_fields as $field) {
+            if (isset($data[$field])) {
+                $filtered_data[$field] = $data[$field];
+            }
+        }
+        
+        // Debug: Log query yang akan dijalankan
+        log_message('debug', 'Inserting data: ' . print_r($filtered_data, true));
+        
+        $result = $this->db->insert($this->table, $filtered_data);
+        
+        if (!$result) {
+            log_message('error', 'Insert failed. Last query: ' . $this->db->last_query());
+            log_message('error', 'DB Error: ' . print_r($this->db->error(), true));
+        } else {
+            log_message('debug', 'Insert successful. Insert ID: ' . $this->db->insert_id());
+        }
+        
+        return $result;
     }
     
     public function get_pelaku_usaha_by_kecamatan($kecamatan) {
         $this->db->select('*');
-        $this->db->from($this->table);
+        $this->db->from($this->table); 
         $this->db->where('kecamatan', $kecamatan);
         $this->db->order_by('created_at', 'DESC');
         $query = $this->db->get();

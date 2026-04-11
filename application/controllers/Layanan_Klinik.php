@@ -13,7 +13,6 @@ class Layanan_Klinik extends CI_Controller {
     
     public function index() {
         $data['layanan_klinik'] = $this->Layanan_Klinik_Model->get_all();
-        $data['kategori_options'] = $this->Layanan_Klinik_Model->get_kategori_options();
         $this->load->view('admin/layanan_klinik', $data);
     }
     
@@ -35,11 +34,7 @@ class Layanan_Klinik extends CI_Controller {
         }
         
         $data = array(
-            'nama_layanan' => $nama_layanan,
-            'kategori' => $this->input->post('kategori'),
-            'deskripsi' => $this->input->post('deskripsi'),
-            'harga' => $this->input->post('harga') ?: 0,
-            'status' => $this->input->post('status') ? 1 : 0
+            'nama_layanan' => $nama_layanan
         );
         
         $result = $this->Layanan_Klinik_Model->insert($data);
@@ -79,11 +74,7 @@ class Layanan_Klinik extends CI_Controller {
         }
         
         $data = array(
-            'nama_layanan' => $nama_layanan,
-            'kategori' => $this->input->post('kategori'),
-            'deskripsi' => $this->input->post('deskripsi'),
-            'harga' => $this->input->post('harga') ?: 0,
-            'status' => $this->input->post('status') ? 1 : 0
+            'nama_layanan' => $nama_layanan
         );
         
         $result = $this->Layanan_Klinik_Model->update($id, $data);
@@ -109,25 +100,6 @@ class Layanan_Klinik extends CI_Controller {
             $this->session->set_flashdata('success', 'Data layanan klinik berhasil dihapus');
         } else {
             $this->session->set_flashdata('error', 'Gagal menghapus data layanan klinik');
-        }
-        
-        redirect('layanan_klinik');
-    }
-    
-    public function toggle_status($id) {
-        if (!$id) {
-            $this->session->set_flashdata('error', 'ID layanan tidak ditemukan');
-            redirect('layanan_klinik');
-        }
-        
-        $layanan = $this->Layanan_Klinik_Model->get_by_id($id);
-        
-        if ($layanan) {
-            $new_status = $layanan->status == 1 ? 0 : 1;
-            $this->Layanan_Klinik_Model->update($id, ['status' => $new_status]);
-            $this->session->set_flashdata('success', 'Status layanan berhasil diubah');
-        } else {
-            $this->session->set_flashdata('error', 'Data layanan tidak ditemukan');
         }
         
         redirect('layanan_klinik');

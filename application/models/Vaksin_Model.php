@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Vaksinasi_Model extends CI_Model {
+class Vaksin_model extends CI_Model {
     
-    private $table = 'vaksinasi';
+    private $table = 'vaksin';
     
     public function __construct() {
         parent::__construct();
@@ -17,7 +17,7 @@ class Vaksinasi_Model extends CI_Model {
     
     public function get_by_id($id) {
         $this->db->where('id_vaksin', $id);
-        return $this->db->get($this->table)->row();
+        return $this->db->get($this->table)->row(); 
     }
     
     public function insert($data) {

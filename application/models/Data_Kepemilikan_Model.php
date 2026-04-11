@@ -8,70 +8,125 @@ class Data_Kepemilikan_Model extends CI_Model {
         $this->load->database();
     }
 
-    public function get_all() {
-        $this->db->select('
-            k.id_komoditas,
-            k.nama_komoditas,
-            k.jenis_hewan as jenis_ternak,
-            k.satuan,
-            COUNT(kp.id_kepemilikan) as total_peternak,
-            COALESCE(SUM(kp.jumlah_masuk) - SUM(kp.jumlah_keluar), 0) as total_ekor
-        ');
-        $this->db->from('komoditas k');
-        $this->db->join('kepemilikan_ternak kp', 'k.id_komoditas = kp.id_komoditas', 'left');
-        $this->db->group_by('k.id_komoditas');
-        $this->db->order_by('k.nama_komoditas', 'asc');
-        return $this->db->get()->result();
+    // Mendapatkan semua data komoditas
+    public function get_komoditas() {
+        return $this->db->get('komoditas')->result();
     }
 
-    public function get_by_komoditas($id_komoditas) {
-        $this->db->select('
-            k.id_komoditas,
-            k.nama_komoditas,
-            k.jenis_hewan as jenis_ternak,
-            k.satuan,
-            COUNT(kp.id_kepemilikan) as total_peternak,
-            COALESCE(SUM(kp.jumlah_masuk) - SUM(kp.jumlah_keluar), 0) as total_ekor
-        ');
-        $this->db->from('komoditas k');
-        $this->db->join('kepemilikan_ternak kp', 'k.id_komoditas = kp.id_komoditas', 'left');
+    // Mendapatkan data kepemilikan ternak - TANPA filter komoditas karena tidak ada relasi
+    public function get_all() {
+        // Ambil semua data dari jenis_usaha
+        $jenis_usaha = $this->db->get('jenis_usaha')->result();
         
-        if ($id_komoditas != 'all') {
-            $this->db->where('k.id_komoditas', $id_komoditas);
+        // Kelompokkan berdasarkan jenis usaha (karena tidak ada komoditas)
+        $result = [];
+        foreach ($jenis_usaha as $ju) {
+            $key = $ju->jenis_usaha; // Group by jenis usaha
+            
+            if (!isset($result[$key])) {
+                $result[$key] = (object)[
+                    'id' => count($result) + 1,
+                    'jenis_ternak' => $ju->jenis_usaha,
+                    'nama_komoditas' => '-', // Tidak ada data komoditas
+                    'satuan' => 'Ekor',
+                    'total_peternak' => 0,
+                    'total_ekor' => 0
+                ];
+            }
+            
+            $result[$key]->total_peternak++;
+            $result[$key]->total_ekor += intval($ju->jumlah);
         }
         
-        $this->db->group_by('k.id_komoditas');
-        $this->db->order_by('k.nama_komoditas', 'asc');
-        return $this->db->get()->result();
+        return array_values($result);
     }
 
-    public function get_komoditas() {
-        $this->db->select('id_komoditas, nama_komoditas');
-        $this->db->from('komoditas');
-        $this->db->order_by('nama_komoditas', 'asc');
-        return $this->db->get()->result();
+    // Filter berdasarkan ID (karena tidak ada komoditas, kita filter berdasarkan ID jenis_usaha)
+    public function get_by_id($id) {
+        return $this->db->get_where('jenis_usaha', ['id' => $id])->result();
     }
 
-    public function get_komoditas_by_id($id_komoditas) {
-        $this->db->select('*');
-        $this->db->from('komoditas');
-        $this->db->where('id_komoditas', $id_komoditas);
-        return $this->db->get()->row();
-    }
-
-    public function get_detail_by_komoditas($id_komoditas) {
+    // Mendapatkan detail pelaku usaha dengan data lengkap
+    public function get_detail_pelaku_usaha() {
         $this->db->select('
-            kp.*,
-            pu.nama_peternak,
-            pu.alamat,
-            k.nama_komoditas
+            ju.*,
+            pu.nama as nama_lengkap,
+            pu.nik,
+            pu.telepon,
+            pu.kecamatan as kecamatan_pu,
+            pu.kelurahan as kelurahan_pu,
+            pu.alamat as alamat_pu
         ');
-        $this->db->from('kepemilikan_ternak kp');
-        $this->db->join('pelaku_usaha pu', 'kp.id_pelaku_usaha = pu.id_pelaku_usaha', 'left');
-        $this->db->join('komoditas k', 'kp.id_komoditas = k.id_komoditas', 'left');
-        $this->db->where('kp.id_komoditas', $id_komoditas);
-        $this->db->order_by('kp.tanggal_transaksi', 'desc');
+        $this->db->from('jenis_usaha ju');
+        $this->db->join('pelaku_usaha pu', 'ju.nik = pu.nik', 'left');
+        $this->db->order_by('ju.nama_peternak', 'asc');
+        
+        return $this->db->get()->result();
+    }
+
+    // Summary per kecamatan dari pelaku_usaha
+    public function get_summary_by_kecamatan() {
+        $this->db->select('
+            kecamatan,
+            COUNT(*) as jumlah_peternak
+        ');
+        $this->db->from('pelaku_usaha');
+        $this->db->where('kecamatan IS NOT NULL');
+        $this->db->where('kecamatan !=', '');
+        $this->db->group_by('kecamatan');
+        $this->db->order_by('kecamatan', 'asc');
+        
+        return $this->db->get()->result();
+    }
+
+    // Summary berdasarkan jenis usaha
+    public function get_summary_by_jenis_usaha() {
+        $this->db->select('
+            jenis_usaha,
+            COUNT(*) as jumlah_peternak,
+            SUM(CAST(jumlah AS UNSIGNED)) as total_ternak
+        ');
+        $this->db->from('jenis_usaha');
+        $this->db->group_by('jenis_usaha');
+        $this->db->order_by('jenis_usaha', 'asc');
+        
+        return $this->db->get()->result();
+    }
+
+    // Mendapatkan data untuk ditampilkan di tabel utama
+    public function get_data_ternak() {
+        $summary = $this->get_summary_by_jenis_usaha();
+        
+        $result = [];
+        $no = 1;
+        foreach ($summary as $s) {
+            $result[] = (object)[
+                'no' => $no++,
+                'jenis_ternak' => $s->jenis_usaha,
+                'nama_komoditas' => $s->jenis_usaha, // Gunakan jenis_usaha sebagai nama komoditas
+                'jumlah' => $s->total_ternak,
+                'satuan' => 'Ekor',
+                'total_peternak' => $s->jumlah_peternak
+            ];
+        }
+        
+        return $result;
+    }
+
+    // Mendapatkan detail berdasarkan jenis usaha
+    public function get_detail_by_jenis_usaha($jenis_usaha) {
+        $this->db->select('
+            ju.*,
+            pu.nama as nama_lengkap,
+            pu.nik,
+            pu.telepon,
+            pu.kecamatan as kecamatan_pu
+        ');
+        $this->db->from('jenis_usaha ju');
+        $this->db->join('pelaku_usaha pu', 'ju.nik = pu.nik', 'left');
+        $this->db->where('ju.jenis_usaha', urldecode($jenis_usaha));
+        $this->db->order_by('ju.nama_peternak', 'asc');
+        
         return $this->db->get()->result();
     }
 }
-?>

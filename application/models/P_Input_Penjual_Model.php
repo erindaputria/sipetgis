@@ -18,7 +18,7 @@ class P_Input_Penjual_Model extends CI_Model {
         return $this->db->insert_id();
     }
     
-    /**
+    /** 
      * Get penjual by kecamatan
      */
     public function get_penjual_by_kecamatan($kecamatan) {

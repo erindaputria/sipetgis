@@ -370,11 +370,32 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="<?php echo base_url(); ?>p_input_rpu">
-                                <i class="fas fa-cut"></i>
-                                <p>RPU</p>
-                            </a>
-                        </li>
+                  <a href="<?php echo base_url(); ?>p_input_rpu">
+                      <i class="fas fa-chart-line"></i>
+                      <p>RPU</p>
+                  </a>
+              </li>
+
+              <li class="nav-item">
+                  <a href="<?php echo base_url(); ?>p_input_pemotongan_unggas">
+                      <i class="fas fa-cut"></i>
+                      <p>Pemotongan Unggas</p>
+                  </a>
+              </li>
+
+              <li class="nav-item">
+                  <a href="<?php echo base_url(); ?>p_input_demplot">
+                      <i class="fas fa-seedling"></i>
+                      <p>Demplot</p>
+                  </a>
+              </li>
+
+              <li class="nav-item">
+                  <a href="<?php echo base_url(); ?>p_input_stok_pakan">
+                      <i class="fas fa-warehouse"></i>
+                      <p>Stok Pakan</p>
+                  </a>
+              </li>
                     </ul>
                 </div>
             </div>

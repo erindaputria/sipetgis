@@ -319,11 +319,32 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url(); ?>p_input_rpu">
-                                <i class="fas fa-cut"></i>
-                                <p>RPU</p>
-                            </a>
-                        </li>
+                  <a href="<?php echo base_url(); ?>p_input_rpu">
+                      <i class="fas fa-chart-line"></i>
+                      <p>RPU</p>
+                  </a>
+              </li>
+
+              <li class="nav-item">
+                  <a href="<?php echo base_url(); ?>p_input_pemotongan_unggas">
+                      <i class="fas fa-cut"></i>
+                      <p>Pemotongan Unggas</p> 
+                  </a>
+              </li>
+
+              <li class="nav-item">
+                  <a href="<?php echo base_url(); ?>p_input_demplot">
+                      <i class="fas fa-seedling"></i>
+                      <p>Demplot</p>
+                  </a>
+              </li>
+
+              <li class="nav-item">
+                  <a href="<?php echo base_url(); ?>p_input_stok_pakan">
+                      <i class="fas fa-warehouse"></i>
+                      <p>Stok Pakan</p>
+                  </a>
+              </li>
                     </ul>
                 </div>
             </div>
@@ -892,82 +913,98 @@
             $(this).val(telepon);
         });
 
-        // ========== FORM SUBMIT ==========
-        $('#formPelakuUsaha').on('submit', function(e) {
-            e.preventDefault();
-            
-            // Validasi sederhana
-            let isValid = true;
-            $('.is-invalid').removeClass('is-invalid');
-            
-            // Validasi field wajib
-            let fields = ['nama', 'nik', 'alamat', 'kelurahan', 'latitude', 'longitude'];
-            fields.forEach(function(id) {
-                let value = $('#' + id).val();
-                if (!value || value.trim() === '') {
-                    $('#' + id).addClass('is-invalid');
-                    isValid = false;
-                }
-            });
-
-            // Validasi panjang NIK
-            if ($('#nik').val().length !== 16) {
-                $('#nik').addClass('is-invalid');
-                isValid = false;
-            }
-
-            if (!isValid) {
-                showAlert('danger', 'Harap lengkapi semua field wajib');
-                return;
-            }
-
-            // Submit AJAX
-            let btn = $(this).find('button[type="submit"]');
-            btn.html('<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...').prop('disabled', true);
-
-            $.ajax({
-                url: baseUrl + 'P_Input_Pelaku_Usaha/save',
-                type: 'POST',
-                data: new FormData(this),
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function(res) {
-                    if (res.status === 'success') {
-                        showAlert('success', res.message);
-                        resetForm();
-                        $('#formContainer').removeClass('show');
-                        $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT PELAKU USAHA');
-                        
-                        // Refresh halaman
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1500);
-                    } else {
-                        showAlert('danger', res.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX Error:', error);
-                    showAlert('danger', 'Terjadi kesalahan server');
-                },
-                complete: function() {
-                    btn.html('<i class="fas fa-save me-1"></i>Simpan Data').prop('disabled', false);
-                }
-            });
-        });
-
-        // ========== RESET FORM ==========
-        function resetForm() {
-            $('#formPelakuUsaha')[0].reset();
-            $('#kecamatan').val(userKecamatan);
-            $('#coordinateInfo').hide();
-            $('#photoPreview').hide();
-            $('#photoPlaceholder').show();
-            $('#btnRemovePhoto').hide();
-            $('#nik-status').html('');
-            $('.is-invalid').removeClass('is-invalid');
+   // ========== FORM SUBMIT ==========
+$('#formPelakuUsaha').on('submit', function(e) {
+    e.preventDefault();
+    
+    // Validasi sederhana
+    let isValid = true;
+    $('.is-invalid').removeClass('is-invalid');
+    
+    // Validasi field wajib
+    let fields = ['nama', 'nik', 'alamat', 'kelurahan', 'latitude', 'longitude'];
+    fields.forEach(function(id) {
+        let value = $('#' + id).val();
+        if (!value || value.trim() === '') {
+            $('#' + id).addClass('is-invalid');
+            isValid = false;
         }
+    });
+
+    // Validasi panjang NIK
+    let nikValue = $('#nik').val();
+    if (nikValue.length !== 16) {
+        $('#nik').addClass('is-invalid');
+        isValid = false;
+        showAlert('danger', 'NIK harus 16 digit angka');
+    }
+
+    if (!isValid) {
+        showAlert('danger', 'Harap lengkapi semua field wajib');
+        return;
+    }
+
+    // Submit AJAX
+    let btn = $(this).find('button[type="submit"]');
+    let originalText = btn.html();
+    btn.html('<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...').prop('disabled', true);
+
+    let formData = new FormData(this);
+    // HAPUS baris ini karena CSRF sudah dinonaktifkan di controller
+    // formData.append('<?php echo $csrf_name; ?>', '<?php echo $csrf_hash; ?>');
+
+    $.ajax({
+        url: baseUrl + 'P_Input_Pelaku_Usaha/save',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        success: function(res) {
+            if (res.status === 'success') {
+                showAlert('success', res.message);
+                resetForm();
+                $('#formContainer').removeClass('show');
+                $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT PELAKU USAHA');
+                
+                // Refresh halaman setelah 1.5 detik
+                setTimeout(function() {
+                    location.reload();
+                }, 1500);
+            } else {
+                showAlert('danger', res.message);
+                btn.html(originalText).prop('disabled', false);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', error);
+            let errorMsg = 'Terjadi kesalahan server. ';
+            try {
+                let response = JSON.parse(xhr.responseText);
+                if (response.message) {
+                    errorMsg = response.message;
+                }
+            } catch(e) {
+                errorMsg += xhr.responseText;
+            }
+            showAlert('danger', errorMsg);
+            btn.html(originalText).prop('disabled', false);
+        }
+    });
+});
+
+       // ========== RESET FORM ==========
+function resetForm() {
+    $('#formPelakuUsaha')[0].reset();
+    $('#kecamatan').val(userKecamatan);
+    $('#coordinateInfo').hide();
+    $('#photoPreview').hide();
+    $('#photoPlaceholder').show();
+    $('#btnRemovePhoto').hide();
+    $('#nik-status').html('');
+    $('.is-invalid').removeClass('is-invalid');
+    // Hapus setting untuk created_at dan updated_at
+}
 
         // ========== ALERT ==========
         function showAlert(type, message) {

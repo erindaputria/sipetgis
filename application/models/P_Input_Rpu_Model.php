@@ -15,135 +15,71 @@ class P_Input_Rpu_Model extends CI_Model {
      * Save RPU data
      */
     public function save_rpu($data) {
-        $this->db->insert($this->table, $data);
+        // Kolom yang ada di tabel input_rpu - menggunakan 'lokasi'
+        $allowed_fields = array(
+            'tanggal_rpu', 'pejagal', 'perizinan', 'tersedia_juleha', 
+            'lokasi', 'kecamatan', 'kelurahan', 'rt', 'rw', 
+            'latitude', 'longitude', 'nama_pj', 'nik_pj', 
+            'telp_pj', 'nama_petugas', 'foto_kegiatan', 'keterangan'
+        );
+        
+        $filtered_data = array();
+        foreach ($allowed_fields as $field) {
+            if (isset($data[$field])) {
+                $filtered_data[$field] = $data[$field];
+            }
+        }
+        
+        $this->db->insert($this->table, $filtered_data);
         return $this->db->insert_id();
     }
     
     /**
      * Save komoditas data
      */
-    public function save_komoditas($data) {
+    public function save_komoditas($data) { 
+        if (empty($data)) {
+            return false;
+        }
         return $this->db->insert_batch($this->table_komoditas, $data);
     }
     
     /**
-     * Get RPU by ID with komoditas
-     */
-    public function get_rpu_by_id($id) {
-        $this->db->select('r.*');
-        $this->db->from($this->table . ' r');
-        $this->db->where('r.id', $id);
-        $rpu = $this->db->get()->row();
-        
-        if ($rpu) {
-            // Get komoditas
-            $this->db->select('*');
-            $this->db->from($this->table_komoditas);
-            $this->db->where('input_rpu_id', $id);
-            $rpu->komoditas = $this->db->get()->result();
-        }
-        
-        return $rpu;
-    }
-    
-    /**
-     * Get RPU by kecamatan (untuk petugas)
+     * Get RPU by kecamatan
      */
     public function get_rpu_by_kecamatan($kecamatan) {
         if (empty($kecamatan)) {
             return array();
         }
         
-        $this->db->select('r.*, GROUP_CONCAT(CONCAT(k.komoditas, ":", k.jumlah_ekor, " ekor") SEPARATOR " | ") as komoditas_list');
-        $this->db->from($this->table . ' r');
-        $this->db->join($this->table_komoditas . ' k', 'r.id = k.input_rpu_id', 'left');
-        $this->db->where('r.kecamatan', $kecamatan);
-        $this->db->group_by('r.id');
-        $this->db->order_by('r.tanggal_rpu', 'DESC');
-        $query = $this->db->get();
+        $sql = "SELECT r.*, 
+                GROUP_CONCAT(
+                    DISTINCT k.komoditas
+                    ORDER BY k.id
+                    SEPARATOR '|'
+                ) as komoditas_list,
+                COALESCE(SUM(k.jumlah_ekor), 0) as total_ekor,
+                COALESCE(SUM(k.berat_kg), 0) as total_berat
+                FROM " . $this->table . " r
+                LEFT JOIN " . $this->table_komoditas . " k ON r.id = k.input_rpu_id
+                WHERE r.kecamatan = ?
+                GROUP BY r.id
+                ORDER BY r.tanggal_rpu DESC, r.id DESC";
         
-        return $query->result_array();
-    }
-    
-    /**
-     * Get all RPU (untuk admin)
-     */
-    public function get_all_rpu() {
-        $this->db->select('r.*, GROUP_CONCAT(CONCAT(k.komoditas, ":", k.jumlah_ekor, " ekor") SEPARATOR " | ") as komoditas_list');
-        $this->db->from($this->table . ' r');
-        $this->db->join($this->table_komoditas . ' k', 'r.id = k.input_rpu_id', 'left');
-        $this->db->group_by('r.id');
-        $this->db->order_by('r.tanggal_rpu', 'DESC');
-        $query = $this->db->get();
+        $query = $this->db->query($sql, array($kecamatan));
+        $result = $query->result_array();
         
-        return $query->result_array();
-    }
-    
-    /**
-     * Get by periode (tanggal range)
-     */
-    public function get_by_periode($start_date, $end_date, $kecamatan) {
-        $this->db->select('r.*, GROUP_CONCAT(CONCAT(k.komoditas, ":", k.jumlah_ekor, " ekor") SEPARATOR " | ") as komoditas_list');
-        $this->db->from($this->table . ' r');
-        $this->db->join($this->table_komoditas . ' k', 'r.id = k.input_rpu_id', 'left');
-        $this->db->where('r.kecamatan', $kecamatan);
-        $this->db->where('r.tanggal_rpu >=', $start_date);
-        $this->db->where('r.tanggal_rpu <=', $end_date);
-        $this->db->group_by('r.id');
-        $this->db->order_by('r.tanggal_rpu', 'DESC');
-        $query = $this->db->get();
+        // Parse komoditas untuk ditampilkan sebagai badge
+        foreach ($result as &$row) {
+            $row['komoditas_badges'] = array();
+            if (!empty($row['komoditas_list'])) {
+                $row['komoditas_badges'] = explode('|', $row['komoditas_list']);
+                // Filter empty values
+                $row['komoditas_badges'] = array_filter($row['komoditas_badges']);
+            }
+        }
         
-        return $query->result_array();
-    }
-    
-    /**
-     * Count all RPU data by kecamatan
-     */
-    public function count_all($kecamatan) {
-        $this->db->from($this->table);
-        $this->db->where('kecamatan', $kecamatan);
-        return $this->db->count_all_results();
-    }
-
-    /**
-     * Sum total ekor by kecamatan
-     */
-    public function sum_total_ekor($kecamatan) {
-        $this->db->select('SUM(k.jumlah_ekor) as total');
-        $this->db->from($this->table . ' r');
-        $this->db->join($this->table_komoditas . ' k', 'r.id = k.input_rpu_id');
-        $this->db->where('r.kecamatan', $kecamatan);
-        $result = $this->db->get()->row();
-        return $result->total ? (int)$result->total : 0;
-    }
-    
-    /**
-     * Sum total berat by kecamatan
-     */
-    public function sum_total_berat($kecamatan) {
-        $this->db->select('SUM(k.berat_kg) as total');
-        $this->db->from($this->table . ' r');
-        $this->db->join($this->table_komoditas . ' k', 'r.id = k.input_rpu_id');
-        $this->db->where('r.kecamatan', $kecamatan);
-        $result = $this->db->get()->row();
-        return $result->total ? (float)$result->total : 0;
-    }
-    
-    /**
-     * Get distinct komoditas by kecamatan
-     */
-    public function get_distinct_komoditas($kecamatan) {
-        $this->db->distinct();
-        $this->db->select('k.komoditas');
-        $this->db->from($this->table_komoditas . ' k');
-        $this->db->join($this->table . ' r', 'r.id = k.input_rpu_id');
-        $this->db->where('r.kecamatan', $kecamatan);
-        $this->db->where('k.komoditas IS NOT NULL');
-        $this->db->where('k.komoditas !=', '');
-        $this->db->order_by('k.komoditas', 'ASC');
-        $query = $this->db->get();
-        
-        return $query->result_array();
+        return $result;
     }
     
     /**
@@ -158,63 +94,66 @@ class P_Input_Rpu_Model extends CI_Model {
         $this->db->where('pejagal !=', '');
         $this->db->order_by('pejagal', 'ASC');
         $query = $this->db->get();
-        
         return $query->result_array();
     }
     
     /**
-     * Cek apakah NIK sudah pernah digunakan
+     * Get distinct komoditas by kecamatan
      */
-    public function cek_nik_exists($nik, $kecamatan) {
-        if (empty($nik)) return 0;
-        
+    public function get_distinct_komoditas($kecamatan) {
+        $sql = "SELECT DISTINCT k.komoditas 
+                FROM " . $this->table_komoditas . " k
+                JOIN " . $this->table . " r ON r.id = k.input_rpu_id
+                WHERE r.kecamatan = ? AND k.komoditas IS NOT NULL AND k.komoditas != ''
+                ORDER BY k.komoditas ASC";
+        $query = $this->db->query($sql, array($kecamatan));
+        return $query->result_array();
+    }
+    
+    /**
+     * Count all RPU data
+     */
+    public function count_all($kecamatan) {
         $this->db->from($this->table);
-        $this->db->where('nik_pj', $nik);
         $this->db->where('kecamatan', $kecamatan);
         return $this->db->count_all_results();
     }
     
     /**
-     * Get statistik per bulan
+     * Sum total ekor
      */
-    public function get_statistik_per_bulan($tahun, $kecamatan) {
-        $this->db->select("MONTH(r.tanggal_rpu) as bulan, COUNT(DISTINCT r.id) as total_kegiatan, SUM(k.jumlah_ekor) as total_ekor, SUM(k.berat_kg) as total_berat");
-        $this->db->from($this->table . ' r');
-        $this->db->join($this->table_komoditas . ' k', 'r.id = k.input_rpu_id');
-        $this->db->where("YEAR(r.tanggal_rpu)", $tahun);
-        $this->db->where('r.kecamatan', $kecamatan);
-        $this->db->group_by("MONTH(r.tanggal_rpu)");
-        $this->db->order_by("bulan", "ASC");
-        $query = $this->db->get();
-        return $query->result_array();
+    public function sum_total_ekor($kecamatan) {
+        $sql = "SELECT COALESCE(SUM(k.jumlah_ekor), 0) as total 
+                FROM " . $this->table . " r
+                LEFT JOIN " . $this->table_komoditas . " k ON r.id = k.input_rpu_id
+                WHERE r.kecamatan = ?";
+        $query = $this->db->query($sql, array($kecamatan));
+        $result = $query->row();
+        return (int)$result->total;
     }
     
     /**
-     * Get statistik per kelurahan
+     * Sum total berat
      */
-    public function get_statistik_per_kelurahan($kecamatan) {
-        $this->db->select('r.kelurahan, COUNT(DISTINCT r.id) as total_kegiatan, SUM(k.jumlah_ekor) as total_ekor, SUM(k.berat_kg) as total_berat');
-        $this->db->from($this->table . ' r');
-        $this->db->join($this->table_komoditas . ' k', 'r.id = k.input_rpu_id');
-        $this->db->where('r.kecamatan', $kecamatan);
-        $this->db->group_by('r.kelurahan');
-        $this->db->order_by('total_kegiatan', 'DESC');
-        $query = $this->db->get();
-        return $query->result_array();
+    public function sum_total_berat($kecamatan) {
+        $sql = "SELECT COALESCE(SUM(k.berat_kg), 0) as total 
+                FROM " . $this->table . " r
+                LEFT JOIN " . $this->table_komoditas . " k ON r.id = k.input_rpu_id
+                WHERE r.kecamatan = ?";
+        $query = $this->db->query($sql, array($kecamatan));
+        $result = $query->row();
+        return (float)$result->total;
     }
     
     /**
-     * Get statistik per pejagal
+     * Cek NIK exists
      */
-    public function get_statistik_per_pejagal($kecamatan) {
-        $this->db->select('r.pejagal, COUNT(DISTINCT r.id) as total_kegiatan, SUM(k.jumlah_ekor) as total_ekor, SUM(k.berat_kg) as total_berat');
-        $this->db->from($this->table . ' r');
-        $this->db->join($this->table_komoditas . ' k', 'r.id = k.input_rpu_id');
-        $this->db->where('r.kecamatan', $kecamatan);
-        $this->db->group_by('r.pejagal');
-        $this->db->order_by('total_kegiatan', 'DESC');
-        $query = $this->db->get();
-        return $query->result_array();
+    public function cek_nik_exists($nik, $kecamatan) { 
+        if (empty($nik)) return 0;
+        $this->db->from($this->table);
+        $this->db->where('nik_pj', $nik);
+        $this->db->where('kecamatan', $kecamatan);
+        return $this->db->count_all_results();
     }
 }
 ?>

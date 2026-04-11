@@ -43,7 +43,7 @@ class Rpu_Model extends CI_Model {
     
     public function get_with_coordinates() {
         $this->db->where('latitude IS NOT NULL');
-        $this->db->where('longitude IS NOT NULL');
+        $this->db->where('longitude IS NOT NULL'); 
         $this->db->where('latitude !=', '');
         $this->db->where('longitude !=', '');
         return $this->db->get($this->table)->result();

@@ -83,7 +83,7 @@ class Rpu extends CI_Controller {
         redirect('rpu');
     }
     
-    public function hapus($pejagal) {
+    public function hapus($pejagal) { 
         // Decode URL encoding
         $pejagal = urldecode($pejagal);
         
