@@ -1,0 +1,337 @@
+/* ========== WARNA DASAR #832706 ========== */
+:root {
+    --primary: #832706;
+    --primary-dark: #6b2005;
+    --primary-light: #a84d2a;
+    --primary-soft: rgba(131, 39, 6, 0.1);
+}
+
+/* ========== LOGO ========== */
+.logo-header .logo div {
+    color: var(--primary) !important;
+}
+
+/* ========== SIDEBAR ICON & DROPDOWN ========== */
+.sidebar .nav-secondary .nav-item > a i,
+.sidebar .nav-secondary .nav-link i,
+.nav-secondary i,
+.nav-item i,
+.fa-home,
+.fa-chart-bar,
+.fa-database,
+.fa-users,
+.fa-map-marked-alt,
+.fa-chevron-down,
+.sidebar .nav-secondary .collapse .nav-link i {
+    color: var(--primary) !important;
+}
+
+/* ========== ACTIVE & HOVER STATE ========== */
+.sidebar .nav-secondary .nav-item.active > a {
+    background: #f0f0f0 !important;
+    border-left: 3px solid var(--primary) !important;
+}
+
+.sidebar .nav-secondary .nav-item.active > a i {
+    color: var(--primary) !important;
+}
+
+.sidebar .nav-secondary .nav-item > a:hover {
+    background: #f5f5f5 !important;
+}
+
+.sidebar .nav-secondary .nav-item > a:hover i {
+    color: var(--primary) !important;
+}
+
+[aria-expanded="true"] .fa-chevron-down {
+    color: var(--primary) !important;
+    transform: rotate(180deg);
+}
+
+/* ========== STATISTIC CARDS ========== */
+.stat-card {
+    background: var(--primary) !important;
+    border: none !important;
+    border-radius: 10px !important;
+}
+
+.stat-card .card-category,
+.stat-card .card-subtitle {
+    color: #ffffff !important;
+}
+
+.stat-card .card-title {
+    color: #ffffff !important;
+    font-weight: 800;
+}
+
+/* ========== ICON CARD STATISTIK (LINGKARAN PUTIH + ICON WARNA DASAR) ========== */
+.stat-card .icon-big {
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    width: 65px;
+    height: 65px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.stat-card .icon-big i,
+.stat-card .icon-big .stat-icon,
+.stat-card .icon-big .fas,
+.stat-card .icon-big .far {
+    color: var(--primary) !important;
+    font-size: 28px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+}
+
+/* Hapus style override dari class icon-primary, icon-success, icon-danger */
+.icon-primary i,
+.icon-success i,
+.icon-danger i,
+.icon-primary .stat-icon,
+.icon-success .stat-icon,
+.icon-danger .stat-icon {
+    color: var(--primary) !important;
+}
+
+/* ========== TABLE ========== */
+.table thead th {
+    color: var(--primary) !important;
+    border-bottom: 2px solid var(--primary) !important;
+}
+
+.table-hover tbody tr:hover {
+    background: var(--primary-soft) !important;
+}
+
+tfoot .fw-bold {
+    color: var(--primary) !important;
+}
+
+/* ========== DROPDOWN & NAVBAR ========== */
+.dropdown-menu .dropdown-item i,
+.topbar-nav .nav-link i,
+.navbar-header i,
+.dropdown-user .nav-link i {
+    color: var(--primary) !important;
+}
+
+.profile-username .fw-bold {
+    color: var(--primary) !important;
+}
+
+/* ========== BUTTON ========== */
+.btn-primary {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark) !important;
+}
+
+.btn-primary i,
+.btn-primary .fa {
+    color: white !important;
+}
+
+.btn-link.text-primary {
+    color: var(--primary) !important;
+}
+
+/* ========== MODAL ========== */
+.modal-header {
+    border-bottom: 2px solid var(--primary) !important;
+}
+
+.modal-header .modal-title {
+    color: var(--primary) !important;
+}
+
+/* ========== BADGE TERNAK ========== */
+.badge-ternak {
+    background: #eef2ff;
+    color: var(--primary);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ========== VAKSIN PROGRESS ========== */
+.vaksin-progress {
+    margin-bottom: 15px;
+}
+
+/* ========== FACILITY CARD ========== */
+.facility-card {
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    background: #f8f9fa;
+}
+
+.facility-card i {
+    color: var(--primary) !important;
+}
+
+/* ========== CHART ========== */
+.chart-container {
+    height: 400px !important;
+    position: relative;
+    background: #ffffff !important;
+}
+
+.compact-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.compact-card .card-body {
+    flex: 1;
+    padding: 15px !important;
+}
+
+/* ========== SIDEBAR DROPDOWN STYLES ========== */
+.nav-secondary .collapse {
+    margin-left: 1rem;
+}
+
+.nav-secondary .collapse .nav-link {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.nav-secondary .nav-link[data-bs-toggle="collapse"] {
+    cursor: pointer;
+}
+
+.nav-secondary .nav-link[data-bs-toggle="collapse"] .fa-chevron-down {
+    transition: transform 0.3s ease;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        height: 100% !important;
+        width: 260px !important;
+        z-index: 999 !important;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease !important;
+    }
+    
+    .main-panel {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+    
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+        display: none;
+        cursor: pointer;
+    }
+}
+
+/* ========== FORCE IKON DI CARD STATISTIK - WARNA DASAR ========== */
+/* Memaksa semua ikon di dalam .icon-big */
+.icon-big i,
+.icon-big .stat-icon,
+.icon-big .fas,
+.icon-big .far,
+.card-stats .icon-big i,
+.card-stats .icon-big .stat-icon {
+    color: #832706 !important;
+    font-size: 28px !important;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Memaksa ikon spesifik */
+.fa-users,
+.fa-paw,
+.fa-syringe,
+.stat-icon {
+    color: #832706 !important;
+}
+
+/* Pastikan lingkaran putih tetap */
+.stat-card .icon-big {
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    width: 65px !important;
+    height: 65px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Matikan warna putih dari template manapun */
+.icon-primary i,
+.icon-success i,
+.icon-danger i,
+.icon-primary .stat-icon,
+.icon-success .stat-icon,
+.icon-danger .stat-icon {
+    color: #832706 !important;
+}
+
+/* Force dengan !important paling kuat */
+i.fa-users,
+i.fa-paw,
+i.fa-syringe,
+i.stat-icon {
+    color: #832706 !important;
+}
+.fa-sign-out-alt {
+    color: var(--primary) !important;
+}
+
+.btn-primary i, 
+.btn-primary .fa {
+    color: white !important;
+}
+
+/* ========== CARD HEADER ICON ========== */
+.card-header i {
+    color: var(--primary) !important;
+}
+
+/* ========== HAPUS BORDER PADA STAT CARD ========== */
+.stat-card {
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+}
+
+.stat-card .card-header,
+.stat-card .card-footer,
+.stat-card .card-body {
+    border: none !important;
+}
+
+/* Hapus garis bawah card header */
+.card-header {
+    border-bottom: none !important;
+}
+

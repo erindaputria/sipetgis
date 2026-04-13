@@ -14,7 +14,7 @@ class Pelaku_Usaha_Model extends CI_Model {
         $this->db->order_by('nama', 'ASC');
         return $this->db->get($this->table)->result();
     }
-    
+     
     public function get_by_id($id) {
         $this->db->where('id', $id);
         return $this->db->get($this->table)->row();

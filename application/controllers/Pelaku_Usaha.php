@@ -10,7 +10,7 @@ class Pelaku_Usaha extends CI_Controller {
         $this->load->library('form_validation');
         $this->load->helper('url');
         $this->load->helper('security');
-        
+         
         // Cek login (sesuaikan dengan sistem autentikasi Anda)
         if(!$this->session->userdata('logged_in')) {
             redirect('login');

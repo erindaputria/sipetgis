@@ -1,0 +1,419 @@
+/* Root variables */
+:root {
+    --primary: #832706;
+    --primary-dark: #6b2005;
+    --primary-light: #a84d2a;
+    --primary-soft: rgba(131, 39, 6, 0.1);
+}
+
+/* ========== LOGO ========== */
+.sipetgis-logo {
+    color: var(--primary) !important;
+    font-weight: 800;
+    font-size: 24px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    letter-spacing: 0.5px;
+    line-height: 1;
+}
+
+/* ========== SIDEBAR ICON ========== */
+.sidebar .nav-secondary .nav-item > a i,
+.sidebar .nav-secondary .nav-link i,
+.nav-secondary i,
+.nav-item i,
+.fa-home,
+.fa-home::before,
+.fa-chart-bar,
+.fa-chart-line,
+.fa-chart-pie,
+.fa-database,
+.fa-users,
+.fa-map-marked-alt,
+.fa-map-marker-alt,
+.sidebar .nav-secondary .collapse .nav-link i,
+.fa-chevron-down,
+.fa-chevron-right,
+.fa-chevron-left,
+.fa-chevron-up {
+    color: var(--primary) !important;
+}
+
+/* ========== ACTIVE & HOVER STATE ========== */
+.sidebar .nav-secondary .nav-item.active > a {
+    background: #f0f0f0 !important;
+    border-left: 3px solid var(--primary) !important;
+}
+
+.sidebar .nav-secondary .nav-item.active > a i,
+.sidebar .nav-secondary .nav-item.active i,
+.nav-item.active .fa-home,
+.nav-item.active .fa-chart-bar,
+.nav-item.active .fa-database,
+.nav-item.active .fa-users,
+.nav-item.active .fa-map-marked-alt,
+.nav-item.active i {
+    color: var(--primary) !important;
+}
+
+.sidebar .nav-secondary .nav-item > a:hover {
+    background: #f5f5f5 !important;
+}
+
+.sidebar .nav-secondary .nav-item > a:hover i {
+    color: var(--primary) !important;
+}
+
+[aria-expanded="true"] i,
+[aria-expanded="true"] .fa-chevron-down {
+    color: var(--primary) !important;
+}
+
+.sidebar .nav-secondary .collapse .nav-link.active i {
+    color: var(--primary) !important;
+}
+
+/* ========== CARD STATISTIK ========== */
+.stat-card {
+    background: var(--primary) !important;
+    border: none !important;
+}
+
+.stat-card .stat-icon,
+.stat-card i,
+.icon-big i,
+.icon-primary i,
+.icon-success i {
+    color: white !important;
+}
+
+.stat-card .card-category,
+.stat-card .card-title,
+.stat-card .card-subtitle,
+.stat-card .numbers p,
+.stat-card .numbers h4 {
+    color: #ffffff !important;
+}
+
+.stat-card .card-category {
+    font-weight: 600;
+}
+
+.stat-card .card-title {
+    color: #000000 !important;
+    font-weight: 800;
+}
+
+.stat-card .card-subtitle {
+    color: #333333 !important;
+}
+
+/* ========== ICON BIG (LINGKARAN PUTIH) ========== */
+.stat-card .icon-big,
+.icon-big {
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    width: 65px;
+    height: 65px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.stat-card .icon-big i,
+.icon-big i,
+.icon-big .stat-icon,
+.icon-big .fas,
+.icon-big .far {
+    color: var(--primary) !important;
+    font-size: 28px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* ========== TABLE ========== */
+.table thead th {
+    color: var(--primary) !important;
+    border-bottom: 2px solid var(--primary) !important;
+}
+
+.table-hover tbody tr:hover {
+    background: var(--primary-soft) !important;
+}
+
+.table i {
+    color: var(--primary) !important;
+}
+
+tfoot .fw-bold {
+    color: var(--primary) !important;
+}
+
+/* ========== DROPDOWN & NAVBAR ========== */
+.dropdown-menu .dropdown-item i,
+.dropdown-item i,
+.topbar-nav .nav-link i,
+.navbar-header i,
+.dropdown-user .nav-link i {
+    color: var(--primary) !important;
+}
+
+.profile-username .fw-bold {
+    color: var(--primary) !important;
+}
+
+/* ========== BUTTON ========== */
+.btn-primary {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark) !important;
+}
+
+.btn-primary i,
+.btn-primary .fa,
+.btn-primary .fas,
+.btn-primary .far {
+    color: white !important;
+}
+
+.btn-outline-primary {
+    border-color: var(--primary) !important;
+    color: var(--primary) !important;
+}
+
+/* ========== PAGINATION ========== */
+.pagination .page-item.active .page-link {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.pagination .page-link {
+    color: var(--primary) !important;
+}
+
+/* ========== CARD & MODAL ========== */
+.card-header h6,
+.card-header i {
+    color: var(--primary) !important;
+}
+
+.modal-header {
+    border-bottom: 2px solid var(--primary) !important;
+}
+
+.modal-header .modal-title {
+    color: var(--primary) !important;
+}
+
+/* ========== NAV TABS ========== */
+.nav-tabs .nav-link.active {
+    color: var(--primary) !important;
+    border-bottom: 2px solid var(--primary) !important;
+}
+
+/* ========== ALERT & BADGE ========== */
+.alert-primary {
+    background: var(--primary-soft) !important;
+    color: var(--primary) !important;
+}
+
+.badge-primary {
+    background: var(--primary) !important;
+}
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar-thumb {
+    background: var(--primary) !important;
+}
+
+/* ========== FORCE SEMUA ICON ========== */
+i, 
+.fa, 
+.fas, 
+.far, 
+.fab, 
+.icon,
+[class*=" fa-"],
+[class^="fa-"],
+.gg-menu-right,
+.gg-menu-left,
+.gg-more-vertical-alt,
+.fa-search,
+.fa-sign-out-alt,
+.nav-toggle .btn-toggle i {
+    color: var(--primary) !important;
+}
+
+.btn-primary i,
+.btn-primary .fa,
+.btn-primary .fas,
+.btn-primary .far {
+    color: white !important;
+}
+
+/* ========== SIDEBAR MINI (GABUNGAN) ========== */
+.sidebar.sidebar_mini .sidebar-wrapper .collapse,
+.sidebar.sidebar_mini .sidebar-wrapper .collapsing,
+.sidebar.sidebar_mini .collapse.show,
+.sidebar_mini .sidebar-wrapper .collapse,
+.sidebar_mini .sidebar-wrapper .collapsing,
+.sidebar.sidebar_mini .sidebar-wrapper .nav-item .collapse {
+    display: none !important;
+    height: 0 !important;
+    visibility: hidden !important;
+}
+
+.sidebar.sidebar_mini .sidebar-wrapper .nav-item > a p,
+.sidebar.sidebar_mini .sidebar-wrapper .nav-item > a span:not(.sidebar-mini-icon),
+.sidebar.sidebar_mini .sidebar-wrapper .nav-section .text-section,
+.sidebar.sidebar_mini .sidebar-wrapper .nav-item .nav-link .d-flex span,
+.sidebar_mini .sidebar-wrapper .nav-item .nav-link span,
+.sidebar_mini .sidebar-wrapper .nav-item .nav-link p,
+.sidebar_mini .sidebar-wrapper .nav-section .text-section {
+    display: none !important;
+}
+
+.sidebar.sidebar_mini .sidebar-wrapper .nav-item > a,
+.sidebar.sidebar_mini .sidebar-wrapper .nav-item .nav-link,
+.sidebar_mini .sidebar-wrapper .nav-item .nav-link {
+    justify-content: center !important;
+    padding: 12px 0 !important;
+    text-align: center !important;
+}
+
+.sidebar.sidebar_mini .sidebar-wrapper .nav-item > a i,
+.sidebar_mini .sidebar-wrapper .nav-item .nav-link i {
+    margin: 0 auto !important;
+    font-size: 20px !important;
+}
+
+.sidebar.sidebar_mini .sidebar-wrapper .nav-item .nav-link .d-flex,
+.sidebar_mini .sidebar-wrapper .nav-item .nav-link .d-flex {
+    margin: 0 auto !important;
+}
+
+.sidebar.sidebar_mini .sidebar-wrapper .fa-chevron-down,
+.sidebar.sidebar_mini .sidebar-wrapper .fa-chevron-right,
+.sidebar_mini .sidebar-wrapper .fa-chevron-down,
+.sidebar_mini .sidebar-wrapper .fa-chevron-right {
+    display: none !important;
+}
+
+.sidebar.sidebar_mini,
+.sidebar_mini {
+    width: 70px !important;
+}
+
+.sidebar.sidebar_mini .sidebar-wrapper,
+.sidebar_mini .sidebar-wrapper {
+    width: 70px !important;
+    overflow-x: hidden !important;
+}
+
+.sidebar.sidebar_mini .logo-header .logo,
+.sidebar_mini .logo-header .logo {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    display: none !important;
+}
+
+.sidebar.sidebar_mini .logo-header .nav-toggle,
+.sidebar_mini .logo-header .nav-toggle {
+    margin: 0 auto !important;
+}
+
+.sidebar.sidebar_mini .sidebar-wrapper .nav-item:hover > a p,
+.sidebar_mini .sidebar-wrapper .nav-item:hover .nav-link p {
+    display: block !important;
+    position: fixed;
+    left: 70px;
+    background: var(--primary);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 8px;
+    z-index: 9999;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+.sidebar.sidebar_mini .sidebar-wrapper .nav-item:hover > a {
+    background: rgba(131, 39, 6, 0.1) !important;
+    border-radius: 8px;
+}
+
+.sidebar.sidebar_mini .sidebar-wrapper .nav-item {
+    position: relative;
+}
+
+/* ========== RESPONSIF SIDEBAR MOBILE ========== */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        height: 100% !important;
+        width: 260px !important;
+        z-index: 999 !important;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease !important;
+    }
+    
+    .main-panel {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+    
+    .nav-toggle .btn-toggle {
+        display: flex !important;
+        cursor: pointer !important;
+    }
+    
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+        display: none;
+        cursor: pointer;
+    }
+}
+
+/* ========== RESPONSIVE UMUM ========== */
+@media (max-width: 992px) {
+    .sipetgis-logo { font-size: 20px; }
+    .stat-card .card-title { font-size: 28px; }
+    .stat-card .icon-big { width: 50px; height: 50px; }
+    .stat-card .stat-icon { font-size: 24px; }
+}
+
+@media (max-width: 768px) {
+    .main-panel { margin-left: 0; }
+    .stat-card { margin: 0 0 15px 0 !important; }
+    .stat-card .card-body { padding: 20px 16px; }
+    .stat-card .card-title { font-size: 24px; }
+    .stat-card .stat-icon { font-size: 20px; }
+    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .table { min-width: 800px; }
+    .table thead th, .table tbody td { font-size: 11px; padding: 8px 6px; white-space: nowrap; }
+    .card-header { padding: 12px 16px; }
+    .card-header h6 { font-size: 14px; }
+    .container { padding-left: 15px; padding-right: 15px; }
+    .page-inner { padding: 15px 0; }
+}
+
+@media (max-width: 480px) {
+    .stat-card .card-title { font-size: 20px; }
+    .stat-card .card-category { font-size: 11px; }
+    .stat-card .card-subtitle { font-size: 10px; }
+    .sipetgis-logo { font-size: 18px; }
+    .profile-username { font-size: 12px; }
+}
+
