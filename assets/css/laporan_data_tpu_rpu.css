@@ -1,0 +1,467 @@
+/* ==============================================
+   LAPORAN DATA TPU/RPU
+   WARNA DASAR: #832706
+   ============================================== */
+:root {
+    --primary: #832706;
+    --primary-dark: #6b1f04;
+    --primary-light: #a13e1a;
+    --primary-soft: #fef3ef;
+    --primary-glow: rgba(131, 39, 6, 0.1);
+    --text-main: #0f172a;
+    --text-muted: #475569;
+}
+
+/* Logo */
+.sipetgis-logo {
+    color: var(--primary) !important;
+    font-weight: 800;
+    font-size: 24px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    letter-spacing: 0.5px;
+    line-height: 1;
+}
+
+/* Sidebar Active Menu */
+.nav-item.active > a {
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+.nav-item.active > a i {
+    color: var(--primary);
+}
+
+/* Sidebar Icon */
+.sidebar .nav-secondary .nav-item > a i,
+.sidebar .nav-secondary .nav-link i,
+.nav-secondary i,
+.nav-item i,
+.fa-home,
+.fa-home::before,
+.fa-chart-bar,
+.fa-chart-line,
+.fa-chart-pie,
+.fa-database,
+.fa-users,
+.fa-map-marked-alt,
+.fa-map-marker-alt,
+.sidebar .nav-secondary .collapse .nav-link i,
+.fa-chevron-down,
+.fa-chevron-right,
+.fa-chevron-left,
+.fa-chevron-up {
+    color: var(--primary) !important;
+}
+
+/* Filter Section */
+.filter-section {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.filter-section .form-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-main);
+    font-size: 13px;
+}
+
+.filter-section .form-select {
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    padding: 10px 12px;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.filter-section .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+/* Report Header */
+.report-header {
+    text-align: center;
+    margin-bottom: 25px;
+    padding: 15px;
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+}
+
+.report-title {
+    font-weight: 800;
+    font-size: 22px;
+    margin-bottom: 5px;
+    color: var(--primary);
+    letter-spacing: 1px;
+}
+
+.report-subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* Search Box */
+.search-box {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    padding: 10px 15px;
+    width: 300px;
+    font-size: 14px;
+}
+
+.search-box input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-glow);
+    outline: none;
+}
+
+/* DataTables */
+.dataTables_wrapper {
+    padding: 20px;
+}
+
+.dataTables_length select {
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+    padding: 5px 10px;
+}
+
+.dataTables_filter input {
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+    padding: 5px 10px;
+    width: 200px;
+}
+
+.dt-buttons .btn {
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+table.dataTable {
+    border-collapse: separate !important;
+    border-spacing: 0 8px !important;
+    width: 100%;
+}
+
+table.dataTable thead th {
+    border: none !important;
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    padding: 15px 10px;
+    white-space: nowrap;
+}
+
+table.dataTable tbody td {
+    background-color: white;
+    border: none !important;
+    padding: 15px 10px;
+    vertical-align: middle;
+}
+
+table.dataTable tbody tr {
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: all 0.3s;
+}
+
+table.dataTable tbody tr:hover {
+    box-shadow: 0 5px 15px rgba(131, 39, 6, 0.08);
+    transform: translateY(-2px);
+}
+
+/* Nama TPU */
+.nama-tpu {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+/* Badge Perizinan */
+.badge-izin {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+/* Badge Juleha */
+.badge-juleha-ya {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.badge-juleha-tidak {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+/* Jumlah Pemotongan */
+.jumlah-pemotongan {
+    font-weight: 600;
+    color: var(--primary-dark);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* Tombol Export */
+.dt-buttons .btn-primary {
+    background-color: #832706 !important;
+    border-color: #832706 !important;
+    color: white !important;
+}
+
+.dt-buttons .btn-success {
+    background-color: #198754 !important;
+    border-color: #198754 !important;
+    color: white !important;
+}
+
+.dt-buttons .btn-danger {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: white !important;
+}
+
+.dt-buttons .btn-info {
+    background-color: #0dcaf0 !important;
+    border-color: #0dcaf0 !important;
+    color: white !important;
+}
+
+/* Pagination */
+.pagination .page-link {
+    border: none;
+    color: #495057;
+    margin: 0 3px;
+    border-radius: 6px !important;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #832706;
+    color: white;
+}
+
+.pagination .page-link:hover {
+    background-color: #f8f9fa;
+}
+
+/* Tombol */
+.btn-primary-custom {
+    background: linear-gradient(135deg, #832706 0%, #6b1f04 100%);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-weight: 500;
+    transition: all 0.3s;
+    color: white;
+}
+
+.btn-primary-custom:hover {
+    background: linear-gradient(135deg, #6b1f04 0%, #541802 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(131, 39, 6, 0.3);
+    color: white;
+}
+
+.btn-secondary-custom {
+    background: #e2e8f0;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-weight: 500;
+    transition: all 0.3s;
+    color: var(--text-main);
+}
+
+.btn-secondary-custom:hover {
+    background: #cbd5e1;
+    transform: translateY(-2px);
+    color: var(--text-main);
+}
+
+/* Card */
+.card {
+    border-radius: 16px;
+    border: 1px solid #eef2f6;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    display: none;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    color: var(--primary) !important;
+}
+
+/* Alert */
+.alert {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Pagination Custom */
+.custom-pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.custom-pagination button {
+    padding: 6px 14px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s;
+    font-size: 14px;
+    color: var(--text-main);
+}
+
+.custom-pagination button.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.custom-pagination button:hover:not(.active) {
+    background: #f1f5f9;
+    transform: translateY(-2px);
+}
+
+.custom-pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Info Data */
+.info-data {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* Print */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    .main-panel {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+    .sidebar {
+        display: none !important;
+    }
+    .main-header {
+        display: none !important;
+    }
+    .filter-section {
+        display: none !important;
+    }
+    .report-header {
+        background: none;
+        border: none;
+    }
+    table.dataTable thead th {
+        background-color: #e2e8f0 !important;
+        color: black !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    .badge-izin, .badge-juleha-ya, .badge-juleha-tidak {
+        background-color: #f0f0f0 !important;
+        color: black !important;
+        border: 1px solid #ccc;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dataTables_wrapper {
+        padding: 10px;
+    }
+    .table-responsive {
+        overflow-x: auto;
+    }
+    .btn-primary-custom,
+    .btn-secondary-custom {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    .dt-buttons .btn {
+        padding: 4px 10px !important;
+        font-size: 12px !important;
+    }
+    .report-title {
+        font-size: 16px;
+    }
+    .report-subtitle {
+        font-size: 11px;
+    }
+    .search-box input {
+        width: 100%;
+    }
+    .search-box {
+        text-align: left;
+        margin-bottom: 15px;
+    }
+    table.dataTable thead th {
+        font-size: 11px;
+        padding: 8px 5px;
+    }
+    table.dataTable tbody td {
+        font-size: 11px;
+        padding: 8px 5px;
+    }
+    .custom-pagination button {
+        padding: 4px 10px;
+        font-size: 12px;
+    }
+}

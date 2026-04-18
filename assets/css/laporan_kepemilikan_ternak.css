@@ -1,0 +1,279 @@
+/* ==============================================
+   WARNA DASAR: #832706
+   ============================================== */
+
+.filter-section {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.report-title {
+    text-align: center;
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 5px;
+    color: #832706;
+}
+
+.report-subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 25px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table thead th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    padding: 12px 10px;
+    text-align: center;
+    border: 1px solid #dee2e6;
+    white-space: nowrap;
+}
+
+table tbody td {
+    padding: 10px;
+    vertical-align: middle;
+    text-align: center;
+    border: 1px solid #dee2e6;
+}
+
+table tbody td:first-child {
+    text-align: center;
+    font-weight: 500;
+}
+
+.total-row td {
+    background-color: #e8f5e9 !important;
+    font-weight: bold;
+}
+
+/* Styling untuk link angka - WARNA HITAM */
+.data-link {
+    color: #000000;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    min-width: 30px;
+}
+
+.data-link:hover {
+    color: #000000;
+    text-decoration: underline;
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+}
+
+.btn-primary-custom {
+    background: linear-gradient(135deg, #832706 0%, #6b1f04 100%);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-weight: 500;
+    transition: all 0.3s;
+    color: white;
+}
+
+.btn-primary-custom:hover {
+    background: linear-gradient(135deg, #6b1f04 0%, #541802 100%);
+    transform: translateY(-2px);
+    color: white;
+}
+
+.form-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #495057;
+}
+
+.form-select, .form-control {
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    padding: 8px 12px;
+}
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    .main-panel {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+    .data-link {
+        color: black !important;
+        text-decoration: none !important;
+        background: none !important;
+    }
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    display: none;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+.nav-link.active {
+    color: #832706 !important;
+    font-weight: 600;
+}
+
+.kecamatan-cell {
+    text-align: left !important;
+}
+
+/* DataTables Button Styling */
+.dt-buttons .btn {
+    border-radius: 6px;
+    margin-right: 5px;
+    transition: all 0.3s;
+}
+
+.dt-buttons .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.dt-buttons .btn-primary {
+    background: linear-gradient(135deg, #832706 0%, #6b1f04 100%) !important;
+    border: none !important;
+    color: white !important;
+}
+
+.dt-buttons .btn-success {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%) !important;
+    border: none !important;
+    color: white !important;
+}
+
+.dt-buttons .btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%) !important;
+    border: none !important;
+    color: white !important;
+}
+
+.dt-buttons .btn-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%) !important;
+    border: none !important;
+    color: white !important;
+}
+
+/* DataTables wrapper styling */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    padding: 10px;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    padding: 6px 12px;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    padding: 6px 12px;
+}
+
+/* Pagination styling */
+.pagination .page-link {
+    border: none;
+    color: #495057;
+    margin: 0 3px;
+    border-radius: 6px !important;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #832706;
+    color: white;
+}
+
+.pagination .page-link:hover {
+    background-color: #f8f9fa;
+}
+
+.dt-buttons {
+    margin-bottom: 15px;
+}
+
+table.dataTable {
+    border-collapse: collapse !important;
+}
+
+/* ==============================================
+   PERBAIKAN SIDEBAR - SAMA SEPERTI AKSES PENGGUNA
+   ============================================== */
+
+/* Logo SIPETGIS - warna coklat, tebal, besar */
+.sipetgis-logo {
+    color: #832706 !important;
+    font-weight: 800;
+    font-size: 24px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    letter-spacing: 0.5px;
+    line-height: 1;
+}
+
+/* Semua icon di sidebar menjadi warna coklat */
+.sidebar .nav-secondary .nav-item > a i,
+.sidebar .nav-secondary .nav-link i,
+.nav-secondary i,
+.nav-item i,
+.fa-home,
+.fa-home::before,
+.fa-chart-bar,
+.fa-chart-line,
+.fa-chart-pie,
+.fa-database,
+.fa-users,
+.fa-map-marked-alt,
+.fa-map-marker-alt,
+.sidebar .nav-secondary .collapse .nav-link i,
+.fa-chevron-down,
+.fa-chevron-right,
+.fa-chevron-left,
+.fa-chevron-up {
+    color: #832706 !important;
+}
+
+/* Active menu di sidebar */
+.nav-item.active > a {
+    background: #fef3ef;
+    color: #832706;
+}
+
+.nav-item.active > a i {
+    color: #832706;
+}

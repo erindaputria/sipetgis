@@ -94,7 +94,7 @@
                     </ul>
                 </div>
             </div>
-        </div>
+        </div> 
         <!-- ========== END SIDEBAR ========== -->
 
         <div class="main-panel">
@@ -127,24 +127,24 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-user animated fadeIn">
                                     <div class="dropdown-user-scroll scrollbar-outer">
-                                        <li>
+                                        <li> 
                                             <div class="user-box">
                                                 <div class="u-text">
                                                     <h4>Dinas Ketahanan Pangan dan Pertanian (DKPP) Kota Surabaya</h4>
                                                     <p class="text-muted">kepala@dkppsby.go.id</p>
-                                                </div>
+                                                </div> 
                                             </div>
                                         </li>
                                         <li>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="<?php echo site_url('login'); ?>" style="text-decoration: none">
+                                            <a class="dropdown-item" href="<?php echo site_url('login/logout'); ?>" style="text-decoration: none">
                                                 <i class="fas fa-sign-out-alt me-2"></i>Keluar
                                             </a>
                                         </li>
                                     </div>
                                 </ul>
                             </li>
-                        </ul>
+                        </ul> 
                     </div>
                 </nav>
             </div>

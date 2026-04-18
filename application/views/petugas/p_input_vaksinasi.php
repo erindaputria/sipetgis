@@ -292,7 +292,7 @@
                                         <li><div class="dropdown-divider"></div><a class="dropdown-item" href="<?php echo site_url('login/logout'); ?>"><i class="fas fa-sign-out-alt me-2"></i>Keluar</a></li>
                                     </div>
                                 </ul>
-                            </li>
+                            </li> 
                         </ul>
                     </div>
                 </nav>

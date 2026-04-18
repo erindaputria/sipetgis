@@ -113,7 +113,7 @@ class Dashboard_model extends CI_Model {
         return $this->db->get($this->table_input_jenis_usaha)->num_rows() > 0;
     }
     
-    /**
+    /** 
      * Get all kecamatan list
      */
     public function get_all_kecamatan() {

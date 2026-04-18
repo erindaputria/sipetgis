@@ -13,7 +13,7 @@
             google: { families: ["Public Sans:300,400,500,600,700"] },
             custom: {
                 families: [
-                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Solid", 
                     "Font Awesome 5 Regular",
                     "Font Awesome 5 Brands",
                     "simple-line-icons",
@@ -30,176 +30,13 @@
     <link rel="stylesheet" href="<?php echo base_url('assets/SIPETGIS/assets/css/bootstrap.min.css'); ?>" />
     <link rel="stylesheet" href="<?php echo base_url('assets/SIPETGIS/assets/css/plugins.min.css'); ?>" />
     <link rel="stylesheet" href="<?php echo base_url('assets/SIPETGIS/assets/css/kaiadmin.min.css'); ?>" />
-
+    
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css" />
     
-    <style>
-        .dataTables_wrapper .dataTables_length,
-        .dataTables_wrapper .dataTables_filter,
-        .dataTables_wrapper .dataTables_info,
-        .dataTables_wrapper .dataTables_paginate {
-            padding: 10px;
-        }
-        
-        .dt-buttons .btn {
-            border-radius: 5px;
-            font-weight: 500;
-            padding: 6px 15px;
-            margin-right: 5px;
-            transition: all 0.3s;
-        }
-
-        .dt-buttons .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .dt-buttons .btn-primary {
-            background-color: #0d6efd !important;
-            border-color: #0d6efd !important;
-            color: white !important;
-        }
-
-        .dt-buttons .btn-success {
-            background-color: #198754 !important;
-            border-color: #198754 !important;
-            color: white !important;
-        }
-
-        .dt-buttons .btn-danger {
-            background-color: #dc3545 !important;
-            border-color: #dc3545 !important;
-            color: white !important;
-        }
-
-        .dt-buttons .btn-info {
-            background-color: #0dcaf0 !important;
-            border-color: #0dcaf0 !important;
-            color: white !important;
-        }
-        
-        table.dataTable {
-            border-collapse: separate !important;
-            border-spacing: 0 8px !important;
-        }
-
-        table.dataTable thead th {
-            border: none !important;
-            background-color: #f8f9fa;
-            color: #495057;
-            font-weight: 600;
-            padding: 15px 10px;
-            white-space: nowrap;
-        }
-
-        table.dataTable tbody td {
-            background-color: white;
-            border: none !important;
-            padding: 15px 10px;
-            vertical-align: middle;
-        }
-
-        table.dataTable tbody tr {
-            border-radius: 8px;
-            margin-bottom: 8px;
-            transition: all 0.3s;
-        }
-
-        table.dataTable tbody tr:hover {
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            transform: translateY(-2px);
-        }
-
-        .btn-action {
-            width: 35px;
-            height: 35px;
-            border-radius: 6px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 3px;
-            transition: all 0.2s;
-        }
-
-        .btn-edit {
-            background-color: rgba(67, 97, 238, 0.1);
-            color: #4361ee;
-        }
-
-        .btn-edit:hover {
-            background-color: #4361ee;
-            color: white;
-        }
-
-        .btn-delete {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: #dc3545;
-        }
-
-        .btn-delete:hover {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .badge-jenis {
-            background-color: #e3f2fd;
-            color: #1976d2;
-            font-size: 12px;
-            font-weight: 500;
-            padding: 4px 10px;
-            border-radius: 20px;
-        }
-
-        .badge-dosis {
-            background-color: #f3e5f5;
-            color: #7b1fa2;
-            font-size: 12px;
-            font-weight: 500;
-            padding: 4px 10px;
-            border-radius: 20px;
-        }
-
-        .pagination .page-link {
-            border: none;
-            color: #495057;
-            margin: 0 3px;
-            border-radius: 6px !important;
-        }
-
-        .pagination .page-item.active .page-link {
-            background-color: #4361ee;
-            color: white;
-        }
-
-        .pagination .page-link:hover {
-            background-color: #f8f9fa;
-        }
-
-        .btn-primary-custom {
-            background: linear-gradient(135deg, #4361ee 0%, #3a56d4 100%);
-            border: none;
-            border-radius: 6px;
-            padding: 8px 20px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .btn-primary-custom:hover {
-            background: linear-gradient(135deg, #3a56d4 0%, #3046b8 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-        }
-
-        /* Flash message styles */
-        .alert {
-            border-radius: 8px;
-            border: none;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-    </style>
+    <!-- Custom CSS Obat -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/obat.css'); ?>" />
 </head>
 
 <body>
@@ -207,33 +44,16 @@
         <!-- Sidebar -->
         <div class="sidebar" data-background-color="white">
             <div class="sidebar-logo">
-                <!-- Logo Header -->
                 <div class="logo-header" data-background-color="white">
-                    <a href="<?php echo site_url('dashboard'); ?>" class="logo" style="text-decoration: none">
-                        <div style="
-                            color: #1e3a8a;
-                            font-weight: 800;
-                            font-size: 24px;
-                            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                            letter-spacing: 0.5px;
-                            line-height: 1;
-                        ">
-                            SIPETGIS
-                        </div>
+                    <a href="<?= base_url('dashboard') ?>" class="logo" style="text-decoration: none">
+                        <div class="sipetgis-logo">SIPETGIS</div>
                     </a>
                     <div class="nav-toggle">
-                        <button class="btn btn-toggle toggle-sidebar">
-                            <i class="gg-menu-right"></i>
-                        </button>
-                        <button class="btn btn-toggle sidenav-toggler">
-                            <i class="gg-menu-left"></i>
-                        </button>
+                        <button class="btn btn-toggle toggle-sidebar"><i class="gg-menu-right"></i></button>
+                        <button class="btn btn-toggle sidenav-toggler"><i class="gg-menu-left"></i></button>
                     </div>
-                    <button class="topbar-toggler more">
-                        <i class="gg-more-vertical-alt"></i>
-                    </button>
+                    <button class="topbar-toggler more"><i class="gg-more-vertical-alt"></i></button>
                 </div>
-                <!-- End Logo Header -->
             </div>
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
                 <div class="sidebar-content">
@@ -245,114 +65,58 @@
                             </a>
                         </li>
                         <li class="nav-section">
-                            <span class="sidebar-mini-icon">
-                                <i class="fa fa-ellipsis-h"></i>
-                            </span>
+                            <span class="sidebar-mini-icon"><i class="fa fa-ellipsis-h"></i></span>
                             <h4 class="text-section">Menu Utama</h4>
                         </li>
-                        <li class="nav-item active">
-                            <a class="nav-link d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#masterDataSubmenu" role="button" aria-expanded="true">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-database me-2"></i>
-                                    <span>Master Data</span>
-                                </div>
-                                <i class="fas fa-chevron-down ms-2"></i>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center justify-content-between collapsed" data-bs-toggle="collapse" href="#masterDataSubmenu" role="button" aria-expanded="false">
+                                <div class="d-flex align-items-center"><i class="fas fa-database me-2" style="color: #832706 !important;"></i><span>Master</span></div>
+                                <i class="fas fa-chevron-down ms-2" style="color: #832706 !important;"></i>
                             </a>
-                            <div class="collapse show" id="masterDataSubmenu">
+                            <div class="collapse" id="masterDataSubmenu">
                                 <ul class="list-unstyled ps-4">
-                                    <li>
-                                        <a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('obat') ?>" class="nav-link active">Obat</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('vaksin') ?>" class="nav-link">Vaksin</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('komoditas') ?>" class="nav-link">Komoditas</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('layanan_klinik') ?>" class="nav-link">Layanan Klinik</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('rpu') ?>" class="nav-link">RPU</a>
-                                    </li>
+                                    <li><a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a></li>
+                                    <li><a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a></li>
+                                    <li><a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a></li>
+                                    <li><a href="<?= site_url('obat') ?>" class="nav-link active">Obat</a></li>
+                                    <li><a href="<?= site_url('vaksin') ?>" class="nav-link">Vaksin</a></li>
+                                    <li><a href="<?= site_url('komoditas') ?>" class="nav-link">Komoditas</a></li>
+                                    <li><a href="<?= site_url('layanan_klinik') ?>" class="nav-link">Layanan Klinik</a></li>
+                                    <li><a href="<?= site_url('rpu') ?>" class="nav-link">RPU</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link d-flex align-items-center justify-content-between collapsed" data-bs-toggle="collapse" href="#dataSubmenu" role="button" aria-expanded="false">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-users me-2"></i>
-                                    <span>Data</span>
-                                </div>
-                                <i class="fas fa-chevron-down ms-2"></i>
+                                <div class="d-flex align-items-center"><i class="fas fa-users me-2" style="color: #832706 !important;"></i><span>Data</span></div>
+                                <i class="fas fa-chevron-down ms-2" style="color: #832706 !important;"></i>
                             </a>
                             <div class="collapse" id="dataSubmenu">
                                 <ul class="list-unstyled ps-4">
-                                    <li>
-                                        <a href="<?= site_url('data_kepemilikan') ?>" class="nav-link">Kepemilikan Ternak</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('data_history_ternak') ?>" class="nav-link">History Data Ternak</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('data_vaksinasi') ?>" class="nav-link">Vaksinasi</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('data_history_vaksinasi') ?>" class="nav-link">History Vaksinasi</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('data_pengobatan') ?>" class="nav-link">Pengobatan Ternak</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('data_penjual_pakan') ?>" class="nav-link">Penjual Pakan Ternak</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('data_klinik') ?>" class="nav-link">Klinik Hewan</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('data_penjual_obat') ?>" class="nav-link">Penjual Obat Hewan</a>
-                                    </li>
-                                  <li>
-                      <a href="<?= site_url('data_rpu') ?>" class="nav-link active"
-                        >TPU/RPU</a
-                      >
-                    </li>
-                    <li>
-                      <a href="<?= site_url('data_pemotongan_unggas') ?>" class="nav-link active"
-                        >Pemotongan Unggas</a
-                      >
-                    </li>
-                    <li>
-                      <a href="<?= site_url('data_demplot') ?>" class="nav-link active"
-                        >Demplot</a
-                      >
-                    </li>
-                    <li>
-                      <a href="<?= site_url('data_stok_pakan') ?>" class="nav-link active"
-                        >Stok Pakan</a
-                      >
-                    </li>
+                                    <li><a href="<?= site_url('data_kepemilikan') ?>" class="nav-link">Kepemilikan Ternak</a></li>
+                                    <li><a href="<?= site_url('data_history_ternak') ?>" class="nav-link">History Data Ternak</a></li>
+                                    <li><a href="<?= site_url('data_vaksinasi') ?>" class="nav-link">Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('data_history_vaksinasi') ?>" class="nav-link">History Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('data_pengobatan') ?>" class="nav-link">Pengobatan Ternak</a></li>
+                                    <li><a href="<?= site_url('data_penjual_pakan') ?>" class="nav-link">Penjual Pakan Ternak</a></li>
+                                    <li><a href="<?= site_url('data_klinik') ?>" class="nav-link">Klinik Hewan</a></li>
+                                    <li><a href="<?= site_url('data_penjual_obat') ?>" class="nav-link">Penjual Obat Hewan</a></li>
+                                    <li><a href="<?= site_url('data_rpu') ?>" class="nav-link">TPU/RPU</a></li>
+                                    <li><a href="<?= site_url('data_pemotongan_unggas') ?>" class="nav-link">Pemotongan Unggas</a></li>
+                                    <li><a href="<?= site_url('data_demplot') ?>" class="nav-link">Demplot</a></li>
+                                    <li><a href="<?= site_url('data_stok_pakan') ?>" class="nav-link">Stok Pakan</a></li>
                                 </ul>
                             </div>
                         </li>
-                         <li class="nav-item active">
-                            <a class="nav-link d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#laporanSubmenu" role="button" aria-expanded="true">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center justify-content-between collapsed" data-bs-toggle="collapse" href="#laporanSubmenu" role="button" aria-expanded="false">
                                 <div class="d-flex align-items-center">
-                                    <i class="fas fa-chart-bar me-2"></i>
+                                    <i class="fas fa-chart-bar me-2" style="color: #832706 !important;"></i>
                                     <span>Laporan</span>
                                 </div>
-                                <i class="fas fa-chevron-down ms-2"></i>
+                                <i class="fas fa-chevron-down ms-2" style="color: #832706 !important;"></i>
                             </a>
-                            <div class="collapse show" id="laporanSubmenu">
+                            <div class="collapse" id="laporanSubmenu"> 
                                 <ul class="list-unstyled ps-4">
                                     <li><a href="<?= site_url('laporan_kepemilikan_ternak') ?>" class="nav-link">Kepemilikan Ternak</a></li>
                                     <li><a href="<?= site_url('laporan_history_data_ternak') ?>" class="nav-link">History Data Ternak</a></li>
@@ -360,7 +124,7 @@
                                     <li><a href="<?= site_url('laporan_history_data_vaksinasi') ?>" class="nav-link">History Data Vaksinasi</a></li>
                                     <li><a href="<?= site_url('laporan_pengobatan_ternak') ?>" class="nav-link">Pengobatan Ternak</a></li>
                                     <li><a href="<?= site_url('laporan_penjual_pakan_ternak') ?>" class="nav-link">Penjual Pakan Ternak</a></li>
-                                    <li><a href="<?= site_url('laporan_data_klinik_hewan') ?>" class="nav-link active">Data Klinik Hewan</a></li>
+                                    <li><a href="<?= site_url('laporan_data_klinik_hewan') ?>" class="nav-link">Data Klinik Hewan</a></li>
                                     <li><a href="<?= site_url('laporan_penjual_obat_hewan') ?>" class="nav-link">Penjual Obat Hewan</a></li>
                                     <li><a href="<?= site_url('laporan_data_tpu_rpu') ?>" class="nav-link">Data TPU / RPU</a></li>
                                     <li><a href="<?= site_url('laporan_demplot_peternakan') ?>" class="nav-link">Demplot Peternakan</a></li>
@@ -369,8 +133,8 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a href="<?= site_url('peta_sebaran') ?>">
-                                <i class="fas fa-map-marked-alt"></i>
+                            <a href="<?= site_url('peta_sebaran') ?>" class="nav-link">
+                                <i class="fas fa-map-marked-alt" style="color: #832706 !important;"></i>
                                 <p>Peta Sebaran</p>
                             </a>
                         </li>
@@ -382,26 +146,10 @@
 
         <div class="main-panel">
             <div class="main-header">
-                <div class="main-header-logo">
-                    <!-- End Logo Header -->
-                </div>
-                <!-- Navbar Header -->
+                <div class="main-header-logo"></div>
                 <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
                     <div class="container-fluid">
                         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
-                            <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" aria-haspopup="true">
-                                    <i class="fa fa-search"></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-search animated fadeIn">
-                                    <form class="navbar-left navbar-form nav-search">
-                                        <div class="input-group">
-                                            <input type="text" placeholder="Search ..." class="form-control" />
-                                        </div>
-                                    </form>
-                                </ul>
-                            </li>
-
                             <li class="nav-item topbar-user dropdown hidden-caret">
                                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                                     <div class="avatar-sm">
@@ -423,7 +171,7 @@
                                         </li>
                                         <li>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="<?php echo base_url(); ?>login">
+                                            <a class="dropdown-item" href="<?php echo base_url(); ?>login/logout">
                                                 <i class="fas fa-sign-out-alt me-2"></i>Keluar
                                             </a>
                                         </li>
@@ -433,12 +181,11 @@
                         </ul>
                     </div>
                 </nav>
-                <!-- End Navbar -->
             </div>
 
             <div class="container">
                 <div class="page-inner">
-                    <!-- Flash Messages - SAMA PERSIS DENGAN AKSES PENGGUNA -->
+                    <!-- Flash Messages -->
                     <?php if($this->session->flashdata('success')): ?>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <i class="fas fa-check-circle me-2"></i>
@@ -455,16 +202,14 @@
                         </div>
                     <?php endif; ?>
 
-                    <!-- Page Header - SAMA PERSIS DENGAN AKSES PENGGUNA -->
+                    <!-- Page Header -->
                     <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                         <div>
-                            <h3 class="fw-bold mb-1">Master Data</h3>
-                            <h6 class="op-7 mb-0">Kelola Data Obat</h6>
+                            <h3 class="fw-bold mb-1" style="color: #832706; font-weight: 900;">Master Obat</h3>
+                            <h6 class="op-7 mb-0">Kelola Data Obat Hewan</h6>
                         </div>
                         <div class="ms-md-auto py-2 py-md-0">
-                            <button class="btn btn-primary-custom text-white"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#tambahDataModal">
+                            <button class="btn btn-primary-custom text-white" data-bs-toggle="modal" data-bs-target="#tambahDataModal">
                                 <i class="fas fa-plus me-2"></i>Tambah Data
                             </button>
                         </div>
@@ -474,11 +219,9 @@
                     <div class="modal fade" id="tambahDataModal" tabindex="-1">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content modal-form">
-                                <form action="<?= base_url('obat/simpan'); ?>" method="post">
+                                <form action="<?= base_url('obat/simpan'); ?>" method="post" id="formTambah">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">
-                                            <i class="fas fa-plus me-2"></i>Tambah Data Obat
-                                        </h5>
+                                        <h5 class="modal-title"><i class="fas fa-capsules me-2"></i>Tambah Data Obat</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
@@ -490,7 +233,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
                                         <div class="row">
                                             <div class="col-md-6 mb-3">
                                                 <div class="form-group">
@@ -516,12 +258,8 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                            Batal
-                                        </button>
-                                        <button type="submit" class="btn btn-primary">
-                                            Simpan Data
-                                        </button>
+                                        <button type="button" class="btn" data-bs-dismiss="modal" style="background: #e6d2c8; border: none; color: #832706; border-radius: 6px; padding: 8px 20px; font-weight: 500;">Batal</button>
+                                        <button type="submit" class="btn btn-primary">Simpan Data</button>
                                     </div>
                                 </form>
                             </div>
@@ -532,12 +270,10 @@
                     <div class="modal fade" id="editDataModal" tabindex="-1">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content modal-form">
-                                <form action="<?= base_url('obat/update'); ?>" method="post">
+                                <form action="<?= base_url('obat/update'); ?>" method="post" id="formEdit">
                                     <input type="hidden" id="edit_id" name="id_obat">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">
-                                            <i class="fas fa-edit me-2"></i>Edit Data Obat
-                                        </h5>
+                                        <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Edit Data Obat</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
@@ -549,7 +285,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
                                         <div class="row">
                                             <div class="col-md-6 mb-3">
                                                 <div class="form-group">
@@ -575,30 +310,25 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                            Batal
-                                        </button>
-                                        <button type="submit" class="btn btn-primary">
-                                            Update Data
-                                        </button>
+                                        <button type="button" class="btn" data-bs-dismiss="modal" style="background: #e6d2c8; border: none; color: #832706; border-radius: 6px; padding: 8px 20px; font-weight: 500;">Batal</button>
+                                        <button type="submit" class="btn btn-primary">Update Data</button>
                                     </div>
                                 </form>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Content -->
+                    <!-- Content Table -->
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <!-- TABLE DENGAN BUTTON EXPORT SAMA PERSIS AKSES PENGGUNA -->
                                         <table id="obatTable" class="table table-hover w-100">
                                             <thead>
                                                 <tr>
                                                     <th width="50">No</th>
-                                                    <th>Obat</th>
+                                                    <th>Nama Obat</th>
                                                     <th>Jenis Pengobatan</th>
                                                     <th>Dosis</th>
                                                     <th width="100">Aksi</th>
@@ -616,11 +346,7 @@
                                                                     <?= htmlspecialchars($row->jenis_pengobatan ?? ''); ?>
                                                                 </span>
                                                             </td>
-                                                            <td>
-                                                                <span class="badge-dosis">
-                                                                    <?= htmlspecialchars($row->dosis ?? ''); ?>
-                                                                </span>
-                                                            </td>
+                                                            <td><?= htmlspecialchars($row->dosis ?? ''); ?></td>
                                                             <td>
                                                                 <button class="btn btn-action btn-edit" title="Edit"
                                                                         data-id="<?= $row->id_obat ?? ''; ?>"
@@ -638,9 +364,7 @@
                                                         </tr>
                                                     <?php endforeach; ?>
                                                 <?php else: ?>
-                                                    <tr>
-                                                        <td colspan="5" class="text-center">Tidak ada data</td>
-                                                    </tr>
+                                                    <tr><td colspan="5" class="text-center">Tidak ada data</td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td></tr>
                                                 <?php endif; ?>
                                             </tbody>
                                         </table>
@@ -658,11 +382,10 @@
     <script src="<?php echo base_url('assets/SIPETGIS/assets/js/core/jquery-3.7.1.min.js'); ?>"></script>
     <script src="<?php echo base_url('assets/SIPETGIS/assets/js/core/popper.min.js'); ?>"></script>
     <script src="<?php echo base_url('assets/SIPETGIS/assets/js/core/bootstrap.min.js'); ?>"></script>
-
-    <!-- jQuery Scrollbar -->
     <script src="<?php echo base_url('assets/SIPETGIS/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js'); ?>"></script>
-
-    <!-- DataTables JS - SAMA PERSIS DENGAN AKSES PENGGUNA -->
+    <script src="<?php echo base_url('assets/SIPETGIS/assets/js/kaiadmin.min.js'); ?>"></script>
+    
+    <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
@@ -672,93 +395,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            // Inisialisasi DataTable dengan BUTTONS SAMA PERSIS AKSES PENGGUNA
-            var table = $("#obatTable").DataTable({
-                dom: "Bfrtip",
-                buttons: [
-                    {
-                        extend: "copy",
-                        text: '<i class="fas fa-copy"></i> Copy',
-                        className: 'btn btn-sm btn-primary'
-                    },
-                    {
-                        extend: "csv",
-                        text: '<i class="fas fa-file-csv"></i> CSV',
-                        className: 'btn btn-sm btn-success'
-                    },
-                    {
-                        extend: "excel",
-                        text: '<i class="fas fa-file-excel"></i> Excel',
-                        className: 'btn btn-sm btn-success'
-                    },
-                    {
-                        extend: "pdf",
-                        text: '<i class="fas fa-file-pdf"></i> PDF',
-                        className: 'btn btn-sm btn-danger'
-                    },
-                    {
-                        extend: "print",
-                        text: '<i class="fas fa-print"></i> Print',
-                        className: 'btn btn-sm btn-info'
-                    }
-                ],
-                language: {
-                    search: "Cari:",
-                    lengthMenu: "Tampilkan _MENU_ data",
-                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                    infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
-                    infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
-                    zeroRecords: "Tidak ada data yang ditemukan",
-                    paginate: {
-                        first: "Pertama",
-                        last: "Terakhir",
-                        next: "Berikutnya",
-                        previous: "Sebelumnya"
-                    }
-                },
-                pageLength: 10,
-                lengthChange: true,
-                lengthMenu: [5, 10, 25, 50, 100],
-                responsive: true,
-                order: [[0, 'asc']]
-            });
-            
-            // Event untuk tombol edit
-            $(document).on("click", ".btn-edit", function () {
-                var id = $(this).data('id');
-                var obat = $(this).data('obat');
-                var jenis = $(this).data('jenis');
-                var dosis = $(this).data('dosis');
-                
-                // Isi form edit
-                $('#edit_id').val(id);
-                $('#edit_obat').val(obat);
-                $('#edit_jenis').val(jenis);
-                $('#edit_dosis').val(dosis);
-                
-                // Tampilkan modal edit
-                $('#editDataModal').modal('show');
-            });
-            
-            // Event untuk tombol hapus - SAMA PERSIS DENGAN AKSES PENGGUNA
-            $(document).on("click", ".btn-delete", function () {
-                var id = $(this).data('id');
-                var obat = $(this).data('obat');
-                
-                if (confirm("Apakah Anda yakin ingin menghapus data obat: " + obat + "?")) {
-                    // Redirect langsung ke controller hapus
-                    window.location.href = "<?= base_url('obat/hapus/'); ?>" + id;
-                }
-            });
-
-            // Auto close alerts - SAMA PERSIS DENGAN AKSES PENGGUNA
-            setTimeout(function() {
-                $('.alert').alert('close');
-            }, 5000);
-        });
-    </script>
+    
+    <!-- Custom JS Obat -->
+    <script src="<?php echo base_url('assets/js/obat.js'); ?>"></script>
 </body>
 </html>

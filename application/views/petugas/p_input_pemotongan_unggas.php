@@ -20,7 +20,7 @@
                 ],
                 urls: ["<?php echo base_url(); ?>assets/SIPETGIS/assets/css/fonts.min.css"],
             },
-            active: function () {
+            active: function () { 
                 sessionStorage.fonts = true;
             },
         });
@@ -483,11 +483,21 @@
                                                     <div class="invalid-feedback">Daerah asal unggas harus diisi</div>
                                                 </div>
 
-                                                <!-- ID RPU (opsional) -->
+                                                <!-- ID RPU (opsional) - DIUBAH MENJADI DROPDOWN -->
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label">ID RPU (Optional)</label>
-                                                    <input type="number" class="form-control" id="id_rpu" name="id_rpu" placeholder="Masukkan ID RPU jika ada" />
-                                                    <small class="text-muted">Kosongkan jika tidak terkait dengan RPU</small>
+                                                    <select class="form-control" id="id_rpu" name="id_rpu">
+                                                        <option value="">-- Pilih RPU (Opsional) --</option>
+                                                        <?php if (!empty($rpu_list)): ?>
+                                                            <?php foreach ($rpu_list as $rpu): ?>
+                                                                <option value="<?php echo $rpu['id']; ?>">
+                                                                    <?php echo htmlspecialchars($rpu['nama_rpu']); ?> 
+                                                                    (Kec. <?php echo htmlspecialchars($rpu['kecamatan']); ?>)
+                                                                </option>
+                                                            <?php endforeach; ?>
+                                                        <?php endif; ?>
+                                                    </select>
+                                                    <small class="text-muted">Pilih RPU yang terkait dengan pemotongan ini (kosongkan jika tidak terkait)</small>
                                                 </div>
                                             </div>
 

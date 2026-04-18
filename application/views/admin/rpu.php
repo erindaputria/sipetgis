@@ -4,33 +4,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Master Data RPU - SIPETGIS</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
-    <link rel="icon" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/kaiadmin/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="<?php echo base_url('assets/SIPETGIS/assets/img/kaiadmin/favicon.ico'); ?>" type="image/x-icon" />
 
     <!-- Fonts and icons -->
-    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script src="<?php echo base_url('assets/SIPETGIS/assets/js/plugin/webfont/webfont.min.js'); ?>"></script>
     <script>
         WebFont.load({
             google: { families: ["Public Sans:300,400,500,600,700"] },
             custom: {
                 families: [
-                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Solid", 
                     "Font Awesome 5 Regular",
                     "Font Awesome 5 Brands",
                     "simple-line-icons",
                 ],
-                urls: ["<?php echo base_url(); ?>assets/SIPETGIS/assets/css/fonts.min.css"],
+                urls: ["<?php echo base_url('assets/SIPETGIS/assets/css/fonts.min.css'); ?>"]
             },
-            active: function () {
+            active: function() {
                 sessionStorage.fonts = true;
-            },
+            }
         });
     </script>
 
     <!-- CSS Files -->
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/css/plugins.min.css" />
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/css/kaiadmin.min.css" />
-
+    <link rel="stylesheet" href="<?php echo base_url('assets/SIPETGIS/assets/css/bootstrap.min.css'); ?>" />
+    <link rel="stylesheet" href="<?php echo base_url('assets/SIPETGIS/assets/css/plugins.min.css'); ?>" />
+    <link rel="stylesheet" href="<?php echo base_url('assets/SIPETGIS/assets/css/kaiadmin.min.css'); ?>" />
+    
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css" />
@@ -38,197 +38,8 @@
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
-    <style>
-        .dataTables_wrapper .dataTables_length,
-        .dataTables_wrapper .dataTables_filter,
-        .dataTables_wrapper .dataTables_info,
-        .dataTables_wrapper .dataTables_paginate {
-            padding: 10px;
-        }
-        
-        .dt-buttons .btn {
-            border-radius: 5px;
-            font-weight: 500;
-            padding: 6px 15px;
-            margin-right: 5px;
-            transition: all 0.3s;
-        }
-
-        .dt-buttons .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .dt-buttons .btn-primary {
-            background-color: #0d6efd !important;
-            border-color: #0d6efd !important;
-            color: white !important;
-        }
-
-        .dt-buttons .btn-success {
-            background-color: #198754 !important;
-            border-color: #198754 !important;
-            color: white !important;
-        }
-
-        .dt-buttons .btn-danger {
-            background-color: #dc3545 !important;
-            border-color: #dc3545 !important;
-            color: white !important;
-        }
-
-        .dt-buttons .btn-info {
-            background-color: #0dcaf0 !important;
-            border-color: #0dcaf0 !important;
-            color: white !important;
-        }
-        
-        table.dataTable {
-            border-collapse: separate !important;
-            border-spacing: 0 8px !important;
-        }
-
-        table.dataTable thead th {
-            border: none !important;
-            background-color: #f8f9fa;
-            color: #495057;
-            font-weight: 600;
-            padding: 15px 10px;
-            white-space: nowrap;
-        }
-
-        table.dataTable tbody td {
-            background-color: white;
-            border: none !important;
-            padding: 15px 10px;
-            vertical-align: middle;
-        }
-
-        table.dataTable tbody tr {
-            border-radius: 8px;
-            margin-bottom: 8px;
-            transition: all 0.3s;
-        }
-
-        table.dataTable tbody tr:hover {
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            transform: translateY(-2px);
-        }
-
-        .btn-action {
-            width: 35px;
-            height: 35px;
-            border-radius: 6px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 3px;
-            transition: all 0.2s;
-        }
-
-        .btn-edit {
-            background-color: rgba(67, 97, 238, 0.1);
-            color: #4361ee;
-        }
-
-        .btn-edit:hover {
-            background-color: #4361ee;
-            color: white;
-        }
-
-        .btn-delete {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: #dc3545;
-        }
-
-        .btn-delete:hover {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .btn-view {
-            background-color: rgba(32, 201, 151, 0.1);
-            color: #20c997;
-        }
-
-        .btn-view:hover {
-            background-color: #20c997;
-            color: white;
-        }
-
-        .pagination .page-link {
-            border: none;
-            color: #495057;
-            margin: 0 3px;
-            border-radius: 6px !important;
-        }
-
-        .pagination .page-item.active .page-link {
-            background-color: #4361ee;
-            color: white;
-        }
-
-        .pagination .page-link:hover {
-            background-color: #f8f9fa;
-        }
-
-        .btn-primary-custom {
-            background: linear-gradient(135deg, #4361ee 0%, #3a56d4 100%);
-            border: none;
-            border-radius: 6px;
-            padding: 8px 20px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .btn-primary-custom:hover {
-            background: linear-gradient(135deg, #3a56d4 0%, #3046b8 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-        }
-
-        .alert {
-            border-radius: 8px;
-            border: none;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .map-preview {
-            height: 200px;
-            border-radius: 8px;
-            margin-top: 10px;
-            border: 1px solid #dee2e6;
-            background-color: #f8f9fa;
-            z-index: 1;
-        }
-
-        .coordinate-badge {
-            background-color: #e3f2fd;
-            color: #1976d2;
-            font-size: 11px;
-            font-weight: 500;
-            padding: 2px 8px;
-            border-radius: 12px;
-            display: inline-block;
-            margin: 2px 0;
-        }
-
-        .text-muted-small {
-            font-size: 11px;
-            color: #6c757d;
-            margin-top: 2px;
-        }
-
-        /* Fix for modal map display */
-        .modal .map-preview {
-            z-index: 1060;
-        }
-        
-        .leaflet-popup {
-            z-index: 1070;
-        }
-    </style>
+    <!-- Custom CSS RPU -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/rpu.css'); ?>" />
 </head>
 
 <body>
@@ -237,22 +48,14 @@
         <div class="sidebar" data-background-color="white">
             <div class="sidebar-logo">
                 <div class="logo-header" data-background-color="white">
-                    <a href="<?php echo site_url('dashboard'); ?>" class="logo" style="text-decoration: none">
-                        <div style="color: #1e3a8a; font-weight: 800; font-size: 24px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; letter-spacing: 0.5px; line-height: 1;">
-                            SIPETGIS
-                        </div>
+                    <a href="<?= base_url('dashboard') ?>" class="logo" style="text-decoration: none">
+                        <div class="sipetgis-logo">SIPETGIS</div>
                     </a>
                     <div class="nav-toggle">
-                        <button class="btn btn-toggle toggle-sidebar">
-                            <i class="gg-menu-right"></i>
-                        </button>
-                        <button class="btn btn-toggle sidenav-toggler">
-                            <i class="gg-menu-left"></i>
-                        </button>
+                        <button class="btn btn-toggle toggle-sidebar"><i class="gg-menu-right"></i></button>
+                        <button class="btn btn-toggle sidenav-toggler"><i class="gg-menu-left"></i></button>
                     </div>
-                    <button class="topbar-toggler more">
-                        <i class="gg-more-vertical-alt"></i>
-                    </button>
+                    <button class="topbar-toggler more"><i class="gg-more-vertical-alt"></i></button>
                 </div>
             </div>
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
@@ -265,114 +68,58 @@
                             </a>
                         </li>
                         <li class="nav-section">
-                            <span class="sidebar-mini-icon">
-                                <i class="fa fa-ellipsis-h"></i>
-                            </span>
+                            <span class="sidebar-mini-icon"><i class="fa fa-ellipsis-h"></i></span>
                             <h4 class="text-section">Menu Utama</h4>
                         </li>
-                        <li class="nav-item active">
-                            <a class="nav-link d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#masterDataSubmenu" role="button" aria-expanded="true">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-database me-2"></i>
-                                    <span>Master Data</span>
-                                </div>
-                                <i class="fas fa-chevron-down ms-2"></i>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center justify-content-between collapsed" data-bs-toggle="collapse" href="#masterDataSubmenu" role="button" aria-expanded="false">
+                                <div class="d-flex align-items-center"><i class="fas fa-database me-2" style="color: #832706 !important;"></i><span>Master</span></div>
+                                <i class="fas fa-chevron-down ms-2" style="color: #832706 !important;"></i>
                             </a>
-                            <div class="collapse show" id="masterDataSubmenu">
+                            <div class="collapse" id="masterDataSubmenu">
                                 <ul class="list-unstyled ps-4">
-                                    <li> 
-                                        <a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('obat') ?>" class="nav-link">Obat</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('vaksin') ?>" class="nav-link">Vaksin</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('komoditas') ?>" class="nav-link">Komoditas</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('layanan_klinik') ?>" class="nav-link">Layanan Klinik</a>
-                                    </li>
-                                     <li>
-                                        <a href="<?= site_url('rpu') ?>" class="nav-link active">RPU</a>
-                                    </li>
+                                    <li><a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a></li>
+                                    <li><a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a></li>
+                                    <li><a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a></li>
+                                    <li><a href="<?= site_url('obat') ?>" class="nav-link">Obat</a></li>
+                                    <li><a href="<?= site_url('vaksin') ?>" class="nav-link">Vaksin</a></li>
+                                    <li><a href="<?= site_url('komoditas') ?>" class="nav-link">Komoditas</a></li>
+                                    <li><a href="<?= site_url('layanan_klinik') ?>" class="nav-link">Layanan Klinik</a></li>
+                                    <li><a href="<?= site_url('rpu') ?>" class="nav-link active">RPU</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link d-flex align-items-center justify-content-between collapsed" data-bs-toggle="collapse" href="#dataSubmenu" role="button" aria-expanded="false">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-users me-2"></i>
-                                    <span>Data</span>
-                                </div>
-                                <i class="fas fa-chevron-down ms-2"></i>
+                                <div class="d-flex align-items-center"><i class="fas fa-users me-2" style="color: #832706 !important;"></i><span>Data</span></div>
+                                <i class="fas fa-chevron-down ms-2" style="color: #832706 !important;"></i>
                             </a>
                             <div class="collapse" id="dataSubmenu">
                                 <ul class="list-unstyled ps-4">
-                                    <li>
-                                        <a href="<?= site_url('data_kepemilikan') ?>" class="nav-link">Kepemilikan Ternak</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('data_history_ternak') ?>" class="nav-link">History Data Ternak</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('data_vaksinasi') ?>" class="nav-link">Vaksinasi</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('data_history_vaksinasi') ?>" class="nav-link">History Vaksinasi</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('data_pengobatan') ?>" class="nav-link">Pengobatan Ternak</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('data_penjual_pakan') ?>" class="nav-link">Penjual Pakan Ternak</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('data_klinik') ?>" class="nav-link">Klinik Hewan</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= site_url('data_penjual_obat') ?>" class="nav-link">Penjual Obat Hewan</a>
-                                    </li>
-                                    <li>
-                      <a href="<?= site_url('data_rpu') ?>" class="nav-link active"
-                        >TPU/RPU</a
-                      >
-                    </li>
-                    <li>
-                      <a href="<?= site_url('data_pemotongan_unggas') ?>" class="nav-link active"
-                        >Pemotongan Unggas</a
-                      >
-                    </li>
-                    <li>
-                      <a href="<?= site_url('data_demplot') ?>" class="nav-link active"
-                        >Demplot</a
-                      >
-                    </li>
-                    <li>
-                      <a href="<?= site_url('data_stok_pakan') ?>" class="nav-link active"
-                        >Stok Pakan</a
-                      >
-                    </li>
+                                    <li><a href="<?= site_url('data_kepemilikan') ?>" class="nav-link">Kepemilikan Ternak</a></li>
+                                    <li><a href="<?= site_url('data_history_ternak') ?>" class="nav-link">History Data Ternak</a></li>
+                                    <li><a href="<?= site_url('data_vaksinasi') ?>" class="nav-link">Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('data_history_vaksinasi') ?>" class="nav-link">History Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('data_pengobatan') ?>" class="nav-link">Pengobatan Ternak</a></li>
+                                    <li><a href="<?= site_url('data_penjual_pakan') ?>" class="nav-link">Penjual Pakan Ternak</a></li>
+                                    <li><a href="<?= site_url('data_klinik') ?>" class="nav-link">Klinik Hewan</a></li>
+                                    <li><a href="<?= site_url('data_penjual_obat') ?>" class="nav-link">Penjual Obat Hewan</a></li>
+                                    <li><a href="<?= site_url('data_rpu') ?>" class="nav-link">TPU/RPU</a></li>
+                                    <li><a href="<?= site_url('data_pemotongan_unggas') ?>" class="nav-link">Pemotongan Unggas</a></li>
+                                    <li><a href="<?= site_url('data_demplot') ?>" class="nav-link">Demplot</a></li>
+                                    <li><a href="<?= site_url('data_stok_pakan') ?>" class="nav-link">Stok Pakan</a></li>
                                 </ul>
                             </div>
                         </li>
-                         <li class="nav-item active">
-                            <a class="nav-link d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#laporanSubmenu" role="button" aria-expanded="true">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center justify-content-between collapsed" data-bs-toggle="collapse" href="#laporanSubmenu" role="button" aria-expanded="false">
                                 <div class="d-flex align-items-center">
-                                    <i class="fas fa-chart-bar me-2"></i>
+                                    <i class="fas fa-chart-bar me-2" style="color: #832706 !important;"></i>
                                     <span>Laporan</span>
                                 </div>
-                                <i class="fas fa-chevron-down ms-2"></i>
+                                <i class="fas fa-chevron-down ms-2" style="color: #832706 !important;"></i>
                             </a>
-                            <div class="collapse show" id="laporanSubmenu">
+                            <div class="collapse" id="laporanSubmenu"> 
                                 <ul class="list-unstyled ps-4">
                                     <li><a href="<?= site_url('laporan_kepemilikan_ternak') ?>" class="nav-link">Kepemilikan Ternak</a></li>
                                     <li><a href="<?= site_url('laporan_history_data_ternak') ?>" class="nav-link">History Data Ternak</a></li>
@@ -380,7 +127,7 @@
                                     <li><a href="<?= site_url('laporan_history_data_vaksinasi') ?>" class="nav-link">History Data Vaksinasi</a></li>
                                     <li><a href="<?= site_url('laporan_pengobatan_ternak') ?>" class="nav-link">Pengobatan Ternak</a></li>
                                     <li><a href="<?= site_url('laporan_penjual_pakan_ternak') ?>" class="nav-link">Penjual Pakan Ternak</a></li>
-                                    <li><a href="<?= site_url('laporan_data_klinik_hewan') ?>" class="nav-link active">Data Klinik Hewan</a></li>
+                                    <li><a href="<?= site_url('laporan_data_klinik_hewan') ?>" class="nav-link">Data Klinik Hewan</a></li>
                                     <li><a href="<?= site_url('laporan_penjual_obat_hewan') ?>" class="nav-link">Penjual Obat Hewan</a></li>
                                     <li><a href="<?= site_url('laporan_data_tpu_rpu') ?>" class="nav-link">Data TPU / RPU</a></li>
                                     <li><a href="<?= site_url('laporan_demplot_peternakan') ?>" class="nav-link">Demplot Peternakan</a></li>
@@ -389,8 +136,8 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url(); ?>peta_sebaran">
-                                <i class="fas fa-map-marked-alt"></i>
+                            <a href="<?= site_url('peta_sebaran') ?>" class="nav-link">
+                                <i class="fas fa-map-marked-alt" style="color: #832706 !important;"></i>
                                 <p>Peta Sebaran</p>
                             </a>
                         </li>
@@ -406,23 +153,10 @@
                 <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
                     <div class="container-fluid">
                         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
-                            <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" aria-haspopup="true">
-                                    <i class="fa fa-search"></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-search animated fadeIn">
-                                    <form class="navbar-left navbar-form nav-search">
-                                        <div class="input-group">
-                                            <input type="text" placeholder="Search ..." class="form-control" />
-                                        </div>
-                                    </form>
-                                </ul>
-                            </li>
-
                             <li class="nav-item topbar-user dropdown hidden-caret">
                                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                                     <div class="avatar-sm">
-                                        <img src="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/logo dkpp.png" alt="..." class="avatar-img rounded-circle" />
+                                        <img src="<?php echo base_url('assets/SIPETGIS/assets/img/logo dkpp.png'); ?>" alt="..." class="avatar-img rounded-circle" />
                                     </div>
                                     <span class="profile-username">
                                         <span class="fw-bold">Administrator</span>
@@ -440,7 +174,7 @@
                                         </li>
                                         <li>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="<?php echo base_url(); ?>login">
+                                            <a class="dropdown-item" href="<?php echo base_url(); ?>login/logout">
                                                 <i class="fas fa-sign-out-alt me-2"></i>Keluar
                                             </a>
                                         </li>
@@ -474,7 +208,7 @@
                     <!-- Page Header -->
                     <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                         <div>
-                            <h3 class="fw-bold mb-1">Master Data</h3>
+                            <h3 class="fw-bold mb-1" style="color: #832706; font-weight: 900;">Master RPU</h3>
                             <h6 class="op-7 mb-0">Kelola Data Rumah Potong Unggas (RPU)</h6>
                         </div>
                         <div class="ms-md-auto py-2 py-md-0">
@@ -702,15 +436,11 @@
     </div>
     
     <!-- Core JS Files -->
-    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/jquery-3.7.1.min.js"></script>
-    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/popper.min.js"></script>
-    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/bootstrap.min.js"></script>
-
-    <!-- jQuery Scrollbar -->
-    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-
-    <!-- Kaiadmin JS -->
-    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/kaiadmin.min.js"></script>
+    <script src="<?php echo base_url('assets/SIPETGIS/assets/js/core/jquery-3.7.1.min.js'); ?>"></script>
+    <script src="<?php echo base_url('assets/SIPETGIS/assets/js/core/popper.min.js'); ?>"></script>
+    <script src="<?php echo base_url('assets/SIPETGIS/assets/js/core/bootstrap.min.js'); ?>"></script>
+    <script src="<?php echo base_url('assets/SIPETGIS/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js'); ?>"></script>
+    <script src="<?php echo base_url('assets/SIPETGIS/assets/js/kaiadmin.min.js'); ?>"></script>
     
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -725,222 +455,8 @@
     
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <script>
-        // Variabel untuk menyimpan instance map
-        let map, editMap, viewMap;
-        let marker, editMarker, viewMarker;
-
-        // Fungsi untuk inisialisasi map
-        function initMap(containerId, lat, lng, mapRef) {
-            if (mapRef) {
-                mapRef.remove();
-            }
-            
-            const defaultLat = -7.2574719;
-            const defaultLng = 112.7520883;
-            
-            const mapLat = (lat && !isNaN(parseFloat(lat))) ? parseFloat(lat) : defaultLat;
-            const mapLng = (lng && !isNaN(parseFloat(lng))) ? parseFloat(lng) : defaultLng;
-            
-            const newMap = L.map(containerId).setView([mapLat, mapLng], 13);
-            
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(newMap);
-            
-            if (lat && lng && !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lng))) {
-                const newMarker = L.marker([parseFloat(lat), parseFloat(lng)]).addTo(newMap);
-                return { map: newMap, marker: newMarker };
-            }
-            
-            return { map: newMap, marker: null };
-        }
-
-        // Fungsi untuk update marker
-        function updateMarker(mapInstance, markerRef, lat, lng) {
-            if (!mapInstance) return null;
-            
-            const latNum = parseFloat(lat);
-            const lngNum = parseFloat(lng);
-            
-            if (isNaN(latNum) || isNaN(lngNum)) return markerRef;
-            
-            mapInstance.setView([latNum, lngNum], 15);
-            
-            if (markerRef) {
-                markerRef.setLatLng([latNum, lngNum]);
-                return markerRef;
-            } else {
-                return L.marker([latNum, lngNum]).addTo(mapInstance);
-            }
-        }
-
-        $(document).ready(function () {
-            // Inisialisasi DataTable dengan warna tombol yang sama seperti referensi
-            var table = $("#rpuTable").DataTable({
-                dom: "Bfrtip",
-                buttons: [
-                    {
-                        extend: "copy",
-                        text: '<i class="fas fa-copy"></i> Copy',
-                        className: 'btn btn-sm btn-primary'
-                    },
-                    {
-                        extend: "csv",
-                        text: '<i class="fas fa-file-csv"></i> CSV',
-                        className: 'btn btn-sm btn-success'
-                    },
-                    {
-                        extend: "excel",
-                        text: '<i class="fas fa-file-excel"></i> Excel',
-                        className: 'btn btn-sm btn-success'
-                    },
-                    {
-                        extend: "pdf",
-                        text: '<i class="fas fa-file-pdf"></i> PDF',
-                        className: 'btn btn-sm btn-danger'
-                    },
-                    {
-                        extend: "print",
-                        text: '<i class="fas fa-print"></i> Print',
-                        className: 'btn btn-sm btn-info'
-                    }
-                ],
-                language: {
-                    search: "Cari:",
-                    lengthMenu: "Tampilkan _MENU_ data",
-                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                    infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
-                    infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
-                    zeroRecords: "Tidak ada data yang ditemukan",
-                    paginate: {
-                        first: "Pertama",
-                        last: "Terakhir",
-                        next: "Berikutnya",
-                        previous: "Sebelumnya"
-                    }
-                },
-                pageLength: 10,
-                lengthChange: true,
-                lengthMenu: [5, 10, 25, 50, 100],
-                responsive: true,
-                order: [[1, 'asc']]
-            });
-
-            // Event untuk tombol lihat koordinat
-            $(document).on("click", ".btn-view", function () {
-                var pejagal = $(this).data('pejagal');
-                var latitude = $(this).data('latitude');
-                var longitude = $(this).data('longitude');
-                
-                $('#view_pejagal').val(pejagal);
-                $('#view_latitude').val(latitude || '-');
-                $('#view_longitude').val(longitude || '-');
-                
-                $('#viewKoordinatModal').modal('show');
-                
-                setTimeout(function() {
-                    if (viewMap) {
-                        viewMap.remove();
-                    }
-                    const result = initMap('viewMapPreview', latitude, longitude, viewMap);
-                    viewMap = result.map;
-                    viewMarker = result.marker;
-                }, 500);
-            });
-
-            // Event untuk tombol edit
-            $(document).on("click", ".btn-edit", function () {
-                var pejagal = $(this).data('pejagal');
-                var latitude = $(this).data('latitude');
-                var longitude = $(this).data('longitude');
-                
-                $('#edit_pejagal_lama').val(pejagal);
-                $('#edit_pejagal').val(pejagal);
-                $('#edit_latitude').val(latitude);
-                $('#edit_longitude').val(longitude);
-                
-                $('#editDataModal').modal('show');
-            });
-
-            // Event untuk tombol hapus
-            $(document).on("click", ".btn-delete", function () {
-                var pejagal = $(this).data('pejagal');
-                
-                if (confirm("Apakah Anda yakin ingin menghapus data RPU: " + pejagal + "?")) {
-                    window.location.href = "<?= base_url('rpu/hapus/'); ?>" + encodeURIComponent(pejagal);
-                }
-            });
-
-            // Event ketika modal tambah ditampilkan
-            $('#tambahDataModal').on('shown.bs.modal', function () {
-                setTimeout(function() {
-                    if (map) {
-                        map.remove();
-                    }
-                    const lat = $('#latitude').val();
-                    const lng = $('#longitude').val();
-                    const result = initMap('mapPreview', lat, lng, map);
-                    map = result.map;
-                    marker = result.marker;
-                }, 500);
-            });
-
-            // Event ketika modal edit ditampilkan
-            $('#editDataModal').on('shown.bs.modal', function () {
-                setTimeout(function() {
-                    if (editMap) {
-                        editMap.remove();
-                    }
-                    const lat = $('#edit_latitude').val();
-                    const lng = $('#edit_longitude').val();
-                    const result = initMap('editMapPreview', lat, lng, editMap);
-                    editMap = result.map;
-                    editMarker = result.marker;
-                }, 500);
-            });
-
-            // Update map preview saat latitude/longitude berubah di modal tambah
-            $('#latitude, #longitude').on('input', function() {
-                if (map) {
-                    const lat = $('#latitude').val();
-                    const lng = $('#longitude').val();
-                    marker = updateMarker(map, marker, lat, lng);
-                }
-            });
-
-            // Update map preview saat latitude/longitude berubah di modal edit
-            $('#edit_latitude, #edit_longitude').on('input', function() {
-                if (editMap) {
-                    const lat = $('#edit_latitude').val();
-                    const lng = $('#edit_longitude').val();
-                    editMarker = updateMarker(editMap, editMarker, lat, lng);
-                }
-            });
-
-            // Validasi input koordinat (hanya angka, titik, dan minus)
-            $('input[name="latitude"], input[name="longitude"], #edit_latitude, #edit_longitude').on('input', function() {
-                let value = $(this).val();
-                value = value.replace(/[^0-9.-]/g, '');
-                
-                const parts = value.split('.');
-                if (parts.length > 2) {
-                    value = parts[0] + '.' + parts.slice(1).join('');
-                }
-                
-                if (value.indexOf('-') > 0) {
-                    value = value.replace(/-/g, '');
-                }
-                 
-                $(this).val(value);
-            });
-
-            // Auto close alerts
-            setTimeout(function() {
-                $('.alert').alert('close');
-            }, 5000);
-        });
-    </script>
+    
+    <!-- Custom JS RPU -->
+    <script src="<?php echo base_url('assets/js/rpu.js'); ?>"></script>
 </body>
 </html>

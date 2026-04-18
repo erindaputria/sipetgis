@@ -18,7 +18,7 @@ class P_Input_Pemotongan_Unggas extends CI_Controller {
         
         $this->load->model('P_Input_Pemotongan_Unggas_Model');
     }
-
+ 
     public function index() {
         $data['pemotongan_data'] = $this->P_Input_Pemotongan_Unggas_Model->get_all_pemotongan();
         $data['user_kecamatan'] = $this->session->userdata('kecamatan') ?: 'Benowo';

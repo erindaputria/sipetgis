@@ -175,16 +175,16 @@
                                         </li>
                                         <li>
                                             <div class="dropdown-divider"></div>
-                                            <a href="<?= site_url('login') ?>" class="nav-link">
+                                            <a href="<?= site_url('login/logout') ?>" class="nav-link">
                                                 <i class="fas fa-sign-out-alt me-2"></i>Keluar
                                             </a>
                                         </li>
                                     </div>
-                                </ul>
+                                </ul> 
                             </li>
                         </ul>
                     </div>
-                </nav>
+                </nav> 
             </div>
 
             <div class="container">

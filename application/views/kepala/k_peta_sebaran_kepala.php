@@ -732,46 +732,23 @@
                   <i class="fas fa-chevron-down ms-2"></i>
                 </a>
                 <div class="collapse" id="laporanSubmenu">
-                  <ul class="list-unstyled ps-4">
-                    <li>
-                      <a href="<?php echo site_url('k_laporan_kepala/kepemilikan_ternak'); ?>" class="nav-link">Kepemilikan Ternak</a>
-                    </li>
-                    <li>
-                      <a href="<?php echo site_url('k_laporan_kepala/history_data_ternak'); ?>" class="nav-link">History Data Ternak</a>
-                    </li>
-                    <li>
-                      <a href="<?php echo site_url('k_laporan_kepala/vaksinasi'); ?>" class="nav-link">Vaksinasi</a>
-                    </li>
-                    <li>
-                      <a href="<?php echo site_url('k_laporan_kepala/history_vaksinasi'); ?>" class="nav-link">History Data Vaksinasi</a>
-                    </li>
-                    <li>
-                      <a href="<?php echo site_url('k_laporan_kepala/pengobatan_ternak'); ?>" class="nav-link">Pengobatan Ternak</a>
-                    </li>
-                    <li>
-                      <a href="<?php echo site_url('k_laporan_kepala/penjual_pakan'); ?>" class="nav-link">Penjual Pakan Ternak</a>
-                    </li>
-                    <li>
-                      <a href="<?php echo site_url('k_laporan_kepala/data_klinik_hewan'); ?>" class="nav-link">Data Klinik Hewan</a>
-                    </li>
-                    <li>
-                      <a href="<?php echo site_url('k_laporan_kepala/penjual_obat_hewan'); ?>" class="nav-link">Penjual Obat Hewan</a>
-                    </li>
-                    <li>
-                      <a href="<?php echo site_url('k_laporan_kepala/data_tpu_rpu'); ?>" class="nav-link">Data TPU / RPU</a>
-                    </li>
-                    <li>
-                      <a href="<?php echo site_url('k_laporan_kepala/demplot_peternakan'); ?>" class="nav-link">Demplot Peternakan</a>
-                    </li>
-                    <li>
-                      <a href="<?php echo site_url('k_laporan_kepala/stok_pakan'); ?>" class="nav-link">Stok Pakan</a>
-                    </li>
-                    
-                  </ul>
+                   <ul class="list-unstyled ps-4">
+                                    <li><a href="<?= site_url('k_laporan_kepala/kepemilikan_ternak') ?>" class="nav-link">Kepemilikan Ternak</a></li>
+                                    <li><a href="<?= site_url('k_laporan_kepala/history_data_ternak') ?>" class="nav-link">History Data Ternak</a></li>
+                                    <li><a href="<?= site_url('k_laporan_kepala/vaksinasi') ?>" class="nav-link">Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('k_laporan_kepala/history_vaksinasi') ?>" class="nav-link">History Data Vaksinasi</a></li>
+                                    <li><a href="<?= site_url('k_laporan_kepala/pengobatan_ternak') ?>" class="nav-link">Pengobatan Ternak</a></li>
+                                    <li><a href="<?= site_url('k_laporan_kepala/penjual_pakan') ?>" class="nav-link">Penjual Pakan Ternak</a></li>
+                                    <li><a href="<?= site_url('k_laporan_kepala/data_klinik_hewan') ?>" class="nav-link">Data Klinik Hewan</a></li>
+                                    <li><a href="<?= site_url('k_laporan_kepala/penjual_obat_hewan') ?>" class="nav-link">Penjual Obat Hewan</a></li>
+                                    <li><a href="<?= site_url('k_laporan_kepala/data_tpu_rpu') ?>" class="nav-link">Data TPU / RPU</a></li>
+                                    <li><a href="<?= site_url('k_laporan_kepala/demplot_peternakan') ?>" class="nav-link">Demplot Peternakan</a></li>
+                                    <li><a href="<?= site_url('k_laporan_kepala/stok_pakan') ?>" class="nav-link">Stok Pakan</a></li>
+                                </ul>
                 </div>
               </li>
                         <li class="nav-item active">
-                            <a href="<?= site_url('peta_sebaran') ?>">
+                            <a href="<?= site_url('k_peta_sebaran_kepala') ?>">
                                 <i class="fas fa-map-marked-alt"></i>
                                 <p>Peta Sebaran</p>
                             </a>
@@ -787,29 +764,31 @@
                     <div class="container-fluid">
                         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
                             <li class="nav-item topbar-user dropdown hidden-caret">
-                                <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#">
+                                <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                                     <div class="avatar-sm">
-                                        <img src="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/logo dkpp.png" class="avatar-img rounded-circle">
+                                        <img src="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/logo dkpp.png" alt="..." class="avatar-img rounded-circle" />
                                     </div>
                                     <span class="profile-username">
-                                        <span class="fw-bold">Administrator</span>
+                                        <span class="fw-bold" style="color: #000000 !important;">Kepala Dinas DKPP Surabaya</span>
                                     </span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-user animated fadeIn">
-                                    <li>
-                                        <div class="user-box">
-                                            <div class="u-text">
-                                                <h4>Administrator</h4>
-                                                <p class="text-muted">admin@dkppsby.go.id</p>
+                                    <div class="dropdown-user-scroll scrollbar-outer">
+                                        <li> 
+                                            <div class="user-box">
+                                                <div class="u-text">
+                                                    <h4>Dinas Ketahanan Pangan dan Pertanian (DKPP) Kota Surabaya</h4>
+                                                    <p class="text-muted">kepala@dkppsby.go.id</p>
+                                                </div> 
                                             </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="<?php echo base_url(); ?>login">
-                                            <i class="fas fa-sign-out-alt me-2"></i>Keluar
-                                        </a>
-                                    </li>
+                                        </li>
+                                        <li>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="<?php echo site_url('login/logout'); ?>" style="text-decoration: none">
+                                                <i class="fas fa-sign-out-alt me-2"></i>Keluar
+                                            </a>
+                                        </li>
+                                    </div>
                                 </ul>
                             </li>
                         </ul>

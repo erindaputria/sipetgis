@@ -31,10 +31,25 @@
     color: var(--primary);
 }
 
-/* Sidebar Ikon */
-.sidebar .nav-secondary i,
+/* ========== SIDEBAR ICON ========== */
+.sidebar .nav-secondary .nav-item > a i,
+.sidebar .nav-secondary .nav-link i,
 .nav-secondary i,
-.nav-item i {
+.nav-item i,
+.fa-home,
+.fa-home::before,
+.fa-chart-bar,
+.fa-chart-line,
+.fa-chart-pie,
+.fa-database,
+.fa-users,
+.fa-map-marked-alt,
+.fa-map-marker-alt,
+.sidebar .nav-secondary .collapse .nav-link i,
+.fa-chevron-down,
+.fa-chevron-right,
+.fa-chevron-left,
+.fa-chevron-up {
     color: var(--primary) !important;
 }
 
@@ -125,31 +140,29 @@ table.dataTable tbody tr:hover {
     color: white;
 }
 
-/* Tombol Export - Semua Warna Dasar */
-.dt-buttons .btn,
-.dt-buttons .btn-primary,
-.dt-buttons .btn-success,
-.dt-buttons .btn-danger,
+/* Tombol Export - WARNA BERBEDA */
+.dt-buttons .btn-primary {
+    background-color: #832706 !important;
+    border-color: #832706 !important;
+    color: white !important;
+}
+
+.dt-buttons .btn-success {
+    background-color: #198754 !important;
+    border-color: #198754 !important;
+    color: white !important;
+}
+
+.dt-buttons .btn-danger {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: white !important;
+}
+
 .dt-buttons .btn-info {
-    background: linear-gradient(135deg, #832706 0%, #6b1f04 100%) !important;
-    border: none !important;
+    background-color: #0dcaf0 !important;
+    border-color: #0dcaf0 !important;
     color: white !important;
-    border-radius: 6px !important;
-    padding: 6px 15px !important;
-    font-weight: 500 !important;
-    transition: all 0.3s !important;
-}
-
-.dt-buttons .btn:hover {
-    background: linear-gradient(135deg, #6b1f04 0%, #541802 100%) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(131, 39, 6, 0.3) !important;
-    color: white !important;
-}
-
-.dt-buttons .btn i {
-    color: white !important;
-    margin-right: 5px;
 }
 
 /* Pagination */
@@ -187,22 +200,15 @@ table.dataTable tbody tr:hover {
     color: white;
 }
 
-/* Tombol Modal Primary */
+/* Tombol Modal */
 .btn-primary {
-    background: linear-gradient(135deg, #832706 0%, #6b1f04 100%) !important;
-    border: none !important;
-    color: white !important;
-    border-radius: 6px !important;
-    padding: 8px 20px !important;
-    font-weight: 500 !important;
-    transition: all 0.3s !important;
+    background-color: #832706 !important;
+    border-color: #832706 !important;
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, #6b1f04 0%, #541802 100%) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(131, 39, 6, 0.3) !important;
-    color: white !important;
+    background-color: #6b1f04 !important;
+    border-color: #6b1f04 !important;
 }
 
 /* Alert */
@@ -224,6 +230,15 @@ table.dataTable tbody tr:hover {
 .card {
     border-radius: 16px;
     border: 1px solid #eef2f6;
+}
+
+/* Modal Header */
+.modal-header {
+    border-bottom: 2px solid #832706 !important;
+}
+
+.modal-header .modal-title {
+    color: #832706 !important;
 }
 
 /* Responsive */

@@ -20,7 +20,7 @@ class P_Input_Pemotongan_Unggas_Model extends CI_Model {
     
     /**
      * Get all pemotongan
-     */
+     */ 
     public function get_all_pemotongan() {
         $this->db->select('*');
         $this->db->from($this->table);

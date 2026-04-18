@@ -11,22 +11,18 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
         $this->load->library('form_validation');
         $this->load->helper(array('form', 'url', 'file')); 
         
-        // CEK SESSION LOGIN
+        // Check session login
         if (!$this->session->userdata('logged_in')) {
             redirect('login');
         }
         
         $this->load->model('P_Input_Pelaku_Usaha_Model');
-        
-        // Enable error reporting untuk debug
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
     }
 
     public function index() {
         $user_kecamatan = $this->session->userdata('kecamatan') ?: 'Benowo';
         
-        // Cek apakah ada parameter tahun
+        // Check if there's a year parameter
         $tahun = $this->input->get('tahun');
         if ($tahun && $tahun != 'all') {
             $data['pelaku_usaha_data'] = $this->P_Input_Pelaku_Usaha_Model->get_by_periode($tahun, $user_kecamatan);
@@ -37,17 +33,13 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
         $data['kel_list'] = $this->get_all_kelurahan();
         $data['user_kecamatan'] = $user_kecamatan;
         
-        // CSRF token
-        $data['csrf_name'] = $this->security->get_csrf_token_name();
-        $data['csrf_hash'] = $this->security->get_csrf_hash();
-        
         $this->load->view('petugas/p_input_pelaku_usaha', $data);
     }
     
     private function get_all_kelurahan() {
         return array(
-            'ASEMROWO' => array('Asemrowo', 'Genting Kalianak', 'Tambak Sarioso'),
             'BENOWO' => array('Benowo', 'Kandangan', 'Romokalisari', 'Sememi', 'Tambak Osowilangun'),
+            'ASEMROWO' => array('Asemrowo', 'Genting Kalianak', 'Tambak Sarioso'),
             'BUBUTAN' => array('Bubutan', 'Alun-alun Contong', 'Gundih', 'Jepara', 'Tembok Dukuh'),
             'BULAK' => array('Bulak', 'Kedung Cowek', 'Kenjeran', 'Sukolilo Baru'),
             'DUKUH PAKIS' => array('Dukuh Pakis', 'Dukuh Kupang', 'Gunung Sari', 'Pradah Kalikendal'),
@@ -81,18 +73,19 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
     }
 
     public function save() {
-        // Set response header
+        // Enable error reporting
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+        
         header('Content-Type: application/json');
         
+        // Debug log
+        error_log("=== SAVE METHOD STARTED ===");
+        error_log("POST: " . print_r($this->input->post(), true));
+        error_log("FILES: " . print_r($_FILES, true));
+        
         try {
-            // Skip CSRF verification for this method
-            $this->security->csrf_verify = false;
-            
-            // Debug: Log received data
-            log_message('debug', 'POST Data: ' . print_r($this->input->post(), true));
-            log_message('debug', 'FILES Data: ' . print_r($_FILES, true));
-            
-            // Validasi form
+            // Set validation rules
             $this->form_validation->set_rules('nama', 'Nama Pelaku Usaha', 'required|trim|min_length[3]|max_length[255]');
             $this->form_validation->set_rules('nik', 'NIK', 'required|trim|exact_length[16]|numeric');
             $this->form_validation->set_rules('telepon', 'Telepon', 'trim|min_length[10]|max_length[15]|numeric');
@@ -104,6 +97,7 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
 
             if ($this->form_validation->run() == FALSE) {
                 $errors = validation_errors();
+                error_log("Validation errors: " . $errors);
                 echo json_encode(array(
                     'status' => 'error',
                     'message' => strip_tags($errors)
@@ -111,11 +105,14 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
                 return;
             }
 
-            // Cek NIK sudah terdaftar atau belum
+            // Check if NIK already exists
             $nik = $this->input->post('nik');
+            error_log("Checking NIK: " . $nik);
+            
             $existing = $this->P_Input_Pelaku_Usaha_Model->check_nik($nik);
             
             if ($existing) {
+                error_log("NIK already exists for: " . $existing['nama']);
                 echo json_encode(array(
                     'status' => 'error',
                     'message' => 'NIK ' . $nik . ' sudah terdaftar atas nama ' . $existing['nama']
@@ -123,19 +120,22 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
                 return;
             }
 
-            // Upload foto
+            // Handle photo upload
             $foto_name = NULL;
-            if (isset($_FILES['foto']) && $_FILES['foto']['error'] != 4) {
+            if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
+                error_log("Processing photo upload");
                 
-                $upload_path = './uploads/pelaku_usaha/';
+                $upload_path = FCPATH . 'uploads/pelaku_usaha/';
+                error_log("Upload path: " . $upload_path);
                 
                 if (!is_dir($upload_path)) {
                     mkdir($upload_path, 0777, TRUE);
+                    error_log("Created directory: " . $upload_path);
                 }
 
                 $config['upload_path'] = $upload_path;
                 $config['allowed_types'] = 'jpg|jpeg|png';
-                $config['max_size'] = 5120; // 5MB
+                $config['max_size'] = 5120;
                 $config['encrypt_name'] = TRUE;
                 
                 $this->upload->initialize($config);
@@ -143,17 +143,21 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
                 if ($this->upload->do_upload('foto')) {
                     $upload_data = $this->upload->data();
                     $foto_name = $upload_data['file_name'];
+                    error_log("Photo uploaded: " . $foto_name);
                 } else {
                     $error = $this->upload->display_errors();
+                    error_log("Upload error: " . $error);
                     echo json_encode(array(
                         'status' => 'error',
                         'message' => 'Gagal upload foto: ' . strip_tags($error)
                     ));
                     return;
                 }
+            } else {
+                error_log("No photo to upload");
             }
 
-            // Ambil nama petugas dari session
+            // Get petugas name from session
             $nama_petugas = $this->session->userdata('nama');
             if (empty($nama_petugas)) {
                 $nama_petugas = $this->session->userdata('username');
@@ -161,8 +165,9 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
             if (empty($nama_petugas)) {
                 $nama_petugas = 'Petugas Lapangan';
             }
+            error_log("Petugas name: " . $nama_petugas);
 
-            // Data sesuai dengan struktur tabel
+            // Prepare data - ALL columns that exist in your table
             $data = array(
                 'nama' => $this->input->post('nama'),
                 'nik' => $nik,
@@ -176,19 +181,20 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
                 'longitude' => $this->input->post('longitude'),
                 'foto' => $foto_name
             );
+            
+            error_log("Data to save: " . print_r($data, true));
 
-            // Debug: Log data yang akan disimpan
-            log_message('debug', 'Data to save: ' . print_r($data, true));
-
-            if ($this->P_Input_Pelaku_Usaha_Model->save_pelaku_usaha($data)) {
-                $foto_msg = $foto_name ? ' dan 1 foto' : ' (tanpa foto)';
+            $result = $this->P_Input_Pelaku_Usaha_Model->save_pelaku_usaha($data);
+            
+            if ($result) {
+                $foto_msg = $foto_name ? ' dan 1 foto' : '';
                 echo json_encode(array(
                     'status' => 'success',
                     'message' => 'Data pelaku usaha berhasil disimpan' . $foto_msg
                 ));
             } else {
                 $db_error = $this->db->error();
-                log_message('error', 'Database error: ' . print_r($db_error, true));
+                error_log("Database error: " . print_r($db_error, true));
                 echo json_encode(array(
                     'status' => 'error',
                     'message' => 'Gagal menyimpan data: ' . $db_error['message']
@@ -196,10 +202,11 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
             }
             
         } catch (Exception $e) {
-            log_message('error', 'Exception in save: ' . $e->getMessage());
+            error_log("Exception: " . $e->getMessage());
+            error_log("Trace: " . $e->getTraceAsString());
             echo json_encode(array(
                 'status' => 'error',
-                'message' => 'Error: ' . $e->getMessage()
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
             ));
         }
     }
@@ -262,3 +269,4 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
         }
     }
 }
+?>

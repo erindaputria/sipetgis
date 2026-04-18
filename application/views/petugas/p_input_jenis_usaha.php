@@ -551,15 +551,13 @@
                                                                             <td>
                                                                                 <select class="form-control jenis_usaha" name="jenis_usaha[]" required>
                                                                                     <option value="">Pilih Jenis Usaha</option>
-                                                                                    <option value="Peternakan">Peternakan</option>
-                                                                                    <option value="Perdagangan Ternak">Perdagangan Ternak</option>
-                                                                                    <option value="Penggemukan">Penggemukan</option>
-                                                                                    <option value="Pembibitan">Pembibitan</option>
-                                                                                    <option value="Pemotongan">Pemotongan</option>
-                                                                                    <option value="Distributor Pakan">Distributor Pakan</option>
-                                                                                    <option value="Distributor Obat Hewan">Distributor Obat Hewan</option>
-                                                                                    <option value="Klinik Hewan">Klinik Hewan</option>
-                                                                                    <option value="Peternakan dan Perdagangan">Peternakan dan Perdagangan</option>
+                                                                                    <option value="Peternak Ayam">Peternak Ayam</option>
+                                                                                    <option value="Peternak Domba">Peternak Domba</option>
+                                                                                    <option value="Peternak Kambing">Peternak Kambing</option>
+                                                                                    <option value="Peternak Kerbau">Peternak Kerbau</option>
+                                                                                    <option value="Peternak Kuda">Peternak Kuda</option>
+                                                                                    <option value="Peternak Sapi">Peternak Sapi</option>
+                                                                                    <option value="Peternak Unggas">Peternak Unggas</option>
                                                                                     <option value="Lainnya">Lainnya</option>
                                                                                 </select>
                                                                             </td>
@@ -1100,15 +1098,13 @@
                     <td>
                         <select class="form-control jenis_usaha" name="jenis_usaha[]" required>
                             <option value="">Pilih Jenis Usaha</option>
-                            <option value="Peternakan">Peternakan</option>
-                            <option value="Perdagangan Ternak">Perdagangan Ternak</option>
-                            <option value="Penggemukan">Penggemukan</option>
-                            <option value="Pembibitan">Pembibitan</option>
-                            <option value="Pemotongan">Pemotongan</option>
-                            <option value="Distributor Pakan">Distributor Pakan</option>
-                            <option value="Distributor Obat Hewan">Distributor Obat Hewan</option>
-                            <option value="Klinik Hewan">Klinik Hewan</option>
-                            <option value="Peternakan dan Perdagangan">Peternakan dan Perdagangan</option>
+                            <option value="Peternak Ayam">Peternak Ayam</option>
+                            <option value="Peternak Domba">Peternak Domba</option>
+                            <option value="Peternak Kambing">Peternak Kambing</option>
+                            <option value="Peternak Kerbau">Peternak Kerbau</option>
+                            <option value="Peternak Kuda">Peternak Kuda</option>
+                            <option value="Peternak Sapi">Peternak Sapi</option>
+                            <option value="Peternak Unggas">Peternak Unggas</option>
                             <option value="Lainnya">Lainnya</option>
                         </select>
                     </td>

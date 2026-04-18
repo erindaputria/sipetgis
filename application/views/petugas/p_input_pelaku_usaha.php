@@ -35,7 +35,6 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
 
     <style>
-        /* CSS DASAR */
         .form-header {
             background: linear-gradient(90deg, #1a73e8 0%, #0d47a1 100%);
             color: white;
@@ -44,7 +43,6 @@
             margin-bottom: 20px;
         }
         
-        /* Form Container */
         .form-container {
             display: none;
             transition: all 0.5s ease;
@@ -197,24 +195,23 @@
             word-wrap: break-word;
         }
         
-        /* DataTables Custom Style */
         .dataTables_wrapper {
             padding: 10px 0;
         }
-
+        
         .dataTables_length select {
             border-radius: 5px;
             border: 1px solid #dee2e6;
             padding: 5px 10px;
         }
-
+        
         .dataTables_filter input {
             border-radius: 5px;
             border: 1px solid #dee2e6;
             padding: 5px 10px;
             width: 200px;
         }
-
+        
         .dataTables_wrapper .dataTables_length,
         .dataTables_wrapper .dataTables_filter,
         .dataTables_wrapper .dataTables_info,
@@ -228,12 +225,12 @@
             margin: 0 3px;
             border-radius: 6px !important;
         }
-
+        
         .pagination .page-item.active .page-link {
             background-color: #4361ee;
             color: white;
         }
-
+        
         .pagination .page-link:hover {
             background-color: #f8f9fa;
         }
@@ -248,10 +245,6 @@
         
         .is-invalid ~ .invalid-feedback {
             display: block;
-        }
-        
-        .dataTables_empty {
-            display: none;
         }
     </style>
 </head>
@@ -319,32 +312,29 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                  <a href="<?php echo base_url(); ?>p_input_rpu">
-                      <i class="fas fa-chart-line"></i>
-                      <p>RPU</p>
-                  </a>
-              </li>
-
-              <li class="nav-item">
-                  <a href="<?php echo base_url(); ?>p_input_pemotongan_unggas">
-                      <i class="fas fa-cut"></i>
-                      <p>Pemotongan Unggas</p> 
-                  </a>
-              </li>
-
-              <li class="nav-item">
-                  <a href="<?php echo base_url(); ?>p_input_demplot">
-                      <i class="fas fa-seedling"></i>
-                      <p>Demplot</p>
-                  </a>
-              </li>
-
-              <li class="nav-item">
-                  <a href="<?php echo base_url(); ?>p_input_stok_pakan">
-                      <i class="fas fa-warehouse"></i>
-                      <p>Stok Pakan</p>
-                  </a>
-              </li>
+                            <a href="<?php echo base_url(); ?>p_input_rpu">
+                                <i class="fas fa-chart-line"></i>
+                                <p>RPU</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo base_url(); ?>p_input_pemotongan_unggas">
+                                <i class="fas fa-cut"></i>
+                                <p>Pemotongan Unggas</p> 
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo base_url(); ?>p_input_demplot">
+                                <i class="fas fa-seedling"></i>
+                                <p>Demplot</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo base_url(); ?>p_input_stok_pakan">
+                                <i class="fas fa-warehouse"></i>
+                                <p>Stok Pakan</p>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -405,7 +395,6 @@
                     <!-- Action Card + Input -->
                     <div class="row mt-4">
                         <div class="col-md-12">
-                            <!-- Card untuk Tombol Input -->
                             <div class="card action-card">
                                 <div class="card-body text-center p-4">
                                     <button type="button" class="btn btn-toggle-form" id="toggleFormBtn">
@@ -414,7 +403,7 @@
                                 </div>
                             </div>
 
-                            <!-- Form Container - AWALNYA HIDDEN -->
+                            <!-- Form Container -->
                             <div class="form-container" id="formContainer">
                                 <div class="card form-card">
                                     <div class="card-header">
@@ -422,17 +411,13 @@
                                     </div>
                                     <div class="card-body">
                                         <form id="formPelakuUsaha" enctype="multipart/form-data">
-                                            <input type="hidden" name="<?php echo $csrf_name; ?>" value="<?php echo $csrf_hash; ?>">
-                                            
                                             <div class="row">
-                                                <!-- Nama -->
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label required-field">Nama Pelaku Usaha</label>
                                                     <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan nama lengkap" required />
                                                     <div class="invalid-feedback">Nama pelaku usaha harus diisi</div>
                                                 </div>
 
-                                                <!-- NIK -->
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label required-field">NIK</label>
                                                     <input type="text" class="form-control" id="nik" name="nik" placeholder="16 digit NIK" maxlength="16" required />
@@ -441,7 +426,6 @@
                                                     <div id="nik-status" class="mt-1"></div>
                                                 </div>
 
-                                                <!-- Telepon -->
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label">Telepon</label>
                                                     <input type="text" class="form-control" id="telepon" name="telepon" placeholder="Nomor telepon" maxlength="15" />
@@ -470,7 +454,6 @@
                                                                     <input type="text" class="form-control" id="kecamatan" name="kecamatan" value="<?php echo $this->session->userdata('kecamatan') ?: 'Benowo'; ?>" readonly />
                                                                 </div>
 
-                                                                <!-- Kelurahan Dropdown -->
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label required-field">Kelurahan</label>
                                                                     <select class="form-control" id="kelurahan" name="kelurahan" required>
@@ -512,12 +495,12 @@
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label required-field">Latitude</label>
                                                                     <input type="text" class="form-control" id="latitude" name="latitude" placeholder="Latitude akan diambil otomatis" readonly required />
-                                                                    <div class="invalid-feedback">Latitude harus diisi dengan format yang benar (contoh: -7.123456)</div>
+                                                                    <div class="invalid-feedback">Latitude harus diisi</div>
                                                                 </div>
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label required-field">Longitude</label>
                                                                     <input type="text" class="form-control" id="longitude" name="longitude" placeholder="Longitude akan diambil otomatis" readonly required />
-                                                                    <div class="invalid-feedback">Longitude harus diisi dengan format yang benar (contoh: 112.123456)</div>
+                                                                    <div class="invalid-feedback">Longitude harus diisi</div>
                                                                 </div>
                                                                 <div class="col-md-12 mb-3">
                                                                     <button class="btn btn-get-location" type="button" id="btnGetLocation">
@@ -670,13 +653,7 @@
                                         <?php endif; ?>
                                     </tbody>
                                 </table>
-                                
-                                <?php if (empty($pelaku_usaha_data)): ?>
-                                <div class="text-center py-4">
-                                    <p class="text-muted mb-0">Tidak ada data pelaku usaha</p>
-                                </div>
-                                <?php endif; ?>
-                            </div> 
+                            </div>
                         </div>
                     </div>
 
@@ -709,26 +686,19 @@
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 
     <script>
-    // CSRF Token
-    var csrfName = '<?php echo addslashes($csrf_name); ?>';
-    var csrfHash = '<?php echo addslashes($csrf_hash); ?>';
     var baseUrl = '<?php echo base_url(); ?>';
     var userKecamatan = '<?php echo addslashes($this->session->userdata('kecamatan') ?: 'Benowo'); ?>';
 
     $(document).ready(function() {
-        // Nonaktifkan error DataTables
         $.fn.dataTable.ext.errMode = 'none';
         
-        // Inisialisasi DataTable
         var table;
         
         try {
-            // Hancurkan DataTable yang sudah ada jika ada
             if ($.fn.DataTable.isDataTable('#pelakuUsahaTable')) {
                 $('#pelakuUsahaTable').DataTable().destroy();
             }
             
-            // Cek apakah ada data
             var hasData = $('#pelakuUsahaTable tbody tr').length > 0;
             
             if (hasData) {
@@ -753,22 +723,16 @@
                     destroy: true,
                     retrieve: true
                 });
-                console.log('DataTable berhasil diinisialisasi dengan ' + hasData + ' data');
-            } else {
-                console.log('Tidak ada data, DataTable tidak diinisialisasi');
             }
         } catch (e) {
             console.error('Error inisialisasi DataTable:', e);
         }
 
-        // PASTIKAN FORM HIDDEN SAAT PERTAMA KALI
         $('#formContainer').removeClass('show');
         
-        // ========== TOGGLE FORM ==========
         $('#toggleFormBtn').on('click', function() {
             $('#formContainer').toggleClass('show');
             
-            // Ubah teks tombol
             if ($('#formContainer').hasClass('show')) {
                 $(this).html('<i class="fas fa-minus-circle me-2"></i> TUTUP FORM');
             } else {
@@ -776,14 +740,12 @@
             }
         });
 
-        // ========== CANCEL BUTTON ==========
         $('#btnCancel').on('click', function() {
             resetForm();
             $('#formContainer').removeClass('show');
             $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT PELAKU USAHA');
         });
 
-        // ========== GEOLOCATION ==========
         $('#btnGetLocation').on('click', function() {
             if (navigator.geolocation) {
                 let btn = $(this);
@@ -794,11 +756,9 @@
                         let lat = position.coords.latitude.toFixed(6);
                         let lng = position.coords.longitude.toFixed(6);
                         
-                        // Set nilai latitude dan longitude
                         $('#latitude').val(lat).removeClass('is-invalid');
                         $('#longitude').val(lng).removeClass('is-invalid');
                         
-                        // Tampilkan di display
                         $('#latDisplay').text(lat);
                         $('#lngDisplay').text(lng);
                         $('#accuracyInfo').text('Akurasi: ±' + Math.round(position.coords.accuracy) + ' meter');
@@ -836,7 +796,6 @@
             }
         });
 
-        // ========== FOTO UPLOAD ==========
         $('#foto').on('change', function(e) {
             let file = e.target.files[0];
             if (file) {
@@ -868,29 +827,23 @@
             $(this).hide();
         });
 
-        // ========== VALIDASI NIK ==========
         $('#nik').on('input', function() {
             let nik = $(this).val().replace(/\D/g, '').slice(0, 16);
             $(this).val(nik);
             
-            // Cek NIK jika panjangnya 16 digit
             if (nik.length === 16) {
                 checkNIK(nik);
             } else {
                 $('#nik-status').html('');
+                $('#nik').removeClass('is-invalid');
             }
         });
 
-        // Fungsi cek NIK via AJAX
         function checkNIK(nik) {
-            let data = {};
-            data[csrfName] = csrfHash;
-            data.nik = nik;
-            
             $.ajax({
                 url: baseUrl + 'P_Input_Pelaku_Usaha/check_nik',
                 type: 'POST',
-                data: data,
+                data: { nik: nik },
                 dataType: 'json',
                 success: function(res) {
                     if (res.status === 'exist') {
@@ -907,106 +860,94 @@
             });
         }
 
-        // ========== TELEPON VALIDATION ==========
         $('#telepon').on('input', function() {
             let telepon = $(this).val().replace(/\D/g, '');
             $(this).val(telepon);
         });
 
-   // ========== FORM SUBMIT ==========
-$('#formPelakuUsaha').on('submit', function(e) {
-    e.preventDefault();
-    
-    // Validasi sederhana
-    let isValid = true;
-    $('.is-invalid').removeClass('is-invalid');
-    
-    // Validasi field wajib
-    let fields = ['nama', 'nik', 'alamat', 'kelurahan', 'latitude', 'longitude'];
-    fields.forEach(function(id) {
-        let value = $('#' + id).val();
-        if (!value || value.trim() === '') {
-            $('#' + id).addClass('is-invalid');
-            isValid = false;
-        }
-    });
-
-    // Validasi panjang NIK
-    let nikValue = $('#nik').val();
-    if (nikValue.length !== 16) {
-        $('#nik').addClass('is-invalid');
-        isValid = false;
-        showAlert('danger', 'NIK harus 16 digit angka');
-    }
-
-    if (!isValid) {
-        showAlert('danger', 'Harap lengkapi semua field wajib');
-        return;
-    }
-
-    // Submit AJAX
-    let btn = $(this).find('button[type="submit"]');
-    let originalText = btn.html();
-    btn.html('<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...').prop('disabled', true);
-
-    let formData = new FormData(this);
-    // HAPUS baris ini karena CSRF sudah dinonaktifkan di controller
-    // formData.append('<?php echo $csrf_name; ?>', '<?php echo $csrf_hash; ?>');
-
-    $.ajax({
-        url: baseUrl + 'P_Input_Pelaku_Usaha/save',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: 'json',
-        success: function(res) {
-            if (res.status === 'success') {
-                showAlert('success', res.message);
-                resetForm();
-                $('#formContainer').removeClass('show');
-                $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT PELAKU USAHA');
-                
-                // Refresh halaman setelah 1.5 detik
-                setTimeout(function() {
-                    location.reload();
-                }, 1500);
-            } else {
-                showAlert('danger', res.message);
-                btn.html(originalText).prop('disabled', false);
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('AJAX Error:', error);
-            let errorMsg = 'Terjadi kesalahan server. ';
-            try {
-                let response = JSON.parse(xhr.responseText);
-                if (response.message) {
-                    errorMsg = response.message;
+        $('#formPelakuUsaha').on('submit', function(e) {
+            e.preventDefault();
+            
+            let isValid = true;
+            $('.is-invalid').removeClass('is-invalid');
+            
+            let fields = ['nama', 'nik', 'alamat', 'kelurahan', 'latitude', 'longitude'];
+            fields.forEach(function(id) {
+                let value = $('#' + id).val();
+                if (!value || value.trim() === '') {
+                    $('#' + id).addClass('is-invalid');
+                    isValid = false;
                 }
-            } catch(e) {
-                errorMsg += xhr.responseText;
+            });
+
+            let nikValue = $('#nik').val();
+            if (nikValue.length !== 16) {
+                $('#nik').addClass('is-invalid');
+                isValid = false;
+                showAlert('danger', 'NIK harus 16 digit angka');
             }
-            showAlert('danger', errorMsg);
-            btn.html(originalText).prop('disabled', false);
+
+            if (!isValid) {
+                showAlert('danger', 'Harap lengkapi semua field wajib');
+                return;
+            }
+
+            let btn = $(this).find('button[type="submit"]');
+            let originalText = btn.html();
+            btn.html('<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...').prop('disabled', true);
+
+            let formData = new FormData(this);
+
+            $.ajax({
+                url: baseUrl + 'P_Input_Pelaku_Usaha/save',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(res) {
+                    if (res.status === 'success') {
+                        showAlert('success', res.message);
+                        resetForm();
+                        $('#formContainer').removeClass('show');
+                        $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT PELAKU USAHA');
+                        
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1500);
+                    } else {
+                        showAlert('danger', res.message);
+                        btn.html(originalText).prop('disabled', false);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', error);
+                    let errorMsg = 'Terjadi kesalahan server. ';
+                    try {
+                        let response = JSON.parse(xhr.responseText);
+                        if (response.message) {
+                            errorMsg = response.message;
+                        }
+                    } catch(e) {
+                        errorMsg += xhr.responseText;
+                    }
+                    showAlert('danger', errorMsg);
+                    btn.html(originalText).prop('disabled', false);
+                }
+            });
+        });
+
+        function resetForm() {
+            $('#formPelakuUsaha')[0].reset();
+            $('#kecamatan').val(userKecamatan);
+            $('#coordinateInfo').hide();
+            $('#photoPreview').hide();
+            $('#photoPlaceholder').show();
+            $('#btnRemovePhoto').hide();
+            $('#nik-status').html('');
+            $('.is-invalid').removeClass('is-invalid');
         }
-    });
-});
 
-       // ========== RESET FORM ==========
-function resetForm() {
-    $('#formPelakuUsaha')[0].reset();
-    $('#kecamatan').val(userKecamatan);
-    $('#coordinateInfo').hide();
-    $('#photoPreview').hide();
-    $('#photoPlaceholder').show();
-    $('#btnRemovePhoto').hide();
-    $('#nik-status').html('');
-    $('.is-invalid').removeClass('is-invalid');
-    // Hapus setting untuk created_at dan updated_at
-}
-
-        // ========== ALERT ==========
         function showAlert(type, message) {
             $('#alert-container').html(`
                 <div class="alert alert-${type} alert-dismissible fade show">
@@ -1017,24 +958,20 @@ function resetForm() {
             setTimeout(() => $('.alert').alert('close'), 5000);
         }
 
-        // ========== SHOW FOTO MODAL ==========
         window.showFoto = function(url) {
             $('#fotoModalImg').attr('src', url);
             $('#fotoModal').modal('show');
         };
 
-        // ========== FILTER ==========
         $('#filterBtn').on('click', function() {
             let kelurahan = $('#filterKelurahan').val();
             let periode = $('#filterPeriode').val();
             
-            // Filter berdasarkan periode (redirect)
             if (periode !== 'all') {
                 window.location.href = baseUrl + 'P_Input_Pelaku_Usaha/index?tahun=' + periode;
                 return;
             }
             
-            // Filter berdasarkan kelurahan menggunakan DataTable
             if (kelurahan !== 'all' && table) {
                 table.column(5).search(kelurahan).draw();
             } else if (table) {

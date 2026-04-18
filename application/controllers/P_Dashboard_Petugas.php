@@ -19,7 +19,7 @@ class P_Dashboard_Petugas extends CI_Controller {
         
         // Cek apakah role-nya petugas
         if($this->session->userdata('role') != 'Petugas Kecamatan') {
-            redirect('login');
+            redirect('login'); 
         }
     }
 

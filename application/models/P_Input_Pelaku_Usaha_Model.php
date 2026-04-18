@@ -11,7 +11,10 @@ class P_Input_Pelaku_Usaha_Model extends CI_Model {
     }
     
     public function save_pelaku_usaha($data) {
-        // Hanya simpan field yang ada di tabel
+        // Debug: Log before insert
+        log_message('debug', 'Attempting to insert data: ' . print_r($data, true));
+        
+        // Only save fields that exist in your table
         $allowed_fields = array('nama', 'nik', 'telepon', 'alamat', 'nama_petugas', 'tanggal_input', 'kecamatan', 'kelurahan', 'latitude', 'longitude', 'foto');
         $filtered_data = array();
         
@@ -21,9 +24,7 @@ class P_Input_Pelaku_Usaha_Model extends CI_Model {
             }
         }
         
-        // Debug: Log query yang akan dijalankan
-        log_message('debug', 'Inserting data: ' . print_r($filtered_data, true));
-        
+        // Insert data
         $result = $this->db->insert($this->table, $filtered_data);
         
         if (!$result) {
@@ -80,3 +81,4 @@ class P_Input_Pelaku_Usaha_Model extends CI_Model {
         return $query->row_array();
     }
 }
+?>
