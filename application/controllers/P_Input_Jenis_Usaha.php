@@ -68,7 +68,7 @@ class P_Input_Jenis_Usaha extends CI_Controller {
         header('Content-Type: application/json');
         
         // Validasi form dasar
-        $this->form_validation->set_rules('nama_pemilik', 'Nama Pemilik', 'required|trim');
+        $this->form_validation->set_rules('nama_peternak', 'Nama Peternak', 'required|trim');
         $this->form_validation->set_rules('nama_petugas', 'Nama Petugas', 'required|trim');
         $this->form_validation->set_rules('tanggal_input', 'Tanggal Input', 'required');
         $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required|trim');
@@ -130,9 +130,7 @@ class P_Input_Jenis_Usaha extends CI_Controller {
         if ($total_rows != count($komoditas_ternak) || $total_rows != count($jumlah)) {
             echo json_encode(array(
                 'status' => 'error',
-                'message' => 'Data tidak konsisten. Jenis Usaha: ' . count($jenis_usaha) . 
-                             ', Komoditas: ' . count($komoditas_ternak) . 
-                             ', Jumlah: ' . count($jumlah)
+                'message' => 'Data tidak konsisten.'
             ));
             return;
         }
@@ -192,14 +190,16 @@ class P_Input_Jenis_Usaha extends CI_Controller {
             }
         }
 
-        // Data yang sama untuk semua baris
+        // Ambil data dari form
         $kecamatan_user = $this->session->userdata('kecamatan');
         $nik_val = $this->input->post('nik');
         $telepon_val = $this->input->post('telepon');
         $keterangan_val = $this->input->post('keterangan');
         $rt_val = $this->input->post('rt');
         $rw_val = $this->input->post('rw');
-        $nama_pemilik = $this->input->post('nama_pemilik');
+        $alamat_val = $this->input->post('alamat');
+        
+        $nama_peternak = $this->input->post('nama_peternak');
         $nama_petugas = $this->input->post('nama_petugas');
         $tanggal_input = $this->input->post('tanggal_input');
         $kelurahan = $this->input->post('kelurahan');
@@ -213,9 +213,12 @@ class P_Input_Jenis_Usaha extends CI_Controller {
         $this->db->trans_begin();
 
         for ($i = 0; $i < $total_rows; $i++) {
+            // PASTIKAN JUMLAH TIDAK BERUBAH
+            $jumlah_value = (int)$jumlah[$i];
+            
             $data = array(
                 'nama_petugas' => $nama_petugas,
-                'nama_peternak' => $nama_pemilik,
+                'nama_peternak' => $nama_peternak,
                 'nik' => !empty($nik_val) ? $nik_val : null,
                 'telepon' => !empty($telepon_val) ? $telepon_val : null,
                 'tanggal_input' => $tanggal_input,
@@ -224,12 +227,13 @@ class P_Input_Jenis_Usaha extends CI_Controller {
                 'kelurahan' => $kelurahan,
                 'rt' => !empty($rt_val) ? $rt_val : null,
                 'rw' => !empty($rw_val) ? $rw_val : null,
+                'alamat' => !empty($alamat_val) ? $alamat_val : null,
                 'latitude' => $latitude,
                 'longitude' => $longitude,
                 'foto_usaha' => $uploaded_file,
                 'jenis_usaha' => $jenis_usaha[$i],
                 'komoditas_ternak' => $komoditas_ternak[$i],
-                'jumlah' => $jumlah[$i]
+                'jumlah' => $jumlah_value  // PASTIKAN TIDAK BERUBAH
             );
             
             if ($this->P_Input_Jenis_Usaha_Model->save_jenis_usaha($data)) {
@@ -265,7 +269,7 @@ class P_Input_Jenis_Usaha extends CI_Controller {
         
         if (!$tahun) {
             $tahun = date('Y');
-        }
+        } 
         
         $data = $this->P_Input_Jenis_Usaha_Model->get_by_periode($tahun, $kecamatan);
         echo json_encode($data);
@@ -273,7 +277,7 @@ class P_Input_Jenis_Usaha extends CI_Controller {
 
     public function get_kelurahan_by_kecamatan() {
         $kecamatan = $this->input->post('kecamatan');
-        $kel_list = $this->get_all_kelurahan();
+        $kel_list = $this->get_all_kelurahan(); 
         
         if (isset($kel_list[$kecamatan])) {
             echo json_encode($kel_list[$kecamatan]);
@@ -282,3 +286,4 @@ class P_Input_Jenis_Usaha extends CI_Controller {
         }
     }
 }
+?>

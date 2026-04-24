@@ -39,6 +39,10 @@
     <!-- Leaflet CSS for Maps -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
+    <script>
+    var base_url = "<?= base_url() ?>";
+    </script>
+
     <!-- Custom CSS Data Pengobatan -->
     <link rel="stylesheet" href="<?php echo base_url('assets/css/data_pengobatan.css'); ?>" />
 </head>
@@ -169,7 +173,7 @@
                                                     <p class="text-muted">admin@dkppsby.go.id</p>
                                                 </div>
                                             </div>
-                                        </li>
+                                        </li> 
                                         <li>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="<?php echo base_url(); ?>login/logout">
@@ -307,6 +311,7 @@
                                             <th>NIK</th>
                                             <th>Kecamatan</th>
                                             <th>Kelurahan</th>
+                                            <th>Alamat</th>
                                             <th>Peta</th>
                                             <th>Jumlah</th>
                                             <th>Komoditas</th>
@@ -314,7 +319,6 @@
                                             <th>Tindakan</th>
                                             <th>Bantuan Prov</th>
                                             <th>Telepon</th>
-                                            <th>Jenis Kelamin</th>
                                             <th width="80">Aksi</th>
                                             <th width="50">Foto</th>
                                         </tr>
@@ -444,9 +448,13 @@
                                 <select class="form-control" id="edit_kelurahan" name="kelurahan" required>
                                     <option value="">Pilih Kelurahan</option>
                                 </select>
+                            </div> 
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Alamat Lengkap</label>
+                                <textarea class="form-control" id="edit_alamat" name="alamat" rows="2" placeholder="Masukkan alamat lengkap (jalan, gang, nomor rumah)"></textarea>
                             </div>
                             <div class="col-md-2 mb-3">
-                                <label class="form-label">RT</label>
+                                <label class="form-label">RT</label> 
                                 <input type="text" class="form-control" id="edit_rt" name="rt">
                             </div>
                             <div class="col-md-2 mb-3">
@@ -481,14 +489,6 @@
                                 </select>
                             </div>
                             <div class="col-md-3 mb-3">
-                                <label class="form-label">Jenis Kelamin</label>
-                                <select class="form-control" id="edit_jk" name="jenis_kelamin">
-                                    <option value="">Pilih</option>
-                                    <option value="Jantan">Jantan</option>
-                                    <option value="Betina">Betina</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3 mb-3">
                                 <label class="form-label">Telepon</label>
                                 <input type="text" class="form-control" id="edit_telp" name="telp">
                             </div>
@@ -508,7 +508,7 @@
                                 <label class="form-label">Bantuan Provinsi</label>
                                 <select class="form-control" id="edit_bantuan" name="bantuan_prov">
                                     <option value="Tidak">Tidak</option>
-                                    <option value="Ya">Ya</option>
+                                    <option value="Ya">Ya</option> 
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">

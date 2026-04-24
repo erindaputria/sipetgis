@@ -89,7 +89,7 @@
                                 </ul>
                             </div>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item"> 
                             <a href="<?= site_url('k_peta_sebaran_kepala') ?>" class="nav-link">
                                 <i class="fas fa-map-marked-alt" style="color: #832706 !important;"></i>
                                 <p>Peta Sebaran</p>

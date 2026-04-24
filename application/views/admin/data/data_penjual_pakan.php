@@ -12,7 +12,7 @@
         WebFont.load({
             google: { families: ["Public Sans:300,400,500,600,700"] },
             custom: {
-                families: [
+                families: [ 
                     "Font Awesome 5 Solid",
                     "Font Awesome 5 Regular",
                     "Font Awesome 5 Brands",
@@ -285,7 +285,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="dataTableBody">
-                                        <!-- Data akan diisi oleh JavaScript -->
+                                        <tr><td colspan="9" class="text-center">Memuat data...</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -482,8 +482,11 @@
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <!-- Custom JS Data Penjual Pakan -->
+ 
+    <!-- Custom JS Data Penjual Pakan - DITEMPATKAN DI PALING BAWAH -->
+    <script>
+    var base_url = "<?= base_url() ?>";
+    </script>
     <script src="<?php echo base_url('assets/js/data_penjual_pakan.js'); ?>"></script>
 </body>
 </html>

@@ -13,7 +13,7 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
         
         // Check session login
         if (!$this->session->userdata('logged_in')) {
-            redirect('login');
+            redirect('login'); 
         }
         
         $this->load->model('P_Input_Pelaku_Usaha_Model');
@@ -94,6 +94,7 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
             $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required|trim');
             $this->form_validation->set_rules('latitude', 'Latitude', 'required|trim');
             $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim');
+            $this->form_validation->set_rules('nama_petugas', 'Nama Petugas', 'required|trim|min_length[3]|max_length[100]');
 
             if ($this->form_validation->run() == FALSE) {
                 $errors = validation_errors();
@@ -157,17 +158,11 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
                 error_log("No photo to upload");
             }
 
-            // Get petugas name from session
-            $nama_petugas = $this->session->userdata('nama');
-            if (empty($nama_petugas)) {
-                $nama_petugas = $this->session->userdata('username');
-            }
-            if (empty($nama_petugas)) {
-                $nama_petugas = 'Petugas Lapangan';
-            }
-            error_log("Petugas name: " . $nama_petugas);
+            // Ambil nama petugas dari input form
+            $nama_petugas = $this->input->post('nama_petugas');
+            error_log("Petugas name from form: " . $nama_petugas);
 
-            // Prepare data - ALL columns that exist in your table
+            // Prepare data
             $data = array(
                 'nama' => $this->input->post('nama'),
                 'nik' => $nik,
@@ -242,7 +237,16 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
     }
 
     public function get_kelurahan_by_kecamatan() {
+        // Set header JSON
+        $this->output->set_content_type('application/json');
+        
+        // Get CSRF hash
+        $this->security->get_csrf_hash();
+        
         $kecamatan = $this->input->post('kecamatan');
+        // Convert to uppercase for matching with array keys
+        $kecamatan = strtoupper(trim($kecamatan));
+        
         $kel_list = $this->get_all_kelurahan();
         
         if (isset($kel_list[$kecamatan])) {
@@ -251,7 +255,7 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
             echo json_encode([]);
         }
     }
-    
+
     public function check_nik() {
         $nik = $this->input->post('nik');
         $existing = $this->P_Input_Pelaku_Usaha_Model->check_nik($nik);

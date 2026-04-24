@@ -11,30 +11,35 @@ class P_Input_Pelaku_Usaha_Model extends CI_Model {
     }
     
     public function save_pelaku_usaha($data) {
-        // Debug: Log before insert
-        log_message('debug', 'Attempting to insert data: ' . print_r($data, true));
+        // RAW QUERY - paling aman
+        $sql = "INSERT INTO pelaku_usaha 
+                (nama, nik, telepon, alamat, nama_petugas, tanggal_input, kecamatan, kelurahan, latitude, longitude, foto) 
+                VALUES 
+                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
-        // Only save fields that exist in your table
-        $allowed_fields = array('nama', 'nik', 'telepon', 'alamat', 'nama_petugas', 'tanggal_input', 'kecamatan', 'kelurahan', 'latitude', 'longitude', 'foto');
-        $filtered_data = array();
+        $values = array(
+            $data['nama'],
+            $data['nik'],
+            isset($data['telepon']) ? $data['telepon'] : null,
+            $data['alamat'],
+            $data['nama_petugas'],
+            isset($data['tanggal_input']) ? $data['tanggal_input'] : date('Y-m-d'),
+            $data['kecamatan'],
+            $data['kelurahan'],
+            $data['latitude'],
+            $data['longitude'],
+            isset($data['foto']) ? $data['foto'] : null
+        );
         
-        foreach ($allowed_fields as $field) {
-            if (isset($data[$field])) {
-                $filtered_data[$field] = $data[$field];
-            }
-        }
-        
-        // Insert data
-        $result = $this->db->insert($this->table, $filtered_data);
+        $result = $this->db->query($sql, $values);
         
         if (!$result) {
-            log_message('error', 'Insert failed. Last query: ' . $this->db->last_query());
-            log_message('error', 'DB Error: ' . print_r($this->db->error(), true));
-        } else {
-            log_message('debug', 'Insert successful. Insert ID: ' . $this->db->insert_id());
+            $error = $this->db->error();
+            log_message('error', 'Insert failed: ' . print_r($error, true));
+            return false;
         }
         
-        return $result;
+        return true;
     }
     
     public function get_pelaku_usaha_by_kecamatan($kecamatan) {

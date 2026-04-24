@@ -1,419 +1,158 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Input Jenis Usaha - SIPETGIS</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
-    <link rel="icon" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/kaiadmin/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="<?php echo base_url('assets/SIPETGIS/assets/img/kaiadmin/favicon.ico'); ?>" type="image/x-icon" />
 
     <!-- Fonts and icons -->
-    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script src="<?php echo base_url('assets/SIPETGIS/assets/js/plugin/webfont/webfont.min.js'); ?>"></script>
     <script>
         WebFont.load({
             google: { families: ["Public Sans:300,400,500,600,700"] },
-            custom: { 
+            custom: {
                 families: [
                     "Font Awesome 5 Solid",
                     "Font Awesome 5 Regular",
                     "Font Awesome 5 Brands",
                     "simple-line-icons",
                 ],
-                urls: ["<?php echo base_url(); ?>assets/SIPETGIS/assets/css/fonts.min.css"],
+                urls: ["<?php echo base_url('assets/SIPETGIS/assets/css/fonts.min.css'); ?>"]
             },
-            active: function () {
+            active: function() {
                 sessionStorage.fonts = true;
-            },
+            }
         });
     </script>
 
     <!-- CSS Files -->
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/css/plugins.min.css" />
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/css/kaiadmin.min.css" />
-
+    <link rel="stylesheet" href="<?php echo base_url('assets/SIPETGIS/assets/css/bootstrap.min.css'); ?>" />
+    <link rel="stylesheet" href="<?php echo base_url('assets/SIPETGIS/assets/css/plugins.min.css'); ?>" />
+    <link rel="stylesheet" href="<?php echo base_url('assets/SIPETGIS/assets/css/kaiadmin.min.css'); ?>" />
+    
     <!-- DataTables CSS -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.bootstrap5.min.css" />
-
-    <style>
-        .form-header {
-            background: linear-gradient(90deg, #1a73e8 0%, #0d47a1 100%);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        .form-card {
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-        .table-container {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .btn-submit {
-            background: linear-gradient(90deg, #1a73e8 0%, #0d47a1 100%);
-            color: white;
-            border: none;
-            padding: 10px 30px;
-            font-weight: 600;
-        }
-        .btn-submit:hover {
-            background: linear-gradient(90deg, #0d47a1 0%, #1a73e8 100%);
-            color: white;
-        }
-        .btn-get-location {
-            background: #34a853;
-            color: white;
-            border: none;
-        }
-        .btn-get-location:hover {
-            background: #2e8b47;
-            color: white;
-        }
-        .btn-toggle-form {
-            background: linear-gradient(90deg, #1a73e8 0%, #0d47a1 100%);
-            color: white;
-            border: none;
-            font-weight: 600;
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        .btn-toggle-form:hover {
-            background: linear-gradient(90deg, #0d47a1 0%, #1a73e8 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(26, 115, 232, 0.3);
-            color: white;
-        }
-        .btn-back {
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 10px 30px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        .btn-back:hover {
-            background: #5a6268;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
-        }
-        .photo-preview {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 10px;
-            border: 2px dashed #ddd;
-            display: none;
-        }
-        .photo-placeholder {
-            width: 150px;
-            height: 150px;
-            border: 2px dashed #ddd;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            cursor: pointer;
-        }
-        .coordinate-info {
-            background: #f8f9fa;
-            border-left: 4px solid #1a73e8;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-        .address-card {
-            border-left: 4px solid #34a853;
-            margin-bottom: 20px;
-        }
-        .required-field::after {
-            content: " *";
-            color: red;
-        }
-        .form-label {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        .table-custom th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            color: #333;
-        }
-        .action-card {
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-        .action-card:hover {
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-        }
-        .form-container {
-            display: none;
-            overflow: hidden;
-            transition: all 0.5s ease;
-        }
-        .form-container.show {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .card-header-address {
-            background: #f8f9fa;
-            border-bottom: 2px solid #34a853;
-        }
-        .is-invalid {
-            border-color: #dc3545 !important;
-        }
-        .invalid-feedback {
-            display: none;
-            width: 100%;
-            margin-top: 0.25rem;
-            font-size: 0.875em;
-            color: #dc3545;
-        }
-        .is-invalid ~ .invalid-feedback {
-            display: block;
-        }
-        .loading-spinner {
-            display: none;
-            text-align: center;
-            padding: 20px;
-        }
-        .profile-username {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .kecamatan-badge {
-            background-color: #1a73e8;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .avatar-sm {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid #1a73e8;
-        }
-        .topbar-user .dropdown-toggle::after {
-            display: none;
-        }
-        .jenis-usaha-table th {
-            background-color: #e9f0fa;
-            font-size: 0.9rem;
-        }
-        .btn-add-row {
-            background-color: #28a745;
-            color: white;
-        }
-        .btn-add-row:hover {
-            background-color: #218838;
-            color: white;
-        }
-        .btn-remove-row {
-            background-color: #dc3545;
-            color: white;
-        }
-        .btn-remove-row:hover {
-            background-color: #c82333;
-            color: white;
-        }
-        .filter-section {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #dee2e6;
-        }
-        .dt-buttons .btn {
-            border-radius: 5px;
-            margin-right: 5px;
-            transition: all 0.3s;
-        }
-        .dt-buttons .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .dt-buttons .btn-primary {
-            background-color: #0d6efd !important;
-            border-color: #0d6efd !important;
-            color: white !important;
-        }
-        .dt-buttons .btn-success {
-            background-color: #198754 !important;
-            border-color: #198754 !important;
-            color: white !important;
-        }
-        .dt-buttons .btn-danger {
-            background-color: #dc3545 !important;
-            border-color: #dc3545 !important;
-            color: white !important;
-        }
-        .dt-buttons .btn-info {
-            background-color: #0dcaf0 !important;
-            border-color: #0dcaf0 !important;
-            color: white !important;
-        }
-        .pagination .page-link {
-            border: none;
-            color: #495057;
-            margin: 0 3px;
-            border-radius: 6px !important;
-        }
-        .pagination .page-item.active .page-link {
-            background-color: #4361ee;
-            color: white;
-        }
-        .pagination .page-link:hover {
-            background-color: #f8f9fa;
-        }
-        .btn-action { margin: 0 2px; }
-        .foto-link { color: #1a73e8; text-decoration: none; cursor: pointer; }
-        .foto-link:hover { text-decoration: underline; color: #0d47a1; }
-        .dataTables_filter { float: right !important; }
-        .dataTables_length { float: left !important; }
-        .dt-buttons { float: left !important; margin-right: 10px; }
-    </style>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css" />
+    
+    <!-- Custom CSS Input Jenis Usaha -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/p_input_jenis_usaha.css'); ?>" />
 </head>
 
 <body>
     <div class="wrapper">
         <!-- Sidebar -->
-        <div class="sidebar" data-background-color="white">
+        <div class="sidebar" data-background-color="white" id="mainSidebar">
             <div class="sidebar-logo">
                 <div class="logo-header" data-background-color="white">
-                    <a href="<?php echo base_url(); ?>p_dashboard_petugas" class="logo" style="text-decoration: none">
-                        <div style="color: #1e3a8a; font-weight: 800; font-size: 24px;">SIPETGIS</div>
+                    <a href="<?php echo base_url('p_dashboard_petugas'); ?>" class="logo" style="text-decoration: none">
+                        <div class="sipetgis-logo">SIPETGIS</div>
                     </a>
+                    <div class="nav-toggle">
+                        <button class="btn btn-toggle toggle-sidebar" id="toggleSidebarBtn">
+                            <i class="gg-menu-right"></i>
+                        </button>
+                        <button class="btn btn-toggle sidenav-toggler" id="closeSidebarBtn">
+                            <i class="gg-menu-left"></i>
+                        </button>
+                    </div>
+                    <button class="topbar-toggler more" id="mobileMenuBtn">
+                        <i class="gg-more-vertical-alt"></i>
+                    </button>
                 </div>
             </div>
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
                 <div class="sidebar-content">
                     <ul class="nav nav-secondary">
                         <li class="nav-item">
-                            <a href="<?php echo base_url(); ?>p_dashboard_petugas">
-                                <i class="fas fa-home"></i>
-                                <p>Dashboard</p>
+                            <a href="<?php echo base_url('p_dashboard_petugas'); ?>">
+                                <i class="fas fa-home" style="color: #832706 !important;"></i>
+                                <p style="color: #832706 !important;">Dashboard</p>
                             </a>
                         </li>
-
                         <li class="nav-section">
-                            <span class="sidebar-mini-icon">
-                                <i class="fa fa-ellipsis-h"></i>
-                            </span>
+                            <span class="sidebar-mini-icon"><i class="fa fa-ellipsis-h"></i></span>
                             <h4 class="text-section">Menu Utama</h4>
                         </li>
-
                         <li class="nav-item">
-                            <a href="<?php echo base_url(); ?>P_Input_Pengobatan">
-                                <i class="fas fa-heartbeat"></i>
-                                <p>Pengobatan</p>
+                            <a href="<?php echo base_url('P_Input_Pengobatan'); ?>">
+                                <i class="fas fa-heartbeat" style="color: #832706 !important;"></i>
+                                <p style="color: #832706 !important;">Pengobatan</p>
                             </a>
                         </li>
-
                         <li class="nav-item">
-                            <a href="<?php echo base_url(); ?>P_Input_Vaksinasi">
-                                <i class="fas fa-syringe"></i>
-                                <p>Vaksinasi</p>
+                            <a href="<?php echo base_url('P_Input_Vaksinasi'); ?>">
+                                <i class="fas fa-syringe" style="color: #832706 !important;"></i>
+                                <p style="color: #832706 !important;">Vaksinasi</p>
                             </a>
                         </li>
-
                         <li class="nav-item">
-                            <a href="<?php echo base_url(); ?>P_Input_Pelaku_Usaha">
-                                <i class="fas fa-users"></i>
-                                <p>Pelaku Usaha</p>
+                            <a href="<?php echo base_url('P_Input_Pelaku_Usaha'); ?>">
+                                <i class="fas fa-users" style="color: #832706 !important;"></i>
+                                <p style="color: #832706 !important;">Pelaku Usaha</p>
                             </a>
                         </li>
-
                         <li class="nav-item active">
-                            <a href="<?php echo base_url(); ?>P_Input_Jenis_Usaha">
-                                <i class="fas fa-store"></i>
-                                <p>Jenis Usaha</p>
+                            <a href="<?php echo base_url('P_Input_Jenis_Usaha'); ?>">
+                                <i class="fas fa-store" style="color: #832706 !important;"></i>
+                                <p style="color: #832706 !important;">Jenis Usaha</p>
                             </a>
                         </li>
-                        
                         <li class="nav-item">
-                            <a href="<?php echo base_url(); ?>P_Input_Penjual">
-                                <i class="fas fa-store-alt"></i> 
-                                <p>Penjual</p>
+                            <a href="<?php echo base_url('P_Input_Penjual'); ?>">
+                                <i class="fas fa-store-alt" style="color: #832706 !important;"></i>
+                                <p style="color: #832706 !important;">Penjual</p>
                             </a>
                         </li>
-
                         <li class="nav-item">
-                            <a href="<?php echo base_url(); ?>P_Input_Klinik_Hewan">
-                                <i class="fas fa-stethoscope"></i>
-                                <p>Klinik Hewan</p>
+                            <a href="<?php echo base_url('p_input_klinik_hewan'); ?>">
+                                <i class="fas fa-stethoscope" style="color: #832706 !important;"></i>
+                                <p style="color: #832706 !important;">Klinik Hewan</p>
                             </a>
                         </li>
-
                         <li class="nav-item">
-                  <a href="<?php echo base_url(); ?>p_input_rpu">
-                      <i class="fas fa-chart-line"></i>
-                      <p>RPU</p>
-                  </a>
-              </li>
-
-              <li class="nav-item">
-                  <a href="<?php echo base_url(); ?>p_input_pemotongan_unggas">
-                      <i class="fas fa-cut"></i>
-                      <p>Pemotongan Unggas</p>
-                  </a>
-              </li>
-
-              <li class="nav-item">
-                  <a href="<?php echo base_url(); ?>p_input_demplot">
-                      <i class="fas fa-seedling"></i>
-                      <p>Demplot</p>
-                  </a>
-              </li>
-
-              <li class="nav-item">
-                  <a href="<?php echo base_url(); ?>p_input_stok_pakan">
-                      <i class="fas fa-warehouse"></i>
-                      <p>Stok Pakan</p>
-                  </a>
-              </li>
+                            <a href="<?php echo base_url('p_input_rpu'); ?>">
+                                <i class="fas fa-chart-line" style="color: #832706 !important;"></i>
+                                <p style="color: #832706 !important;">RPU</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo base_url('p_input_pemotongan_unggas'); ?>">
+                                <i class="fas fa-cut" style="color: #832706 !important;"></i>
+                                <p style="color: #832706 !important;">Pemotongan Unggas</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo base_url('p_input_demplot'); ?>">
+                                <i class="fas fa-seedling" style="color: #832706 !important;"></i>
+                                <p style="color: #832706 !important;">Demplot</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo base_url('p_input_stok_pakan'); ?>">
+                                <i class="fas fa-warehouse" style="color: #832706 !important;"></i>
+                                <p style="color: #832706 !important;">Stok Pakan</p>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
+        <!-- End Sidebar -->
 
-        <div class="main-panel">
+        <div class="main-panel"> 
             <div class="main-header">
                 <div class="main-header-logo"></div>
                 <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
                     <div class="container-fluid">
                         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
                             <li class="nav-item topbar-user dropdown hidden-caret">
-                                <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#">
+                                <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                                     <div class="avatar-sm">
-                                        <img src="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/petugas lapangan.png" class="avatar-img rounded-circle" />
+                                        <img src="<?php echo base_url('assets/SIPETGIS/assets/img/petugas lapangan.png'); ?>" alt="..." class="avatar-img rounded-circle" />
                                     </div>
                                     <span class="profile-username">
-                                        <span class="fw-bold">Petugas Lapangan</span>
+                                        <span class="fw-bold"><?php echo $this->session->userdata('username') ?: 'Petugas Lapangan'; ?></span>
                                     </span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -445,15 +184,15 @@
                     <!-- Page Header -->
                     <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                         <div class="flex-grow-1">
-                            <h3 class="fw-bold mb-1">Jenis Usaha</h3>
-                            <h6 class="op-7 mb-0">Kecamatan <?php echo $this->session->userdata('kecamatan') ?: 'Benowo'; ?>, Surabaya</h6>
+                            <h3 class="fw-bold mb-1" style="color: #832706; font-weight: 900;">Jenis Usaha</h3>
+                            <h6 class="op-7 mb-0">Kecamatan <?php echo $this->session->userdata('kecamatan') ?: 'Benowo'; ?></h6>
                         </div>
                     </div>
 
                     <!-- Alert Section -->
                     <div id="alert-container"></div>
 
-                    <!-- Action Card + Input -->
+                    <!-- Action Card + Input Jenis Usaha -->
                     <div class="row mt-4">
                         <div class="col-md-12">
                             <!-- Card untuk Tombol Input -->
@@ -468,36 +207,33 @@
                             <!-- Form Container -->
                             <div class="form-container" id="formContainer">
                                 <div class="card form-card">
-                                    <div class="card-header">
-                                        <h4 class="card-title">INPUT DATA JENIS USAHA BARU</h4>
+                                    <div class="card-header" style="border-bottom: 2px solid #832706;">
+                                        <h4 class="card-title" style="color: #832706;">INPUT DATA JENIS USAHA BARU</h4>
                                     </div>
                                     <div class="card-body">
                                         <form id="formJenisUsaha" enctype="multipart/form-data">
                                             <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                                             <input type="hidden" name="kecamatan_session" id="kecamatan_session" value="<?php echo $this->session->userdata('kecamatan') ?: 'Benowo'; ?>">
-                                            
+                                             
                                             <div class="row">
-                                                <!-- Nama Pemilik -->
+                                                <!-- Di dalam form, bagian Nama Pemilik -->
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label required-field">Nama Pemilik</label>
-                                                    <input type="text" class="form-control" id="nama_pemilik" name="nama_pemilik" placeholder="Masukkan nama pemilik" required />
-                                                    <div class="invalid-feedback">Nama pemilik harus diisi</div>
+                                                    <label class="form-label required-field">Nama Peternak</label>
+                                                    <input type="text" class="form-control" id="nama_peternak" name="nama_peternak" placeholder="Masukkan nama peternak" required />
+                                                    <div class="invalid-feedback">Nama peternak harus diisi</div>
                                                 </div>
 
-                                                <!-- NIK -->
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label">NIK</label>
-                                                    <input type="text" class="form-control" id="nik" name="nik" placeholder="Masukkan NIK (16 digit)" maxlength="16" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
-                                                    <small class="text-muted">Masukkan 16 digit angka</small>
+                                                    <input type="text" class="form-control" id="nik" name="nik" placeholder="Masukkan NIK (16 digit)" maxlength="16" />
+                                                    <small class="text-muted">16 digit angka</small>
                                                 </div>
 
-                                                <!-- Telepon -->
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label">Telepon</label>
-                                                    <input type="text" class="form-control" id="telepon" name="telepon" placeholder="Masukkan nomor telepon" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                                                    <input type="text" class="form-control" id="telepon" name="telepon" placeholder="Masukkan nomor telepon" />
                                                 </div>
 
-                                                <!-- NAMA PETUGAS -->
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label required-field">Nama Petugas</label>
                                                     <select class="form-control" id="nama_petugas" name="nama_petugas" required>
@@ -508,36 +244,43 @@
                                                         <option value="Samsul Arifin">Samsul Arifin</option>
                                                         <option value="Drh. Arfiandy Noorrahman">Drh. Arfiandy Noorrahman</option>
                                                         <option value="Drh. Kartika Eka Paksi">Drh. Kartika Eka Paksi</option>
+                                                        <option value="Drh. Romadhony Arif">Drh. Romadhony Arif</option>
+                                                        <option value="Drh. Rinenggo Palupi">Drh. Rinenggo Palupi</option>
+                                                        <option value="Drh. Rieska Nursita">Drh. Rieska Nursita</option>
+                                                        <option value="Drh. Albert Fabio S">Drh. Albert Fabio S</option>
+                                                        <option value="Drh. Rizal Maulana I">Drh. Rizal Maulana I</option>
+                                                        <option value="Drh. Moch Rozali">Drh. Moch Rozali</option>
+                                                        <option value="Drh. Arsanti Arsy">Drh. Arsanti Arsy</option>
+                                                        <option value="Drh. Richa Putri A">Drh. Richa Putri A</option>
+                                                        <option value="Drh. Niken Rahmawati">Drh. Niken Rahmawati</option>
                                                     </select>
                                                     <div class="invalid-feedback">Nama petugas harus dipilih</div>
                                                 </div>
 
-                                                <!-- Tanggal Input -->
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label required-field">Tanggal Input</label>
                                                     <input type="date" class="form-control" id="tanggal_input" name="tanggal_input" required />
                                                     <div class="invalid-feedback">Tanggal input harus diisi</div>
                                                 </div>
 
-                                                <!-- Keterangan -->
                                                 <div class="col-md-12 mb-3">
                                                     <label class="form-label">Keterangan</label>
                                                     <textarea class="form-control" id="keterangan" name="keterangan" rows="2" placeholder="Masukkan keterangan tambahan (opsional)"></textarea>
                                                 </div>
                                             </div>
 
-                                            <!-- MULTIPLE JENIS USAHA SECTION -->
+                                            <!-- Multiple Jenis Usaha Section -->
                                             <div class="row mt-3">
                                                 <div class="col-md-12">
                                                     <div class="card address-card">
-                                                        <div class="card-header card-header-address">
-                                                            <h5 class="card-title mb-0">
-                                                                <i class="fas fa-list me-2 text-success"></i>DATA KOMODITAS TERNAK
+                                                        <div class="card-header card-header-address" style="border-bottom: 2px solid #832706;">
+                                                            <h5 class="card-title mb-0" style="color: #832706;">
+                                                                <i class="fas fa-list me-2"></i>DATA KOMODITAS TERNAK
                                                             </h5>
                                                         </div>
                                                         <div class="card-body">
                                                             <div class="table-responsive">
-                                                                <table class="table table-bordered jenis-usaha-table" id="jenisUsahaTable">
+                                                                <table class="table table-bordered komoditas-table" id="komoditasTable">
                                                                     <thead>
                                                                         <tr>
                                                                             <th width="30%">Jenis Usaha <span class="text-danger">*</span></th>
@@ -585,10 +328,10 @@
                                                                                 <input type="number" class="form-control jumlah" name="jumlah[]" min="0" placeholder="0" required />
                                                                             </td>
                                                                             <td class="text-center">
-                                                                                <button type="button" class="btn btn-success btn-sm btn-add-row" title="Tambah baris">
+                                                                                <button type="button" class="btn btn-sm btn-add-row" title="Tambah baris">
                                                                                     <i class="fas fa-plus"></i>
                                                                                 </button>
-                                                                                <button type="button" class="btn btn-danger btn-sm btn-remove-row" title="Hapus baris" style="display: none;">
+                                                                                <button type="button" class="btn btn-sm btn-remove-row" title="Hapus baris" style="display: none;">
                                                                                     <i class="fas fa-trash"></i>
                                                                                 </button>
                                                                             </td>
@@ -601,24 +344,27 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Card Alamat -->
+                                            <!-- Alamat Section -->
                                             <div class="row mt-3">
                                                 <div class="col-md-12">
                                                     <div class="card address-card">
-                                                        <div class="card-header card-header-address">
-                                                            <h5 class="card-title mb-0">
-                                                                <i class="fas fa-map-marker-alt me-2 text-success"></i>ALAMAT USAHA
+                                                        <div class="card-header card-header-address" style="border-bottom: 2px solid #832706;">
+                                                            <h5 class="card-title mb-0" style="color: #832706;">
+                                                                <i class="fas fa-map-marker-alt me-2"></i>ALAMAT USAHA
                                                             </h5>
                                                         </div>
                                                         <div class="card-body">
                                                             <div class="row">
-                                                                <!-- Kecamatan -->
+                                                                <div class="col-md-12 mb-3">
+                                                                    <label class="form-label">Alamat Lengkap</label>
+                                                                    <textarea class="form-control" id="alamat" name="alamat" rows="2" placeholder="Masukkan alamat lengkap usaha (opsional)"></textarea>
+                                                                </div>
+
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label required-field">Kecamatan</label>
                                                                     <input type="text" class="form-control" id="kecamatan" name="kecamatan" value="<?php echo $this->session->userdata('kecamatan') ?: 'Benowo'; ?>" readonly />
                                                                 </div>
 
-                                                                <!-- Kelurahan -->
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label required-field">Kelurahan</label>
                                                                     <select class="form-control" id="kelurahan" name="kelurahan" required>
@@ -634,13 +380,11 @@
                                                                     <div class="invalid-feedback">Kelurahan harus dipilih</div>
                                                                 </div>
 
-                                                                <!-- RT -->
                                                                 <div class="col-md-3 mb-3">
                                                                     <label class="form-label">RT</label>
                                                                     <input type="text" class="form-control" id="rt" name="rt" placeholder="RT" />
                                                                 </div>
                                                                 
-                                                                <!-- RW -->
                                                                 <div class="col-md-3 mb-3">
                                                                     <label class="form-label">RW</label>
                                                                     <input type="text" class="form-control" id="rw" name="rw" placeholder="RW" />
@@ -655,9 +399,9 @@
                                             <div class="row mt-3">
                                                 <div class="col-md-12">
                                                     <div class="card address-card">
-                                                        <div class="card-header card-header-address">
-                                                            <h5 class="card-title mb-0">
-                                                                <i class="fas fa-globe me-2 text-success"></i>TITIK KOORDINAT
+                                                        <div class="card-header card-header-address" style="border-bottom: 2px solid #832706;">
+                                                            <h5 class="card-title mb-0" style="color: #832706;">
+                                                                <i class="fas fa-globe me-2"></i>TITIK KOORDINAT
                                                             </h5>
                                                         </div>
                                                         <div class="card-body">
@@ -665,12 +409,12 @@
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label required-field">Latitude</label>
                                                                     <input type="text" class="form-control" id="latitude" name="latitude" placeholder="Latitude akan diambil otomatis" readonly required />
-                                                                    <div class="invalid-feedback">Latitude harus diisi</div>
+                                                                    <div class="invalid-feedback">Latitude harus diisi. Klik tombol Ambil Lokasi</div>
                                                                 </div>
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label required-field">Longitude</label>
                                                                     <input type="text" class="form-control" id="longitude" name="longitude" placeholder="Longitude akan diambil otomatis" readonly required />
-                                                                    <div class="invalid-feedback">Longitude harus diisi</div>
+                                                                    <div class="invalid-feedback">Longitude harus diisi. Klik tombol Ambil Lokasi</div>
                                                                 </div>
                                                                 <div class="col-md-12 mb-3">
                                                                     <button class="btn btn-get-location" type="button" id="btnGetLocation">
@@ -679,8 +423,11 @@
                                                                     <div class="coordinate-info mt-2" id="coordinateInfo" style="display: none">
                                                                         <small>
                                                                             <i class="fas fa-info-circle me-1"></i>
-                                                                            Koordinat: <span id="latDisplay"></span>, <span id="lngDisplay"></span>
-                                                                            <br /><span id="accuracyInfo"></span>
+                                                                            Koordinat berhasil diambil:
+                                                                            <span id="latDisplay"></span>,
+                                                                            <span id="lngDisplay"></span>
+                                                                            <br />
+                                                                            <span id="accuracyInfo"></span>
                                                                         </small>
                                                                     </div>
                                                                 </div>
@@ -690,13 +437,13 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Foto -->
+                                            <!-- Foto Usaha -->
                                             <div class="row mt-3">
                                                 <div class="col-md-12">
                                                     <div class="card address-card">
-                                                        <div class="card-header card-header-address">
-                                                            <h5 class="card-title mb-0">
-                                                                <i class="fas fa-camera me-2 text-success"></i>FOTO USAHA
+                                                        <div class="card-header card-header-address" style="border-bottom: 2px solid #832706;">
+                                                            <h5 class="card-title mb-0" style="color: #832706;">
+                                                                <i class="fas fa-camera me-2"></i>FOTO USAHA
                                                             </h5>
                                                         </div>
                                                         <div class="card-body">
@@ -714,7 +461,7 @@
                                                                         </div>
                                                                         <div class="flex-grow-1">
                                                                             <input type="file" class="form-control d-none" id="foto_usaha" name="foto_usaha" accept="image/jpeg, image/jpg, image/png" />
-                                                                            <small class="text-muted d-block mb-2">Upload foto (maks. 5MB, format: JPG, PNG)</small>
+                                                                            <small class="text-muted d-block mb-2">Upload foto usaha (maks. 5MB, format: JPG, PNG)</small>
                                                                             <button type="button" class="btn btn-outline-secondary btn-sm" onclick="document.getElementById('foto_usaha').click()">
                                                                                 <i class="fas fa-upload me-1"></i>Pilih File
                                                                             </button>
@@ -750,12 +497,68 @@
                         </div>
                     </div>
 
-                 
+                    <!-- Filter Section -->
+                    <div class="filter-section">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <div class="form-group mb-0">
+                                    <label for="filterJenisUsaha" class="form-label fw-bold">Filter Jenis Usaha:</label>
+                                    <select class="form-select" id="filterJenisUsaha">
+                                        <option selected value="all">Semua Jenis Usaha</option>
+                                        <option value="Peternak Ayam">Peternak Ayam</option>
+                                        <option value="Peternak Domba">Peternak Domba</option>
+                                        <option value="Peternak Kambing">Peternak Kambing</option>
+                                        <option value="Peternak Kerbau">Peternak Kerbau</option>
+                                        <option value="Peternak Kuda">Peternak Kuda</option>
+                                        <option value="Peternak Sapi">Peternak Sapi</option>
+                                        <option value="Peternak Unggas">Peternak Unggas</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group mb-0">
+                                    <label for="filterKomoditas" class="form-label fw-bold">Filter Komoditas:</label>
+                                    <select class="form-select" id="filterKomoditas">
+                                        <option selected value="all">Semua Komoditas</option>
+                                        <option value="Sapi Potong">Sapi Potong</option>
+                                        <option value="Sapi Perah">Sapi Perah</option>
+                                        <option value="Kerbau">Kerbau</option>
+                                        <option value="Kambing">Kambing</option>
+                                        <option value="Domba">Domba</option>
+                                        <option value="Ayam Ras Petelur">Ayam Ras Petelur</option>
+                                        <option value="Ayam Ras Pedaging">Ayam Ras Pedaging</option>
+                                        <option value="Ayam Kampung">Ayam Kampung</option>
+                                        <option value="Itik">Itik</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group mb-0">
+                                    <label for="filterKelurahan" class="form-label fw-bold">Filter Kelurahan:</label>
+                                    <select class="form-select" id="filterKelurahan">
+                                        <option selected value="all">Semua Kelurahan</option>
+                                        <?php 
+                                        if (isset($kel_list[$user_kec]) && is_array($kel_list[$user_kec])): 
+                                            foreach ($kel_list[$user_kec] as $kel): ?>
+                                            <option value="<?php echo $kel; ?>"><?php echo $kel; ?></option>
+                                        <?php endforeach; 
+                                        endif; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <button id="filterBtn" class="btn btn-primary-custom"><i class="fas fa-filter me-2"></i>Filter Data</button>
+                                <button id="resetBtn" class="btn btn-secondary-custom ms-2"><i class="fas fa-redo me-2"></i>Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Data Table -->
                     <div class="card form-card mt-4">
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="jenisUsahaTable" class="table table-bordered table-hover table-custom">
+                                <table id="jenisUsahaTable" class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -768,7 +571,8 @@
                                             <th>Foto</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="dataTableBody">
+                                    <!-- Di bagian Data Table - Body -->
+                                    <tbody>
                                         <?php if (!empty($jenis_usaha_data)): ?>
                                             <?php $no = 1; ?>
                                             <?php foreach ($jenis_usaha_data as $data): ?>
@@ -777,7 +581,7 @@
                                                     <td><?php echo htmlspecialchars($data['nama_peternak'] ?? '-'); ?></td>
                                                     <td><?php echo htmlspecialchars($data['jenis_usaha'] ?? '-'); ?></td>
                                                     <td><?php echo htmlspecialchars($data['komoditas_ternak'] ?? '-'); ?></td>
-                                                    <td><?php echo htmlspecialchars($data['jumlah'] ?? '0'); ?></td>
+                                                    <td><?php echo htmlspecialchars($data['jumlah'] ?? '0'); ?> Ekor</td>
                                                     <td><?php echo htmlspecialchars($data['kelurahan'] ?? '-'); ?></td>
                                                     <td><?php echo isset($data['tanggal_input']) ? date('d-m-Y', strtotime($data['tanggal_input'])) : '-'; ?></td>
                                                     <td>
@@ -786,19 +590,15 @@
                                                                 <i class="fas fa-image me-1"></i>Lihat
                                                             </a>
                                                         <?php else: ?>
-                                                            <span class="badge bg-secondary">No Foto</span>
+                                                            <span class="badge bg-secondary">Tidak Ada</span>
                                                         <?php endif; ?>
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <tr>
-                                                <td colspan="8" class="text-center">Tidak ada data jenis usaha</td>
-                                            </tr>
                                         <?php endif; ?>
                                     </tbody>
                                 </table>
-                            </div> 
+                            </div>
                         </div>
                     </div>
 
@@ -806,8 +606,8 @@
                     <div class="modal fade modal-foto" id="fotoModal" tabindex="-1">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Foto Usaha</h5>
+                                <div class="modal-header" style="border-bottom: 2px solid #832706;">
+                                    <h5 class="modal-title" style="color: #832706;">Foto Usaha</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
                                 <div class="modal-body text-center">
@@ -822,339 +622,31 @@
     </div>
 
     <!-- Core JS Files -->
-    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/jquery-3.7.1.min.js"></script>
-    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/popper.min.js"></script>
-    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/bootstrap.min.js"></script>
-    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="<?php echo base_url('assets/SIPETGIS/assets/js/core/jquery-3.7.1.min.js'); ?>"></script>
+    <script src="<?php echo base_url('assets/SIPETGIS/assets/js/core/popper.min.js'); ?>"></script>
+    <script src="<?php echo base_url('assets/SIPETGIS/assets/js/core/bootstrap.min.js'); ?>"></script>
+    <script src="<?php echo base_url('assets/SIPETGIS/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js'); ?>"></script>
+    <script src="<?php echo base_url('assets/SIPETGIS/assets/js/kaiadmin.min.js'); ?>"></script>
     
     <!-- DataTables JS -->
-    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
     
-    <!-- Kaiadmin JS -->
-    <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/kaiadmin.min.js"></script>
-
+    <!-- Variabel Global -->
     <script>
-    $(document).ready(function() {
-        // Set today's date
-        $('#tanggal_input').val(new Date().toISOString().split('T')[0]);
-        
-        // Initialize DataTable
-        let dataTable = $('#jenisUsahaTable').DataTable({
-            language: {
-                search: "Cari:",
-                lengthMenu: "Tampilkan _MENU_ data",
-                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
-                zeroRecords: "Tidak ada data ditemukan",
-                paginate: {
-                    first: "Pertama",
-                    last: "Terakhir",
-                    next: "Berikutnya",
-                    previous: "Sebelumnya"
-                }
-            },
-            pageLength: 10,
-            lengthMenu: [5, 10, 25, 50, 100],
-            dom: 'Bfrtip',
-            buttons: [
-                { extend: 'copy', text: '<i class="fas fa-copy"></i> Copy', className: 'btn btn-sm btn-primary' },
-                { extend: 'csv', text: '<i class="fas fa-file-csv"></i> CSV', className: 'btn btn-sm btn-success' },
-                { extend: 'excel', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-sm btn-success' },
-                { extend: 'pdf', text: '<i class="fas fa-file-pdf"></i> PDF', className: 'btn btn-sm btn-danger' },
-                { extend: 'print', text: '<i class="fas fa-print"></i> Print', className: 'btn btn-sm btn-info' }
-            ]
-        });
-
-        // Toggle Form
-        $('#toggleFormBtn').click(function() {
-            $('#formContainer').toggleClass('show');
-            $(this).html($('#formContainer').hasClass('show') ? 
-                '<i class="fas fa-minus-circle me-2"></i> TUTUP FORM' : 
-                '<i class="fas fa-plus-circle me-2"></i> INPUT JENIS USAHA');
-        });
-
-        // Cancel Button
-        $('#btnCancel').click(function() {
-            resetForm();
-            $('#formContainer').removeClass('show');
-            $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT JENIS USAHA');
-        });
-
-        // Add Row
-        function addJenisUsahaRow() {
-            let newRow = $('.jenis-usaha-row:first').clone();
-            newRow.find('select, input').val('');
-            newRow.find('.btn-remove-row').show();
-            $('#jenisUsahaBody').append(newRow);
-            updateRemoveButtons();
-        }
-
-        // Remove Row
-        function removeJenisUsahaRow(btn) {
-            if ($('.jenis-usaha-row').length > 1) {
-                $(btn).closest('tr').remove();
-                updateRemoveButtons();
-            }
-        }
-
-        function updateRemoveButtons() {
-            $('.btn-remove-row').toggle($('.jenis-usaha-row').length > 1);
-        }
-
-        $(document).on('click', '.btn-add-row', function(e) {
-            e.preventDefault();
-            addJenisUsahaRow();
-        });
-
-        $(document).on('click', '.btn-remove-row', function(e) {
-            e.preventDefault();
-            removeJenisUsahaRow(this);
-        });
-
-        updateRemoveButtons();
-
-        // Geolocation
-        $('#btnGetLocation').click(function() {
-            if (navigator.geolocation) {
-                let btn = $(this);
-                btn.html('<i class="fas fa-spinner fa-spin me-2"></i>Mengambil lokasi...').prop('disabled', true);
-
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        let lat = position.coords.latitude.toFixed(6);
-                        let lng = position.coords.longitude.toFixed(6);
-                        
-                        $('#latitude, #longitude').val(lat).removeClass('is-invalid');
-                        $('#latDisplay, #lngDisplay').text(lat);
-                        $('#accuracyInfo').text('Akurasi: ±' + Math.round(position.coords.accuracy) + ' meter');
-                        $('#coordinateInfo').show();
-                        btn.html('<i class="fas fa-map-marker-alt me-2"></i>Ambil Lokasi').prop('disabled', false);
-                        showAlert('success', 'Lokasi berhasil diambil!');
-                    },
-                    function(error) {
-                        let msg = 'Gagal mengambil lokasi. ';
-                        switch(error.code) {
-                            case 1: msg += 'Izin ditolak'; break;
-                            case 2: msg += 'Tidak tersedia'; break;
-                            case 3: msg += 'Timeout'; break;
-                        }
-                        showAlert('danger', msg);
-                        btn.html('<i class="fas fa-map-marker-alt me-2"></i>Ambil Lokasi').prop('disabled', false);
-                    },
-                    { enableHighAccuracy: true, timeout: 10000 }
-                );
-            } else {
-                showAlert('danger', 'Browser tidak mendukung geolocation');
-            }
-        });
-
-        // Photo Upload
-        $('#foto_usaha').change(function(e) {
-            let file = e.target.files[0];
-            if (file) {
-                if (file.size > 5 * 1024 * 1024) {
-                    showAlert('danger', 'Ukuran file maksimal 5MB');
-                    $(this).val('');
-                    return;
-                }
-                if (!['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)) {
-                    showAlert('danger', 'Format file harus JPG/PNG');
-                    $(this).val('');
-                    return;
-                }
-                
-                let reader = new FileReader();
-                reader.onload = function(e) {
-                    $('#photoPreview').attr('src', e.target.result).show();
-                    $('#photoPlaceholder').hide();
-                    $('#btnRemovePhoto').show();
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        $('#btnRemovePhoto').click(function() {
-            $('#foto_usaha').val('');
-            $('#photoPreview').attr('src', '').hide();
-            $('#photoPlaceholder').show();
-            $(this).hide();
-        });
-
-        // Filter
-        $('#filterBtn').click(function() {
-            let search = [];
-            if ($('#filterJenisUsaha').val() != 'all') search.push($('#filterJenisUsaha').val());
-            if ($('#filterKomoditas').val() != 'all') search.push($('#filterKomoditas').val());
-            if ($('#filterKelurahan').val() != 'all') search.push($('#filterKelurahan').val());
-            if ($('#filterPeriode').val() != 'all') search.push($('#filterPeriode').val());
-            dataTable.search(search.join(' ')).draw();
-        });
-
-        $('#resetBtn').click(function() {
-            $('#filterJenisUsaha, #filterKomoditas, #filterKelurahan, #filterPeriode').val('all');
-            dataTable.search('').draw();
-        });
-
-        // Form Submit
-        $('#formJenisUsaha').submit(function(e) {
-            e.preventDefault();
-            
-            // Validasi
-            let isValid = true;
-            $('.is-invalid').removeClass('is-invalid');
-            
-            // Cek field wajib
-            let requiredFields = ['nama_pemilik', 'nama_petugas', 'tanggal_input', 'kelurahan', 'latitude', 'longitude'];
-            requiredFields.forEach(id => {
-                if (!$('#' + id).val()) {
-                    $('#' + id).addClass('is-invalid');
-                    isValid = false;
-                }
-            });
-
-            // Cek baris jenis usaha
-            let rows = $('.jenis-usaha-row');
-            if (rows.length === 0) {
-                showAlert('danger', 'Minimal 1 data komoditas harus diisi');
-                return;
-            }
-            
-            rows.each(function(i) {
-                let jenis = $(this).find('.jenis_usaha').val();
-                let komoditas = $(this).find('.komoditas_ternak').val();
-                let jumlah = $(this).find('.jumlah').val();
-                
-                if (!jenis) {
-                    $(this).find('.jenis_usaha').addClass('is-invalid');
-                    isValid = false;
-                }
-                if (!komoditas) {
-                    $(this).find('.komoditas_ternak').addClass('is-invalid');
-                    isValid = false;
-                }
-                if (jumlah === '' || parseInt(jumlah) <= 0) {
-                    $(this).find('.jumlah').addClass('is-invalid');
-                    isValid = false;
-                }
-            });
-
-            if (!isValid) {
-                showAlert('danger', 'Harap lengkapi semua field wajib dengan benar');
-                return;
-            }
-
-            // Hitung jumlah baris yang akan diinsert
-            let totalRows = rows.length;
-            console.log('Total rows to insert: ' + totalRows);
-
-            // Tampilkan loading
-            let btn = $(this).find('button[type="submit"]');
-            let originalText = btn.html();
-            btn.html('<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan ' + totalRows + ' data...').prop('disabled', true);
-
-            // Kirim data
-            $.ajax({
-                url: '<?php echo base_url("P_Input_Jenis_Usaha/save"); ?>',
-                type: 'POST',
-                data: new FormData(this),
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function(res) {
-                    console.log('Response:', res);
-                    if (res.status === 'success') {
-                        showAlert('success', res.message);
-                        resetForm();
-                        $('#formContainer').removeClass('show');
-                        $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT JENIS USAHA');
-                        
-                        // Reload halaman setelah 2 detik untuk melihat data baru
-                        setTimeout(() => location.reload(), 2000);
-                    } else {
-                        showAlert('danger', res.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX Error:', status, error);
-                    console.error('Response Text:', xhr.responseText);
-                    showAlert('danger', 'Terjadi kesalahan: ' + error);
-                },
-                complete: function() {
-                    btn.html(originalText).prop('disabled', false);
-                }
-            });
-        });
-
-        // Reset Form
-        function resetForm() {
-            $('#formJenisUsaha')[0].reset();
-            $('#kecamatan').val('<?php echo $this->session->userdata('kecamatan') ?: 'Benowo'; ?>');
-            $('#tanggal_input').val(new Date().toISOString().split('T')[0]);
-            
-            // Reset ke 1 baris saja
-            $('#jenisUsahaBody').empty().html(`
-                <tr class="jenis-usaha-row">
-                    <td>
-                        <select class="form-control jenis_usaha" name="jenis_usaha[]" required>
-                            <option value="">Pilih Jenis Usaha</option>
-                            <option value="Peternak Ayam">Peternak Ayam</option>
-                            <option value="Peternak Domba">Peternak Domba</option>
-                            <option value="Peternak Kambing">Peternak Kambing</option>
-                            <option value="Peternak Kerbau">Peternak Kerbau</option>
-                            <option value="Peternak Kuda">Peternak Kuda</option>
-                            <option value="Peternak Sapi">Peternak Sapi</option>
-                            <option value="Peternak Unggas">Peternak Unggas</option>
-                            <option value="Lainnya">Lainnya</option>
-                        </select>
-                    </td>
-                    <td>
-                        <select class="form-control komoditas_ternak" name="komoditas_ternak[]" required>
-                            <option value="">Pilih Komoditas Ternak</option>
-                            <option value="Sapi Potong">Sapi Potong</option>
-                            <option value="Sapi Perah">Sapi Perah</option>
-                            <option value="Kerbau">Kerbau</option>
-                            <option value="Kambing">Kambing</option>
-                            <option value="Domba">Domba</option>
-                            <option value="Ayam Ras Petelur">Ayam Ras Petelur</option>
-                            <option value="Ayam Ras Pedaging">Ayam Ras Pedaging</option>
-                            <option value="Ayam Kampung">Ayam Kampung</option>
-                            <option value="Itik">Itik</option>
-                        </select>
-                    </td>
-                    <td><input type="number" class="form-control jumlah" name="jumlah[]" min="0" required></td>
-                    <td class="text-center">
-                        <button type="button" class="btn btn-success btn-sm btn-add-row"><i class="fas fa-plus"></i></button>
-                        <button type="button" class="btn btn-danger btn-sm btn-remove-row" style="display: none;"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-            `);
-            updateRemoveButtons();
-            
-            $('#coordinateInfo').hide();
-            $('#photoPreview').attr('src', '').hide();
-            $('#photoPlaceholder').show();
-            $('#btnRemovePhoto').hide();
-            $('.is-invalid').removeClass('is-invalid');
-        }
-
-        // Alert
-        function showAlert(type, message) {
-            $('#alert-container').html(`
-                <div class="alert alert-${type} alert-dismissible fade show">
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            `);
-            setTimeout(() => $('.alert').alert('close'), 5000);
-        }
-
-        // Show Foto Modal
-        window.showFoto = function(url) {
-            $('#fotoModalImg').attr('src', url);
-            $('#fotoModal').modal('show');
-        };
-    });
+        var base_url = "<?= base_url() ?>";
+        var user_kecamatan = "<?php echo $this->session->userdata('kecamatan') ?: 'Benowo'; ?>";
+        var csrf_token_name = "<?php echo $this->security->get_csrf_token_name(); ?>";
     </script>
+    
+    <!-- Custom JS Input Jenis Usaha -->
+    <script src="<?php echo base_url('assets/js/p_input_jenis_usaha.js'); ?>"></script>
 </body>
 </html>

@@ -6,47 +6,76 @@ class Data_Klinik extends CI_Controller {
     public function __construct()
     {
         parent::__construct();
-        // Load model jika diperlukan
-        // $this->load->model('Klinik_model');
+        $this->load->database();
     }
 
     public function index()
     {
-        // $data['klinik'] = $this->Klinik_model->get_all_data();
         $this->load->view('admin/data/data_klinik');
+    }
+
+    public function get_all_data()
+    {
+        header('Content-Type: application/json');
         
+        // Query langsung tanpa model untuk test
+        $query = $this->db->get('input_klinik_hewan');
+        $data = $query->result_array();
+        
+        echo json_encode($data);
     }
 
-    // Fungsi untuk mendapatkan data JSON (jika menggunakan AJAX)
-    public function get_data()
+    public function get_detail($id)
     {
-        // $data = $this->Klinik_model->get_all_data();
-        // echo json_encode($data);
+        header('Content-Type: application/json');
+        
+        $this->db->where('id', $id);
+        $query = $this->db->get('input_klinik_hewan');
+        $data = $query->row_array();
+        
+        echo json_encode($data);
     }
 
-    // Fungsi untuk menambah data
-    public function tambah()
+    public function delete($id)
     {
-        // Logika untuk menambah data
+        header('Content-Type: application/json');
+        
+        $this->db->where('id', $id);
+        $result = $this->db->delete('input_klinik_hewan');
+        
+        echo json_encode([
+            'status' => $result ? 'success' : 'error',
+            'message' => $result ? 'Data berhasil dihapus' : 'Gagal menghapus data'
+        ]);
     }
 
-    // Fungsi untuk mengedit data
-    public function edit($id)
+    public function update($id)
     {
-        // Logika untuk mengedit data
-    }
-
-    // Fungsi untuk menghapus data
-    public function hapus($id)
-    {
-        // Logika untuk menghapus data
-    }
-
-    // Fungsi untuk mendapatkan detail klinik
-    public function detail($id)
-    {
-        // $data = $this->Klinik_model->get_detail($id);
-        // echo json_encode($data);
+        header('Content-Type: application/json');
+        
+        $update_data = [
+            'nama_klinik' => $this->input->post('nama_klinik'),
+            'kecamatan' => $this->input->post('kecamatan'),
+            'kelurahan' => $this->input->post('kelurahan'),
+            'alamat' => $this->input->post('alamat'),
+            'rt' => $this->input->post('rt'),
+            'rw' => $this->input->post('rw'),
+            'telp' => $this->input->post('telepon'),
+            'latitude' => $this->input->post('latitude'),
+            'longitude' => $this->input->post('longitude'),
+            'jumlah_dokter' => $this->input->post('jumlah_dokter'),
+            'jenis_layanan' => $this->input->post('jenis_layanan'),
+            'surat_ijin' => $this->input->post('surat_ijin'),
+            'keterangan' => $this->input->post('keterangan')
+        ];
+        
+        $this->db->where('id', $id);
+        $result = $this->db->update('input_klinik_hewan', $update_data);
+        
+        echo json_encode([
+            'status' => $result ? 'success' : 'error',
+            'message' => $result ? 'Data berhasil diperbarui' : 'Gagal memperbarui data'
+        ]);
     }
 }
 ?>

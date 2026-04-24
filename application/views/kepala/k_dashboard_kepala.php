@@ -123,7 +123,7 @@
                                     </div>
                                     <span class="profile-username">
                                         <span class="fw-bold" style="color: #000000 !important;">Kepala Dinas DKPP Surabaya</span>
-                                    </span>
+                                    </span> 
                                 </a>
                                 <ul class="dropdown-menu dropdown-user animated fadeIn">
                                     <div class="dropdown-user-scroll scrollbar-outer">

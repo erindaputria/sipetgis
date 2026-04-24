@@ -15,7 +15,7 @@ class Laporan_Vaksinasi_Model extends CI_Model {
         'Benowo', 'Pakal', 'Sambikerep', 'Tandes', 'Sukomanunggal',
         'Lakarsantri', 'Wiyung', 'Sawahan', 'Dukuh Pakis', 'Karangpilang',
         'Gayungan', 'Jambangan', 'Wonokromo', 'Tegalsari', 'Genteng', 'Bubutan'
-    ];
+    ]; 
 
     public function get_kecamatan()
     {
@@ -67,10 +67,10 @@ class Laporan_Vaksinasi_Model extends CI_Model {
     {
         $sql = "SELECT 
                     kecamatan,
-                    SUM(CASE WHEN komoditas_ternak = 'Sapi Potong' THEN CAST(jumlah AS UNSIGNED) ELSE 0 END) as sapi_potong,
-                    SUM(CASE WHEN komoditas_ternak = 'Sapi Perah' THEN CAST(jumlah AS UNSIGNED) ELSE 0 END) as sapi_perah,
-                    SUM(CASE WHEN komoditas_ternak = 'Kambing' THEN CAST(jumlah AS UNSIGNED) ELSE 0 END) as kambing,
-                    SUM(CASE WHEN komoditas_ternak = 'Domba' THEN CAST(jumlah AS UNSIGNED) ELSE 0 END) as domba
+                    COALESCE(SUM(CASE WHEN komoditas_ternak = 'Sapi Potong' THEN CAST(jumlah AS UNSIGNED) ELSE 0 END), 0) as sapi_potong,
+                    COALESCE(SUM(CASE WHEN komoditas_ternak = 'Sapi Perah' THEN CAST(jumlah AS UNSIGNED) ELSE 0 END), 0) as sapi_perah,
+                    COALESCE(SUM(CASE WHEN komoditas_ternak = 'Kambing' THEN CAST(jumlah AS UNSIGNED) ELSE 0 END), 0) as kambing,
+                    COALESCE(SUM(CASE WHEN komoditas_ternak = 'Domba' THEN CAST(jumlah AS UNSIGNED) ELSE 0 END), 0) as domba
                 FROM input_vaksinasi
                 WHERE jenis_vaksinasi IN ('Vaksinasi PMK', 'PMK', 'Vaksinasi LSD', 'LSD')
                 AND komoditas_ternak IN ('Sapi Potong', 'Sapi Perah', 'Kambing', 'Domba')";
@@ -85,10 +85,6 @@ class Laporan_Vaksinasi_Model extends CI_Model {
         
         if($kecamatan_filter && $kecamatan_filter != 'semua' && $kecamatan_filter != 'Surabaya') {
             $sql .= " AND UPPER(kecamatan) = " . $this->db->escape(strtoupper($kecamatan_filter));
-        } else {
-            // Filter kecamatan yang valid (bukan Surabaya)
-            $validKecamatan = implode("','", array_map('strtoupper', $this->kecamatan_order));
-            $sql .= " AND UPPER(kecamatan) IN ('" . $validKecamatan . "')";
         }
         
         $sql .= " GROUP BY kecamatan ORDER BY kecamatan ASC";
@@ -99,6 +95,11 @@ class Laporan_Vaksinasi_Model extends CI_Model {
         // Normalisasi nama kecamatan
         foreach($results as $item) {
             $item->kecamatan = ucwords(strtolower($item->kecamatan));
+            // Pastikan integer
+            $item->sapi_potong = (int)$item->sapi_potong;
+            $item->sapi_perah = (int)$item->sapi_perah;
+            $item->kambing = (int)$item->kambing;
+            $item->domba = (int)$item->domba;
         }
         
         return $results;
@@ -106,16 +107,16 @@ class Laporan_Vaksinasi_Model extends CI_Model {
     
     public function get_data_ndai($tahun, $bulan, $kecamatan_filter = null)
     {
+        // Query untuk mengambil data dari database
         $sql = "SELECT 
                     kecamatan,
-                    SUM(CASE WHEN komoditas_ternak IN ('Ayam', 'Ayam Buras', 'Ayam Ras Pedaging', 'Ayam Ras Petelur', 'Kambing') THEN CAST(jumlah AS UNSIGNED) ELSE 0 END) as ayam,
-                    SUM(CASE WHEN komoditas_ternak = 'Itik' THEN CAST(jumlah AS UNSIGNED) ELSE 0 END) as itik,
-                    SUM(CASE WHEN komoditas_ternak = 'Angsa' THEN CAST(jumlah AS UNSIGNED) ELSE 0 END) as angsa,
-                    SUM(CASE WHEN komoditas_ternak = 'Kalkun' THEN CAST(jumlah AS UNSIGNED) ELSE 0 END) as kalkun,
-                    SUM(CASE WHEN komoditas_ternak = 'Burung' THEN CAST(jumlah AS UNSIGNED) ELSE 0 END) as burung
+                    COALESCE(SUM(CASE WHEN komoditas_ternak IN ('Ayam', 'Ayam Buras', 'Ayam Ras Pedaging', 'Ayam Ras Petelur') THEN CAST(jumlah AS UNSIGNED) ELSE 0 END), 0) as ayam,
+                    COALESCE(SUM(CASE WHEN komoditas_ternak = 'Itik' THEN CAST(jumlah AS UNSIGNED) ELSE 0 END), 0) as itik,
+                    COALESCE(SUM(CASE WHEN komoditas_ternak = 'Angsa' THEN CAST(jumlah AS UNSIGNED) ELSE 0 END), 0) as angsa,
+                    COALESCE(SUM(CASE WHEN komoditas_ternak = 'Kalkun' THEN CAST(jumlah AS UNSIGNED) ELSE 0 END), 0) as kalkun,
+                    COALESCE(SUM(CASE WHEN komoditas_ternak = 'Burung' THEN CAST(jumlah AS UNSIGNED) ELSE 0 END), 0) as burung
                 FROM input_vaksinasi
-                WHERE jenis_vaksinasi IN ('Vaksinasi ND-AI', 'ND-AI')
-                AND komoditas_ternak IN ('Ayam', 'Ayam Buras', 'Ayam Ras Pedaging', 'Ayam Ras Petelur', 'Itik', 'Angsa', 'Kalkun', 'Burung', 'Kambing')";
+                WHERE jenis_vaksinasi IN ('Vaksinasi ND-AI', 'ND-AI')";
         
         if($tahun && $tahun != '') {
             $sql .= " AND YEAR(tanggal_vaksinasi) = " . $this->db->escape($tahun);
@@ -127,20 +128,50 @@ class Laporan_Vaksinasi_Model extends CI_Model {
         
         if($kecamatan_filter && $kecamatan_filter != 'semua' && $kecamatan_filter != 'Surabaya') {
             $sql .= " AND UPPER(kecamatan) = " . $this->db->escape(strtoupper($kecamatan_filter));
-        } else {
-            // Filter kecamatan yang valid (bukan Surabaya)
-            $validKecamatan = implode("','", array_map('strtoupper', $this->kecamatan_order));
-            $sql .= " AND UPPER(kecamatan) IN ('" . $validKecamatan . "')";
         }
         
         $sql .= " GROUP BY kecamatan ORDER BY kecamatan ASC";
         
         $query = $this->db->query($sql);
-        $results = $query->result();
+        $dbResults = $query->result();
         
-        // Normalisasi nama kecamatan
-        foreach($results as $item) {
-            $item->kecamatan = ucwords(strtolower($item->kecamatan));
+        // Normalisasi nama kecamatan dari database dan pastikan integer
+        $dataMap = [];
+        foreach($dbResults as $item) {
+            $kecamatanNormalized = ucwords(strtolower($item->kecamatan));
+            // Pastikan semua nilai integer
+            $item->ayam = (int)$item->ayam;
+            $item->itik = (int)$item->itik;
+            $item->angsa = (int)$item->angsa;
+            $item->kalkun = (int)$item->kalkun;
+            $item->burung = (int)$item->burung;
+            $dataMap[$kecamatanNormalized] = $item;
+        }
+        
+        // Tentukan daftar kecamatan yang akan ditampilkan
+        $kecamatanList = [];
+        if($kecamatan_filter && $kecamatan_filter != 'semua' && $kecamatan_filter != 'Surabaya') {
+            $kecamatanList = [ucwords(strtolower($kecamatan_filter))];
+        } else {
+            $kecamatanList = $this->kecamatan_order;
+        }
+        
+        // Buat hasil untuk semua kecamatan (isi 0 jika tidak ada data)
+        $results = [];
+        foreach($kecamatanList as $kecamatan) {
+            if(isset($dataMap[$kecamatan])) {
+                $results[] = $dataMap[$kecamatan];
+            } else {
+                // Buat object dengan nilai 0 untuk kecamatan yang tidak memiliki data
+                $emptyObj = new stdClass();
+                $emptyObj->kecamatan = $kecamatan;
+                $emptyObj->ayam = 0;
+                $emptyObj->itik = 0;
+                $emptyObj->angsa = 0;
+                $emptyObj->kalkun = 0;
+                $emptyObj->burung = 0;
+                $results[] = $emptyObj;
+            }
         }
         
         return $results;

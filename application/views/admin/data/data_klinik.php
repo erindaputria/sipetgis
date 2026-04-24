@@ -15,7 +15,7 @@
                 families: [
                     "Font Awesome 5 Solid",
                     "Font Awesome 5 Regular",
-                    "Font Awesome 5 Brands",
+                    "Font Awesome 5 Brands", 
                     "simple-line-icons",
                 ],
                 urls: ["<?php echo base_url(); ?>assets/SIPETGIS/assets/css/fonts.min.css"],
@@ -507,6 +507,9 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <!-- Custom JS Data Klinik -->
+    <script>
+    var base_url = "<?= base_url() ?>";
+    </script>
     <script src="<?php echo base_url('assets/js/data_klinik.js'); ?>"></script>
 </body>
-</html> 
+</html>

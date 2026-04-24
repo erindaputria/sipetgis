@@ -6,6 +6,10 @@
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/kaiadmin/favicon.ico" type="image/x-icon" />
 
+    <script>
+    var base_url = "<?= base_url() ?>";
+    </script>
+
     <!-- Fonts and icons -->
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
@@ -167,7 +171,7 @@
                                                     <h4>Administrator</h4>
                                                     <p class="text-muted">admin@dkppsby.go.id</p>
                                                 </div>
-                                            </div>
+                                            </div> 
                                         </li>
                                         <li>
                                             <div class="dropdown-divider"></div>
@@ -201,15 +205,6 @@
                                     <label for="filterKomoditas" class="form-label fw-bold">Filter Komoditas:</label>
                                     <select class="form-select" id="filterKomoditas">
                                         <option selected value="all">Semua Komoditas</option>
-                                        <option value="sapi_potong">Sapi Potong</option>
-                                        <option value="sapi_perah">Sapi Perah</option>
-                                        <option value="kambing">Kambing</option>
-                                        <option value="domba">Domba</option>
-                                        <option value="ayam">Ayam</option>
-                                        <option value="itik">Itik</option>
-                                        <option value="angsa">Angsa</option>
-                                        <option value="kalkun">Kalkun</option>
-                                        <option value="burung">Burung</option>
                                     </select>
                                 </div>
                             </div>
@@ -218,9 +213,6 @@
                                     <label for="filterPeriode" class="form-label fw-bold">Filter Periode:</label>
                                     <select class="form-select" id="filterPeriode">
                                         <option selected value="all">Semua Periode</option>
-                                        <option value="2023">Tahun 2023</option>
-                                        <option value="2022">Tahun 2022</option>
-                                        <option value="2021">Tahun 2021</option>
                                     </select>
                                 </div>
                             </div>
@@ -250,196 +242,14 @@
                                             <th>Koordinat Lokasi</th>
                                             <th>Tanggal Update</th>
                                             <th width="100">Aksi</th>
+                                            <th width="50">Foto</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Vaksinasi PMK Tahap II</td>
-                                            <td>LUKAH BANUA BARU (Kelompok Ternak)</td>
-                                            <td>Kambing</td>
-                                            <td><span>10</span> <span>Ekor</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="mb-1 text-muted">-</div>
-                                                    <button class="btn btn-sm btn-outline-secondary-custom" disabled>
-                                                        <i class="fas fa-map-marker-alt me-1"></i>Lihat Peta
-                                                    </button>
-                                                </div>
-                                             </td>
-                                            <td>13-11-2022</td>
-                                            <td>
-                                                <div class="d-flex gap-1">
-                                                    <button class="btn btn-sm btn-warning-custom" title="Edit Data">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger-custom" title="Hapus Data">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                             </td>
-                                         </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Vaksinasi PMK Tahap II</td>
-                                            <td>Meleleh Raya (Kelompok Ternak)</td>
-                                            <td>Sapi Potong</td>
-                                            <td><span>50</span> <span>Ekor</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="mb-1 text-muted">-</div>
-                                                    <button class="btn btn-sm btn-outline-secondary-custom" disabled>
-                                                        <i class="fas fa-map-marker-alt me-1"></i>Lihat Peta
-                                                    </button>
-                                                </div>
-                                             </td>
-                                            <td>13-11-2022</td>
-                                            <td>
-                                                <div class="d-flex gap-1">
-                                                    <button class="btn btn-sm btn-warning-custom" title="Edit Data">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger-custom" title="Hapus Data">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                             </td>
-                                         </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Vaksinasi PMK Tahap I</td>
-                                            <td>Bersatu (Kelompok Ternak)</td>
-                                            <td>Sapi Potong</td>
-                                            <td><span>15</span> <span>Ekor</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="mb-1">-7.2575, 112.7521</div>
-                                                    <button class="btn btn-sm btn-outline-primary-custom" onclick="showMap('Vaksinasi PMK Tahap I', 'Bersatu', 'Sapi Potong', '-7.2575, 112.7521')">
-                                                        <i class="fas fa-map-marker-alt me-1"></i>Lihat Peta
-                                                    </button>
-                                                </div>
-                                             </td>
-                                            <td>10-10-2022</td>
-                                            <td>
-                                                <div class="d-flex gap-1">
-                                                    <button class="btn btn-sm btn-warning-custom" title="Edit Data">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger-custom" title="Hapus Data">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                             </td>
-                                         </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td>Vaksinasi Rabies</td>
-                                            <td>Peternak Mandiri</td>
-                                            <td>Anjing</td>
-                                            <td><span>25</span> <span>Ekor</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="mb-1">-7.2500, 112.7600</div>
-                                                    <button class="btn btn-sm btn-outline-primary-custom" onclick="showMap('Vaksinasi Rabies', 'Peternak Mandiri', 'Anjing', '-7.2500, 112.7600')">
-                                                        <i class="fas fa-map-marker-alt me-1"></i>Lihat Peta
-                                                    </button>
-                                                </div>
-                                             </td>
-                                            <td>05-09-2022</td>
-                                            <td>
-                                                <div class="d-flex gap-1">
-                                                    <button class="btn btn-sm btn-warning-custom" title="Edit Data">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger-custom" title="Hapus Data">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                             </td>
-                                         </tr>
-                                        <tr>
-                                            <td>5</td>
-                                            <td>Vaksinasi ND</td>
-                                            <td>Ayam Sejahtera (Kelompok Ternak)</td>
-                                            <td>Ayam Ras Petelur</td>
-                                            <td><span>1000</span> <span>Ekor</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="mb-1">-7.2650, 112.7475</div>
-                                                    <button class="btn btn-sm btn-outline-primary-custom" onclick="showMap('Vaksinasi ND', 'Ayam Sejahtera', 'Ayam Ras Petelur', '-7.2650, 112.7475')">
-                                                        <i class="fas fa-map-marker-alt me-1"></i>Lihat Peta
-                                                    </button>
-                                                </div>
-                                             </td>
-                                            <td>20-08-2022</td>
-                                            <td>
-                                                <div class="d-flex gap-1">
-                                                    <button class="btn btn-sm btn-warning-custom" title="Edit Data">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger-custom" title="Hapus Data">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                             </td>
-                                         </tr>
-                                        <tr>
-                                            <td>6</td>
-                                            <td>Vaksinasi AI</td>
-                                            <td>Bebek Unggul Farm</td>
-                                            <td>Itik</td>
-                                            <td><span>200</span> <span>Ekor</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="mb-1">-7.2600, 112.7500</div>
-                                                    <button class="btn btn-sm btn-outline-primary-custom" onclick="showMap('Vaksinasi AI', 'Bebek Unggul Farm', 'Itik', '-7.2600, 112.7500')">
-                                                        <i class="fas fa-map-marker-alt me-1"></i>Lihat Peta
-                                                    </button>
-                                                </div>
-                                             </td>
-                                            <td>15-07-2022</td>
-                                            <td>
-                                                <div class="d-flex gap-1">
-                                                    <button class="btn btn-sm btn-warning-custom" title="Edit Data">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger-custom" title="Hapus Data">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                             </td>
-                                         </tr>
+                                        <!-- Data akan diisi oleh JavaScript -->
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Detail Section (Initially Hidden) -->
-                    <div id="detailSection" class="detail-section" style="display: none;">
-                        <div class="detail-header">
-                            <h5 class="fw-bold mb-0" id="detailTitle">Detail History Data Vaksinasi</h5>
-                            <div id="detailInfo" class="text-muted mt-2"></div>
-                        </div>
-                        <div class="table-responsive">
-                            <table id="detailTable" class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Jenis Perubahan</th>
-                                        <th>Jumlah</th>
-                                        <th>Alasan</th>
-                                        <th>Petugas</th>
-                                        <th>Tanggal</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="detailTableBody"></tbody>
-                            </table>
-                        </div>
-                        <div class="text-end mt-3">
-                            <button id="closeDetailBtn" class="btn btn-outline-primary-custom">
-                                <i class="fas fa-times me-2"></i>Tutup Detail
-                            </button>
                         </div>
                     </div>
 
@@ -489,6 +299,196 @@
                             </button>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Data -->
+    <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="formEdit">
+                    <input type="hidden" id="edit_id" name="id">
+                    <div class="modal-header bg-primary-custom text-white">
+                        <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Edit Data Vaksinasi</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Tanggal Vaksinasi <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="edit_tanggal" name="tanggal_vaksinasi" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nama Petugas <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="edit_petugas" name="nama_petugas" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nama Peternak <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="edit_peternak" name="nama_peternak" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">NIK</label>
+                                <input type="text" class="form-control" id="edit_nik" name="nik" maxlength="16">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Kecamatan <span class="text-danger">*</span></label>
+                                <select class="form-control" id="edit_kecamatan" name="kecamatan" required>
+                                    <option value="">Pilih Kecamatan</option>
+                                    <option value="Asemrowo">Asemrowo</option>
+                                    <option value="Benowo">Benowo</option>
+                                    <option value="Bubutan">Bubutan</option>
+                                    <option value="Bulak">Bulak</option>
+                                    <option value="Dukuh Pakis">Dukuh Pakis</option>
+                                    <option value="Gayungan">Gayungan</option>
+                                    <option value="Genteng">Genteng</option>
+                                    <option value="Gubeng">Gubeng</option>
+                                    <option value="Gunung Anyar">Gunung Anyar</option>
+                                    <option value="Jambangan">Jambangan</option>
+                                    <option value="Karang Pilang">Karang Pilang</option>
+                                    <option value="Kenjeran">Kenjeran</option>
+                                    <option value="Krembangan">Krembangan</option>
+                                    <option value="Lakarsantri">Lakarsantri</option>
+                                    <option value="Mulyorejo">Mulyorejo</option>
+                                    <option value="Pabean Cantian">Pabean Cantian</option>
+                                    <option value="Pakal">Pakal</option>
+                                    <option value="Rungkut">Rungkut</option>
+                                    <option value="Sambikerep">Sambikerep</option>
+                                    <option value="Sawahan">Sawahan</option>
+                                    <option value="Semampir">Semampir</option>
+                                    <option value="Simokerto">Simokerto</option>
+                                    <option value="Sukolilo">Sukolilo</option>
+                                    <option value="Sukomanunggal">Sukomanunggal</option>
+                                    <option value="Tambaksari">Tambaksari</option>
+                                    <option value="Tandes">Tandes</option>
+                                    <option value="Tegalsari">Tegalsari</option>
+                                    <option value="Tenggilis Mejoyo">Tenggilis Mejoyo</option>
+                                    <option value="Wiyung">Wiyung</option>
+                                    <option value="Wonocolo">Wonocolo</option>
+                                    <option value="Wonokromo">Wonokromo</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Kelurahan <span class="text-danger">*</span></label>
+                                <select class="form-control" id="edit_kelurahan" name="kelurahan" required>
+                                    <option value="">Pilih Kelurahan</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Alamat</label>
+                                <textarea class="form-control" id="edit_alamat" name="alamat" rows="2" placeholder="Masukkan alamat lengkap"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 mb-3">
+                                <label class="form-label">RT</label>
+                                <input type="text" class="form-control" id="edit_rt" name="rt">
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label class="form-label">RW</label>
+                                <input type="text" class="form-control" id="edit_rw" name="rw">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Latitude</label>
+                                <input type="text" class="form-control" id="edit_latitude" name="latitude">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Longitude</label>
+                                <input type="text" class="form-control" id="edit_longitude" name="longitude">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Jumlah <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="edit_jumlah" name="jumlah" required min="0">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Komoditas <span class="text-danger">*</span></label>
+                                <select class="form-control" id="edit_komoditas" name="komoditas_ternak" required>
+                                    <option value="">Pilih Komoditas</option>
+                                    <option value="Sapi Potong">Sapi Potong</option>
+                                    <option value="Sapi Perah">Sapi Perah</option>
+                                    <option value="Kambing">Kambing</option>
+                                    <option value="Domba">Domba</option>
+                                    <option value="Ayam">Ayam</option>
+                                    <option value="Itik">Itik</option>
+                                    <option value="Kucing">Kucing</option>
+                                    <option value="Anjing">Anjing</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Jenis Vaksinasi</label>
+                                <input type="text" class="form-control" id="edit_jenis_vaksinasi" name="jenis_vaksinasi">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Dosis</label>
+                                <input type="text" class="form-control" id="edit_dosis" name="dosis">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Telepon</label>
+                                <input type="text" class="form-control" id="edit_telp" name="telp">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Bantuan Provinsi</label>
+                                <select class="form-control" id="edit_bantuan" name="bantuan_prov">
+                                    <option value="Tidak">Tidak</option>
+                                    <option value="Ya">Ya</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Keterangan</label>
+                                <textarea class="form-control" id="edit_keterangan" name="keterangan" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary-custom btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-1"></i>Batal</button>
+                        <button type="submit" class="btn btn-primary-custom btn-sm"><i class="fas fa-save me-1"></i>Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Foto -->
+    <div class="modal fade modal-foto" id="fotoModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary-custom text-white">
+                    <h5 class="modal-title">Foto Vaksinasi</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="fotoModalImg" src="" alt="Foto Vaksinasi" style="max-width:100%; max-height:80vh;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Delete -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger-custom text-white">
+                    <h5 class="modal-title">Konfirmasi Hapus</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah Anda yakin ingin menghapus data vaksinasi ini?</p>
+                    <p class="fw-bold" id="deleteInfo"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary-custom btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-1"></i>Batal</button>
+                    <button type="button" class="btn btn-danger-custom btn-sm" id="confirmDelete"><i class="fas fa-trash me-1"></i>Hapus</button>
                 </div>
             </div>
         </div>

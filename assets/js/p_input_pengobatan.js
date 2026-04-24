@@ -81,15 +81,12 @@ $(document).ready(function() {
                         <option value="Kerbau">Kerbau</option>
                         <option value="Kambing">Kambing</option>
                         <option value="Domba">Domba</option>
-                        <option value="Babi">Babi</option>
+                        <option value="Kura-Kura">Kura-Kura</option>
                         <option value="Kuda">Kuda</option>
                         <option value="Kelinci">Kelinci</option>
-                        <option value="Ayam Ras Petelur">Ayam Ras Petelur</option>
-                        <option value="Ayam Ras Pedaging">Ayam Ras Pedaging</option>
-                        <option value="Ayam Kampung">Ayam Kampung</option>
+                        <option value="Ayam">Ayam</option>
                         <option value="Itik">Itik</option>
-                        <option value="Entok">Entok</option>
-                        <option value="Burung Puyuh">Burung Puyuh</option>
+                        <option value="Kucing">Kucing</option>
                     </select>
                 </td>
                 <td>
@@ -180,15 +177,12 @@ $(document).ready(function() {
                         <option value="Kerbau">Kerbau</option>
                         <option value="Kambing">Kambing</option>
                         <option value="Domba">Domba</option>
-                        <option value="Babi">Babi</option>
+                        <option value="Kura-Kura">Kura-Kura</option>
                         <option value="Kuda">Kuda</option>
                         <option value="Kelinci">Kelinci</option>
-                        <option value="Ayam Ras Petelur">Ayam Ras Petelur</option>
-                        <option value="Ayam Ras Pedaging">Ayam Ras Pedaging</option>
-                        <option value="Ayam Kampung">Ayam Kampung</option>
+                        <option value="Ayam">Ayam</option>
                         <option value="Itik">Itik</option>
-                        <option value="Entok">Entok</option>
-                        <option value="Burung Puyuh">Burung Puyuh</option>
+                        <option value="Kucing">Kucing</option>
                     </select>
                 </td>
                 <td>
@@ -216,6 +210,7 @@ $(document).ready(function() {
         $('#photoPreview').hide();
         $('#photoPlaceholder').show();
         $('#btnRemovePhoto').hide();
+        $('#alamat').val('');
         $('.is-invalid').removeClass('is-invalid');
     }
 
@@ -307,9 +302,17 @@ $(document).ready(function() {
     $('#formPengobatan').submit(function(e) {
         e.preventDefault();
         let isValid = true;
-        const fields = ['nama_peternak', 'nama_petugas', 'tanggal_pengobatan', 'bantuan_prov', 'kelurahan', 'latitude', 'longitude'];
+        
+        // Validasi field wajib termasuk ALAMAT
+        const fields = ['nama_peternak', 'nama_petugas', 'tanggal_pengobatan', 'bantuan_prov', 'kelurahan', 'latitude', 'longitude', 'alamat'];
         fields.forEach(f => { $('#' + f).removeClass('is-invalid'); });
-        fields.forEach(f => { if (!$('#' + f).val()) { $('#' + f).addClass('is-invalid'); isValid = false; } });
+        
+        fields.forEach(f => { 
+            if (!$('#' + f).val()) { 
+                $('#' + f).addClass('is-invalid'); 
+                isValid = false; 
+            } 
+        });
         
         if (!$('#keterangan').val()) {
             $('#keterangan').addClass('is-invalid');
@@ -372,11 +375,10 @@ $(document).ready(function() {
     };
 });
 
-// Fungsi Print/PDF - SAMA PERSIS DENGAN LAPORAN_VAKSINASI
+// Fungsi Print/PDF
 function printWithCurrentData() {
     var title = $('#reportTitle').length ? $('#reportTitle').html() : 'DATA PENGOBATAN TERNAK';
     var subtitle = $('#reportSubtitle').length ? $('#reportSubtitle').html() : 'Kota Surabaya';
-    var tableHtml = $('#pengobatanTable').clone();
     
     var printWindow = window.open('', '_blank');
     printWindow.document.write('<html><head><title>Data Pengobatan Ternak</title>');
@@ -404,7 +406,7 @@ function printWithCurrentData() {
     
     printWindow.document.write('<div class="header">');
     printWindow.document.write('<h2>' + title + '</h2>');
-    printWindow.document.write('<p>' + subtitle + '</p>');
+    printWindow.document.write('<p>' + subtitle + '</p>'); 
     printWindow.document.write('<p>Tanggal Cetak: ' + new Date().toLocaleDateString('id-ID') + '</p>');
     printWindow.document.write('</div>');
     printWindow.document.write(tableContent.outerHTML);

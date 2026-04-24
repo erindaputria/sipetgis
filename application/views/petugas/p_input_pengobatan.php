@@ -333,7 +333,7 @@
                                                                             </td>
                                                                         </tr>
                                                                     </tbody>
-                                                                 </table>
+                                                                 </table> 
                                                             </div>
                                                             <div class="col-md-12 mb-3">
                                                                 <label class="form-label required-field">Keterangan</label>
@@ -358,6 +358,14 @@
                                                         </div>
                                                         <div class="card-body">
                                                             <div class="row">
+                                                                <!-- TAMBAHKAN FIELD ALAMAT LENGKAP DI SINI -->
+                                                                <div class="col-md-12 mb-3">
+                                                                    <label class="form-label required-field">Alamat Lengkap</label>
+                                                                    <textarea class="form-control" id="alamat" name="alamat" rows="3" placeholder="Masukkan alamat lengkap (contoh: Jalan Raya Benowo No. 123, RT 01 RW 02, Kelurahan Sememi)" required></textarea>
+                                                                    <div class="invalid-feedback">Alamat lengkap harus diisi</div>
+                                                                    <small class="text-muted">Isi dengan alamat lengkap lokasi pengobatan ternak</small>
+                                                                </div>
+                                                                
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label required-field">Kecamatan</label>
                                                                     <input type="text" class="form-control" id="kecamatan" name="kecamatan" value="<?php echo $this->session->userdata('kecamatan') ?: 'Benowo'; ?>" readonly />
@@ -565,6 +573,7 @@
                                             <th>Gejala Klinis</th>
                                             <th>Jenis Pengobatan</th>
                                             <th>Jumlah Ternak</th>
+                                            <th>Alamat</th>
                                             <th>Kelurahan</th>
                                             <th>Tanggal</th>
                                             <th>Foto</th>
@@ -581,6 +590,7 @@
                                                     <td><?php echo htmlspecialchars($data['gejala_klinis'] ?? '-'); ?></td>
                                                     <td><?php echo htmlspecialchars($data['jenis_pengobatan'] ?? '-'); ?></td>
                                                     <td><?php echo htmlspecialchars($data['jumlah'] ?? '0'); ?> Ekor</td>
+                                                    <td><?php echo htmlspecialchars($data['alamat'] ?? '-'); ?></td>
                                                     <td><?php echo htmlspecialchars($data['kelurahan'] ?? '-'); ?></td>
                                                     <td><?php echo isset($data['tanggal_pengobatan']) ? date('d-m-Y', strtotime($data['tanggal_pengobatan'])) : '-'; ?></td>
                                                     <td>

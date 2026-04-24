@@ -11,15 +11,15 @@ class Data_Pengobatan_Model extends CI_Model {
 
     public function get_all_pengobatan()
     {
-        // Ambil semua data dari input_pengobatan
         $this->db->select('
             id,
             nama_peternak,
-            nik,
+            nik, 
             tanggal_pengobatan,
             keterangan,
             kecamatan,
             kelurahan,
+            alamat,
             rt,
             rw,
             latitude,
@@ -29,7 +29,6 @@ class Data_Pengobatan_Model extends CI_Model {
             telp,
             bantuan_prov,
             komoditas_ternak,
-            jenis_kelamin,
             gejala_klinis,
             jenis_pengobatan,
             jumlah
@@ -39,17 +38,11 @@ class Data_Pengobatan_Model extends CI_Model {
         $this->db->order_by('id', 'DESC');
         
         $query = $this->db->get();
-        $result = $query->result_array();
-        
-        // Log untuk debug
-        log_message('debug', 'Data_Pengobatan_Model::get_all_pengobatan() - Jumlah data: ' . count($result));
-        
-        return $result;
+        return $query->result_array();
     }
 
     public function get_pengobatan_by_kecamatan($kecamatan)
     {
-        // Ambil data berdasarkan kecamatan
         $this->db->select('
             id,
             nama_peternak,
@@ -58,6 +51,7 @@ class Data_Pengobatan_Model extends CI_Model {
             keterangan,
             kecamatan,
             kelurahan,
+            alamat,
             rt,
             rw,
             latitude,
@@ -67,7 +61,6 @@ class Data_Pengobatan_Model extends CI_Model {
             telp,
             bantuan_prov,
             komoditas_ternak,
-            jenis_kelamin,
             gejala_klinis,
             jenis_pengobatan,
             jumlah
@@ -78,16 +71,11 @@ class Data_Pengobatan_Model extends CI_Model {
         $this->db->order_by('id', 'DESC');
         
         $query = $this->db->get();
-        $result = $query->result_array();
-        
-        log_message('debug', 'Data_Pengobatan_Model::get_pengobatan_by_kecamatan(' . $kecamatan . ') - Jumlah data: ' . count($result));
-        
-        return $result;
+        return $query->result_array();
     }
 
     public function get_pengobatan_by_id($id)
     {
-        // Ambil data berdasarkan ID
         $this->db->select('
             id,
             nama_peternak,
@@ -96,6 +84,7 @@ class Data_Pengobatan_Model extends CI_Model {
             keterangan,
             kecamatan,
             kelurahan,
+            alamat,
             rt,
             rw,
             latitude,
@@ -105,7 +94,6 @@ class Data_Pengobatan_Model extends CI_Model {
             telp,
             bantuan_prov,
             komoditas_ternak,
-            jenis_kelamin,
             gejala_klinis,
             jenis_pengobatan,
             jumlah
@@ -119,7 +107,6 @@ class Data_Pengobatan_Model extends CI_Model {
 
     public function delete_pengobatan($id)
     {
-        // Mulai transaksi
         $this->db->trans_start();
         
         // Ambil data foto untuk dihapus
@@ -135,19 +122,20 @@ class Data_Pengobatan_Model extends CI_Model {
             }
         }
         
-        // Hapus data
         $this->db->where('id', $id);
         $this->db->delete('input_pengobatan');
         
-        // Selesaikan transaksi
         $this->db->trans_complete();
         
         return $this->db->trans_status();
     }
     
-    /**
-     * Get distinct komoditas untuk filter
-     */
+    public function update_pengobatan($id, $data)
+    {
+        $this->db->where('id', $id);
+        return $this->db->update('input_pengobatan', $data);
+    }
+    
     public function get_distinct_komoditas()
     {
         $this->db->distinct();
@@ -161,11 +149,8 @@ class Data_Pengobatan_Model extends CI_Model {
         return $query->result_array();
     }
     
-    /**
-     * Get distinct kecamatan untuk filter
-     */
     public function get_distinct_kecamatan()
-    {
+    { 
         $this->db->distinct();
         $this->db->select('kecamatan');
         $this->db->from('input_pengobatan');
@@ -176,4 +161,4 @@ class Data_Pengobatan_Model extends CI_Model {
         
         return $query->result_array();
     }
-}
+} 

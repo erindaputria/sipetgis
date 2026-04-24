@@ -1,6 +1,6 @@
 /* ==============================================
    INPUT VAKSINASI TERNAK
-   WARNA DASAR: #832706
+   WARNA DASAR: #832706 (SAMA DENGAN PENGOBATAN)
    ============================================== */
 :root {
     --primary: #832706;
@@ -149,23 +149,68 @@
     color: white;
 }
 
-.btn-primary {
-    background: var(--primary) !important;
-    border-color: var(--primary) !important;
+.btn-primary-custom {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-weight: 500;
+    transition: all 0.3s;
+    color: white;
 }
 
-.btn-primary:hover {
-    background: var(--primary-dark) !important;
+.btn-primary-custom:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, #541802 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(131, 39, 6, 0.3);
+    color: white;
 }
 
-.btn-outline-secondary {
-    border-color: #6c757d !important;
-    color: #6c757d !important;
+.btn-secondary-custom {
+    background: #e2e8f0;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-weight: 500;
+    transition: all 0.3s;
+    color: #0f172a;
 }
 
-.btn-outline-secondary:hover {
-    background-color: #6c757d !important;
-    color: white !important;
+.btn-secondary-custom:hover {
+    background: #cbd5e1;
+    transform: translateY(-2px);
+    color: #0f172a;
+}
+
+/* Tombol Aksi - WARNA DASAR COKLAT #832706 */
+.btn-add-row {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.btn-add-row:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.btn-remove-row {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.btn-remove-row:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
 }
 
 /* Form Container Animation */
@@ -176,7 +221,7 @@
 }
 
 .form-container.show {
-    display: block !important;
+    display: block;
     animation: fadeIn 0.5s ease;
 }
 
@@ -392,30 +437,10 @@ table.dataTable tbody tr:hover {
     background-color: #f8f9fa;
 }
 
-/* Komoditas Table */
+/* Komoditas Table Header */
 .komoditas-table thead th {
-    background-color: #e9f0fa;
-    font-size: 0.9rem;
-}
-
-.btn-add-row {
-    background-color: #28a745;
-    color: white;
-}
-
-.btn-add-row:hover {
-    background-color: #218838;
-    color: white;
-}
-
-.btn-remove-row {
-    background-color: #dc3545;
-    color: white;
-}
-
-.btn-remove-row:hover {
-    background-color: #c82333;
-    color: white;
+    background-color: #fef3ef;
+    color: var(--primary);
 }
 
 /* Foto Link */
@@ -481,8 +506,8 @@ table.dataTable tbody tr:hover {
     .table-responsive {
         overflow-x: auto;
     }
-    .btn-primary,
-    .btn-outline-secondary {
+    .btn-primary-custom,
+    .btn-secondary-custom {
         padding: 6px 12px;
         font-size: 12px;
     }

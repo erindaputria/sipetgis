@@ -6,47 +6,65 @@ class Data_Penjual_Obat extends CI_Controller {
     public function __construct()
     {
         parent::__construct();
-        // Load model jika diperlukan
-        // $this->load->model('PenjualObat_model');
+        $this->load->model('Data_Penjual_Obat_Model');
+        $this->load->helper('url');
+        $this->load->library('session');
     }
 
     public function index()
     {
-        // $data['penjual_obat'] = $this->PenjualObat_model->get_all_data();
         $this->load->view('admin/data/data_penjual_obat');
+    }
+
+    public function get_all_data()
+    {
+        header('Content-Type: application/json');
+        $data = $this->Data_Penjual_Obat_Model->get_all_penjual_obat();
+        echo json_encode($data);
+    }
+
+    public function get_detail($id)
+    {
+        header('Content-Type: application/json');
+        $data = $this->Data_Penjual_Obat_Model->get_penjual_obat_by_id($id);
+        echo json_encode($data);
+    }
+
+    public function delete($id)
+    {
+        header('Content-Type: application/json');
+        $result = $this->Data_Penjual_Obat_Model->delete_penjual_obat($id);
+        echo json_encode([
+            'status' => $result ? 'success' : 'error',
+            'message' => $result ? 'Data berhasil dihapus' : 'Gagal menghapus data'
+        ]);
+    }
+
+    public function update($id)
+    {
+        header('Content-Type: application/json');
         
-    }
-
-    // Fungsi untuk mendapatkan data JSON (jika menggunakan AJAX)
-    public function get_data()
-    {
-        // $data = $this->PenjualObat_model->get_all_data();
-        // echo json_encode($data);
-    }
-
-    // Fungsi untuk menambah data
-    public function tambah()
-    {
-        // Logika untuk menambah data
-    }
-
-    // Fungsi untuk mengedit data
-    public function edit($id)
-    {
-        // Logika untuk mengedit data
-    }
-
-    // Fungsi untuk menghapus data
-    public function hapus($id)
-    {
-        // Logika untuk menghapus data
-    }
-
-    // Fungsi untuk mendapatkan detail penjual obat
-    public function detail($id)
-    {
-        // $data = $this->PenjualObat_model->get_detail($id);
-        // echo json_encode($data);
+        $update_data = [
+            'nama_toko' => $this->input->post('nama_toko'),
+            'nama_pemilik' => $this->input->post('pemilik'),
+            'kecamatan' => $this->input->post('kecamatan'),
+            'alamat' => $this->input->post('alamat'),
+            'latitude' => $this->input->post('latitude'),
+            'longitude' => $this->input->post('longitude'),
+            'telp' => $this->input->post('telepon'),
+            'surat_ijin' => $this->input->post('status') == 'Aktif' ? 'Y' : 'N',
+            'kategori_obat' => $this->input->post('kategori_obat'),
+            'jenis_obat' => $this->input->post('jenis_obat'),
+            'obat_hewan' => $this->input->post('obat_hewan'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+        
+        $this->db->where('id_penjual', $id);
+        $result = $this->db->update('penjual', $update_data);
+        
+        echo json_encode([
+            'status' => $result ? 'success' : 'error',
+            'message' => $result ? 'Data berhasil diperbarui' : 'Gagal memperbarui data'
+        ]);
     }
 }
-?>

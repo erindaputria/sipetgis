@@ -11,11 +11,12 @@ class Jenis_Usaha extends CI_Controller {
     }
     
     public function index() {
-        $data['jenis_usaha'] = $this->Jenis_Usaha_Model->get_all();
+        // Ambil data gabungan dari kedua tabel
+        $data['jenis_usaha'] = $this->Jenis_Usaha_Model->get_all_combined();
         $this->load->view('admin/jenis_usaha', $data);
     }
     
-    public function simpan() {
+    public function simpan() { 
         // Validasi input
         $this->load->library('form_validation');
         

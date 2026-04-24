@@ -12,7 +12,7 @@ class P_Input_Pengobatan extends CI_Controller {
         $this->load->helper(array('form', 'url', 'file'));
         
         // CEK SESSION LOGIN
-        if (!$this->session->userdata('logged_in')) {
+        if (!$this->session->userdata('logged_in')) { 
             redirect('login');
         }
         
@@ -65,7 +65,7 @@ class P_Input_Pengobatan extends CI_Controller {
     }
 
     public function save() {
-        // Set validation rules
+        // Set validation rules - TAMBAHKAN ALAMAT
         $this->form_validation->set_rules('nama_peternak', 'Nama Peternak', 'required|trim');
         $this->form_validation->set_rules('nama_petugas', 'Nama Petugas', 'required|trim');
         $this->form_validation->set_rules('tanggal_pengobatan', 'Tanggal Pengobatan', 'required');
@@ -73,6 +73,7 @@ class P_Input_Pengobatan extends CI_Controller {
         $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required|trim');
         $this->form_validation->set_rules('latitude', 'Latitude', 'required|trim');
         $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim');
+        $this->form_validation->set_rules('alamat', 'Alamat', 'required|trim');
 
         if ($this->form_validation->run() == FALSE) {
             $response = array(
@@ -171,10 +172,11 @@ class P_Input_Pengobatan extends CI_Controller {
         $nik_val = $this->input->post('nik');
         $telp_val = $this->input->post('telp');
         $keterangan_val = $this->input->post('keterangan');
+        $alamat_val = $this->input->post('alamat');
         $rt_val = $this->input->post('rt');
         $rw_val = $this->input->post('rw');
         
-        // Data dasar
+        // Data dasar - TAMBAHKAN ALAMAT
         $base_data = array(
             'nama_petugas' => $this->input->post('nama_petugas'),
             'nama_peternak' => $this->input->post('nama_peternak'),
@@ -184,6 +186,7 @@ class P_Input_Pengobatan extends CI_Controller {
             'bantuan_prov' => $this->input->post('bantuan_prov'),
             'kecamatan' => $this->session->userdata('kecamatan'),
             'kelurahan' => $this->input->post('kelurahan'),
+            'alamat' => (!empty($alamat_val)) ? $alamat_val : NULL,
             'rt' => (!empty($rt_val)) ? $rt_val : NULL,
             'rw' => (!empty($rw_val)) ? $rw_val : NULL,
             'latitude' => $this->input->post('latitude'),

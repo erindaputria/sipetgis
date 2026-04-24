@@ -16,7 +16,7 @@ $(document).ready(function() {
                     columns: ':visible'
                 }
             },
-            {
+            { 
                 extend: 'csv',
                 text: '<i class="fas fa-file-csv"></i> CSV',
                 className: 'btn btn-sm btn-success',
@@ -83,7 +83,7 @@ $(document).ready(function() {
             jenis_vaksin: 'PMK'
         };
         
-        // Reset semua cell ke 0
+        // Reset semua cell ke 0 dengan format yang benar
         $("#vaksinasiTable tbody tr").each(function(index, row) {
             if($(row).hasClass('total-row-bottom')) return;
             var kecamatan = $(row).data('kecamatan');
@@ -240,7 +240,21 @@ function loadData() {
                 
                 for(var i = 0; i < config.fields.length; i++) {
                     var field = config.fields[i];
-                    var value = item ? parseInt(item[field]) || 0 : 0;
+                    var value = 0;
+                    
+                    if(item) {
+                        if(field === 'sapi_potong') value = parseInt(item.sapi_potong) || 0;
+                        else if(field === 'sapi_perah') value = parseInt(item.sapi_perah) || 0;
+                        else if(field === 'kambing') value = parseInt(item.kambing) || 0;
+                        else if(field === 'domba') value = parseInt(item.domba) || 0;
+                        else if(field === 'ayam') value = parseInt(item.ayam) || 0;
+                        else if(field === 'itik') value = parseInt(item.itik) || 0;
+                        else if(field === 'angsa') value = parseInt(item.angsa) || 0;
+                        else if(field === 'kalkun') value = parseInt(item.kalkun) || 0;
+                        else if(field === 'burung') value = parseInt(item.burung) || 0;
+                        else value = parseInt(item[field]) || 0;
+                    }
+                    
                     totals[field] += value;
                     
                     var columnName = config.columns[i];

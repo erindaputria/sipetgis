@@ -5,138 +5,63 @@ let currentView = "map";
 let currentClinicMarker = null;
 let dataTable = null;
 let deleteId = null;
+let allData = [];
 
-// Data Klinik Hewan (8 klinik)
-let allData = [
-    {
-        id: 1,
-        nama_klinik: "Klinik Hewan Satwa Sehat",
-        kecamatan: "Sukolilo",
-        kelurahan: "Keputih",
-        alamat: "Jl. Raya ITS No. 45",
-        rt: "005",
-        rw: "003",
-        telepon: "031-5945678",
-        latitude: "-7.2876",
-        longitude: "112.7891",
-        jumlah_dokter: 4,
-        jenis_layanan: "24 Jam, Rawat Inap, Bedah",
-        surat_ijin: "Y",
-        keterangan: "Klinik hewan dengan layanan lengkap 24 jam. Dilengkapi dengan fasilitas rawat inap dan ruang operasi. Melayani berbagai jenis hewan kesayangan dan ternak."
-    },
-    {
-        id: 2,
-        nama_klinik: "Klinik Drh. Soeparno",
-        kecamatan: "Rungkut",
-        kelurahan: "Rungkut Kidul",
-        alamat: "Jl. Raya Rungkut Industri No. 78",
-        rt: "002",
-        rw: "005",
-        telepon: "031-8723456",
-        latitude: "-7.3265",
-        longitude: "112.7683",
-        jumlah_dokter: 2,
-        jenis_layanan: "Praktek Umum, Vaksinasi",
-        surat_ijin: "Y",
-        keterangan: "Klinik praktek umum untuk hewan kesayangan. Fokus pada pelayanan vaksinasi dan pengobatan rutin."
-    },
-    {
-        id: 3,
-        nama_klinik: "Surabaya Veterinary Clinic",
-        kecamatan: "Gubeng",
-        kelurahan: "Gubeng",
-        alamat: "Jl. Gubeng Raya No. 112",
-        rt: "001",
-        rw: "002",
-        telepon: "031-5034567",
-        latitude: "-7.2667",
-        longitude: "112.7500",
-        jumlah_dokter: 6,
-        jenis_layanan: "24 Jam, Spesialis, Bedah, Laboratorium",
-        surat_ijin: "Y",
-        keterangan: "Klinik hewan spesialis dengan peralatan modern. Menyediakan layanan bedah, laboratorium, dan konsultasi spesialis."
-    },
-    {
-        id: 4,
-        nama_klinik: "Klinik Hewan Kenari",
-        kecamatan: "Wonokromo",
-        kelurahan: "Wonokromo",
-        alamat: "Jl. Kenari No. 34",
-        rt: "003",
-        rw: "004",
-        telepon: "031-7256789",
-        latitude: "-7.2953",
-        longitude: "112.7389",
-        jumlah_dokter: 3,
-        jenis_layanan: "Praktek Umum, Vaksinasi",
-        surat_ijin: "Y",
-        keterangan: "Klinik hewan yang berlokasi di pusat kota, melayani pengobatan umum dan vaksinasi untuk hewan kesayangan."
-    },
-    {
-        id: 5,
-        nama_klinik: "Puskeswan Mulyorejo",
-        kecamatan: "Mulyorejo",
-        kelurahan: "Kalisari",
-        alamat: "Jl. Mulyorejo Utara No. 56",
-        rt: "002",
-        rw: "006",
-        telepon: "031-5961234",
-        latitude: "-7.2621",
-        longitude: "112.7915",
-        jumlah_dokter: 5,
-        jenis_layanan: "Praktek Umum, Laboratorium, Vaksinasi",
-        surat_ijin: "Y",
-        keterangan: "Pusat Kesehatan Hewan milik pemerintah yang melayani masyarakat dengan tarif terjangkau."
-    },
-    {
-        id: 6,
-        nama_klinik: "Klinik Hewan Tandes",
-        kecamatan: "Tandes",
-        kelurahan: "Balongsari",
-        alamat: "Jl. Tandes No. 89",
-        rt: "004",
-        rw: "002",
-        telepon: "031-7112345",
-        latitude: "-7.2439",
-        longitude: "112.6816",
-        jumlah_dokter: 2,
-        jenis_layanan: "Praktek Umum",
-        surat_ijin: "N",
-        keterangan: "Klinik hewan sederhana yang melayani pengobatan umum untuk hewan ternak dan kesayangan di wilayah Tandes."
-    },
-    {
-        id: 7,
-        nama_klinik: "Klinik Hewan Genteng",
-        kecamatan: "Genteng",
-        kelurahan: "Genteng",
-        alamat: "Jl. Genteng Besar No. 23",
-        rt: "001",
-        rw: "003",
-        telepon: "031-5345678",
-        latitude: "-7.2581",
-        longitude: "112.7394",
-        jumlah_dokter: 3,
-        jenis_layanan: "Praktek Umum, Rawat Inap",
-        surat_ijin: "Y",
-        keterangan: "Klinik hewan dengan fasilitas rawat inap yang nyaman. Melayani konsultasi dan pengobatan untuk hewan kesayangan."
-    },
-    {
-        id: 8,
-        nama_klinik: "Klinik Hewan Tegalsari",
-        kecamatan: "Tegalsari",
-        kelurahan: "Keputran",
-        alamat: "Jl. Tegalsari No. 67",
-        rt: "002",
-        rw: "005",
-        telepon: "031-5489012",
-        latitude: "-7.2815",
-        longitude: "112.7322",
-        jumlah_dokter: 2,
-        jenis_layanan: "Praktek Umum, Vaksinasi",
-        surat_ijin: "N",
-        keterangan: "Klinik hewan yang sedang dalam proses pengurusan ijin. Saat ini melayani pengobatan umum terbatas."
-    }
-];
+// ================ FUNGSI AMBIL DATA DARI SERVER ================
+function loadDataFromServer() {
+    $("#dataTableBody").html('<tr><td colspan="11" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><br>Memuat data...</td></tr>');
+    
+    var apiUrl = base_url + 'index.php/data_klinik/get_all_data';
+    
+    $.ajax({
+        url: apiUrl,
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            if (response && !response.error) {
+                if (Array.isArray(response) && response.length > 0) {
+                    allData = response;
+                } else {
+                    allData = [];
+                }
+            } else {
+                allData = [];
+            }
+            renderTable(allData);
+            if (dataTable) {
+                dataTable.clear();
+                dataTable.rows.add($("#dataTableBody tr"));
+                dataTable.draw();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', xhr.status, error);
+            $.ajax({
+                url: base_url + 'data_klinik/get_all_data',
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response && !response.error) {
+                        allData = Array.isArray(response) ? response : [];
+                    } else {
+                        allData = [];
+                    }
+                    renderTable(allData);
+                    if (dataTable) {
+                        dataTable.clear();
+                        dataTable.rows.add($("#dataTableBody tr"));
+                        dataTable.draw();
+                    }
+                },
+                error: function() {
+                    allData = [];
+                    renderTable(allData);
+                    alert('Gagal memuat data. Silahkan refresh halaman.');
+                }
+            });
+        }
+    });
+}
 
 // ================ RENDER TABLE ================
 function renderTable(data) {
@@ -146,349 +71,120 @@ function renderTable(data) {
             var no = index + 1;
             
             var statusIjin = item.surat_ijin === 'Y' ? 
-                '<span class="badge-status badge-ijin">Y</span>' : 
-                '<span class="badge-status badge-belum-ijin">N</span>';
+                '<span class="badge-status badge-ijin"><i class="fas fa-check-circle me-1"></i>Y</span>' : 
+                '<span class="badge-status badge-belum-ijin"><i class="fas fa-times-circle me-1"></i>N</span>';
             
-            var btnMap = (item.latitude && item.longitude) ? 
-                '<button class="btn btn-sm btn-outline-primary-custom" onclick="showMap(\'' + item.nama_klinik + '\', \'' + item.kecamatan + '\', \'' + item.kelurahan + '\', \'' + item.latitude + ', ' + item.longitude + '\', \'' + item.alamat + ', RT ' + item.rt + '/RW ' + item.rw + '\', \'' + item.telepon + '\', \'' + item.jumlah_dokter + '\', \'' + item.jenis_layanan + '\', \'' + item.surat_ijin + '\')" title="Lihat Peta">' +
+            var btnMap = (item.latitude && item.longitude && item.latitude != '' && item.longitude != '') ? 
+                '<button class="btn btn-sm btn-outline-primary-custom" onclick="showMap(' + item.id + ')" title="Lihat Peta">' +
                 '<i class="fas fa-map-marker-alt me-1"></i>Lihat Peta' +
                 '</button>' : 
                 '<button class="btn btn-sm btn-outline-secondary-custom" disabled title="Koordinat tidak tersedia">' +
-                '<i class="fas fa-map-marker-alt me-1"></i>Lihat Peta' +
+                '<i class="fas fa-map-marker-alt me-1"></i>No Koordinat' +
                 '</button>';
             
+            var teleponDisplay = item.telp ? 
+                '<a href="tel:' + item.telp + '" style="color: #212529; text-decoration: none;">' + item.telp + '</a>' : 
+                '<span class="text-muted">-</span>';
+            
             html += '<tr>' +
-                '<td>' + no + '</td>' +
-                '<td><span class="fw-bold">' + item.nama_klinik + '</span><br><small class="text-muted">' + item.jenis_layanan.split(',')[0] + '</small></td>' +
-                '<td>' + item.kecamatan + '</td>' +
-                '<td>' + item.kelurahan + '</td>' +
-                '<td>' + item.alamat + '<br><small>RT ' + item.rt + '/RW ' + item.rw + '</small></td>' +
-                '<td><div>' + item.telepon + '</div></td>' +
-                '<td><span class="badge-dokter">' + item.jumlah_dokter + ' Dokter</span></td>' +  // <-- PERUBAHAN DI SINI
-                '<td>' + item.jenis_layanan + '</td>' +
-                '<td>' + statusIjin + '</td>' +
-                '<td>' + btnMap + '</td>' +
-                '<td>' +
+                '<td class="text-center">' + no + '</td>' +
+                '<td><span class="fw-bold">' + escapeHtml(item.nama_klinik || '-') + '</span><br><small class="text-muted">' + (item.jenis_layanan ? item.jenis_layanan.substring(0, 15) : '-') + '</small></td>' +
+                '<td>' + escapeHtml(item.kecamatan || '-') + '</td>' +
+                '<td>' + escapeHtml(item.kelurahan || '-') + '</td>' +
+                '<td title="' + escapeHtml(item.alamat || '') + '">' + truncateText(item.alamat, 25) + '<br><small>RT ' + (item.rt || '-') + '/RW ' + (item.rw || '-') + '</small></td>' +
+                '<td>' + teleponDisplay + '</td>' +
+                '<td><span class="badge-dokter"><i class="fas fa-user-md me-1"></i>' + (item.jumlah_dokter || '0') + ' Dokter</span></td>' +
+                '<td>' + escapeHtml(item.jenis_layanan || '-') + '</td>' +
+                '<td class="text-center">' + statusIjin + '</td>' +
+                '<td class="text-center">' + btnMap + '</td>' +
+                '<td class="text-center">' +
                 '<div class="btn-action-group">' +
                 '<button class="btn btn-action btn-edit" onclick="editData(' + item.id + ')" title="Edit"><i class="fas fa-edit"></i></button>' +
-                '<button class="btn btn-action btn-delete" onclick="confirmDelete(' + item.id + ', \'' + item.nama_klinik + '\')" title="Hapus"><i class="fas fa-trash"></i></button>' +
+                '<button class="btn btn-action btn-delete" onclick="confirmDelete(' + item.id + ', \'' + escapeHtml(item.nama_klinik || '') + '\')" title="Hapus"><i class="fas fa-trash"></i></button>' +
                 '</div>' +
                 '</td>' +
                 '</tr>';
         });
     } else {
-        html = '<tr><td colspan="11" class="text-center">Tidak ada data klinik hewan</td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td>' +
-            '<td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td>' +
-            '<td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td>' +
-            '<td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td>' +
-            '</tr>';
+        html = '<tr><td colspan="11" class="text-center py-5"><i class="fas fa-clinic-medical fa-3x text-muted mb-3 d-block"></i>Tidak ada data klinik hewan</td></tr>';
     }
     
     $("#dataTableBody").html(html);
+    
     if (dataTable) {
-        dataTable.clear();
-        dataTable.rows.add($(html));
-        dataTable.draw();
+        dataTable.destroy();
     }
-}
-
-// ================ EDIT DATA ================
-function editData(id) {
-    var item = allData.find(function(d) { return d.id === id; });
-    if (item) {
-        $('#edit_id').val(item.id);
-        $('#edit_nama').val(item.nama_klinik);
-        $('#edit_kecamatan').val(item.kecamatan);
-        $('#edit_kelurahan').val(item.kelurahan);
-        $('#edit_alamat').val(item.alamat);
-        $('#edit_rt').val(item.rt);
-        $('#edit_rw').val(item.rw);
-        $('#edit_telepon').val(item.telepon);
-        $('#edit_latitude').val(item.latitude);
-        $('#edit_longitude').val(item.longitude);
-        $('#edit_dokter').val(item.jumlah_dokter);
-        $('#edit_layanan').val(item.jenis_layanan);
-        $('#edit_status').val(item.surat_ijin);
-        $('#edit_keterangan').val(item.keterangan);
-        
-        $('#editModal').modal('show');
-    }
-}
-
-// ================ CONFIRM DELETE ================
-function confirmDelete(id, nama) {
-    deleteId = id;
-    $("#deleteInfo").text("Data klinik hewan: " + nama);
-    $("#deleteModal").modal("show");
-}
-
-// ================ DELETE DATA ================
-function deleteData(id) {
-    var index = allData.findIndex(function(item) { return item.id === id; });
-    if (index !== -1) {
-        allData.splice(index, 1);
-        renderTable(allData);
-    }
-    $("#deleteModal").modal("hide");
-    alert("Data berhasil dihapus");
-}
-
-// ================ FILTER ================
-function filterData() {
-    var kecamatan = $("#filterKecamatan").val();
-    var ijin = $("#filterIjin").val();
-    var layanan = $("#filterLayanan").val();
-    
-    var filteredData = allData.slice();
-    
-    if (kecamatan !== "all") {
-        filteredData = filteredData.filter(function(item) {
-            return item.kecamatan === kecamatan;
-        });
-    }
-    
-    if (ijin !== "all") {
-        filteredData = filteredData.filter(function(item) {
-            return item.surat_ijin === ijin;
-        });
-    }
-    
-    if (layanan !== "all") {
-        filteredData = filteredData.filter(function(item) {
-            return item.jenis_layanan.includes(layanan);
-        });
-    }
-    
-    renderTable(filteredData);
-}
-
-function resetFilter() {
-    $("#filterKecamatan").val("all");
-    $("#filterIjin").val("all");
-    $("#filterLayanan").val("all");
-    renderTable(allData.slice());
-}
-
-// ================ MAP FUNCTION ================
-function showMap(namaKlinik, kecamatan, kelurahan, coordinates, alamat, telepon, jumlahDokter, jenisLayanan, suratIjin) {
-    var coords = coordinates.split(",").map(function(c) { return parseFloat(c.trim()); });
-    var lat = coords[0];
-    var lng = coords[1];
-    
-    if (!lat || !lng || isNaN(lat) || isNaN(lng)) {
-        alert("Koordinat tidak valid");
-        return;
-    }
-    
-    $("#mapTitle").text("Peta Lokasi " + namaKlinik);
-    $("#mapInfo").html(
-        '<div class="row">' +
-        '<div class="col-md-6">' +
-        '<span class="fw-bold">Klinik:</span> ' + namaKlinik + '<br>' +
-        '<span class="fw-bold">Kecamatan:</span> ' + kecamatan + '<br>' +
-        '<span class="fw-bold">Kelurahan:</span> ' + kelurahan +
-        '</div>' +
-        '<div class="col-md-6">' +
-        '<span class="fw-bold">Koordinat:</span> <span class="coord-badge">' + coordinates + '</span><br>' +
-        '<span class="fw-bold">Telepon:</span> ' + telepon +
-        '</div>' +
-        '</div>'
-    );
-    
-    $("#clinicInfo").html(
-        '<div class="mb-2"><span class="fw-bold">Nama Klinik:</span><br><span class="text-primary fw-bold">' + namaKlinik + '</span></div>' +
-        '<div class="mb-2"><span class="fw-bold">Kecamatan/Kelurahan:</span><br>' + kecamatan + ' - ' + kelurahan + '</div>' +
-        '<div class="mb-2"><span class="fw-bold">Alamat:</span><br>' + alamat + '</div>' +
-        '<div class="mb-2"><span class="fw-bold">Kontak:</span><br><i class="fas fa-phone-alt me-1"></i> ' + telepon + '</div>' +
-        '<div class="mb-2"><span class="fw-bold">Jumlah Dokter:</span><br><span class="badge-dokter">' + jumlahDokter + ' Dokter</span></div>'  // <-- PERUBAHAN DI SINI
-    );
-    
-    $("#coordInfo").html(
-        '<div class="mb-2"><span class="fw-bold">Latitude:</span><br><code>' + lat.toFixed(6) + '</code></div>' +
-        '<div class="mb-2"><span class="fw-bold">Longitude:</span><br><code>' + lng.toFixed(6) + '</code></div>' +
-        '<div class="mb-2"><span class="fw-bold">Format Koordinat:</span><br><small>DD (Decimal Degrees)</small></div>' +
-        '<div class="mb-2"><span class="fw-bold">Akurasi:</span><br><small>GPS ± 5 meter</small></div>'
-    );
-    
-    var layananArray = jenisLayanan.split(','); 
-    var layananHtml = '<div class="row">';
-    for (var i = 0; i < layananArray.length; i++) {
-        layananHtml += '<div class="col-md-3"><div class="layanan-card"><i class="fas fa-check-circle text-success me-1"></i>' + layananArray[i].trim() + '</div></div>';
-    }
-    layananHtml += '</div>';
-    $("#layananInfo").html(layananHtml);
-    
-    if (!map) {
-        $("#mapContainer").css("height", "500px");
-        setTimeout(function() {
-            map = L.map("mapContainer", { zoomControl: false, attributionControl: false }).setView([lat, lng], 15);
-            L.control.zoom({ position: "topright" }).addTo(map);
-            L.control.attribution({ position: "bottomright" }).addTo(map).addAttribution("© OpenStreetMap contributors");
-            updateMapView();
-            
-            var clinicIcon = L.divIcon({
-                html: '<div style="background-color: #fd7e14; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 14px;">K</div>',
-                className: "clinic-marker",
-                iconSize: [36, 36],
-                iconAnchor: [18, 18]
-            });
-            
-            currentClinicMarker = L.marker([lat, lng], { icon: clinicIcon }).addTo(map);
-            currentClinicMarker.bindPopup(
-                '<div style="min-width: 250px;">' +
-                '<h5 style="margin: 0 0 5px 0; color: #fd7e14; text-align: center;">' + namaKlinik + '</h5>' +
-                '<hr style="margin: 5px 0;">' +
-                '<div><strong>Alamat:</strong> ' + alamat + '</div>' +
-                '<div><strong>Kecamatan:</strong> ' + kecamatan + '</div>' +
-                '<div><strong>Kelurahan:</strong> ' + kelurahan + '</div>' +
-                '<div><strong>Koordinat:</strong> ' + lat.toFixed(6) + ', ' + lng.toFixed(6) + '</div>' +
-                '<div><strong>Telepon:</strong> ' + telepon + '</div>' +
-                '<div><strong>Dokter:</strong> ' + jumlahDokter + ' orang</div>' +
-                '<div style="text-align: center; margin-top: 8px;"><small class="text-muted">Klik di luar popup untuk menutup</small></div>' +
-                '</div>'
-            ).openPopup();
-            mapMarkers.push(currentClinicMarker);
-            
-            var circle = L.circle([lat, lng], { color: "#fd7e14", fillColor: "#fd7e14", fillOpacity: 0.1, radius: 300 }).addTo(map);
-            mapMarkers.push(circle);
-            setTimeout(function() { map.invalidateSize(); }, 100);
-        }, 100);
-    } else {
-        mapMarkers.forEach(function(m) { if (map.hasLayer(m)) map.removeLayer(m); });
-        mapMarkers = [];
-        map.setView([lat, lng], 15);
-        
-        var clinicIcon = L.divIcon({
-            html: '<div style="background-color: #fd7e14; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 14px;">K</div>',
-            className: "clinic-marker",
-            iconSize: [36, 36],
-            iconAnchor: [18, 18]
-        });
-        
-        currentClinicMarker = L.marker([lat, lng], { icon: clinicIcon }).addTo(map);
-        currentClinicMarker.bindPopup(
-            '<div style="min-width: 250px;">' +
-            '<h5 style="margin: 0 0 5px 0; color: #fd7e14; text-align: center;">' + namaKlinik + '</h5>' +
-            '<hr style="margin: 5px 0;">' +
-            '<div><strong>Alamat:</strong> ' + alamat + '</div>' +
-            '<div><strong>Kecamatan:</strong> ' + kecamatan + '</div>' +
-            '<div><strong>Kelurahan:</strong> ' + kelurahan + '</div>' +
-            '<div><strong>Koordinat:</strong> ' + lat.toFixed(6) + ', ' + lng.toFixed(6) + '</div>' +
-            '<div><strong>Telepon:</strong> ' + telepon + '</div>' +
-            '<div><strong>Dokter:</strong> ' + jumlahDokter + ' orang</div>' +
-            '<div style="text-align: center; margin-top: 8px;"><small class="text-muted">Klik di luar popup untuk menutup</small></div>' +
-            '</div>'
-        ).openPopup();
-        mapMarkers.push(currentClinicMarker);
-        
-        var circle = L.circle([lat, lng], { color: "#fd7e14", fillColor: "#fd7e14", fillOpacity: 0.1, radius: 300 }).addTo(map);
-        mapMarkers.push(circle);
-        setTimeout(function() { map.invalidateSize(); }, 50);
-    }
-    
-    $("#mapSection").show();
-    $("html, body").animate({ scrollTop: $("#mapSection").offset().top - 20 }, 500);
-    setTimeout(function() { if (map) map.invalidateSize(); }, 300);
-}
-
-function updateMapView() {
-    if (!map) return;
-    map.eachLayer(function(layer) { if (layer instanceof L.TileLayer) map.removeLayer(layer); });
-    if (currentView === "map") {
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: '&copy; OpenStreetMap', maxZoom: 19 }).addTo(map);
-    } else {
-        L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { attribution: "Tiles &copy; Esri", maxZoom: 19 }).addTo(map);
-    }
-    mapMarkers.forEach(function(m) { if (!map.hasLayer(m)) map.addLayer(m); });
-    setTimeout(function() { map.invalidateSize(); }, 50);
-}
-
-function closeMap() {
-    $("#mapSection").hide();
-    if (map) {
-        map.remove();
-        map = null;
-    }
-}
-
-// ================ DOCUMENT READY ================
-$(document).ready(function() {
-    renderTable(allData);
     
     dataTable = $("#klinikTable").DataTable({
-        dom: "Bfrtip",
+        dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>' +
+             '<"row"<"col-sm-12"tr>>' +
+             '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
         buttons: [
             {
                 extend: 'copy',
                 text: '<i class="fas fa-copy"></i> Copy',
                 className: 'btn btn-sm btn-primary',
-                exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9] }
+                exportOptions: { columns: [0,1,2,3,4,5,6,7,8] }
             },
             {
                 extend: 'csv',
                 text: '<i class="fas fa-file-csv"></i> CSV',
                 className: 'btn btn-sm btn-success',
-                exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9] }
+                exportOptions: { columns: [0,1,2,3,4,5,6,7,8] }
             },
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Excel',
                 className: 'btn btn-sm btn-success',
-                exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9] }
+                exportOptions: { columns: [0,1,2,3,4,5,6,7,8] }
             },
             {
                 extend: 'pdf',
                 text: '<i class="fas fa-file-pdf"></i> PDF',
                 className: 'btn btn-sm btn-danger',
-                exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9] },
+                exportOptions: { columns: [0,1,2,3,4,5,6,7,8] },
                 customize: function(doc) {
                     doc.content.splice(0, 1);
-                    
                     var currentDate = new Date();
-                    var formattedDate = currentDate.toLocaleDateString('id-ID', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric'
-                    });
-                    
+                    var formattedDate = currentDate.toLocaleDateString('id-ID');
                     doc.content.unshift({
                         text: 'LAPORAN DATA KLINIK HEWAN',
                         style: 'title',
                         alignment: 'center',
-                        margin: [0, 0, 0, 5]
+                        margin: [0, 0, 0, 5],
+                        fontSize: 14,
+                        bold: true
                     });
-                    
                     doc.content.unshift({
                         text: 'DINAS PETERNAKAN KOTA SURABAYA',
                         style: 'subtitle',
                         alignment: 'center',
-                        margin: [0, 0, 0, 3]
+                        margin: [0, 0, 0, 3],
+                        fontSize: 12
                     });
-                    
                     doc.content.unshift({
                         text: 'PEMERINTAH KOTA SURABAYA',
                         style: 'header',
                         alignment: 'center',
-                        margin: [0, 0, 0, 15]
+                        margin: [0, 0, 0, 15],
+                        fontSize: 10
                     });
-                    
                     doc.content.push({
                         text: 'Tanggal Cetak: ' + formattedDate,
                         style: 'date',
                         alignment: 'center',
-                        margin: [0, 15, 0, 0]
+                        margin: [0, 15, 0, 0],
+                        fontSize: 9,
+                        color: '#666666'
                     });
-                    
                     if (doc.content[3] && doc.content[3].table) {
                         var rows = doc.content[3].table.body;
-                        
                         for (var i = 0; i < rows[0].length; i++) {
                             rows[0][i].fillColor = '#832706';
                             rows[0][i].color = '#ffffff';
                             rows[0][i].bold = true;
                             rows[0][i].alignment = 'center';
                         }
-                        
                         for (var i = 1; i < rows.length; i++) {
                             for (var j = 0; j < rows[i].length; j++) {
                                 rows[i][j].alignment = 'center';
@@ -497,18 +193,14 @@ $(document).ready(function() {
                             }
                         }
                     }
-                    
                     doc.pageMargins = [20, 60, 20, 40];
-                    
-                    var headerText = 'SIPETGIS - Sistem Informasi Peternakan Kota Surabaya';
                     doc.header = {
-                        text: headerText,
+                        text: 'SIPETGIS - Sistem Informasi Peternakan Kota Surabaya',
                         alignment: 'center',
                         fontSize: 8,
                         color: '#666666',
                         margin: [20, 15, 20, 0]
                     };
-                    
                     doc.footer = function(currentPage, pageCount) {
                         return {
                             text: 'Halaman ' + currentPage + ' dari ' + pageCount,
@@ -524,7 +216,7 @@ $(document).ready(function() {
                 extend: 'print',
                 text: '<i class="fas fa-print"></i> Print',
                 className: 'btn btn-sm btn-info',
-                exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9] },
+                exportOptions: { columns: [0,1,2,3,4,5,6,7,8] },
                 customize: function(win) {
                     $(win.document.body).find('table').addClass('print-table');
                     $(win.document.body).find('table thead th').css({
@@ -551,6 +243,7 @@ $(document).ready(function() {
         ],
         language: {
             search: "Cari:",
+            searchPlaceholder: "Ketik kata kunci...",
             lengthMenu: "Tampilkan _MENU_ data",
             info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
             infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
@@ -566,15 +259,325 @@ $(document).ready(function() {
         pageLength: 10,
         lengthChange: true,
         lengthMenu: [5, 10, 25, 50, 100],
+        scrollX: true,
         responsive: true,
-        order: [[0, 'asc']],
         columnDefs: [
-            { targets: [9], orderable: false },
-            { targets: [10], orderable: false }
-        ]
+            { orderable: false, targets: [9, 10] },
+            { className: "text-nowrap", targets: [1, 2, 3, 4, 5, 6, 7] }
+        ],
+        order: [[0, 'asc']]
+    });
+}
+
+function truncateText(text, maxLength) {
+    if (!text) return '-';
+    if (text.length <= maxLength) return escapeHtml(text);
+    return escapeHtml(text.substring(0, maxLength)) + '...';
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+
+// ================ EDIT DATA ================
+function editData(id) {
+    $.ajax({
+        url: base_url + 'index.php/data_klinik/get_detail/' + id,
+        type: 'GET',
+        dataType: 'json',
+        success: function(item) {
+            if (item && !item.error) {
+                $('#edit_id').val(item.id);
+                $('#edit_nama').val(item.nama_klinik || '');
+                $('#edit_kecamatan').val(item.kecamatan || '');
+                $('#edit_kelurahan').val(item.kelurahan || '');
+                $('#edit_alamat').val(item.alamat || '');
+                $('#edit_rt').val(item.rt || '');
+                $('#edit_rw').val(item.rw || '');
+                $('#edit_telepon').val(item.telp || '');
+                $('#edit_latitude').val(item.latitude || '');
+                $('#edit_longitude').val(item.longitude || '');
+                $('#edit_dokter').val(item.jumlah_dokter || '');
+                $('#edit_layanan').val(item.jenis_layanan || '');
+                $('#edit_status').val(item.surat_ijin || 'Y');
+                $('#edit_keterangan').val(item.keterangan || '');
+                
+                $('#editModal').modal('show');
+            } else {
+                alert('Data tidak ditemukan');
+            }
+        },
+        error: function() {
+            alert('Gagal mengambil data');
+        }
+    });
+}
+
+// ================ CONFIRM DELETE ================
+function confirmDelete(id, nama) {
+    deleteId = id;
+    $("#deleteInfo").html('<i class="fas fa-clinic-medical me-2"></i>' + escapeHtml(nama));
+    $("#deleteModal").modal("show");
+}
+
+// ================ DELETE DATA ================
+function deleteData(id) {
+    $.ajax({
+        url: base_url + 'index.php/data_klinik/delete/' + id,
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                allData = allData.filter(function(item) { return item.id !== id; });
+                renderTable(allData);
+                $("#deleteModal").modal("hide");
+                alert(response.message);
+            } else {
+                alert(response.message);
+            }
+        },
+        error: function() {
+            alert('Gagal menghapus data');
+        }
+    });
+}
+
+// ================ FILTER ================
+function filterData() {
+    var kecamatan = $("#filterKecamatan").val();
+    var ijin = $("#filterIjin").val();
+    var layanan = $("#filterLayanan").val();
+    
+    var filteredData = allData.slice();
+    
+    if (kecamatan !== "all") {
+        filteredData = filteredData.filter(function(item) {
+            return item.kecamatan === kecamatan;
+        });
+    }
+    
+    if (ijin !== "all") {
+        filteredData = filteredData.filter(function(item) {
+            return item.surat_ijin === ijin;
+        });
+    }
+    
+    if (layanan !== "all") {
+        filteredData = filteredData.filter(function(item) {
+            return item.jenis_layanan && item.jenis_layanan.toLowerCase().includes(layanan.toLowerCase());
+        });
+    }
+    
+    renderTable(filteredData);
+}
+
+function resetFilter() {
+    $("#filterKecamatan").val("all");
+    $("#filterIjin").val("all");
+    $("#filterLayanan").val("all");
+    renderTable(allData);
+}
+
+// ================ MAP FUNCTION (PERBAIKAN) ================
+function showMap(id) {
+    console.log("ID yang diklik:", id);
+    console.log("All Data:", allData);
+    
+    // Cari data berdasarkan id (pastikan id dari database ada)
+    var item = allData.find(function(d) { 
+        return parseInt(d.id) === parseInt(id); 
     });
     
-    // Event listeners
+    if (!item) {
+        console.error("Data tidak ditemukan untuk ID:", id);
+        alert("Data tidak ditemukan untuk ID: " + id);
+        return;
+    }
+    
+    console.log("Data ditemukan:", item);
+    
+    var lat = parseFloat(item.latitude);
+    var lng = parseFloat(item.longitude);
+    
+    if (!lat || !lng || isNaN(lat) || isNaN(lng)) {
+        alert("Koordinat tidak valid untuk klinik ini");
+        return;
+    }
+    
+    var namaKlinik = item.nama_klinik || '-';
+    var kecamatan = item.kecamatan || '-';
+    var kelurahan = item.kelurahan || '-';
+    var alamat = item.alamat || '-';
+    var rt = item.rt || '-';
+    var rw = item.rw || '-';
+    var telepon = item.telp || '-';
+    var jumlahDokter = item.jumlah_dokter || '0';
+    var jenisLayanan = item.jenis_layanan || '-';
+    var suratIjin = item.surat_ijin || 'N';
+    var keterangan = item.keterangan || '';
+    
+    var alamatLengkap = alamat + ', RT ' + rt + '/RW ' + rw;
+    
+    $("#mapTitle").html('<i class="fas fa-clinic-medical me-2"></i>' + escapeHtml(namaKlinik));
+    $("#mapInfo").html(
+        '<div class="row">' +
+        '<div class="col-md-6">' +
+        '<span class="fw-bold"><i class="fas fa-clinic-medical me-1"></i> Klinik:</span> ' + escapeHtml(namaKlinik) + '<br>' +
+        '<span class="fw-bold"><i class="fas fa-map-marker-alt me-1"></i> Kecamatan:</span> ' + escapeHtml(kecamatan) + '<br>' +
+        '<span class="fw-bold"><i class="fas fa-building me-1"></i> Kelurahan:</span> ' + escapeHtml(kelurahan) +
+        '</div>' +
+        '<div class="col-md-6">' +
+        '<span class="fw-bold"><i class="fas fa-map-pin me-1"></i> Koordinat:</span> <span class="coord-badge">' + lat.toFixed(6) + ', ' + lng.toFixed(6) + '</span><br>' +
+        '<span class="fw-bold"><i class="fas fa-phone-alt me-1"></i> Telepon:</span> ' + escapeHtml(telepon) +
+        '</div>' +
+        '</div>'
+    );
+    
+    $("#clinicInfo").html(
+        '<div class="mb-2"><span class="fw-bold"><i class="fas fa-clinic-medical me-2"></i>Nama Klinik:</span><br><span class="text-primary fw-bold fs-5">' + escapeHtml(namaKlinik) + '</span></div>' +
+        '<div class="mb-2"><span class="fw-bold"><i class="fas fa-map-marker-alt me-2"></i>Kecamatan/Kelurahan:</span><br>' + escapeHtml(kecamatan) + ' - ' + escapeHtml(kelurahan) + '</div>' +
+        '<div class="mb-2"><span class="fw-bold"><i class="fas fa-location-dot me-2"></i>Alamat:</span><br>' + escapeHtml(alamatLengkap) + '</div>' +
+        '<div class="mb-2"><span class="fw-bold"><i class="fas fa-phone-alt me-2"></i>Kontak:</span><br>' + escapeHtml(telepon) + '</div>' +
+        '<div class="mb-2"><span class="fw-bold"><i class="fas fa-user-md me-2"></i>Jumlah Dokter:</span><br><span class="badge-dokter">' + escapeHtml(jumlahDokter) + ' Dokter</span></div>' +
+        (keterangan ? '<div class="mb-2"><span class="fw-bold"><i class="fas fa-info-circle me-2"></i>Keterangan:</span><br>' + escapeHtml(keterangan) + '</div>' : '')
+    );
+    
+    $("#coordInfo").html(
+        '<div class="mb-2"><span class="fw-bold"><i class="fas fa-arrow-up me-2"></i>Latitude:</span><br><code class="bg-light p-1 rounded">' + lat.toFixed(6) + '</code></div>' +
+        '<div class="mb-2"><span class="fw-bold"><i class="fas fa-arrow-right me-2"></i>Longitude:</span><br><code class="bg-light p-1 rounded">' + lng.toFixed(6) + '</code></div>' +
+        '<div class="mb-2"><span class="fw-bold"><i class="fas fa-globe me-2"></i>Format Koordinat:</span><br><small>DD (Decimal Degrees)</small></div>' +
+        '<div class="mb-2"><span class="fw-bold"><i class="fas fa-satellite me-2"></i>Akurasi:</span><br><small>GPS ± 5 meter</small></div>'
+    );
+    
+    var statusIjinText = (suratIjin === 'Y') ? 'Memiliki Ijin' : 'Belum Memiliki Ijin';
+    var statusBadge = (suratIjin === 'Y') ? 
+        '<span class="badge-status badge-ijin"><i class="fas fa-check-circle me-1"></i>' + statusIjinText + '</span>' : 
+        '<span class="badge-status badge-belum-ijin"><i class="fas fa-times-circle me-1"></i>' + statusIjinText + '</span>';
+    
+    var layananArray = jenisLayanan.split(','); 
+    var layananHtml = '<div class="row">';
+    for (var i = 0; i < layananArray.length; i++) {
+        layananHtml += '<div class="col-md-4 mb-2"><div class="layanan-card p-2 text-center"><i class="fas fa-stethoscope me-1 text-primary-custom"></i> ' + escapeHtml(layananArray[i].trim()) + '</div></div>';
+    }
+    layananHtml += '<div class="col-md-12 mt-2"><hr><div class="mt-2"><span class="fw-bold"><i class="fas fa-file-alt me-2"></i>Status Ijin:</span> ' + statusBadge + '</div></div>';
+    layananHtml += '</div>';
+    $("#layananInfo").html(layananHtml);
+    
+    if (!map) {
+        $("#mapContainer").css("height", "500px");
+        setTimeout(function() {
+            map = L.map("mapContainer", { zoomControl: false, attributionControl: false }).setView([lat, lng], 16);
+            L.control.zoom({ position: "topright" }).addTo(map);
+            L.control.attribution({ position: "bottomright" }).addTo(map).addAttribution("© OpenStreetMap contributors");
+            updateMapView();
+            
+            var clinicIcon = L.divIcon({
+                html: '<div style="background-color: #832706; width: 36px; height: 36px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 16px;"><i class="fas fa-clinic-medical"></i></div>',
+                className: "clinic-marker",
+                iconSize: [36, 36],
+                iconAnchor: [18, 18],
+                popupAnchor: [0, -18]
+            });
+            
+            currentClinicMarker = L.marker([lat, lng], { icon: clinicIcon }).addTo(map);
+            currentClinicMarker.bindPopup(
+                '<div style="min-width: 250px; font-family: inherit;">' +
+                '<h6 style="margin: 0 0 8px 0; color: #832706; text-align: center; font-weight: 700;">' + escapeHtml(namaKlinik) + '</h6>' +
+                '<hr style="margin: 5px 0;">' +
+                '<div><i class="fas fa-map-marker-alt fa-fw me-2 text-muted"></i><strong>Alamat:</strong> ' + escapeHtml(alamatLengkap) + '</div>' +
+                '<div><i class="fas fa-map-pin fa-fw me-2 text-muted"></i><strong>Kecamatan:</strong> ' + escapeHtml(kecamatan) + '</div>' +
+                '<div><i class="fas fa-building fa-fw me-2 text-muted"></i><strong>Kelurahan:</strong> ' + escapeHtml(kelurahan) + '</div>' +
+                '<div><i class="fas fa-phone-alt fa-fw me-2 text-muted"></i><strong>Telepon:</strong> ' + escapeHtml(telepon) + '</div>' +
+                '<div><i class="fas fa-user-md fa-fw me-2 text-muted"></i><strong>Dokter:</strong> ' + escapeHtml(jumlahDokter) + ' orang</div>' +
+                '<div class="text-center mt-2"><small class="text-muted">Klik di luar untuk menutup</small></div>' +
+                '</div>'
+            ).openPopup();
+            mapMarkers.push(currentClinicMarker);
+            
+            var circle = L.circle([lat, lng], { 
+                color: "#832706", 
+                fillColor: "#832706", 
+                fillOpacity: 0.1, 
+                radius: 200,
+                weight: 2
+            }).addTo(map);
+            mapMarkers.push(circle);
+            setTimeout(function() { map.invalidateSize(); }, 100);
+        }, 100);
+    } else {
+        mapMarkers.forEach(function(m) { if (map.hasLayer(m)) map.removeLayer(m); });
+        mapMarkers = [];
+        map.setView([lat, lng], 16);
+        
+        var clinicIcon = L.divIcon({
+            html: '<div style="background-color: #832706; width: 36px; height: 36px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 16px;"><i class="fas fa-clinic-medical"></i></div>',
+            className: "clinic-marker",
+            iconSize: [36, 36],
+            iconAnchor: [18, 18],
+            popupAnchor: [0, -18]
+        });
+        
+        currentClinicMarker = L.marker([lat, lng], { icon: clinicIcon }).addTo(map);
+        currentClinicMarker.bindPopup(
+            '<div style="min-width: 250px;">' +
+            '<h6 style="margin: 0 0 8px 0; color: #832706; text-align: center; font-weight: 700;">' + escapeHtml(namaKlinik) + '</h6>' +
+            '<hr style="margin: 5px 0;">' +
+            '<div><strong>Alamat:</strong> ' + escapeHtml(alamatLengkap) + '</div>' +
+            '<div><strong>Kecamatan:</strong> ' + escapeHtml(kecamatan) + '</div>' +
+            '<div><strong>Kelurahan:</strong> ' + escapeHtml(kelurahan) + '</div>' +
+            '<div><strong>Telepon:</strong> ' + escapeHtml(telepon) + '</div>' +
+            '<div><strong>Dokter:</strong> ' + escapeHtml(jumlahDokter) + ' orang</div>' +
+            '<div class="text-center mt-2"><small class="text-muted">Klik di luar untuk menutup</small></div>' +
+            '</div>'
+        ).openPopup();
+        mapMarkers.push(currentClinicMarker);
+        
+        var circle = L.circle([lat, lng], { color: "#832706", fillColor: "#832706", fillOpacity: 0.1, radius: 200 }).addTo(map);
+        mapMarkers.push(circle);
+        setTimeout(function() { map.invalidateSize(); }, 50);
+    }
+    
+    $("#mapSection").show();
+    $("html, body").animate({ scrollTop: $("#mapSection").offset().top - 20 }, 500);
+    setTimeout(function() { if (map) map.invalidateSize(); }, 300);
+}
+
+function updateMapView() {
+    if (!map) return;
+    map.eachLayer(function(layer) { if (layer instanceof L.TileLayer) map.removeLayer(layer); });
+    if (currentView === "map") {
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { 
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', 
+            maxZoom: 19 
+        }).addTo(map);
+    } else {
+        L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { 
+            attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community", 
+            maxZoom: 19 
+        }).addTo(map);
+    }
+    mapMarkers.forEach(function(m) { if (!map.hasLayer(m)) map.addLayer(m); });
+    setTimeout(function() { map.invalidateSize(); }, 50);
+}
+
+function closeMap() {
+    $("#mapSection").hide();
+    if (map) {
+        map.remove();
+        map = null;
+    }
+}
+
+// ================ DOCUMENT READY ================
+$(document).ready(function() {
+    loadDataFromServer();
+    
     $("#filterBtn").click(filterData);
     $("#resetBtn").click(resetFilter);
     $("#closeMapBtn").click(closeMap);
@@ -596,7 +599,7 @@ $(document).ready(function() {
     $("#btnResetView").click(function() {
         if (map && currentClinicMarker) {
             var latlng = currentClinicMarker.getLatLng();
-            map.setView([latlng.lat, latlng.lng], 15);
+            map.setView([latlng.lat, latlng.lng], 16);
         }
     });
     
@@ -606,13 +609,11 @@ $(document).ready(function() {
         }
     });
     
-    // Form edit submit
     $("#formEdit").submit(function(e) {
         e.preventDefault();
-        var id = parseInt($("#edit_id").val());
+        var id = $("#edit_id").val();
         
-        var updatedData = {
-            id: id,
+        var formData = {
             nama_klinik: $("#edit_nama").val(),
             kecamatan: $("#edit_kecamatan").val(),
             kelurahan: $("#edit_kelurahan").val(),
@@ -622,28 +623,33 @@ $(document).ready(function() {
             telepon: $("#edit_telepon").val(),
             latitude: $("#edit_latitude").val(),
             longitude: $("#edit_longitude").val(),
-            jumlah_dokter: parseInt($("#edit_dokter").val()),
+            jumlah_dokter: $("#edit_dokter").val(),
             jenis_layanan: $("#edit_layanan").val(),
             surat_ijin: $("#edit_status").val(),
             keterangan: $("#edit_keterangan").val()
         };
         
-        var index = allData.findIndex(function(item) { return item.id === id; });
-        if (index !== -1) {
-            allData[index] = updatedData;
-            renderTable(allData);
-            
-            if (dataTable) {
-                dataTable.clear();
-                dataTable.rows.add($("#dataTableBody tr"));
-                dataTable.draw();
+        $("#editModal .btn-primary-custom").prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...');
+        
+        $.ajax({
+            url: base_url + 'index.php/data_klinik/update/' + id,
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                $("#editModal .btn-primary-custom").prop('disabled', false).html('<i class="fas fa-save me-1"></i>Simpan Perubahan');
+                if (response.status === 'success') {
+                    $("#editModal").modal("hide");
+                    alert(response.message);
+                    loadDataFromServer();
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function() {
+                $("#editModal .btn-primary-custom").prop('disabled', false).html('<i class="fas fa-save me-1"></i>Simpan Perubahan');
+                alert('Gagal menyimpan perubahan');
             }
-            
-            $("#editModal").modal("hide");
-            alert("Data berhasil diupdate");
-        }
+        });
     });
 });
-
-// Base URL
-var base_url = "<?= base_url() ?>";

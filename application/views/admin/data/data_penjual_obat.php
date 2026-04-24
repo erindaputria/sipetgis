@@ -12,7 +12,7 @@
         WebFont.load({
             google: { families: ["Public Sans:300,400,500,600,700"] },
             custom: {
-                families: [
+                families: [ 
                     "Font Awesome 5 Solid",
                     "Font Awesome 5 Regular",
                     "Font Awesome 5 Brands",
@@ -237,25 +237,23 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group mb-0">
-                                    <label for="filterIjin" class="form-label fw-bold">Filter Status Ijin:</label>
-                                    <select class="form-select form-select-sm" id="filterIjin">
+                                    <label for="filterStatus" class="form-label fw-bold">Filter Status Ijin:</label>
+                                    <select class="form-select form-select-sm" id="filterStatus">
                                         <option selected value="all">Semua Status</option>
-                                        <option value="Y">Memiliki Ijin</option>
-                                        <option value="N">Belum Memiliki Ijin</option>
+                                        <option value="Aktif">Memiliki Ijin</option>
+                                        <option value="Tidak Aktif">Belum Memiliki Ijin</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group mb-0">
-                                    <label for="filterKategori" class="form-label fw-bold">Filter Kategori Obat:</label>
-                                    <select class="form-select form-select-sm" id="filterKategori">
+                                    <label for="filterKategoriObat" class="form-label fw-bold">Filter Kategori Obat:</label>
+                                    <select class="form-select form-select-sm" id="filterKategoriObat">
                                         <option selected value="all">Semua Kategori</option>
+                                        <option value="Vaksin">Vaksin</option>
                                         <option value="Antibiotik">Antibiotik</option>
-                                        <option value="Antiparasit">Antiparasit</option>
                                         <option value="Vitamin">Vitamin</option>
-                                        <option value="Antiseptik">Antiseptik</option>
-                                        <option value="Hormon">Hormon</option>
-                                        <option value="Obat Khusus">Obat Khusus</option>
+                                        <option value="Antiparasit">Antiparasit</option>
                                     </select>
                                 </div>
                             </div>
@@ -277,17 +275,15 @@
                                             <th>Nama Toko</th>
                                             <th>Pemilik</th>
                                             <th>Kecamatan</th>
-                                            <th>Kelurahan</th>
                                             <th>Alamat</th>
                                             <th>Telepon</th>
-                                            <th>Kategori Obat</th>
-                                            <th>Status Ijin</th>
                                             <th>Peta</th>
+                                            <th>Status</th>
                                             <th width="80">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="dataTableBody">
-                                        <!-- Data akan diisi oleh JavaScript -->
+                                        <tr><td colspan="9" class="text-center">Memuat data...</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -328,9 +324,9 @@
                                 </div>
                                 <div class="card mt-3">
                                     <div class="card-header bg-primary-custom text-white py-2">
-                                        <h6 class="mb-0"><i class="fas fa-pills me-1"></i> Kategori Obat</h6>
+                                        <h6 class="mb-0"><i class="fas fa-capsules me-1"></i> Produk Obat Tersedia</h6>
                                     </div>
-                                    <div class="card-body p-3" id="kategoriInfo"></div>
+                                    <div class="card-body p-3" id="productInfo"></div>
                                 </div>
                             </div>
                         </div>
@@ -369,35 +365,42 @@
                                 <label class="form-label">Kecamatan <span class="text-danger">*</span></label>
                                 <select class="form-control" id="edit_kecamatan" name="kecamatan" required>
                                     <option value="">Pilih Kecamatan</option>
-                                    <option value="Sukolilo">Sukolilo</option>
-                                    <option value="Rungkut">Rungkut</option>
-                                    <option value="Gunung Anyar">Gunung Anyar</option>
-                                    <option value="Mulyorejo">Mulyorejo</option>
-                                    <option value="Sawahan">Sawahan</option>
-                                    <option value="Gubeng">Gubeng</option>
-                                    <option value="Wonokromo">Wonokromo</option>
-                                    <option value="Tandes">Tandes</option>
+                                    <option value="Asemrowo">Asemrowo</option>
+                                    <option value="Benowo">Benowo</option>
+                                    <option value="Bubutan">Bubutan</option>
+                                    <option value="Bulak">Bulak</option>
+                                    <option value="Dukuh Pakis">Dukuh Pakis</option>
+                                    <option value="Gayungan">Gayungan</option>
                                     <option value="Genteng">Genteng</option>
+                                    <option value="Gubeng">Gubeng</option>
+                                    <option value="Gunung Anyar">Gunung Anyar</option>
+                                    <option value="Jambangan">Jambangan</option>
+                                    <option value="Karang Pilang">Karang Pilang</option>
+                                    <option value="Kenjeran">Kenjeran</option>
+                                    <option value="Krembangan">Krembangan</option>
+                                    <option value="Lakarsantri">Lakarsantri</option>
+                                    <option value="Mulyorejo">Mulyorejo</option>
+                                    <option value="Pabean Cantian">Pabean Cantian</option>
+                                    <option value="Pakal">Pakal</option>
+                                    <option value="Rungkut">Rungkut</option>
+                                    <option value="Sambikerep">Sambikerep</option>
+                                    <option value="Sawahan">Sawahan</option>
+                                    <option value="Semampir">Semampir</option>
+                                    <option value="Simokerto">Simokerto</option>
+                                    <option value="Sukolilo">Sukolilo</option>
+                                    <option value="Sukomanunggal">Sukomanunggal</option>
+                                    <option value="Tambaksari">Tambaksari</option>
+                                    <option value="Tandes">Tandes</option>
                                     <option value="Tegalsari">Tegalsari</option>
+                                    <option value="Tenggilis Mejoyo">Tenggilis Mejoyo</option>
+                                    <option value="Wiyung">Wiyung</option>
+                                    <option value="Wonocolo">Wonocolo</option>
+                                    <option value="Wonokromo">Wonokromo</option>
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Kelurahan <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="edit_kelurahan" name="kelurahan" required>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">RT</label>
-                                <input type="text" class="form-control" id="edit_rt" name="rt">
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">RW</label>
-                                <input type="text" class="form-control" id="edit_rw" name="rw">
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Telepon</label>
-                                <input type="text" class="form-control" id="edit_telepon" name="telepon">
+                                <label class="form-label">Alamat <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="edit_alamat" name="alamat" required>
                             </div>
                         </div>
                         <div class="row">
@@ -410,23 +413,40 @@
                                 <input type="text" class="form-control" id="edit_longitude" name="longitude" placeholder="112.7520883">
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Status Ijin</label>
-                                <select class="form-control" id="edit_status" name="surat_ijin">
-                                    <option value="Y">Memiliki Ijin</option>
-                                    <option value="N">Belum Memiliki Ijin</option>
+                                <label class="form-label">Status</label>
+                                <select class="form-control" id="edit_status" name="status">
+                                    <option value="Aktif">Aktif (Memiliki Ijin)</option>
+                                    <option value="Tidak Aktif">Tidak Aktif (Belum Ijin)</option>
                                 </select>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12 mb-3">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Telepon</label>
+                                <input type="text" class="form-control" id="edit_telepon" name="telepon">
+                            </div>
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label">Kategori Obat</label>
-                                <input type="text" class="form-control" id="edit_kategori" name="kategori_obat" placeholder="Contoh: Antibiotik, Vitamin, Antiparasit">
+                                <select class="form-control" id="edit_kategori_obat" name="kategori_obat">
+                                    <option value="">Pilih Kategori</option>
+                                    <option value="Vaksin">Vaksin</option>
+                                    <option value="Antibiotik">Antibiotik</option>
+                                    <option value="Vitamin">Vitamin</option>
+                                    <option value="Antiparasit">Antiparasit</option>
+                                </select>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label class="form-label">Keterangan</label>
-                                <textarea class="form-control" id="edit_keterangan" name="keterangan" rows="2"></textarea>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Jenis Obat</label>
+                                <input type="text" class="form-control" id="edit_jenis_obat" name="jenis_obat" placeholder="Contoh: Obat Ternak, Obat Unggas, Obat Kucing">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Obat Hewan</label>
+                                <select class="form-control" id="edit_obat_hewan" name="obat_hewan">
+                                    <option value="Y">Ya (Memiliki izin obat hewan)</option>
+                                    <option value="N">Tidak</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -481,6 +501,9 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <!-- Custom JS Data Penjual Obat -->
+    <script>
+    var base_url = "<?= base_url() ?>";
+    </script>
     <script src="<?php echo base_url('assets/js/data_penjual_obat.js'); ?>"></script>
 </body>
 </html>

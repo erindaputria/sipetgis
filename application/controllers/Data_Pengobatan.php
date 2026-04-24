@@ -14,7 +14,7 @@ class Data_Pengobatan extends CI_Controller {
         if (!$this->session->userdata('logged_in')) {
             redirect('login');
         }
-    }
+    } 
 
     public function index()
     {
@@ -38,17 +38,8 @@ class Data_Pengobatan extends CI_Controller {
 
     public function get_all_data()
     {
-        $user_kecamatan = $this->session->userdata('kecamatan');
-        $user_level = $this->session->userdata('level');
-        
-        // Untuk admin bisa lihat semua, untuk petugas hanya kecamatannya
-        if ($user_level == 'admin') {
-            $data = $this->Data_Pengobatan_Model->get_all_pengobatan();
-        } else {
-            $data = $this->Data_Pengobatan_Model->get_pengobatan_by_kecamatan($user_kecamatan);
-        }
-        
         header('Content-Type: application/json');
+        $data = $this->Data_Pengobatan_Model->get_all_pengobatan();
         echo json_encode($data);
     }
 
@@ -92,9 +83,6 @@ class Data_Pengobatan extends CI_Controller {
         echo json_encode($response);
     }
     
-    /**
-     * Test endpoint untuk cek koneksi database
-     */
     public function test_db()
     {
         $query = $this->db->get('input_pengobatan');
@@ -102,5 +90,61 @@ class Data_Pengobatan extends CI_Controller {
         echo '<pre>';
         print_r($query->result_array());
         echo '</pre>';
+    }
+
+    public function update($id)
+    {
+        // Cek akses
+        $user_level = $this->session->userdata('level');
+        $user_kecamatan = $this->session->userdata('kecamatan');
+        
+        // Untuk petugas, cek apakah data milik kecamatannya
+        if ($user_level != 'admin') {
+            $this->db->select('kecamatan');
+            $this->db->from('input_pengobatan');
+            $this->db->where('id', $id);
+            $data = $this->db->get()->row_array();
+            
+            if (!$data || $data['kecamatan'] != $user_kecamatan) {
+                $response = [
+                    'status' => 'error',
+                    'message' => 'Anda tidak memiliki akses untuk mengedit data ini'
+                ];
+                echo json_encode($response);
+                return;
+            }
+        }
+        
+        $update_data = [
+            'tanggal_pengobatan' => $this->input->post('tanggal_pengobatan'),
+            'nama_petugas' => $this->input->post('nama_petugas'),
+            'nama_peternak' => $this->input->post('nama_peternak'),
+            'nik' => $this->input->post('nik'),
+            'kecamatan' => $this->input->post('kecamatan'),
+            'kelurahan' => $this->input->post('kelurahan'),
+            'alamat' => $this->input->post('alamat'),
+            'rt' => $this->input->post('rt'),
+            'rw' => $this->input->post('rw'),
+            'latitude' => $this->input->post('latitude'),
+            'longitude' => $this->input->post('longitude'),
+            'jumlah' => $this->input->post('jumlah'),
+            'komoditas_ternak' => $this->input->post('komoditas_ternak'),
+            'telp' => $this->input->post('telp'),
+            'gejala_klinis' => $this->input->post('gejala_klinis'),
+            'jenis_pengobatan' => $this->input->post('jenis_pengobatan'),
+            'bantuan_prov' => $this->input->post('bantuan_prov'),
+            'keterangan' => $this->input->post('keterangan')
+        ];
+        
+        $this->db->where('id', $id); 
+        $result = $this->db->update('input_pengobatan', $update_data);
+        
+        $response = [
+            'status' => $result ? 'success' : 'error',
+            'message' => $result ? 'Data berhasil diperbarui' : 'Gagal memperbarui data'
+        ];
+        
+        header('Content-Type: application/json');
+        echo json_encode($response); 
     }
 }

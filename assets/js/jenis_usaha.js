@@ -13,12 +13,12 @@ $(document).ready(function() {
                 extend: "csv",
                 text: '<i class="fas fa-file-csv"></i> CSV',
                 className: 'btn btn-sm btn-success',
-                exportOptions: { columns: [0,1,2,3,4,5] }
+                exportOptions: { columns: [0,1,2,3,4,5] } 
             },
             {
                 extend: "excel",
                 text: '<i class="fas fa-file-excel"></i> Excel',
-                className: 'btn btn-sm btn-success',
+                className: 'btn btn-sm btn-success', 
                 exportOptions: { columns: [0,1,2,3,4,5] }
             },
             {
