@@ -1,8 +1,4 @@
-/**
- * Input Stok Pakan Ternak
- * SIPETGIS - Kota Surabaya
- * Mengikuti pola yang sama dengan P_Input_Pengobatan
- */
+
 
 $(document).ready(function() {
     // Set today's date as default
@@ -182,7 +178,7 @@ $(document).ready(function() {
         var formData = $(this).serialize();
         var csrfHash = $('input[name="' + csrf_token_name + '"]').val();
         
-        var saveUrl = base_url + 'P_Input_Stok_Pakan/save';
+        var saveUrl = base_url + 'P_input_stok_pakan/save';
         
         $.ajax({
             url: saveUrl,

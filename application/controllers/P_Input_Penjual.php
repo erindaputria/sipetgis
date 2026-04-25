@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class P_Input_Penjual extends CI_Controller {
+class P_input_penjual extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -16,18 +16,18 @@ class P_Input_Penjual extends CI_Controller {
             redirect('login');
         }
         
-        $this->load->model('P_Input_Penjual_Model');
+        $this->load->model('P_input_penjual_model');
     }
  
     public function index() {
         $user_kecamatan = $this->session->userdata('kecamatan');
-        $data['penjual_data'] = $this->P_Input_Penjual_Model->get_penjual_by_kecamatan($user_kecamatan);
+        $data['penjual_data'] = $this->P_input_penjual_model->get_penjual_by_kecamatan($user_kecamatan);
         $data['kel_list'] = $this->get_all_kelurahan();
         $data['user_kecamatan'] = $user_kecamatan;
         
         // Ambil data untuk filter
-        $data['filter_kelurahan'] = $this->P_Input_Penjual_Model->get_distinct_kelurahan($user_kecamatan);
-        $data['filter_dagangan'] = $this->P_Input_Penjual_Model->get_distinct_dagangan($user_kecamatan);
+        $data['filter_kelurahan'] = $this->P_input_penjual_model->get_distinct_kelurahan($user_kecamatan);
+        $data['filter_dagangan'] = $this->P_input_penjual_model->get_distinct_dagangan($user_kecamatan);
         
         $this->load->view('petugas/p_input_penjual', $data);
     }
@@ -147,7 +147,7 @@ class P_Input_Penjual extends CI_Controller {
             'created_at' => date('Y-m-d H:i:s')
         );
 
-        if ($this->P_Input_Penjual_Model->save_penjual($data)) {
+        if ($this->P_input_penjual_model->save_penjual($data)) {
             $foto_msg = $foto_name ? ' dan 1 foto' : ' (tanpa foto)';
             $response = array(
                 'status' => 'success',
@@ -165,7 +165,7 @@ class P_Input_Penjual extends CI_Controller {
 
     public function get_all_data() {
         $user_kecamatan = $this->session->userdata('kecamatan');
-        $data = $this->P_Input_Penjual_Model->get_penjual_by_kecamatan($user_kecamatan);
+        $data = $this->P_input_penjual_model->get_penjual_by_kecamatan($user_kecamatan);
         echo json_encode($data);
     }
 
@@ -188,7 +188,7 @@ class P_Input_Penjual extends CI_Controller {
             $tahun = date('Y');
         }
         
-        $data = $this->P_Input_Penjual_Model->get_by_periode($tahun, $kecamatan);
+        $data = $this->P_input_penjual_model->get_by_periode($tahun, $kecamatan);
         
         if (!empty($data)) {
             $response = array(
@@ -208,7 +208,7 @@ class P_Input_Penjual extends CI_Controller {
     
     public function get_statistik() {
         $kecamatan = $this->session->userdata('kecamatan');
-        $data = $this->P_Input_Penjual_Model->get_statistik_per_kelurahan($kecamatan);
+        $data = $this->P_input_penjual_model->get_statistik_per_kelurahan($kecamatan);
         echo json_encode($data);
     }
 }

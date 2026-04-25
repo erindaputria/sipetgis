@@ -1,9 +1,3 @@
-/**
- * Input Pemotongan Unggas
- * SIPETGIS - Kota Surabaya
- * Mengikuti pola yang sama dengan P_Input_Pengobatan
- */
-
 $(document).ready(function() {
     // Set today's date as default
     const today = new Date().toISOString().split('T')[0];
@@ -17,7 +11,7 @@ $(document).ready(function() {
         const total = ayam + itik + dst;
         $('#totalUnggas').text(total);
         return total;
-    }
+    } 
     
     $('#ayam, #itik, #dst').on('input', function() {
         hitungTotal();
@@ -28,7 +22,7 @@ $(document).ready(function() {
         $('#pemotonganTable').DataTable().destroy();
     }
     
-    // Initialize DataTable dengan custom buttons termasuk Print
+    // Initialize DataTable
     let dataTable = $('#pemotonganTable').DataTable({
         language: {
             search: "Cari:",
@@ -58,7 +52,7 @@ $(document).ready(function() {
                 text: '<i class="fas fa-file-pdf"></i> PDF', 
                 className: 'btn btn-sm btn-danger',
                 action: function(e, dt, button, config) {
-                    printWithCurrentData();
+                    printData();
                 }
             },
             { 
@@ -66,40 +60,14 @@ $(document).ready(function() {
                 text: '<i class="fas fa-print"></i> Print', 
                 className: 'btn btn-sm btn-info',
                 action: function(e, dt, button, config) {
-                    printWithCurrentData();
+                    printData();
                 }
             }
         ],
         columnDefs: [
-            { orderable: false, targets: [8] }
+            { orderable: false, targets: [9] }
         ],
-        footerCallback: function (row, data, start, end, display) {
-            let api = this.api();
-            
-            // Hitung total untuk setiap kolom
-            let totalAyam = api.column(2, { page: 'current' }).data().reduce(function (a, b) {
-                let val = typeof b === 'string' ? parseFloat(b.toString().replace(/\./g, '')) : parseFloat(b);
-                return a + (isNaN(val) ? 0 : val);
-            }, 0);
-            
-            let totalItik = api.column(3, { page: 'current' }).data().reduce(function (a, b) {
-                let val = typeof b === 'string' ? parseFloat(b.toString().replace(/\./g, '')) : parseFloat(b);
-                return a + (isNaN(val) ? 0 : val);
-            }, 0);
-            
-            let totalDst = api.column(4, { page: 'current' }).data().reduce(function (a, b) {
-                let val = typeof b === 'string' ? parseFloat(b.toString().replace(/\./g, '')) : parseFloat(b);
-                return a + (isNaN(val) ? 0 : val);
-            }, 0);
-            
-            let totalSemua = totalAyam + totalItik + totalDst;
-            
-            // Update footer
-            $(api.column(2).footer()).html(totalAyam.toLocaleString('id-ID'));
-            $(api.column(3).footer()).html(totalItik.toLocaleString('id-ID'));
-            $(api.column(4).footer()).html(totalDst.toLocaleString('id-ID'));
-            $(api.column(5).footer()).html(totalSemua.toLocaleString('id-ID'));
-        }
+        order: [[1, 'desc']]
     });
     
     // Toggle Form
@@ -123,9 +91,6 @@ $(document).ready(function() {
 
     // Reset Form
     function resetForm() {
-        $('#formContainer').removeClass('show');
-        $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT PEMOTONGAN UNGGAS');
-        
         $('#formPemotongan')[0].reset();
         $('#tanggal').val(new Date().toISOString().split('T')[0]);
         $('#ayam, #itik, #dst').val(0);
@@ -168,12 +133,33 @@ $(document).ready(function() {
         $(this).hide();
     });
 
-    // Filter functions
+    // Filter functions dengan tanggal tunggal
     function filterData() {
         let search = "";
         const daerahAsal = $("#filterDaerahAsal").val();
         const periode = $("#filterPeriode").val();
+        const tanggalFilter = $("#filterTanggal").val();
         
+        // Hapus filter custom sebelumnya
+        $.fn.dataTable.ext.search.pop();
+        
+        // Buat filter kustom untuk tanggal
+        if (tanggalFilter !== "") {
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                let tanggalTabel = data[1]; // kolom tanggal (index 1)
+                
+                if (!tanggalTabel || tanggalTabel === '-') return false;
+                
+                // Konversi format tanggal dari dd-mm-yyyy ke yyyy-mm-dd
+                let parts = tanggalTabel.split('-');
+                let tanggalData = parts[2] + '-' + parts[1] + '-' + parts[0];
+                
+                // Cek apakah tanggal sama
+                return tanggalData === tanggalFilter;
+            });
+        }
+        
+        // Filter berdasarkan daerah asal dan periode
         if (daerahAsal !== "all") search += daerahAsal + " ";
         if (periode !== "all") search += periode;
         
@@ -181,7 +167,14 @@ $(document).ready(function() {
     }
     
     function resetFilter() {
+        // Reset semua input filter
         $("#filterDaerahAsal, #filterPeriode").val("all");
+        $("#filterTanggal").val("");
+        
+        // Hapus filter custom
+        $.fn.dataTable.ext.search.pop();
+        
+        // Reset search dan redraw
         dataTable.search("").draw();
     }
     
@@ -192,7 +185,6 @@ $(document).ready(function() {
     $('#formPemotongan').submit(function(e) {
         e.preventDefault();
         
-        // Validasi minimal satu jenis unggas diisi
         const ayam = parseInt($('#ayam').val()) || 0;
         const itik = parseInt($('#itik').val()) || 0;
         const dst = parseInt($('#dst').val()) || 0;
@@ -265,24 +257,24 @@ $(document).ready(function() {
     };
 });
 
-// Fungsi Print/PDF - SAMA PERSIS DENGAN LAPORAN_PENGOBATAN
-function printWithCurrentData() {
-    var title = $('#reportTitle').length ? $('#reportTitle').html() : 'DATA PEMOTONGAN UNGGAS';
-    var subtitle = $('#reportSubtitle').length ? $('#reportSubtitle').html() : 'Kota Surabaya';
+// Fungsi Print
+function printData() {
+    var title = 'DATA PEMOTONGAN UNGGAS';
+    var subtitle = 'SIPETGIS - Kecamatan ' + (typeof user_kecamatan !== 'undefined' ? user_kecamatan : 'Benowo');
     
     var printWindow = window.open('', '_blank');
     printWindow.document.write('<html><head><title>Data Pemotongan Unggas</title>');
     printWindow.document.write('<style>');
     printWindow.document.write('body { font-family: Arial, sans-serif; margin: 20px; }');
     printWindow.document.write('.header { text-align: center; margin-bottom: 20px; }');
-    printWindow.document.write('.header h2 { margin: 0; }');
+    printWindow.document.write('.header h2 { margin: 0; color: #832706; }');
     printWindow.document.write('.header p { margin: 5px 0; }');
     printWindow.document.write('table { width: 100%; border-collapse: collapse; margin-top: 20px; }');
-    printWindow.document.write('th, td { border: 1px solid #000; padding: 8px; }');
+    printWindow.document.write('th, td { border: 1px solid #000; padding: 8px; text-align: left; }');
     printWindow.document.write('th { background-color: #f2f2f2; }');
+    printWindow.document.write('td.text-end { text-align: right; }');
+    printWindow.document.write('td.text-center { text-align: center; }');
     printWindow.document.write('.badge-secondary { background-color: #6c757d; color: white; padding: 2px 6px; border-radius: 4px; }');
-    printWindow.document.write('.foto-link { color: black; text-decoration: none; }');
-    printWindow.document.write('@media print { .no-print { display: none; } }');
     printWindow.document.write('</style>');
     printWindow.document.write('</head><body>');
     
@@ -293,6 +285,7 @@ function printWithCurrentData() {
     $(tableContent).find('.dataTables_length').remove();
     $(tableContent).find('.dataTables_info').remove();
     $(tableContent).find('.dataTables_paginate').remove();
+    $(tableContent).find('.dataTables_wrapper').removeClass();
     
     printWindow.document.write('<div class="header">');
     printWindow.document.write('<h2>' + title + '</h2>');

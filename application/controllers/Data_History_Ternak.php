@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Data_History_Ternak extends CI_Controller {
+class Data_history_ternak extends CI_Controller {
 
     public function index()
     {

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class P_Dashboard_Petugas_Model extends CI_Model {
+class P_dashboard_petugas_model extends CI_Model {
     
     public function __construct() {
         parent::__construct();

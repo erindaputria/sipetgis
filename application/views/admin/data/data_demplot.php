@@ -80,6 +80,7 @@
                                 <ul class="list-unstyled ps-4">
                                     <li><a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a></li>
                                     <li><a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a></li>
+                                    <li><a href="<?= site_url('kepemilikan_jenis_usaha') ?>" class="nav-link active">Kepemilikan Jenis Usaha</a></li>
                                     <li><a href="<?php echo base_url(); ?>akses_pengguna" class="nav-link">Akses Pengguna</a></li>
                                     <li><a href="<?php echo base_url(); ?>obat" class="nav-link">Obat</a></li>
                                     <li><a href="<?php echo base_url(); ?>vaksin" class="nav-link">Vaksin</a></li>

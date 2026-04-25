@@ -334,7 +334,7 @@ $(document).ready(function() {
             formData.append(csrf_token_name, csrfHash);
         }
         
-        var saveUrl = base_url + 'P_Input_Pengobatan/save';
+        var saveUrl = base_url + 'P_input_pengobatan/save';
         
         $.ajax({
             url: saveUrl,

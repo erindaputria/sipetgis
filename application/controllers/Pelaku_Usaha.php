@@ -1,11 +1,11 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Pelaku_Usaha extends CI_Controller {
+class Pelaku_usaha extends CI_Controller {
     
     public function __construct() {
         parent::__construct();
-        $this->load->model('Pelaku_Usaha_Model');
+        $this->load->model('Pelaku_usaha_model');
         $this->load->library('session');
         $this->load->library('form_validation');
         $this->load->helper('url');
@@ -18,7 +18,7 @@ class Pelaku_Usaha extends CI_Controller {
     }
     
     public function index() {
-        $data['pelaku_usaha'] = $this->Pelaku_Usaha_Model->get_all();
+        $data['pelaku_usaha'] = $this->Pelaku_usaha_model->get_all();
         $data['title'] = 'Master Data Pelaku Usaha';
         $data['active_menu'] = 'pelaku_usaha';
         
@@ -41,7 +41,7 @@ class Pelaku_Usaha extends CI_Controller {
         
         // Cek NIK sudah ada atau belum
         $nik = $this->input->post('nik');
-        if ($this->Pelaku_Usaha_Model->check_nik($nik)) {
+        if ($this->Pelaku_usaha_model->check_nik($nik)) {
             $this->session->set_flashdata('error', 'NIK sudah terdaftar');
             redirect('pelaku_usaha');
         }
@@ -56,7 +56,7 @@ class Pelaku_Usaha extends CI_Controller {
             'updated_at' => date('Y-m-d H:i:s')
         );
         
-        $result = $this->Pelaku_Usaha_Model->insert($data);
+        $result = $this->Pelaku_usaha_model->insert($data);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data pelaku usaha berhasil disimpan');
@@ -86,14 +86,14 @@ class Pelaku_Usaha extends CI_Controller {
         $nik = $this->input->post('nik');
         
         // Cek apakah data dengan ID tersebut ada
-        $existing_data = $this->Pelaku_Usaha_Model->get_by_id($id);
+        $existing_data = $this->Pelaku_usaha_model->get_by_id($id);
         if (!$existing_data) {
             $this->session->set_flashdata('error', 'Data tidak ditemukan');
             redirect('pelaku_usaha');
         }
         
         // Cek NIK sudah ada untuk pengguna lain (kecuali data sendiri)
-        $check_nik = $this->Pelaku_Usaha_Model->check_nik_except($nik, $id);
+        $check_nik = $this->Pelaku_usaha_model->check_nik_except($nik, $id);
         if ($check_nik) {
             $this->session->set_flashdata('error', 'NIK sudah digunakan oleh pelaku usaha lain');
             redirect('pelaku_usaha');
@@ -108,7 +108,7 @@ class Pelaku_Usaha extends CI_Controller {
             'updated_at' => date('Y-m-d H:i:s')
         );
         
-        $result = $this->Pelaku_Usaha_Model->update($id, $data);
+        $result = $this->Pelaku_usaha_model->update($id, $data);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data pelaku usaha berhasil diperbarui');
@@ -126,13 +126,13 @@ class Pelaku_Usaha extends CI_Controller {
         }
         
         // Cek apakah data dengan ID tersebut ada
-        $existing_data = $this->Pelaku_Usaha_Model->get_by_id($id);
+        $existing_data = $this->Pelaku_usaha_model->get_by_id($id);
         if (!$existing_data) {
             $this->session->set_flashdata('error', 'Data tidak ditemukan');
             redirect('pelaku_usaha');
         }
         
-        $result = $this->Pelaku_Usaha_Model->delete($id);
+        $result = $this->Pelaku_usaha_model->delete($id);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data pelaku usaha berhasil dihapus');
@@ -149,7 +149,7 @@ class Pelaku_Usaha extends CI_Controller {
             redirect('pelaku_usaha');
         }
         
-        $data['pelaku'] = $this->Pelaku_Usaha_Model->get_by_id($id);
+        $data['pelaku'] = $this->Pelaku_usaha_model->get_by_id($id);
          
         if (!$data['pelaku']) {
             $this->session->set_flashdata('error', 'Data tidak ditemukan');

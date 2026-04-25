@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class K_Dashboard_Kepala_Model extends CI_Model {
+class K_dashboard_kepala_model extends CI_Model {
     
     private $table_input_jenis_usaha = 'input_jenis_usaha';
     private $table_input_vaksinasi = 'input_vaksinasi';
@@ -13,7 +13,7 @@ class K_Dashboard_Kepala_Model extends CI_Model {
     
     /**
      * Count total pelaku usaha (unique berdasarkan NIK)
-     */
+     */ 
     public function count_pelaku_usaha() {
         $this->db->select('COUNT(DISTINCT nik) as total');
         $query = $this->db->get($this->table_input_jenis_usaha);
@@ -218,38 +218,46 @@ class K_Dashboard_Kepala_Model extends CI_Model {
     }
     
     /**
- * Get total vaksinasi PMK
- */
-public function get_total_vaksinasi_pmk() {
-    $this->db->select('SUM(jumlah) as total');
-    $this->db->like('jenis_vaksinasi', 'PMK', 'both');
-    $query = $this->db->get($this->table_input_vaksinasi);
-    $result = $query->row();
-    return (int)($result->total ?? 0);
-}
+     * Get total vaksinasi PMK
+     */
+    public function get_total_vaksinasi_pmk() {
+        $this->db->select('SUM(jumlah) as total');
+        $this->db->group_start();
+        $this->db->like('jenis_vaksinasi', 'PMK', 'both');
+        $this->db->or_like('jenis_vaksinasi', 'Penyakit Mulut', 'both');
+        $this->db->group_end();
+        $query = $this->db->get($this->table_input_vaksinasi);
+        $result = $query->row();
+        return (int)($result->total ?? 0);
+    }
 
-/**
- * Get total vaksinasi ND/AI
- */
-public function get_total_vaksinasi_ndai() {
-    $this->db->select('SUM(jumlah) as total');
-    $this->db->like('jenis_vaksinasi', 'ND-AI', 'both');
-    $query = $this->db->get($this->table_input_vaksinasi);
-    $result = $query->row();
-    return (int)($result->total ?? 0);
-}
+    /**
+     * Get total vaksinasi ND/AI
+     */
+    public function get_total_vaksinasi_ndai() {
+        $this->db->select('SUM(jumlah) as total');
+        $this->db->group_start();
+        $this->db->like('jenis_vaksinasi', 'ND-AI', 'both');
+        $this->db->or_like('jenis_vaksinasi', 'Newcastle', 'both');
+        $this->db->group_end();
+        $query = $this->db->get($this->table_input_vaksinasi);
+        $result = $query->row();
+        return (int)($result->total ?? 0);
+    }
 
-/**
- * Get total vaksinasi LSD
- * Catatan: Dari data yang ada, belum ada vaksinasi LSD, jadi hasilnya 0
- */
-public function get_total_vaksinasi_lsd() {
-    $this->db->select('SUM(jumlah) as total');
-    $this->db->like('jenis_vaksinasi', 'LSD', 'both');
-    $query = $this->db->get($this->table_input_vaksinasi);
-    $result = $query->row();
-    return (int)($result->total ?? 0);
-}
+    /**
+     * Get total vaksinasi LSD
+     */
+    public function get_total_vaksinasi_lsd() {
+        $this->db->select('SUM(jumlah) as total');
+        $this->db->group_start();
+        $this->db->like('jenis_vaksinasi', 'LSD', 'both');
+        $this->db->or_like('jenis_vaksinasi', 'Lumpy', 'both');
+        $this->db->group_end();
+        $query = $this->db->get($this->table_input_vaksinasi);
+        $result = $query->row();
+        return (int)($result->total ?? 0);
+    }
     
     /**
      * Get persentase vaksinasi
@@ -373,22 +381,18 @@ public function get_total_vaksinasi_lsd() {
      * Get data untuk chart (31 kecamatan dengan jumlah pelaku usaha)
      */
     public function get_data_for_chart() {
-        // Ambil semua kecamatan
         $all_kecamatan = $this->get_all_kecamatan();
         
-        // Ambil data jumlah pelaku usaha per kecamatan dari database
         $this->db->select('kecamatan, COUNT(DISTINCT nik) as jumlah_pelaku');
         $this->db->group_by('kecamatan');
         $query = $this->db->get($this->table_input_jenis_usaha);
         $result = $query->result();
         
-        // Mapping hasil query ke array
         $data_map = [];
         foreach ($result as $row) {
             $data_map[$row->kecamatan] = (int)$row->jumlah_pelaku;
         }
         
-        // Siapkan data untuk chart (labels dan data)
         $labels = [];
         $data = [];
         
@@ -403,17 +407,23 @@ public function get_total_vaksinasi_lsd() {
         ];
     }
 
-        /**
+    /**
      * Get total klinik hewan
      */
     public function get_total_klinik_hewan() {
+        if (!$this->db->table_exists('input_klinik_hewan')) {
+            return 0;
+        }
         return $this->db->count_all('input_klinik_hewan');
     }
 
     /**
-     * Get total penjual obat hewan (dagangan = 'Obat')
+     * Get total penjual obat hewan
      */
     public function get_total_penjual_obat() {
+        if (!$this->db->table_exists('penjual')) {
+            return 0;
+        }
         $this->db->select('COUNT(id_penjual) as total');
         $this->db->where('dagangan', 'Obat');
         $query = $this->db->get('penjual');
@@ -422,9 +432,12 @@ public function get_total_vaksinasi_lsd() {
     }
 
     /**
-     * Get total penjual pakan (dagangan = 'Pakan')
+     * Get total penjual pakan
      */
     public function get_total_penjual_pakan() {
+        if (!$this->db->table_exists('penjual')) {
+            return 0;
+        }
         $this->db->select('COUNT(id_penjual) as total');
         $this->db->where('dagangan', 'Pakan');
         $query = $this->db->get('penjual');
@@ -433,102 +446,153 @@ public function get_total_vaksinasi_lsd() {
     }
 
     /**
- * Get data klinik hewan per kecamatan
- */
-public function get_klinik_hewan_per_kecamatan() {
-    // Cek apakah tabel input_klinik_hewan ada kolom kecamatan
-    $fields = $this->db->list_fields('input_klinik_hewan');
-    if (!in_array('kecamatan', $fields)) {
-        return [];
-    }
-    
-    $this->db->select('kecamatan, COUNT(*) as jumlah');
-    $this->db->group_by('kecamatan');
-    $query = $this->db->get('input_klinik_hewan');
-    $result = $query->result();
-    
-    $data = [];
-    foreach ($result as $row) {
-        $data[$row->kecamatan] = (int)$row->jumlah;
-    }
-    return $data;
-}
-
-/**
- * Get data penjual obat per kecamatan (dagangan = 'Obat')
- */
-public function get_penjual_obat_per_kecamatan() {
-    // Cek apakah tabel penjual ada kolom kecamatan
-    $fields = $this->db->list_fields('penjual');
-    if (!in_array('kecamatan', $fields)) {
-        return [];
-    }
-    
-    $this->db->select('kecamatan, COUNT(*) as jumlah');
-    $this->db->where('dagangan', 'Obat');
-    $this->db->group_by('kecamatan');
-    $query = $this->db->get('penjual');
-    $result = $query->result();
-    
-    $data = [];
-    foreach ($result as $row) {
-        $data[$row->kecamatan] = (int)$row->jumlah;
-    }
-    return $data;
-}
-
-/**
- * Get data penjual pakan per kecamatan (dagangan = 'Pakan')
- */
-public function get_penjual_pakan_per_kecamatan() {
-    // Cek apakah tabel penjual ada kolom kecamatan
-    $fields = $this->db->list_fields('penjual');
-    if (!in_array('kecamatan', $fields)) {
-        return [];
-    }
-    
-    $this->db->select('kecamatan, COUNT(*) as jumlah');
-    $this->db->where('dagangan', 'Pakan');
-    $this->db->group_by('kecamatan');
-    $query = $this->db->get('penjual');
-    $result = $query->result();
-    
-    $data = [];
-    foreach ($result as $row) {
-        $data[$row->kecamatan] = (int)$row->jumlah;
-    }
-    return $data;
-}
-
-/**
- * Get data vaksinasi per kecamatan
- */
-public function get_vaksinasi_per_kecamatan() {
-    // Cek apakah tabel input_vaksinasi ada kolom kecamatan
-    $fields = $this->db->list_fields('input_vaksinasi');
-    if (!in_array('kecamatan', $fields)) {
-        return [];
-    }
-    
-    $this->db->select('kecamatan, jenis_vaksinasi, SUM(jumlah) as total');
-    $this->db->group_by(array('kecamatan', 'jenis_vaksinasi'));
-    $query = $this->db->get('input_vaksinasi');
-    $result = $query->result();
-    
-    $data = [];
-    foreach ($result as $row) {
-        if (!isset($data[$row->kecamatan])) {
-            $data[$row->kecamatan] = array('PMK' => 0, 'ND-AI' => 0, 'LSD' => 0);
+     * Get data klinik hewan per kecamatan
+     */
+    public function get_klinik_hewan_per_kecamatan() {
+        if (!$this->db->table_exists('input_klinik_hewan')) {
+            return [];
         }
-        if (strpos($row->jenis_vaksinasi, 'PMK') !== false) {
-            $data[$row->kecamatan]['PMK'] = (int)$row->total;
-        } elseif (strpos($row->jenis_vaksinasi, 'ND-AI') !== false) {
-            $data[$row->kecamatan]['ND-AI'] = (int)$row->total;
-        } elseif (strpos($row->jenis_vaksinasi, 'LSD') !== false) {
-            $data[$row->kecamatan]['LSD'] = (int)$row->total;
+        
+        $fields = $this->db->list_fields('input_klinik_hewan');
+        if (!in_array('kecamatan', $fields)) {
+            return [];
         }
+        
+        $this->db->select('kecamatan, COUNT(*) as jumlah');
+        $this->db->group_by('kecamatan');
+        $query = $this->db->get('input_klinik_hewan');
+        $result = $query->result();
+        
+        $data = [];
+        foreach ($result as $row) {
+            $data[$row->kecamatan] = (int)$row->jumlah;
+        }
+        return $data;
     }
-    return $data;
-}
+
+    /**
+     * Get data penjual obat per kecamatan
+     */
+    public function get_penjual_obat_per_kecamatan() {
+        if (!$this->db->table_exists('penjual')) {
+            return [];
+        }
+        
+        $fields = $this->db->list_fields('penjual');
+        if (!in_array('kecamatan', $fields)) {
+            return [];
+        }
+        
+        $this->db->select('kecamatan, COUNT(*) as jumlah');
+        $this->db->where('dagangan', 'Obat');
+        $this->db->group_by('kecamatan');
+        $query = $this->db->get('penjual');
+        $result = $query->result();
+        
+        $data = [];
+        foreach ($result as $row) {
+            $data[$row->kecamatan] = (int)$row->jumlah;
+        }
+        return $data;
+    }
+
+    /**
+     * Get data penjual pakan per kecamatan
+     */
+    public function get_penjual_pakan_per_kecamatan() {
+        if (!$this->db->table_exists('penjual')) {
+            return [];
+        }
+        
+        $fields = $this->db->list_fields('penjual');
+        if (!in_array('kecamatan', $fields)) {
+            return [];
+        }
+        
+        $this->db->select('kecamatan, COUNT(*) as jumlah');
+        $this->db->where('dagangan', 'Pakan');
+        $this->db->group_by('kecamatan');
+        $query = $this->db->get('penjual');
+        $result = $query->result();
+        
+        $data = [];
+        foreach ($result as $row) {
+            $data[$row->kecamatan] = (int)$row->jumlah;
+        }
+        return $data;
+    }
+
+    /**
+     * Get data vaksinasi per kecamatan (detail)
+     */
+    public function get_vaksinasi_per_kecamatan_detail() {
+        if (!$this->db->table_exists('input_vaksinasi')) {
+            return [];
+        }
+        
+        $fields = $this->db->list_fields('input_vaksinasi');
+        if (!in_array('kecamatan', $fields)) {
+            return [];
+        }
+        
+        $this->db->select('kecamatan, jenis_vaksinasi, SUM(jumlah) as total');
+        $this->db->group_by(array('kecamatan', 'jenis_vaksinasi'));
+        $query = $this->db->get('input_vaksinasi');
+        $result = $query->result();
+        
+        $data = [];
+        foreach ($result as $row) {
+            if (!isset($data[$row->kecamatan])) {
+                $data[$row->kecamatan] = array('PMK' => 0, 'ND-AI' => 0, 'LSD' => 0);
+            }
+            $jenis = strtolower($row->jenis_vaksinasi);
+            if (strpos($jenis, 'pmk') !== false || strpos($jenis, 'mulut') !== false) {
+                $data[$row->kecamatan]['PMK'] = (int)$row->total;
+            } elseif (strpos($jenis, 'nd') !== false || strpos($jenis, 'newcastle') !== false) {
+                $data[$row->kecamatan]['ND-AI'] = (int)$row->total;
+            } elseif (strpos($jenis, 'lsd') !== false || strpos($jenis, 'lumpy') !== false) {
+                $data[$row->kecamatan]['LSD'] = (int)$row->total;
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Get total RPU/TPU per kecamatan
+     */
+    public function get_rpu_tpu_per_kecamatan() {
+        if (!$this->db->table_exists('rpu_tpu')) {
+            return [];
+        }
+        
+        $fields = $this->db->list_fields('rpu_tpu');
+        if (!in_array('kecamatan', $fields)) {
+            return [];
+        }
+        
+        $this->db->select('kecamatan, COUNT(*) as jumlah');
+        $this->db->group_by('kecamatan');
+        $query = $this->db->get('rpu_tpu');
+        $result = $query->result();
+        
+        $data = [];
+        foreach ($result as $row) {
+            $data[$row->kecamatan] = (int)$row->jumlah;
+        }
+        return $data;
+    }
+
+        /**
+     * Get total RPU/TPU
+     */
+    public function get_total_rpu_tpu() {
+        // Cek apakah tabel rpu_tpu ada
+        if (!$this->db->table_exists('rpu_tpu')) {
+            return 5; // Return default value jika tabel tidak ada
+        }
+        
+        $total = $this->db->count_all('rpu_tpu');
+        return $total > 0 ? $total : 5; // Return 5 jika tidak ada data (opsional)
+    }
 }
 ?>

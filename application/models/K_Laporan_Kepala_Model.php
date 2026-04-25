@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class K_Laporan_Kepala_Model extends CI_Model {
+class K_laporan_kepala_model extends CI_Model {
 
     public function __construct() {
         parent::__construct();

@@ -75,37 +75,37 @@
                             <h4 class="text-section">Menu Utama</h4>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Pengobatan'); ?>">
+                            <a href="<?php echo base_url('P_input_pengobatan'); ?>">
                                 <i class="fas fa-heartbeat" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Pengobatan</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Vaksinasi'); ?>">
+                            <a href="<?php echo base_url('P_input_vaksinasi'); ?>">
                                 <i class="fas fa-syringe" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Vaksinasi</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Pelaku_Usaha'); ?>">
+                            <a href="<?php echo base_url('P_input_pelaku_usaha'); ?>">
                                 <i class="fas fa-users" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Pelaku Usaha</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Jenis_Usaha'); ?>">
+                            <a href="<?php echo base_url('P_input_jenis_usaha'); ?>">
                                 <i class="fas fa-store" style="color: #832706 !important;"></i>
-                                <p style="color: #832706 !important;">Jenis Usaha</p>
+                                <p style="color: #832706 !important;">Kepemilikan Jenis Usaha</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Penjual'); ?>">
+                            <a href="<?php echo base_url('P_input_penjual'); ?>">
                                 <i class="fas fa-store-alt" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Penjual</p>
                             </a>
-                        </li>
+                        </li> 
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Klinik_Hewan'); ?>">
+                            <a href="<?php echo base_url('P_input_klinik_hewan'); ?>">
                                 <i class="fas fa-stethoscope" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Klinik Hewan</p>
                             </a>
@@ -252,19 +252,18 @@
                                                 </div>
 
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label">ID RPU (Optional)</label>
+                                                    <label class="form-label">RPU/Pejagal (Optional)</label>
                                                     <select class="form-control" id="id_rpu" name="id_rpu">
-                                                        <option value="">-- Pilih RPU (Opsional) --</option>
+                                                        <option value="">-- Pilih RPU/Pejagal (Opsional) --</option>
                                                         <?php if (!empty($rpu_list)): ?>
                                                             <?php foreach ($rpu_list as $rpu): ?>
                                                                 <option value="<?php echo $rpu['id']; ?>">
-                                                                    <?php echo htmlspecialchars($rpu['nama_rpu']); ?> 
-                                                                    (Kec. <?php echo htmlspecialchars($rpu['kecamatan']); ?>)
+                                                                    <?php echo htmlspecialchars($rpu['pejagal']); ?>
                                                                 </option>
                                                             <?php endforeach; ?>
                                                         <?php endif; ?>
                                                     </select>
-                                                    <small class="text-muted">Pilih RPU yang terkait dengan pemotongan ini (kosongkan jika tidak terkait)</small>
+                                                    <small class="text-muted">Pilih RPU/Pejagal yang terkait dengan pemotongan ini (kosongkan jika tidak terkait)</small>
                                                 </div>
                                             </div>
 
@@ -398,7 +397,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-group mb-0">
                                     <label for="filterPeriode" class="form-label fw-bold">Filter Periode:</label>
                                     <select class="form-select" id="filterPeriode">
@@ -412,9 +411,20 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6 text-end">
-                                <button id="filterBtn" class="btn btn-primary-custom"><i class="fas fa-filter me-2"></i>Filter Data</button>
-                                <button id="resetBtn" class="btn btn-secondary-custom ms-2"><i class="fas fa-redo me-2"></i>Reset</button>
+                            <div class="col-md-2">
+                                <div class="form-group mb-0">
+                                    <label for="filterTanggal" class="form-label fw-bold">Filter Tanggal:</label>
+                                    <input type="date" class="form-control" id="filterTanggal" />
+                                </div>
+                            </div>
+                            <div class="col-md-5 text-end">
+                                <div class="form-group mb-0">
+                                    <label class="form-label fw-bold" style="visibility: hidden;">Aksi</label>
+                                    <div>
+                                        <button id="filterBtn" class="btn btn-primary-custom"><i class="fas fa-filter me-2"></i>Filter Data</button>
+                                        <button id="resetBtn" class="btn btn-secondary-custom ms-2"><i class="fas fa-redo me-2"></i>Reset</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -434,6 +444,7 @@
                                             <th>Total</th>
                                             <th>Daerah Asal</th>
                                             <th>Petugas</th>
+                                            <th>RPU/Pejagal</th>
                                             <th>Foto</th>
                                         </tr>
                                     </thead>
@@ -453,6 +464,7 @@
                                                     <td class="text-end fw-bold"><?php echo number_format($total, 0, ',', '.'); ?></td>
                                                     <td><?php echo htmlspecialchars($data['daerah_asal'] ?? '-'); ?></td>
                                                     <td><?php echo htmlspecialchars($data['nama_petugas'] ?? '-'); ?></td>
+                                                    <td><?php echo !empty($data['nama_rpu']) ? htmlspecialchars($data['nama_rpu']) : '-'; ?></td>
                                                     <td class="text-center">
                                                         <?php if (!empty($data['foto_kegiatan'])): ?>
                                                             <a href="javascript:void(0)" class="foto-link" onclick="showFoto('<?php echo base_url(); ?>uploads/pemotongan_unggas/<?php echo $data['foto_kegiatan']; ?>')">
@@ -464,6 +476,10 @@
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="10" class="text-center">Belum ada data pemotongan unggas</td>
+                                            </tr>
                                         <?php endif; ?>
                                     </tbody>
                                 </table>

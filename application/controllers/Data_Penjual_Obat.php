@@ -1,12 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Data_Penjual_Obat extends CI_Controller {
+class Data_penjual_obat extends CI_Controller {
 
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Data_Penjual_Obat_Model');
+        $this->load->model('Data_penjual_obat_model');
         $this->load->helper('url');
         $this->load->library('session');
     }
@@ -19,21 +19,21 @@ class Data_Penjual_Obat extends CI_Controller {
     public function get_all_data()
     {
         header('Content-Type: application/json');
-        $data = $this->Data_Penjual_Obat_Model->get_all_penjual_obat();
+        $data = $this->Data_penjual_obat_model->get_all_penjual_obat();
         echo json_encode($data);
     }
 
     public function get_detail($id)
     {
         header('Content-Type: application/json');
-        $data = $this->Data_Penjual_Obat_Model->get_penjual_obat_by_id($id);
+        $data = $this->Data_penjual_obat_model->get_penjual_obat_by_id($id);
         echo json_encode($data);
     }
 
     public function delete($id)
     {
         header('Content-Type: application/json');
-        $result = $this->Data_Penjual_Obat_Model->delete_penjual_obat($id);
+        $result = $this->Data_penjual_obat_model->delete_penjual_obat($id);
         echo json_encode([
             'status' => $result ? 'success' : 'error',
             'message' => $result ? 'Data berhasil dihapus' : 'Gagal menghapus data'

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Rpu_Model extends CI_Model {
+class Rpu_model extends CI_Model {
     
     private $table = 'rpu';
     private $primary_key = 'pejagal';

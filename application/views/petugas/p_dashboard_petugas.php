@@ -94,7 +94,7 @@
                         <li class="nav-item">
                             <a href="<?php echo base_url('P_Input_Jenis_Usaha'); ?>">
                                 <i class="fas fa-store" style="color: #832706 !important;"></i>
-                                <p style="color: #832706 !important;">Jenis Usaha</p>
+                                <p style="color: #832706 !important;">Kepemilikan Jenis Usaha</p>
                             </a>
                         </li>
                         <li class="nav-item">

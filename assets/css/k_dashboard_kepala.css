@@ -1,0 +1,269 @@
+/* ========== DASHBOARD KEPALA DINAS - CUSTOM STYLES ========== */
+/* File ini adalah hasil pemisahan dari view k_dashboard_kepala.php */
+/* Tidak ada perubahan fungsi atau tampilan */
+
+/* Stat Cards */
+.stat-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 16px !important;
+    background: linear-gradient(135deg, #ffffff 0%, #fef9f5 100%) !important;
+    box-shadow: 0 4px 12px rgba(131, 39, 6, 0.08) !important;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(131, 39, 6, 0.15) !important;
+}
+
+.stat-card .card-category {
+    font-size: 14px;
+    color: #832706;
+    opacity: 0.8;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.stat-card .card-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #832706;
+    margin-bottom: 5px;
+}
+
+.stat-card .card-subtitle {
+    font-size: 12px;
+    color: #832706;
+    opacity: 0.7;
+    margin-bottom: 0;
+}
+
+/* Badge Ternak */
+.badge-ternak {
+    display: inline-block;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 20px;
+    background: #eef2ff;
+    color: #832706;
+    transition: all 0.2s ease;
+    margin: 4px;
+}
+
+.badge-ternak:hover {
+    background: #832706;
+    color: #ffffff;
+    cursor: default;
+}
+
+/* Chart Container */
+.chart-container-wrapper {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Vaksinasi Wrapper */
+.vaksin-wrapper {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    height: 100%;
+}
+
+.vaksin-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eef2ff;
+}
+
+.vaksin-body {
+    padding: 20px;
+}
+
+.vaksin-progress {
+    margin-bottom: 20px;
+}
+
+.vaksin-progress:last-child {
+    margin-bottom: 0;
+}
+
+/* Progress Bar Colors */
+.progress-bar.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.progress-bar.bg-warning {
+    background-color: #ffc107 !important;
+}
+
+.progress-bar.bg-info {
+    background-color: #0dcaf0 !important;
+}
+
+/* Facility/Tempat Usaha Wrapper */
+.facility-wrapper {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    height: 100%;
+}
+
+.facility-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eef2ff;
+}
+
+.facility-body {
+    padding: 20px;
+}
+
+.facility-card {
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    transition: transform 0.2s ease;
+}
+
+.facility-card:hover {
+    transform: scale(1.02);
+}
+
+/* Table Wrapper */
+.table-wrapper {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.table-wrapper .table {
+    margin-bottom: 0;
+}
+
+.table-wrapper .table thead th {
+    background-color: #f8f9fa;
+    color: #832706;
+    font-weight: 600;
+    border-bottom: 2px solid #eef2ff;
+    padding: 12px 15px;
+}
+
+.table-wrapper .table tbody td {
+    padding: 10px 15px;
+    vertical-align: middle;
+}
+
+.table-footer {
+    padding: 12px 20px;
+    border-top: 1px solid #eef2ff;
+    text-align: right;
+}
+
+/* Modal Styles */
+.modal-header {
+    background: #832706 !important;
+}
+
+.modal-header .modal-title {
+    color: #ffffff !important;
+}
+
+.modal-header .btn-close {
+    filter: brightness(0) invert(1);
+}
+
+/* Link Styles */
+.btn-link {
+    color: #832706 !important;
+    text-decoration: none;
+}
+
+.btn-link:hover {
+    color: #6b2005 !important;
+    text-decoration: underline;
+}
+
+/* Button Styles */
+.btn-primary {
+    background: #832706 !important;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #6b2005 !important;
+}
+
+.btn-secondary {
+    background: #6b2005 !important;
+    color: #ffffff !important;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background: #541904 !important;
+}
+
+/* Table Active Row */
+.table-active {
+    background-color: #f8f9fa !important;
+}
+
+.table-active td {
+    font-weight: bold;
+}
+
+/* Small Text */
+.text-muted {
+    color: #832706 !important;
+    opacity: 0.7;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stat-card .card-title {
+        font-size: 20px;
+    }
+    
+    .badge-ternak {
+        font-size: 10px;
+        padding: 4px 10px;
+    }
+    
+    .facility-card h6 {
+        font-size: 12px;
+    }
+    
+    .facility-card .fs-4 {
+        font-size: 1.25rem !important;
+    }
+}
+
+/* Icon Colors */
+.icon-big i {
+    color: #832706 !important;
+}
+
+/* Sidebar Active Link */
+.nav-item.active {
+    background-color: rgba(131, 39, 6, 0.1);
+    border-radius: 8px;
+}
+
+/* Card Footer */
+.card-footer {
+    background: transparent;
+    border-top: 1px solid #eef2ff;
+}
+
+/* Chart Container Canvas */
+.chart-container {
+    height: 400px;
+    width: 100%;
+}

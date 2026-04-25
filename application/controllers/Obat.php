@@ -5,12 +5,12 @@ class Obat extends CI_Controller {
     
     public function __construct() {
         parent::__construct();
-        $this->load->model('Obat_Model');
+        $this->load->model('Obat_model');
         $this->load->library('session');
     }
     
     public function index() {
-        $data['obat'] = $this->Obat_Model->get_all();
+        $data['obat'] = $this->Obat_model->get_all();
         $this->load->view('admin/obat', $data);
     }
     
@@ -21,7 +21,7 @@ class Obat extends CI_Controller {
             'dosis' => $this->input->post('dosis')
         );
         
-        $result = $this->Obat_Model->insert($data);
+        $result = $this->Obat_model->insert($data);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data obat berhasil disimpan');
@@ -41,7 +41,7 @@ class Obat extends CI_Controller {
             'dosis' => $this->input->post('dosis')
         );
         
-        $result = $this->Obat_Model->update($id, $data);
+        $result = $this->Obat_model->update($id, $data);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data obat berhasil diperbarui');
@@ -53,7 +53,7 @@ class Obat extends CI_Controller {
     }
     
     public function hapus($id) {
-        $result = $this->Obat_Model->delete($id);
+        $result = $this->Obat_model->delete($id);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data obat berhasil dihapus');

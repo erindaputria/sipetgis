@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Laporan_History_Data_Vaksinasi_Model extends CI_Model {
+class Laporan_history_data_vaksinasi_model extends CI_Model {
 
     protected $table = 'input_vaksinasi';
     

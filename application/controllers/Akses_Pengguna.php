@@ -1,16 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Akses_Pengguna extends CI_Controller {
+class Akses_pengguna extends CI_Controller {
     
     public function __construct() {
         parent::__construct();
-        $this->load->model('Akses_Pengguna_Model');
+        $this->load->model('Akses_pengguna_model');
         $this->load->library('session');
     }
     
     public function index() {
-        $data['akses'] = $this->Akses_Pengguna_Model->get_all();
+        $data['akses'] = $this->Akses_pengguna_model->get_all();
         $this->load->view('admin/akses_pengguna', $data);
     }
     
@@ -39,7 +39,7 @@ class Akses_Pengguna extends CI_Controller {
             'status' => $this->input->post('status')
         );
         
-        $result = $this->Akses_Pengguna_Model->insert($data);
+        $result = $this->Akses_pengguna_model->insert($data);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data pengguna berhasil disimpan');
@@ -67,7 +67,7 @@ class Akses_Pengguna extends CI_Controller {
             $data['password'] = $password; // Simpan plain text
         }
         
-        $result = $this->Akses_Pengguna_Model->update($id, $data);
+        $result = $this->Akses_pengguna_model->update($id, $data);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data pengguna berhasil diperbarui');
@@ -79,7 +79,7 @@ class Akses_Pengguna extends CI_Controller {
     }
     
     public function hapus($id) {
-        $result = $this->Akses_Pengguna_Model->delete($id);
+        $result = $this->Akses_pengguna_model->delete($id);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data pengguna berhasil dihapus');

@@ -13,7 +13,7 @@
             google: { families: ["Public Sans:300,400,500,600,700"] },
             custom: {
                 families: [
-                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Solid", 
                     "Font Awesome 5 Regular",
                     "Font Awesome 5 Brands",
                     "simple-line-icons",
@@ -75,31 +75,31 @@
                             <h4 class="text-section">Menu Utama</h4>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Pengobatan'); ?>">
+                            <a href="<?php echo base_url('P_input_pengobatan'); ?>">
                                 <i class="fas fa-heartbeat" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Pengobatan</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Vaksinasi'); ?>">
+                            <a href="<?php echo base_url('P_input_vaksinasi'); ?>">
                                 <i class="fas fa-syringe" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Vaksinasi</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Pelaku_Usaha'); ?>">
+                            <a href="<?php echo base_url('P_input_pelaku_usaha'); ?>">
                                 <i class="fas fa-users" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Pelaku Usaha</p>
                             </a>
                         </li>
                         <li class="nav-item active">
-                            <a href="<?php echo base_url('P_Input_Jenis_Usaha'); ?>">
+                            <a href="<?php echo base_url('P_input_jenis_usaha'); ?>">
                                 <i class="fas fa-store" style="color: #832706 !important;"></i>
-                                <p style="color: #832706 !important;">Jenis Usaha</p>
+                                <p style="color: #832706 !important;">Kepemilikan Jenis Usaha</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Penjual'); ?>">
+                            <a href="<?php echo base_url('P_input_penjual'); ?>">
                                 <i class="fas fa-store-alt" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Penjual</p>
                             </a>
@@ -184,7 +184,7 @@
                     <!-- Page Header -->
                     <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                         <div class="flex-grow-1">
-                            <h3 class="fw-bold mb-1" style="color: #832706; font-weight: 900;">Jenis Usaha</h3>
+                            <h3 class="fw-bold mb-1" style="color: #832706; font-weight: 900;">Kepemilikan Jenis Usaha</h3>
                             <h6 class="op-7 mb-0">Kecamatan <?php echo $this->session->userdata('kecamatan') ?: 'Benowo'; ?></h6>
                         </div>
                     </div>
@@ -217,17 +217,17 @@
                                              
                                             <div class="row">
                                                 <!-- Di dalam form, bagian Nama Pemilik -->
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label required-field">Nama Peternak</label>
-                                                    <input type="text" class="form-control" id="nama_peternak" name="nama_peternak" placeholder="Masukkan nama peternak" required />
-                                                    <div class="invalid-feedback">Nama peternak harus diisi</div>
-                                                </div>
-
-                                                <div class="col-md-6 mb-3">
+                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label">NIK</label>
                                                     <input type="text" class="form-control" id="nik" name="nik" placeholder="Masukkan NIK (16 digit)" maxlength="16" />
                                                     <small class="text-muted">16 digit angka</small>
                                                 </div>
+
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label required-field">Nama Peternak</label>
+                                                    <input type="text" class="form-control" id="nama_peternak" name="nama_peternak" placeholder="Masukkan nama peternak" required />
+                                                    <div class="invalid-feedback">Nama peternak harus diisi</div>
+                                                </div> 
 
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label">Telepon</label>

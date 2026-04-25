@@ -1,18 +1,18 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Layanan_Klinik extends CI_Controller {
+class Layanan_klinik extends CI_Controller {
     
     public function __construct() {
         parent::__construct();
-        $this->load->model('Layanan_Klinik_Model');
+        $this->load->model('Layanan_klinik_model');
         $this->load->library('session');
         $this->load->library('form_validation');
         $this->load->helper('security');
     }
     
     public function index() {
-        $data['layanan_klinik'] = $this->Layanan_Klinik_Model->get_all();
+        $data['layanan_klinik'] = $this->Layanan_klinik_model->get_all();
         $this->load->view('admin/layanan_klinik', $data);
     }
     
@@ -28,7 +28,7 @@ class Layanan_Klinik extends CI_Controller {
         
         // Cek nama layanan sudah ada atau belum
         $nama_layanan = $this->input->post('nama_layanan');
-        if ($this->Layanan_Klinik_Model->check_nama($nama_layanan)) {
+        if ($this->Layanan_klinik_model->check_nama($nama_layanan)) {
             $this->session->set_flashdata('error', 'Nama layanan sudah terdaftar');
             redirect('layanan_klinik');
         }
@@ -37,7 +37,7 @@ class Layanan_Klinik extends CI_Controller {
             'nama_layanan' => $nama_layanan
         );
         
-        $result = $this->Layanan_Klinik_Model->insert($data);
+        $result = $this->Layanan_klinik_model->insert($data);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data layanan klinik berhasil disimpan');
@@ -67,7 +67,7 @@ class Layanan_Klinik extends CI_Controller {
         
         // Cek nama layanan sudah ada untuk data lain
         $nama_layanan = $this->input->post('nama_layanan');
-        $existing = $this->Layanan_Klinik_Model->check_nama_except($nama_layanan, $id);
+        $existing = $this->Layanan_klinik_model->check_nama_except($nama_layanan, $id);
         if ($existing) {
             $this->session->set_flashdata('error', 'Nama layanan sudah digunakan oleh data lain');
             redirect('layanan_klinik');
@@ -77,7 +77,7 @@ class Layanan_Klinik extends CI_Controller {
             'nama_layanan' => $nama_layanan
         );
         
-        $result = $this->Layanan_Klinik_Model->update($id, $data);
+        $result = $this->Layanan_klinik_model->update($id, $data);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data layanan klinik berhasil diperbarui');
@@ -94,7 +94,7 @@ class Layanan_Klinik extends CI_Controller {
             redirect('layanan_klinik');
         }
         
-        $result = $this->Layanan_Klinik_Model->delete($id);
+        $result = $this->Layanan_klinik_model->delete($id);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data layanan klinik berhasil dihapus');

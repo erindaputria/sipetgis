@@ -1,16 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class P_Dashboard_Petugas extends CI_Controller {
+class P_dashboard_petugas extends CI_Controller {
 
     public function __construct()
     {
         parent::__construct();
         $this->load->helper('url');
         $this->load->library('session');
-        $this->load->model('P_Input_Pengobatan_Model');
-        $this->load->model('P_Input_Vaksinasi_Model');
-        $this->load->model('P_Input_Jenis_Usaha_Model');
+        $this->load->model('P_input_pengobatan_model');
+        $this->load->model('P_input_vaksinasi_model');
+        $this->load->model('P_input_jenis_usaha_model');
         
         // Cek apakah user sudah login
         if(!$this->session->userdata('username')) {
@@ -29,20 +29,20 @@ class P_Dashboard_Petugas extends CI_Controller {
         $kecamatan = $this->session->userdata('kecamatan');
         
         // Statistik Pengobatan
-        $total_pengobatan = $this->P_Input_Pengobatan_Model->count_all($kecamatan);
-        $total_ternak_diobati = $this->P_Input_Pengobatan_Model->sum_jumlah($kecamatan);
+        $total_pengobatan = $this->P_input_pengobatan_model->count_all($kecamatan);
+        $total_ternak_diobati = $this->P_input_pengobatan_model->sum_jumlah($kecamatan);
         
         // Statistik Vaksinasi
-        $total_vaksinasi = $this->P_Input_Vaksinasi_Model->count_all($kecamatan);
-        $total_ternak_divaksin = $this->P_Input_Vaksinasi_Model->sum_jumlah($kecamatan);
+        $total_vaksinasi = $this->P_input_vaksinasi_model->count_all($kecamatan);
+        $total_ternak_divaksin = $this->P_input_vaksinasi_model->sum_jumlah($kecamatan);
         
         // Statistik Jenis Usaha
-        $total_pemilik_usaha = $this->P_Input_Jenis_Usaha_Model->count_unique_pemilik($kecamatan);
-        $total_jumlah_ternak = $this->P_Input_Jenis_Usaha_Model->get_total_ternak_saat_ini($kecamatan);
-        $total_usaha = $this->P_Input_Jenis_Usaha_Model->count_all($kecamatan);
+        $total_pemilik_usaha = $this->P_input_jenis_usaha_model->count_unique_pemilik($kecamatan);
+        $total_jumlah_ternak = $this->P_input_jenis_usaha_model->get_total_ternak_saat_ini($kecamatan);
+        $total_usaha = $this->P_input_jenis_usaha_model->count_all($kecamatan);
         
         // Data komoditas ternak untuk chart
-        $komoditas_ternak = $this->P_Input_Jenis_Usaha_Model->get_statistik_jenis_usaha($kecamatan);
+        $komoditas_ternak = $this->P_input_jenis_usaha_model->get_statistik_jenis_usaha($kecamatan);
         $jumlah_jenis_usaha = count($komoditas_ternak);
         
         // Data untuk chart

@@ -1,14 +1,14 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Laporan_Pengobatan_Ternak extends CI_Controller {
+class Laporan_pengobatan_ternak extends CI_Controller {
 
     public function __construct()
     { 
         parent::__construct();
         
         $this->load->library('session');
-        $this->load->model('Laporan_Pengobatan_Ternak_Model');
+        $this->load->model('Laporan_pengobatan_ternak_model');
         
         if(!$this->session->userdata('logged_in')) {
             redirect('login');
@@ -18,8 +18,8 @@ class Laporan_Pengobatan_Ternak extends CI_Controller {
     public function index()
     {
         $data['title'] = 'Laporan Pengobatan Ternak';
-        $data['kecamatan'] = $this->Laporan_Pengobatan_Ternak_Model->get_kecamatan();
-        $data['tahun'] = $this->Laporan_Pengobatan_Ternak_Model->get_tahun();
+        $data['kecamatan'] = $this->Laporan_pengobatan_ternak_model->get_kecamatan();
+        $data['tahun'] = $this->Laporan_pengobatan_ternak_model->get_tahun();
         
         $this->load->view('laporan/laporan_pengobatan_ternak', $data);
     }
@@ -30,9 +30,9 @@ class Laporan_Pengobatan_Ternak extends CI_Controller {
         $kecamatan = $this->input->post('kecamatan');
         $jenis_hewan = $this->input->post('jenis_hewan');
         
-        $data = $this->Laporan_Pengobatan_Ternak_Model->get_data_pengobatan($tahun, $kecamatan, $jenis_hewan);
-        $rekap_jenis = $this->Laporan_Pengobatan_Ternak_Model->get_rekap_per_jenis_hewan($tahun, $kecamatan);
-        $rekap_kecamatan = $this->Laporan_Pengobatan_Ternak_Model->get_rekap_per_kecamatan($tahun, $jenis_hewan);
+        $data = $this->Laporan_pengobatan_ternak_model->get_data_pengobatan($tahun, $kecamatan, $jenis_hewan);
+        $rekap_jenis = $this->Laporan_pengobatan_ternak_model->get_rekap_per_jenis_hewan($tahun, $kecamatan);
+        $rekap_kecamatan = $this->Laporan_pengobatan_ternak_model->get_rekap_per_kecamatan($tahun, $jenis_hewan);
         
         $response = [
             'data' => $data,
@@ -88,7 +88,7 @@ class Laporan_Pengobatan_Ternak extends CI_Controller {
             $col++;
         }
         
-        $results = $this->Laporan_Pengobatan_Ternak_Model->get_data_pengobatan($tahun, $kecamatan, $jenis_hewan);
+        $results = $this->Laporan_pengobatan_ternak_model->get_data_pengobatan($tahun, $kecamatan, $jenis_hewan);
         
         $row = 5;
         $no = 1;
@@ -108,7 +108,7 @@ class Laporan_Pengobatan_Ternak extends CI_Controller {
             $row++;
         }
         
-        $total = $this->Laporan_Pengobatan_Ternak_Model->get_total_pengobatan($tahun, $kecamatan, $jenis_hewan);
+        $total = $this->Laporan_pengobatan_ternak_model->get_total_pengobatan($tahun, $kecamatan, $jenis_hewan);
         
         $sheet->setCellValue('A' . $row, '');
         $sheet->setCellValue('B' . $row, '');
@@ -131,7 +131,7 @@ class Laporan_Pengobatan_Ternak extends CI_Controller {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
         
-        $filename = 'Laporan_Pengobatan_Ternak_' . $tahun . '.xls';
+        $filename = 'Laporan_pengobatan_ternak_' . $tahun . '.xls';
         
         header('Content-Type: application/vnd.ms-excel'); 
         header('Content-Disposition: attachment;filename="' . $filename . '"');
@@ -151,9 +151,9 @@ class Laporan_Pengobatan_Ternak extends CI_Controller {
             $tahun = date('Y');
         }
         
-        $results = $this->Laporan_Pengobatan_Ternak_Model->get_data_pengobatan($tahun, $kecamatan, $jenis_hewan);
+        $results = $this->Laporan_pengobatan_ternak_model->get_data_pengobatan($tahun, $kecamatan, $jenis_hewan);
         
-        $filename = 'Laporan_Pengobatan_Ternak_' . $tahun . '.csv';
+        $filename = 'Laporan_pengobatan_ternak_' . $tahun . '.csv';
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
         
@@ -199,15 +199,15 @@ class Laporan_Pengobatan_Ternak extends CI_Controller {
         $data['title'] = 'Laporan Pengobatan Ternak';
         $data['subtitle'] = 'Kota Surabaya - ' . $kecamatanText . $jenisText;
         $data['tahun'] = $tahun;
-        $data['results'] = $this->Laporan_Pengobatan_Ternak_Model->get_data_pengobatan($tahun, $kecamatan, $jenis_hewan);
-        $data['total'] = $this->Laporan_Pengobatan_Ternak_Model->get_total_pengobatan($tahun, $kecamatan, $jenis_hewan);
+        $data['results'] = $this->Laporan_pengobatan_ternak_model->get_data_pengobatan($tahun, $kecamatan, $jenis_hewan);
+        $data['total'] = $this->Laporan_pengobatan_ternak_model->get_total_pengobatan($tahun, $kecamatan, $jenis_hewan);
         
         $html = $this->load->view('laporan/laporan_pengobatan_pdf', $data, true);
         
         $this->pdf->loadHtml($html);
         $this->pdf->setPaper('A4', 'landscape');
         $this->pdf->render();
-        $this->pdf->stream('Laporan_Pengobatan_Ternak_' . $tahun . '.pdf', array('Attachment' => 0));
+        $this->pdf->stream('Laporan_pengobatan_ternak_' . $tahun . '.pdf', array('Attachment' => 0));
     }
 
     public function get_all_data()

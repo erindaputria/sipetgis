@@ -1,14 +1,14 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Laporan_Vaksinasi extends CI_Controller {
+class Laporan_vaksinasi extends CI_Controller {
 
     public function __construct()
     {
         parent::__construct();
         
         $this->load->library('session');
-        $this->load->model('Laporan_Vaksinasi_Model');
+        $this->load->model('Laporan_vaksinasi_model');
         
         if(!$this->session->userdata('logged_in')) {
             redirect('login');
@@ -18,8 +18,8 @@ class Laporan_Vaksinasi extends CI_Controller {
     public function index()
     {
         $data['title'] = 'Laporan Vaksinasi Ternak';
-        $data['kecamatan'] = $this->Laporan_Vaksinasi_Model->get_kecamatan();
-        $data['tahun'] = $this->Laporan_Vaksinasi_Model->get_tahun();
+        $data['kecamatan'] = $this->Laporan_vaksinasi_model->get_kecamatan();
+        $data['tahun'] = $this->Laporan_vaksinasi_model->get_tahun();
         $data['bulan'] = [
             '01' => 'Januari', '02' => 'Februari', '03' => 'Maret',
             '04' => 'April', '05' => 'Mei', '06' => 'Juni',
@@ -37,8 +37,8 @@ class Laporan_Vaksinasi extends CI_Controller {
         $kecamatan = $this->input->post('kecamatan');
         $jenis_vaksin = $this->input->post('jenis_vaksin');
         
-        $data = $this->Laporan_Vaksinasi_Model->get_data_vaksinasi($tahun, $bulan, $kecamatan, $jenis_vaksin);
-        $total = $this->Laporan_Vaksinasi_Model->get_total_vaksinasi($tahun, $bulan, $kecamatan, $jenis_vaksin);
+        $data = $this->Laporan_vaksinasi_model->get_data_vaksinasi($tahun, $bulan, $kecamatan, $jenis_vaksin);
+        $total = $this->Laporan_vaksinasi_model->get_total_vaksinasi($tahun, $bulan, $kecamatan, $jenis_vaksin);
         
         $response = [
             'data' => $data,
@@ -93,8 +93,8 @@ class Laporan_Vaksinasi extends CI_Controller {
         $kecamatanText = ($kecamatan && $kecamatan != 'semua') ? 'Kecamatan ' . $kecamatan : 'Seluruh Kecamatan';
         
         if($jenis_vaksin == 'PMK' || $jenis_vaksin == 'LSD') {
-            $data = $this->Laporan_Vaksinasi_Model->get_data_pmk_lsd($tahun, $bulan, $kecamatan);
-            $total = $this->Laporan_Vaksinasi_Model->get_total_pmk_lsd($tahun, $bulan, $kecamatan);
+            $data = $this->Laporan_vaksinasi_model->get_data_pmk_lsd($tahun, $bulan, $kecamatan);
+            $total = $this->Laporan_vaksinasi_model->get_total_pmk_lsd($tahun, $bulan, $kecamatan);
             
             $sheet->setCellValue('A1', 'REKAP DATA VAKSIN ' . $jenis_vaksin . ' TAHUN ' . $tahun);
             $sheet->mergeCells('A1:F1');
@@ -149,8 +149,8 @@ class Laporan_Vaksinasi extends CI_Controller {
             $filename = 'Laporan_Vaksinasi_' . $jenis_vaksin . '_' . $tahun . '.xls';
             
         } else {
-            $data = $this->Laporan_Vaksinasi_Model->get_data_ndai($tahun, $bulan, $kecamatan);
-            $total = $this->Laporan_Vaksinasi_Model->get_total_ndai($tahun, $bulan, $kecamatan);
+            $data = $this->Laporan_vaksinasi_model->get_data_ndai($tahun, $bulan, $kecamatan);
+            $total = $this->Laporan_vaksinasi_model->get_total_ndai($tahun, $bulan, $kecamatan);
             
             $sheet->setCellValue('A1', 'REKAP DATA VAKSIN ND-AI TAHUN ' . $tahun);
             $sheet->mergeCells('A1:G1');
@@ -248,8 +248,8 @@ class Laporan_Vaksinasi extends CI_Controller {
         fputcsv($output, []);
         
         if($jenis_vaksin == 'PMK' || $jenis_vaksin == 'LSD') {
-            $data = $this->Laporan_Vaksinasi_Model->get_data_pmk_lsd($tahun, $bulan, $kecamatan);
-            $total = $this->Laporan_Vaksinasi_Model->get_total_pmk_lsd($tahun, $bulan, $kecamatan);
+            $data = $this->Laporan_vaksinasi_model->get_data_pmk_lsd($tahun, $bulan, $kecamatan);
+            $total = $this->Laporan_vaksinasi_model->get_total_pmk_lsd($tahun, $bulan, $kecamatan);
             
             fputcsv($output, ['No', 'Kecamatan', 'Sapi Potong', 'Sapi Perah', 'Kambing', 'Domba']);
             
@@ -268,8 +268,8 @@ class Laporan_Vaksinasi extends CI_Controller {
             fputcsv($output, ['', 'TOTAL', $total->sapi_potong, $total->sapi_perah, $total->kambing, $total->domba]);
             
         } else {
-            $data = $this->Laporan_Vaksinasi_Model->get_data_ndai($tahun, $bulan, $kecamatan);
-            $total = $this->Laporan_Vaksinasi_Model->get_total_ndai($tahun, $bulan, $kecamatan);
+            $data = $this->Laporan_vaksinasi_model->get_data_ndai($tahun, $bulan, $kecamatan);
+            $total = $this->Laporan_vaksinasi_model->get_total_ndai($tahun, $bulan, $kecamatan);
             
             fputcsv($output, ['No', 'Kecamatan', 'Ayam', 'Itik', 'Angsa', 'Kalkun', 'Burung']);
             
@@ -338,8 +338,8 @@ class Laporan_Vaksinasi extends CI_Controller {
         $html .= '<p style="text-align: center;">Periode: ' . $bulanText . '</p>';
         
         if($jenis_vaksin == 'PMK' || $jenis_vaksin == 'LSD') {
-            $data = $this->Laporan_Vaksinasi_Model->get_data_pmk_lsd($tahun, $bulan, $kecamatan);
-            $total = $this->Laporan_Vaksinasi_Model->get_total_pmk_lsd($tahun, $bulan, $kecamatan);
+            $data = $this->Laporan_vaksinasi_model->get_data_pmk_lsd($tahun, $bulan, $kecamatan);
+            $total = $this->Laporan_vaksinasi_model->get_total_pmk_lsd($tahun, $bulan, $kecamatan);
             
             $html .= '<table border="1" cellpadding="5" style="width:100%; border-collapse:collapse;">';
             $html .= '<thead>
@@ -375,8 +375,8 @@ class Laporan_Vaksinasi extends CI_Controller {
             $html .= '</tbody></table>';
             
         } else {
-            $data = $this->Laporan_Vaksinasi_Model->get_data_ndai($tahun, $bulan, $kecamatan);
-            $total = $this->Laporan_Vaksinasi_Model->get_total_ndai($tahun, $bulan, $kecamatan);
+            $data = $this->Laporan_vaksinasi_model->get_data_ndai($tahun, $bulan, $kecamatan);
+            $total = $this->Laporan_vaksinasi_model->get_total_ndai($tahun, $bulan, $kecamatan);
             
             $html .= '<table border="1" cellpadding="5" style="width:100%; border-collapse:collapse;">';
             $html .= '<thead>

@@ -1,8 +1,4 @@
-/**
- * Input RPU (Rumah Potong Unggas)
- * SIPETGIS - Kota Surabaya
- * Mengikuti pola yang sama dengan P_Input_Pengobatan
- */
+
 
 $(document).ready(function() {
     // Set today's date as default

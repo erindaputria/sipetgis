@@ -1,14 +1,14 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Laporan_Demplot_Peternakan extends CI_Controller {
+class Laporan_demplot_peternakan extends CI_Controller {
 
     public function __construct()
     {
         parent::__construct();
         
         $this->load->library('session');
-        $this->load->model('Laporan_Demplot_Peternakan_Model');
+        $this->load->model('Laporan_demplot_peternakan_model');
         
         if(!$this->session->userdata('logged_in')) {
             redirect('login');
@@ -17,9 +17,9 @@ class Laporan_Demplot_Peternakan extends CI_Controller {
 
     public function index()
     {
-        $data['demplot'] = $this->Laporan_Demplot_Peternakan_Model->get_demplot();
-        $data['tahun'] = $this->Laporan_Demplot_Peternakan_Model->get_tahun();
-        $data['kecamatan'] = $this->Laporan_Demplot_Peternakan_Model->get_kecamatan();
+        $data['demplot'] = $this->Laporan_demplot_peternakan_model->get_demplot();
+        $data['tahun'] = $this->Laporan_demplot_peternakan_model->get_tahun();
+        $data['kecamatan'] = $this->Laporan_demplot_peternakan_model->get_kecamatan();
         
         $this->load->view('laporan/laporan_demplot_peternakan', $data);
     }
@@ -30,8 +30,8 @@ class Laporan_Demplot_Peternakan extends CI_Controller {
         $demplot = $this->input->post('demplot');
         $kecamatan = $this->input->post('kecamatan');
         
-        $data = $this->Laporan_Demplot_Peternakan_Model->get_data_demplot($tahun, $demplot, $kecamatan);
-        $total = $this->Laporan_Demplot_Peternakan_Model->get_total_demplot($tahun, $demplot, $kecamatan);
+        $data = $this->Laporan_demplot_peternakan_model->get_data_demplot($tahun, $demplot, $kecamatan);
+        $total = $this->Laporan_demplot_peternakan_model->get_total_demplot($tahun, $demplot, $kecamatan);
         
         echo json_encode(['data' => $data, 'total' => $total]);
     }
@@ -82,8 +82,8 @@ class Laporan_Demplot_Peternakan extends CI_Controller {
             $col++;
         }
         
-        $results = $this->Laporan_Demplot_Peternakan_Model->get_data_demplot($tahun, $demplot, $kecamatan);
-        $total = $this->Laporan_Demplot_Peternakan_Model->get_total_demplot($tahun, $demplot, $kecamatan);
+        $results = $this->Laporan_demplot_peternakan_model->get_data_demplot($tahun, $demplot, $kecamatan);
+        $total = $this->Laporan_demplot_peternakan_model->get_total_demplot($tahun, $demplot, $kecamatan);
         
         $row = 5;
         $no = 1;
@@ -120,9 +120,9 @@ class Laporan_Demplot_Peternakan extends CI_Controller {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         } 
         
-        $filename = 'Laporan_Demplot_Peternakan.xls';
+        $filename = 'Laporan_demplot_peternakan.xls';
         if($tahun && $tahun != 'semua') {
-            $filename = 'Laporan_Demplot_Peternakan_' . $tahun . '.xls';
+            $filename = 'Laporan_demplot_peternakan_' . $tahun . '.xls';
         }
         
         header('Content-Type: application/vnd.ms-excel');
@@ -138,7 +138,7 @@ class Laporan_Demplot_Peternakan extends CI_Controller {
         $tahun = $this->input->get('tahun');
         $data['nama_demplot'] = urldecode($nama_demplot);
         $data['tahun'] = $tahun;
-        $data['details'] = $this->Laporan_Demplot_Peternakan_Model->get_detail_demplot($nama_demplot, $tahun);
+        $data['details'] = $this->Laporan_demplot_peternakan_model->get_detail_demplot($nama_demplot, $tahun);
         
         $this->load->view('laporan/laporan_demplot_detail', $data);
     }

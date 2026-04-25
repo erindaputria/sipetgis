@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class K_Laporan_Kepala extends CI_Controller {
+class K_laporan_kepala extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -9,7 +9,7 @@ class K_Laporan_Kepala extends CI_Controller {
         // Load libraries and model
         $this->load->library('session');
         $this->load->helper('url');
-        $this->load->model('K_Laporan_Kepala_Model');
+        $this->load->model('K_laporan_kepala_model');
     }
 
     public function index() {
@@ -23,9 +23,9 @@ class K_Laporan_Kepala extends CI_Controller {
      */
     public function kepemilikan_ternak() {
         $data['title'] = 'Laporan Kepemilikan Ternak';
-        $data['tahun'] = $this->K_Laporan_Kepala_Model->get_tahun_range();
-        $data['kecamatan'] = $this->K_Laporan_Kepala_Model->get_kecamatan_from_table('data_kepemilikan_ternak');
-        $data['bulan'] = $this->K_Laporan_Kepala_Model->get_all_bulan();
+        $data['tahun'] = $this->K_laporan_kepala_model->get_tahun_range();
+        $data['kecamatan'] = $this->K_laporan_kepala_model->get_kecamatan_from_table('data_kepemilikan_ternak');
+        $data['bulan'] = $this->K_laporan_kepala_model->get_all_bulan();
         
         $this->load->view('kepala/laporan/laporan_kepemilikan_ternak', $data);
     }
@@ -35,9 +35,9 @@ class K_Laporan_Kepala extends CI_Controller {
      */
     public function history_data_ternak() {
         $data['title'] = 'Laporan History Data Ternak';
-        $data['tahun'] = $this->K_Laporan_Kepala_Model->get_tahun_range();
-        $data['kecamatan'] = $this->K_Laporan_Kepala_Model->get_kecamatan_from_table('data_history_ternak');
-        $data['bulan'] = $this->K_Laporan_Kepala_Model->get_all_bulan();
+        $data['tahun'] = $this->K_laporan_kepala_model->get_tahun_range();
+        $data['kecamatan'] = $this->K_laporan_kepala_model->get_kecamatan_from_table('data_history_ternak');
+        $data['bulan'] = $this->K_laporan_kepala_model->get_all_bulan();
         
         $this->load->view('kepala/laporan/laporan_history_data_ternak', $data);
     }
@@ -47,9 +47,9 @@ class K_Laporan_Kepala extends CI_Controller {
      */
     public function vaksinasi() {
         $data['title'] = 'Laporan Vaksinasi';
-        $data['tahun'] = $this->K_Laporan_Kepala_Model->get_tahun_range();
-        $data['kecamatan'] = $this->K_Laporan_Kepala_Model->get_kecamatan_from_table('data_vaksinasi');
-        $data['bulan'] = $this->K_Laporan_Kepala_Model->get_all_bulan();
+        $data['tahun'] = $this->K_laporan_kepala_model->get_tahun_range();
+        $data['kecamatan'] = $this->K_laporan_kepala_model->get_kecamatan_from_table('data_vaksinasi');
+        $data['bulan'] = $this->K_laporan_kepala_model->get_all_bulan();
         
         $this->load->view('kepala/laporan/laporan_vaksinasi', $data);
     }
@@ -59,9 +59,9 @@ class K_Laporan_Kepala extends CI_Controller {
      */
     public function history_vaksinasi() {
         $data['title'] = 'Laporan History Data Vaksinasi';
-        $data['tahun'] = $this->K_Laporan_Kepala_Model->get_tahun_range();
-        $data['kecamatan'] = $this->K_Laporan_Kepala_Model->get_kecamatan_from_table('data_history_vaksinasi');
-        $data['bulan'] = $this->K_Laporan_Kepala_Model->get_all_bulan();
+        $data['tahun'] = $this->K_laporan_kepala_model->get_tahun_range();
+        $data['kecamatan'] = $this->K_laporan_kepala_model->get_kecamatan_from_table('data_history_vaksinasi');
+        $data['bulan'] = $this->K_laporan_kepala_model->get_all_bulan();
         
         $this->load->view('kepala/laporan/laporan_history_data_vaksinasi', $data);
     }
@@ -71,9 +71,9 @@ class K_Laporan_Kepala extends CI_Controller {
      */
     public function pengobatan_ternak() {
         $data['title'] = 'Laporan Pengobatan Ternak';
-        $data['tahun'] = $this->K_Laporan_Kepala_Model->get_tahun_range();
-        $data['kecamatan'] = $this->K_Laporan_Kepala_Model->get_kecamatan_from_table('data_pengobatan_ternak');
-        $data['bulan'] = $this->K_Laporan_Kepala_Model->get_all_bulan();
+        $data['tahun'] = $this->K_laporan_kepala_model->get_tahun_range();
+        $data['kecamatan'] = $this->K_laporan_kepala_model->get_kecamatan_from_table('data_pengobatan_ternak');
+        $data['bulan'] = $this->K_laporan_kepala_model->get_all_bulan();
         
         $this->load->view('kepala/laporan/laporan_pengobatan_ternak', $data);
     }
@@ -83,9 +83,9 @@ class K_Laporan_Kepala extends CI_Controller {
      */
     public function penjual_pakan() {
         $data['title'] = 'Laporan Penjual Pakan Ternak';
-        $data['tahun'] = $this->K_Laporan_Kepala_Model->get_tahun_range();  // TAMBAHKAN INI
-        $data['kecamatan'] = $this->K_Laporan_Kepala_Model->get_kecamatan_from_table('data_penjual_pakan');
-        $data['bulan'] = $this->K_Laporan_Kepala_Model->get_all_bulan();      // TAMBAHKAN INI
+        $data['tahun'] = $this->K_laporan_kepala_model->get_tahun_range();  // TAMBAHKAN INI
+        $data['kecamatan'] = $this->K_laporan_kepala_model->get_kecamatan_from_table('data_penjual_pakan');
+        $data['bulan'] = $this->K_laporan_kepala_model->get_all_bulan();      // TAMBAHKAN INI
         
         $this->load->view('kepala/laporan/laporan_penjual_pakan_ternak', $data);
     }
@@ -95,9 +95,9 @@ class K_Laporan_Kepala extends CI_Controller {
      */
     public function data_klinik_hewan() {
         $data['title'] = 'Laporan Data Klinik Hewan';
-        $data['tahun'] = $this->K_Laporan_Kepala_Model->get_tahun_range();  // TAMBAHKAN INI
-        $data['kecamatan'] = $this->K_Laporan_Kepala_Model->get_kecamatan_from_table('data_klinik_hewan');
-        $data['bulan'] = $this->K_Laporan_Kepala_Model->get_all_bulan();      // TAMBAHKAN INI
+        $data['tahun'] = $this->K_laporan_kepala_model->get_tahun_range();  // TAMBAHKAN INI
+        $data['kecamatan'] = $this->K_laporan_kepala_model->get_kecamatan_from_table('data_klinik_hewan');
+        $data['bulan'] = $this->K_laporan_kepala_model->get_all_bulan();      // TAMBAHKAN INI
         
         $this->load->view('kepala/laporan/laporan_data_klinik_hewan', $data);
     }
@@ -107,9 +107,9 @@ class K_Laporan_Kepala extends CI_Controller {
      */
     public function penjual_obat_hewan() {
         $data['title'] = 'Laporan Penjual Obat Hewan';
-        $data['tahun'] = $this->K_Laporan_Kepala_Model->get_tahun_range();  // TAMBAHKAN INI
-        $data['kecamatan'] = $this->K_Laporan_Kepala_Model->get_kecamatan_from_table('data_penjual_obat');
-        $data['bulan'] = $this->K_Laporan_Kepala_Model->get_all_bulan();      // TAMBAHKAN INI
+        $data['tahun'] = $this->K_laporan_kepala_model->get_tahun_range();  // TAMBAHKAN INI
+        $data['kecamatan'] = $this->K_laporan_kepala_model->get_kecamatan_from_table('data_penjual_obat');
+        $data['bulan'] = $this->K_laporan_kepala_model->get_all_bulan();      // TAMBAHKAN INI
         
         $this->load->view('kepala/laporan/laporan_penjual_obat_hewan', $data);
     }
@@ -119,9 +119,9 @@ class K_Laporan_Kepala extends CI_Controller {
      */
     public function data_tpu_rpu() {
         $data['title'] = 'Laporan Data TPU / RPU';
-        $data['tahun'] = $this->K_Laporan_Kepala_Model->get_tahun_range();  // TAMBAHKAN INI
-        $data['kecamatan'] = $this->K_Laporan_Kepala_Model->get_kecamatan_from_table('data_tpu_rpu');
-        $data['bulan'] = $this->K_Laporan_Kepala_Model->get_all_bulan();      // TAMBAHKAN INI
+        $data['tahun'] = $this->K_laporan_kepala_model->get_tahun_range();  // TAMBAHKAN INI
+        $data['kecamatan'] = $this->K_laporan_kepala_model->get_kecamatan_from_table('data_tpu_rpu');
+        $data['bulan'] = $this->K_laporan_kepala_model->get_all_bulan();      // TAMBAHKAN INI
         
         $this->load->view('kepala/laporan/laporan_data_tpu_rpu', $data);
     }
@@ -131,9 +131,9 @@ class K_Laporan_Kepala extends CI_Controller {
      */
     public function demplot_peternakan() {
         $data['title'] = 'Laporan Demplot Peternakan';
-        $data['tahun'] = $this->K_Laporan_Kepala_Model->get_tahun_range();  // TAMBAHKAN INI
-        $data['kecamatan'] = $this->K_Laporan_Kepala_Model->get_kecamatan_from_table('data_demplot');
-        $data['bulan'] = $this->K_Laporan_Kepala_Model->get_all_bulan();      // TAMBAHKAN INI
+        $data['tahun'] = $this->K_laporan_kepala_model->get_tahun_range();  // TAMBAHKAN INI
+        $data['kecamatan'] = $this->K_laporan_kepala_model->get_kecamatan_from_table('data_demplot');
+        $data['bulan'] = $this->K_laporan_kepala_model->get_all_bulan();      // TAMBAHKAN INI
         
         $this->load->view('kepala/laporan/laporan_demplot_peternakan', $data);
     }
@@ -143,8 +143,8 @@ class K_Laporan_Kepala extends CI_Controller {
      */
     public function stok_pakan() {
         $data['title'] = 'Laporan Stok Pakan';
-        $data['tahun'] = $this->K_Laporan_Kepala_Model->get_tahun_range();
-        $data['kecamatan'] = $this->K_Laporan_Kepala_Model->get_kecamatan_from_table('data_stok_pakan');
+        $data['tahun'] = $this->K_laporan_kepala_model->get_tahun_range();
+        $data['kecamatan'] = $this->K_laporan_kepala_model->get_kecamatan_from_table('data_stok_pakan');
         
         $this->load->view('kepala/laporan/laporan_stok_pakan', $data);
     }
@@ -161,7 +161,7 @@ class K_Laporan_Kepala extends CI_Controller {
             'kecamatan' => $this->input->get('kecamatan')
         ];
         
-        $data = $this->K_Laporan_Kepala_Model->get_data_with_filter('data_kepemilikan_ternak', $filter, 'tanggal_data');
+        $data = $this->K_laporan_kepala_model->get_data_with_filter('data_kepemilikan_ternak', $filter, 'tanggal_data');
         
         $this->output
             ->set_content_type('application/json')
@@ -178,7 +178,7 @@ class K_Laporan_Kepala extends CI_Controller {
             'kecamatan' => $this->input->get('kecamatan')
         ];
         
-        $data = $this->K_Laporan_Kepala_Model->get_data_with_filter('data_history_ternak', $filter, 'tanggal_update');
+        $data = $this->K_laporan_kepala_model->get_data_with_filter('data_history_ternak', $filter, 'tanggal_update');
         
         $this->output
             ->set_content_type('application/json')
@@ -195,7 +195,7 @@ class K_Laporan_Kepala extends CI_Controller {
             'kecamatan' => $this->input->get('kecamatan')
         ];
         
-        $data = $this->K_Laporan_Kepala_Model->get_data_with_filter('data_vaksinasi', $filter, 'tanggal_vaksinasi');
+        $data = $this->K_laporan_kepala_model->get_data_with_filter('data_vaksinasi', $filter, 'tanggal_vaksinasi');
         
         $this->output
             ->set_content_type('application/json')
@@ -212,7 +212,7 @@ class K_Laporan_Kepala extends CI_Controller {
             'kecamatan' => $this->input->get('kecamatan')
         ];
         
-        $data = $this->K_Laporan_Kepala_Model->get_data_with_filter('data_history_vaksinasi', $filter, 'tanggal_vaksinasi');
+        $data = $this->K_laporan_kepala_model->get_data_with_filter('data_history_vaksinasi', $filter, 'tanggal_vaksinasi');
         
         $this->output
             ->set_content_type('application/json')
@@ -229,7 +229,7 @@ class K_Laporan_Kepala extends CI_Controller {
             'kecamatan' => $this->input->get('kecamatan')
         ];
         
-        $data = $this->K_Laporan_Kepala_Model->get_data_with_filter('data_pengobatan_ternak', $filter, 'tanggal_pengobatan');
+        $data = $this->K_laporan_kepala_model->get_data_with_filter('data_pengobatan_ternak', $filter, 'tanggal_pengobatan');
         
         $this->output
             ->set_content_type('application/json')
@@ -246,7 +246,7 @@ class K_Laporan_Kepala extends CI_Controller {
             'kecamatan' => $this->input->get('kecamatan')
         ];
         
-        $data = $this->K_Laporan_Kepala_Model->get_data_with_filter('data_penjual_pakan', $filter, 'tanggal_data');
+        $data = $this->K_laporan_kepala_model->get_data_with_filter('data_penjual_pakan', $filter, 'tanggal_data');
         
         $this->output
             ->set_content_type('application/json')
@@ -263,7 +263,7 @@ class K_Laporan_Kepala extends CI_Controller {
             'kecamatan' => $this->input->get('kecamatan')
         ];
         
-        $data = $this->K_Laporan_Kepala_Model->get_data_with_filter('data_klinik_hewan', $filter, 'tanggal_data');
+        $data = $this->K_laporan_kepala_model->get_data_with_filter('data_klinik_hewan', $filter, 'tanggal_data');
         
         $this->output
             ->set_content_type('application/json')
@@ -280,7 +280,7 @@ class K_Laporan_Kepala extends CI_Controller {
             'kecamatan' => $this->input->get('kecamatan')
         ];
         
-        $data = $this->K_Laporan_Kepala_Model->get_data_with_filter('data_penjual_obat', $filter, 'tanggal_data');
+        $data = $this->K_laporan_kepala_model->get_data_with_filter('data_penjual_obat', $filter, 'tanggal_data');
         
         $this->output
             ->set_content_type('application/json')
@@ -297,7 +297,7 @@ class K_Laporan_Kepala extends CI_Controller {
             'kecamatan' => $this->input->get('kecamatan')
         ];
         
-        $data = $this->K_Laporan_Kepala_Model->get_data_with_filter('data_tpu_rpu', $filter, 'tanggal_data');
+        $data = $this->K_laporan_kepala_model->get_data_with_filter('data_tpu_rpu', $filter, 'tanggal_data');
         
         $this->output
             ->set_content_type('application/json')
@@ -314,7 +314,7 @@ class K_Laporan_Kepala extends CI_Controller {
             'kecamatan' => $this->input->get('kecamatan')
         ];
         
-        $data = $this->K_Laporan_Kepala_Model->get_data_with_filter('data_demplot', $filter, 'tanggal_data');
+        $data = $this->K_laporan_kepala_model->get_data_with_filter('data_demplot', $filter, 'tanggal_data');
         
         $this->output
             ->set_content_type('application/json')
@@ -330,7 +330,7 @@ class K_Laporan_Kepala extends CI_Controller {
             'kecamatan' => $this->input->get('kecamatan')
         ];
         
-        $data = $this->K_Laporan_Kepala_Model->get_data_with_filter('data_stok_pakan', $filter, 'tanggal_data');
+        $data = $this->K_laporan_kepala_model->get_data_with_filter('data_stok_pakan', $filter, 'tanggal_data');
         
         $this->output
             ->set_content_type('application/json')

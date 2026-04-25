@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class P_Input_Rpu_Model extends CI_Model {
+class P_input_rpu_model extends CI_Model {
     
     protected $table = 'input_rpu';
     protected $table_komoditas = 'input_rpu_komoditas';

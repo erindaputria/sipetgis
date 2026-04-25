@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class P_Input_Pemotongan_Unggas_Model extends CI_Model {
+class P_input_pemotongan_unggas_model extends CI_Model {
     
     protected $table = 'input_pemotongan_unggas';
     
@@ -18,12 +18,13 @@ class P_Input_Pemotongan_Unggas_Model extends CI_Model {
         return $this->db->insert_id();
     }
     
-    /**
-     * Get all pemotongan
+    /** 
+     * Get all pemotongan with JOIN to get RPU name
      */ 
     public function get_all_pemotongan() {
-        $this->db->select('*');
+        $this->db->select('input_pemotongan_unggas.*, rpu.pejagal as nama_rpu');
         $this->db->from($this->table);
+        $this->db->join('rpu', 'rpu.id = input_pemotongan_unggas.id_rpu', 'left');
         $this->db->order_by('tanggal', 'DESC');
         $query = $this->db->get();
         
@@ -34,8 +35,9 @@ class P_Input_Pemotongan_Unggas_Model extends CI_Model {
      * Get pemotongan by ID
      */
     public function get_pemotongan_by_id($id) {
-        $this->db->select('*');
+        $this->db->select('input_pemotongan_unggas.*, rpu.pejagal as nama_rpu');
         $this->db->from($this->table);
+        $this->db->join('rpu', 'rpu.id = input_pemotongan_unggas.id_rpu', 'left');
         $this->db->where('id_pemotongan', $id);
         $query = $this->db->get();
         
@@ -46,8 +48,9 @@ class P_Input_Pemotongan_Unggas_Model extends CI_Model {
      * Get by periode (tahun)
      */
     public function get_by_periode($tahun) {
-        $this->db->select('*');
+        $this->db->select('input_pemotongan_unggas.*, rpu.pejagal as nama_rpu');
         $this->db->from($this->table);
+        $this->db->join('rpu', 'rpu.id = input_pemotongan_unggas.id_rpu', 'left');
         $this->db->where("YEAR(tanggal)", $tahun);
         $this->db->order_by('tanggal', 'DESC');
         $query = $this->db->get();
@@ -59,8 +62,9 @@ class P_Input_Pemotongan_Unggas_Model extends CI_Model {
      * Get by RPU ID
      */
     public function get_by_rpu($id_rpu) {
-        $this->db->select('*');
+        $this->db->select('input_pemotongan_unggas.*, rpu.pejagal as nama_rpu');
         $this->db->from($this->table);
+        $this->db->join('rpu', 'rpu.id = input_pemotongan_unggas.id_rpu', 'left');
         $this->db->where('id_rpu', $id_rpu);
         $this->db->order_by('tanggal', 'DESC');
         $query = $this->db->get();
@@ -72,8 +76,9 @@ class P_Input_Pemotongan_Unggas_Model extends CI_Model {
      * Get by daerah asal
      */
     public function get_by_daerah_asal($daerah_asal) {
-        $this->db->select('*');
+        $this->db->select('input_pemotongan_unggas.*, rpu.pejagal as nama_rpu');
         $this->db->from($this->table);
+        $this->db->join('rpu', 'rpu.id = input_pemotongan_unggas.id_rpu', 'left');
         $this->db->where('daerah_asal', $daerah_asal);
         $this->db->order_by('tanggal', 'DESC');
         $query = $this->db->get();
@@ -147,6 +152,22 @@ class P_Input_Pemotongan_Unggas_Model extends CI_Model {
         $this->db->where('daerah_asal IS NOT NULL');
         $this->db->where('daerah_asal !=', '');
         $this->db->order_by('daerah_asal', 'ASC');
+        $query = $this->db->get();
+        
+        return $query->result_array();
+    }
+    
+    /**
+     * Get all RPU/pejagal from rpu table
+     */
+    public function get_all_rpu() {
+        if (!$this->db->table_exists('rpu')) {
+            return array();
+        }
+        
+        $this->db->select('*');
+        $this->db->from('rpu');
+        $this->db->order_by('pejagal', 'ASC');
         $query = $this->db->get();
         
         return $query->result_array();

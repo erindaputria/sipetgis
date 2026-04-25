@@ -156,7 +156,7 @@ $(document).ready(function() {
     // Check NIK duplicate via AJAX
     function checkNIK(nik) {
         $.ajax({
-            url: base_url + 'P_Input_Pelaku_Usaha/check_nik',
+            url: base_url + 'P_input_pelaku_usaha/check_nik',
             type: 'POST',
             data: { nik: nik, csrf_token_name: $('input[name="' + csrf_token_name + '"]').val() },
             dataType: 'json',
@@ -200,7 +200,7 @@ $(document).ready(function() {
         $('#kelurahan').empty().append('<option value="">Memuat kelurahan...</option>');
         
         $.ajax({
-            url: base_url + 'P_Input_Pelaku_Usaha/get_kelurahan_by_kecamatan',
+            url: base_url + 'P_input_pelaku_usaha/get_kelurahan_by_kecamatan',
             type: 'POST',
             data: { 
                 kecamatan: kecamatan,
@@ -263,7 +263,7 @@ $(document).ready(function() {
         // Karena tanggal tidak ditampilkan di tabel, kita perlu reload halaman dengan parameter tahun
         if (periode && periode !== 'all') {
             // Reload halaman dengan parameter tahun
-            window.location.href = base_url + 'P_Input_Pelaku_Usaha/index?tahun=' + periode;
+            window.location.href = base_url + 'P_input_pelaku_usaha/index?tahun=' + periode;
         }
     }
     
@@ -274,7 +274,7 @@ $(document).ready(function() {
         $('#filterPeriode').val('all');
         
         // Reload halaman tanpa parameter
-        window.location.href = base_url + 'P_Input_Pelaku_Usaha';
+        window.location.href = base_url + 'P_input_pelaku_usaha';
     }
     
     // Event listeners untuk filter
@@ -335,7 +335,7 @@ $(document).ready(function() {
         submitBtn.html('<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...').prop('disabled', true);
         
         $.ajax({
-            url: base_url + 'P_Input_Pelaku_Usaha/save',
+            url: base_url + 'P_input_pelaku_usaha/save',
             type: 'POST',
             data: formData,
             dataType: 'json',

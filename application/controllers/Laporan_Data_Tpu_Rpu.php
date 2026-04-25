@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Laporan_Data_Tpu_Rpu extends CI_Controller {
+class Laporan_data_tpu_rpu extends CI_Controller {
 
     public function __construct()
     {
@@ -9,7 +9,7 @@ class Laporan_Data_Tpu_Rpu extends CI_Controller {
         
         // Load library yang diperlukan
         $this->load->library('session');
-        $this->load->model('Laporan_Data_Tpu_Rpu_Model');
+        $this->load->model('Laporan_data_tpu_rpu_model');
         
         // Cek login
         if(!$this->session->userdata('logged_in')) {
@@ -20,8 +20,8 @@ class Laporan_Data_Tpu_Rpu extends CI_Controller {
     public function index()
     {
         $data['title'] = 'Laporan Data TPU/RPU';
-        $data['kecamatan'] = $this->Laporan_Data_Tpu_Rpu_Model->get_kecamatan();
-        $data['tahun'] = $this->Laporan_Data_Tpu_Rpu_Model->get_tahun();
+        $data['kecamatan'] = $this->Laporan_data_tpu_rpu_model->get_kecamatan();
+        $data['tahun'] = $this->Laporan_data_tpu_rpu_model->get_tahun();
         
         $this->load->view('laporan/laporan_data_tpu_rpu', $data);
     }
@@ -39,8 +39,8 @@ class Laporan_Data_Tpu_Rpu extends CI_Controller {
             $kecamatan = 'semua';
         }
         
-        $data = $this->Laporan_Data_Tpu_Rpu_Model->get_data_tpu_rpu($tahun, $kecamatan);
-        $total = $this->Laporan_Data_Tpu_Rpu_Model->get_total_tpu_rpu($tahun, $kecamatan);
+        $data = $this->Laporan_data_tpu_rpu_model->get_data_tpu_rpu($tahun, $kecamatan);
+        $total = $this->Laporan_data_tpu_rpu_model->get_total_tpu_rpu($tahun, $kecamatan);
         
         $response = [
             'status' => 'success',
@@ -68,7 +68,7 @@ class Laporan_Data_Tpu_Rpu extends CI_Controller {
             $kecamatan = 'semua';
         }
         
-        $data = $this->Laporan_Data_Tpu_Rpu_Model->get_data_tpu_rpu($tahun, $kecamatan);
+        $data = $this->Laporan_data_tpu_rpu_model->get_data_tpu_rpu($tahun, $kecamatan);
         
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="Laporan_TPU_RPU_' . $tahun . '.csv"');
@@ -110,7 +110,7 @@ class Laporan_Data_Tpu_Rpu extends CI_Controller {
             $kecamatan = 'semua';
         }
         
-        $data = $this->Laporan_Data_Tpu_Rpu_Model->get_data_tpu_rpu($tahun, $kecamatan);
+        $data = $this->Laporan_data_tpu_rpu_model->get_data_tpu_rpu($tahun, $kecamatan);
         
         $this->load->library('excel');
         $objPHPExcel = new PHPExcel();
@@ -213,7 +213,7 @@ class Laporan_Data_Tpu_Rpu extends CI_Controller {
             $kecamatan = 'semua';
         }
         
-        $data = $this->Laporan_Data_Tpu_Rpu_Model->get_data_tpu_rpu($tahun, $kecamatan);
+        $data = $this->Laporan_data_tpu_rpu_model->get_data_tpu_rpu($tahun, $kecamatan);
         
         // Load library PDF (pastikan sudah ada library TCPDF)
         $this->load->library('pdf');

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class P_Input_Vaksinasi extends CI_Controller {
+class P_input_vaksinasi extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -16,12 +16,12 @@ class P_Input_Vaksinasi extends CI_Controller {
             redirect('login');
         }
         
-        $this->load->model('P_Input_Vaksinasi_Model');
+        $this->load->model('P_input_vaksinasi_model');
     }
 
     public function index() {
         $user_kecamatan = $this->session->userdata('kecamatan');
-        $data['vaksinasi_data'] = $this->P_Input_Vaksinasi_Model->get_vaksinasi_by_kecamatan($user_kecamatan);
+        $data['vaksinasi_data'] = $this->P_input_vaksinasi_model->get_vaksinasi_by_kecamatan($user_kecamatan);
         $data['kel_list'] = $this->get_all_kelurahan();
         $data['user_kecamatan'] = $user_kecamatan;
         
@@ -175,7 +175,7 @@ class P_Input_Vaksinasi extends CI_Controller {
                 'jumlah' => $jumlah[$index]
             );
             
-            if ($this->P_Input_Vaksinasi_Model->save_vaksinasi($data)) {
+            if ($this->P_input_vaksinasi_model->save_vaksinasi($data)) {
                 $success_count++;
             }
         }
@@ -198,7 +198,7 @@ class P_Input_Vaksinasi extends CI_Controller {
 
     public function get_all_data() {
         $user_kecamatan = $this->session->userdata('kecamatan');
-        $data = $this->P_Input_Vaksinasi_Model->get_vaksinasi_by_kecamatan($user_kecamatan);
+        $data = $this->P_input_vaksinasi_model->get_vaksinasi_by_kecamatan($user_kecamatan);
         echo json_encode($data);
     }
 
@@ -210,7 +210,7 @@ class P_Input_Vaksinasi extends CI_Controller {
             $tahun = date('Y');
         }
         
-        $data = $this->P_Input_Vaksinasi_Model->get_by_periode($tahun, $kecamatan);
+        $data = $this->P_input_vaksinasi_model->get_by_periode($tahun, $kecamatan);
         
         if (!empty($data)) {
             $response = array(
@@ -248,7 +248,7 @@ class P_Input_Vaksinasi extends CI_Controller {
             return;
         } 
         
-        $cek = $this->P_Input_Vaksinasi_Model->cek_nik_exists($nik, $kecamatan);
+        $cek = $this->P_input_vaksinasi_model->cek_nik_exists($nik, $kecamatan);
         
         if ($cek) {
             echo json_encode([

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Laporan_History_Data_Vaksinasi extends CI_Controller {
+class Laporan_history_data_vaksinasi extends CI_Controller {
 
     public function __construct()
     {
@@ -9,7 +9,7 @@ class Laporan_History_Data_Vaksinasi extends CI_Controller {
         
         // Load library yang diperlukan
         $this->load->library('session');
-        $this->load->model('Laporan_History_Data_Vaksinasi_Model');
+        $this->load->model('Laporan_history_data_vaksinasi_model');
         
         // Cek login
         if(!$this->session->userdata('logged_in')) {
@@ -20,8 +20,8 @@ class Laporan_History_Data_Vaksinasi extends CI_Controller {
     public function index()
     {
         $data['title'] = 'Laporan History Data Vaksinasi';
-        $data['kecamatan'] = $this->Laporan_History_Data_Vaksinasi_Model->get_kecamatan();
-        $data['tahun'] = $this->Laporan_History_Data_Vaksinasi_Model->get_tahun();
+        $data['kecamatan'] = $this->Laporan_history_data_vaksinasi_model->get_kecamatan();
+        $data['tahun'] = $this->Laporan_history_data_vaksinasi_model->get_tahun();
         
         $this->load->view('laporan/laporan_history_data_vaksinasi', $data);
     }
@@ -33,8 +33,8 @@ class Laporan_History_Data_Vaksinasi extends CI_Controller {
         $jenis_vaksin = $this->input->post('jenis_vaksin');
         $jenis_hewan = $this->input->post('jenis_hewan');
         
-        $data = $this->Laporan_History_Data_Vaksinasi_Model->get_history_data($tahun, $kecamatan, $jenis_vaksin, $jenis_hewan);
-        $total_dosis = $this->Laporan_History_Data_Vaksinasi_Model->get_total_dosis($tahun, $kecamatan, $jenis_vaksin, $jenis_hewan);
+        $data = $this->Laporan_history_data_vaksinasi_model->get_history_data($tahun, $kecamatan, $jenis_vaksin, $jenis_hewan);
+        $total_dosis = $this->Laporan_history_data_vaksinasi_model->get_total_dosis($tahun, $kecamatan, $jenis_vaksin, $jenis_hewan);
         
         $response = [
             'status' => 'success',
@@ -106,8 +106,8 @@ class Laporan_History_Data_Vaksinasi extends CI_Controller {
         }
         
         // Get data
-        $results = $this->Laporan_History_Data_Vaksinasi_Model->get_history_data($tahun, $kecamatan, $jenis_vaksin, $jenis_hewan);
-        $total_dosis = $this->Laporan_History_Data_Vaksinasi_Model->get_total_dosis($tahun, $kecamatan, $jenis_vaksin, $jenis_hewan);
+        $results = $this->Laporan_history_data_vaksinasi_model->get_history_data($tahun, $kecamatan, $jenis_vaksin, $jenis_hewan);
+        $total_dosis = $this->Laporan_history_data_vaksinasi_model->get_total_dosis($tahun, $kecamatan, $jenis_vaksin, $jenis_hewan);
         
         // Add data
         $row = 5;
@@ -148,7 +148,7 @@ class Laporan_History_Data_Vaksinasi extends CI_Controller {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
         
-        $filename = 'Laporan_History_Data_Vaksinasi_' . ($jenis_vaksin != 'semua' ? $jenis_vaksin : 'Semua') . '_' . $tahun . '.xls';
+        $filename = 'Laporan_history_data_vaksinasi_' . ($jenis_vaksin != 'semua' ? $jenis_vaksin : 'Semua') . '_' . $tahun . '.xls';
         
         // Redirect output to client browser
         header('Content-Type: application/vnd.ms-excel');

@@ -8,7 +8,7 @@
 
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initSurabayaMap" async defer></script>
 
-    <!-- Fonts and icons -->
+    <!-- Fonts and icons --> 
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/plugin/webfont/webfont.min.js"></script>
     <script> 
         WebFont.load({
@@ -506,7 +506,8 @@
                                                         <td class="text-end"><?php echo number_format($total_klinik_hewan, 0, ',', '.'); ?></td>
                                                         <td class="text-end"><?php echo number_format($total_penjual_obat, 0, ',', '.'); ?></td>
                                                         <td class="text-end"><?php echo number_format($total_penjual_pakan, 0, ',', '.'); ?></td>
-                                                        <td class="text-end"><?php echo number_format($total_rpu_tpu, 0, ',', '.'); ?></td>
+                                                        <!-- PERBAIKAN: Gunakan isset() untuk menghindari error -->
+                                                        <td class="text-end"><?php echo number_format(isset($total_rpu_tpu) ? $total_rpu_tpu : 0, 0, ',', '.'); ?> Unit</td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                                 <tr class="table-active">
@@ -519,7 +520,8 @@
                                                     <td class="text-end fw-bold"><?php echo number_format($total_klinik_hewan, 0, ',', '.'); ?> Unit</td>
                                                     <td class="text-end fw-bold"><?php echo number_format($total_penjual_obat, 0, ',', '.'); ?> Toko</td>
                                                     <td class="text-end fw-bold"><?php echo number_format($total_penjual_pakan, 0, ',', '.'); ?> Outlet</td>
-                                                    <td class="text-end fw-bold"><?php echo number_format($total_rpu_tpu, 0, ',', '.'); ?> Unit</td>
+                                                    <!-- PERBAIKAN: Gunakan isset() untuk menghindari error -->
+                                                    <td class="text-end fw-bold"><?php echo number_format(isset($total_rpu_tpu) ? $total_rpu_tpu : 0, 0, ',', '.'); ?> Unit</td>
                                                 </tr>
                                             <?php else: ?>
                                                 <tr>
@@ -577,110 +579,119 @@
                     </div>
 
                     <!-- ========== MODAL 31 KECAMATAN LENGKAP ========== -->
-<div class="modal fade" id="modalSemuaKecamatan" tabindex="-1" aria-labelledby="modalSemuaKecamatanLabel" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen modal-xl modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header" style="background: #832706 !important;">
-                <h5 class="modal-title fw-bold" style="color: #ffffff !important;">
-                    <i class="fas fa-city me-2" style="color: #ffffff !important;"></i>Data Seluruh Kecamatan di Surabaya (31 Kecamatan)
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>No</th>
-                                <th>Kecamatan</th>
-                                <th class="text-end">Pelaku Usaha</th>
-                                <th>Jenis Ternak</th>
-                                <th class="text-end">Vaksinasi PMK</th>
-                                <th class="text-end">Vaksinasi ND-AI</th>
-                                <th class="text-end">Vaksinasi LSD</th>
-                                <th class="text-end">Klinik Hewan</th>
-                                <th class="text-end">Penjual Obat</th>
-                                <th class="text-end">Penjual Pakan</th>
-                                <th class="text-end">RPU/TPU</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (!empty($detail_pelaku_usaha_per_kecamatan)): ?>
-                                <?php 
-                                $total_seluruh_pelaku = 0;
-                                $total_seluruh_pmk = 0;
-                                $total_seluruh_ndai = 0;
-                                $total_seluruh_lsd = 0;
-                                $total_seluruh_klinik = 0;
-                                $total_seluruh_obat = 0;
-                                $total_seluruh_pakan = 0;
-                                ?>
-                                <?php foreach ($detail_pelaku_usaha_per_kecamatan as $row): 
-                                    $total_seluruh_pelaku += $row->pelaku_usaha;
-                                    
-                                    // Ambil data vaksinasi per kecamatan
-                                    $vaksin_pmk = isset($vaksinasi_per_kecamatan[$row->kecamatan]['PMK']) ? $vaksinasi_per_kecamatan[$row->kecamatan]['PMK'] : 0;
-                                    $vaksin_ndai = isset($vaksinasi_per_kecamatan[$row->kecamatan]['ND-AI']) ? $vaksinasi_per_kecamatan[$row->kecamatan]['ND-AI'] : 0;
-                                    $vaksin_lsd = isset($vaksinasi_per_kecamatan[$row->kecamatan]['LSD']) ? $vaksinasi_per_kecamatan[$row->kecamatan]['LSD'] : 0;
-                                    
-                                    // Ambil data klinik per kecamatan
-                                    $klinik = isset($klinik_per_kecamatan[$row->kecamatan]) ? $klinik_per_kecamatan[$row->kecamatan] : 0;
-                                    
-                                    // Ambil data penjual obat per kecamatan
-                                    $penjual_obat = isset($penjual_obat_per_kecamatan[$row->kecamatan]) ? $penjual_obat_per_kecamatan[$row->kecamatan] : 0;
-                                    
-                                    // Ambil data penjual pakan per kecamatan
-                                    $penjual_pakan = isset($penjual_pakan_per_kecamatan[$row->kecamatan]) ? $penjual_pakan_per_kecamatan[$row->kecamatan] : 0;
-                                    
-                                    $total_seluruh_pmk += $vaksin_pmk;
-                                    $total_seluruh_ndai += $vaksin_ndai;
-                                    $total_seluruh_lsd += $vaksin_lsd;
-                                    $total_seluruh_klinik += $klinik;
-                                    $total_seluruh_obat += $penjual_obat;
-                                    $total_seluruh_pakan += $penjual_pakan;
-                                ?>
-                                    <tr>
-                                        <td class="text-center"><?php echo $row->no; ?></td>
-                                        <td><?php echo htmlspecialchars($row->kecamatan); ?></td>
-                                        <td class="text-end"><?php echo number_format($row->pelaku_usaha, 0, ',', '.'); ?></td>
-                                        <td><?php echo htmlspecialchars($row->jenis_ternak); ?></td>
-                                        <td class="text-end"><?php echo number_format($vaksin_pmk, 0, ',', '.'); ?> Ekor</td>
-                                        <td class="text-end"><?php echo number_format($vaksin_ndai, 0, ',', '.'); ?> Ekor</td>
-                                        <td class="text-end"><?php echo number_format($vaksin_lsd, 0, ',', '.'); ?> Ekor</td>
-                                        <td class="text-end"><?php echo number_format($klinik, 0, ',', '.'); ?> Unit</td>
-                                        <td class="text-end"><?php echo number_format($penjual_obat, 0, ',', '.'); ?> Toko</td>
-                                        <td class="text-end"><?php echo number_format($penjual_pakan, 0, ',', '.'); ?> Outlet</td>
-                                        <td class="text-end">0 Unit</td>
-                                    </tr>
-                                <?php endforeach; ?>
-                                <tr class="table-active">
-                                    <td class="fw-bold" colspan="2">Total 31 Kecamatan</td>
-                                    <td class="text-end fw-bold"><?php echo number_format($total_seluruh_pelaku, 0, ',', '.'); ?></td>
-                                    <td class="fw-bold">13 Jenis Ternak</td>
-                                    <td class="text-end fw-bold"><?php echo number_format($total_seluruh_pmk, 0, ',', '.'); ?> Ekor</td>
-                                    <td class="text-end fw-bold"><?php echo number_format($total_seluruh_ndai, 0, ',', '.'); ?> Ekor</td>
-                                    <td class="text-end fw-bold"><?php echo number_format($total_seluruh_lsd, 0, ',', '.'); ?> Ekor</td>
-                                    <td class="text-end fw-bold"><?php echo number_format($total_seluruh_klinik, 0, ',', '.'); ?> Unit</td>
-                                    <td class="text-end fw-bold"><?php echo number_format($total_seluruh_obat, 0, ',', '.'); ?> Toko</td>
-                                    <td class="text-end fw-bold"><?php echo number_format($total_seluruh_pakan, 0, ',', '.'); ?> Outlet</td>
-                                    <td class="text-end fw-bold">0 Unit</td>
-                                </tr>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="11" class="text-center">Belum ada data</td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" style="background: #6b2005 !important; color: #ffffff !important;" data-bs-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-primary" style="background: #832706 !important;" onclick="window.print()"><i class="fas fa-print me-2" style="color: #ffffff !important;"></i>Cetak</button>
-            </div>
-        </div>
-    </div>
-</div>
+                    <div class="modal fade" id="modalSemuaKecamatan" tabindex="-1" aria-labelledby="modalSemuaKecamatanLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-fullscreen modal-xl modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background: #832706 !important;">
+                                    <h5 class="modal-title fw-bold" style="color: #ffffff !important;">
+                                        <i class="fas fa-city me-2" style="color: #ffffff !important;"></i>Data Seluruh Kecamatan di Surabaya (31 Kecamatan)
+                                    </h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th style="width: 5%;">No</th>
+                                                    <th style="width: 15%;">Kecamatan</th>
+                                                    <th style="width: 10%;" class="text-end">Pelaku Usaha</th>
+                                                    <th style="width: 15%;">Jenis Ternak</th>
+                                                    <th style="width: 10%;" class="text-end">Vaksinasi PMK</th>
+                                                    <th style="width: 10%;" class="text-end">Vaksinasi ND-AI</th>
+                                                    <th style="width: 10%;" class="text-end">Vaksinasi LSD</th>
+                                                    <th style="width: 8%;" class="text-end">Klinik Hewan</th>
+                                                    <th style="width: 8%;" class="text-end">Penjual Obat</th>
+                                                    <th style="width: 8%;" class="text-end">Penjual Pakan</th>
+                                                    <th style="width: 8%;" class="text-end">RPU/TPU</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php if (!empty($detail_pelaku_usaha_per_kecamatan)): ?>
+                                                    <?php 
+                                                    $total_seluruh_pelaku = 0;
+                                                    $total_seluruh_pmk = 0;
+                                                    $total_seluruh_ndai = 0;
+                                                    $total_seluruh_lsd = 0;
+                                                    $total_seluruh_klinik = 0;
+                                                    $total_seluruh_obat = 0;
+                                                    $total_seluruh_pakan = 0;
+                                                    $total_seluruh_rpu = 0;
+                                                    ?>
+                                                    <?php foreach ($detail_pelaku_usaha_per_kecamatan as $row): 
+                                                        // Ambil data vaksinasi per kecamatan dari database
+                                                        $vaksin_pmk = isset($vaksinasi_per_kecamatan[$row->kecamatan]['PMK']) ? $vaksinasi_per_kecamatan[$row->kecamatan]['PMK'] : 0;
+                                                        $vaksin_ndai = isset($vaksinasi_per_kecamatan[$row->kecamatan]['ND-AI']) ? $vaksinasi_per_kecamatan[$row->kecamatan]['ND-AI'] : 0;
+                                                        $vaksin_lsd = isset($vaksinasi_per_kecamatan[$row->kecamatan]['LSD']) ? $vaksinasi_per_kecamatan[$row->kecamatan]['LSD'] : 0;
+                                                        
+                                                        // Ambil data klinik per kecamatan dari database
+                                                        $klinik = isset($klinik_per_kecamatan[$row->kecamatan]) ? $klinik_per_kecamatan[$row->kecamatan] : 0;
+                                                        
+                                                        // Ambil data penjual obat per kecamatan dari database
+                                                        $penjual_obat = isset($penjual_obat_per_kecamatan[$row->kecamatan]) ? $penjual_obat_per_kecamatan[$row->kecamatan] : 0;
+                                                        
+                                                        // Ambil data penjual pakan per kecamatan dari database
+                                                        $penjual_pakan = isset($penjual_pakan_per_kecamatan[$row->kecamatan]) ? $penjual_pakan_per_kecamatan[$row->kecamatan] : 0;
+                                                        
+                                                        // Ambil data RPU/TPU per kecamatan dari database
+                                                        $rpu_tpu = isset($rpu_tpu_per_kecamatan[$row->kecamatan]) ? $rpu_tpu_per_kecamatan[$row->kecamatan] : 0;
+                                                        
+                                                        // Akumulasi total
+                                                        $total_seluruh_pelaku += $row->pelaku_usaha;
+                                                        $total_seluruh_pmk += $vaksin_pmk;
+                                                        $total_seluruh_ndai += $vaksin_ndai;
+                                                        $total_seluruh_lsd += $vaksin_lsd;
+                                                        $total_seluruh_klinik += $klinik;
+                                                        $total_seluruh_obat += $penjual_obat;
+                                                        $total_seluruh_pakan += $penjual_pakan;
+                                                        $total_seluruh_rpu += $rpu_tpu;
+                                                    ?>
+                                                        <tr>
+                                                            <td class="text-center"><?php echo $row->no; ?></td>
+                                                            <td><strong><?php echo htmlspecialchars($row->kecamatan); ?></strong></td>
+                                                            <td class="text-end"><?php echo number_format($row->pelaku_usaha, 0, ',', '.'); ?></td>
+                                                            <td><?php echo htmlspecialchars($row->jenis_ternak); ?></td>
+                                                            <td class="text-end"><?php echo number_format($vaksin_pmk, 0, ',', '.'); ?> <small class="text-muted">ekor</small></td>
+                                                            <td class="text-end"><?php echo number_format($vaksin_ndai, 0, ',', '.'); ?> <small class="text-muted">ekor</small></td>
+                                                            <td class="text-end"><?php echo number_format($vaksin_lsd, 0, ',', '.'); ?> <small class="text-muted">ekor</small></td>
+                                                            <td class="text-end"><?php echo number_format($klinik, 0, ',', '.'); ?> <small class="text-muted">unit</small></td>
+                                                            <td class="text-end"><?php echo number_format($penjual_obat, 0, ',', '.'); ?> <small class="text-muted">toko</small></td>
+                                                            <td class="text-end"><?php echo number_format($penjual_pakan, 0, ',', '.'); ?> <small class="text-muted">outlet</small></td>
+                                                            <td class="text-end"><?php echo number_format($rpu_tpu, 0, ',', '.'); ?> <small class="text-muted">unit</small></td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                    <tr class="table-active" style="background-color: #f8f9fa; font-weight: bold;">
+                                                        <td class="fw-bold" colspan="2">TOTAL (31 Kecamatan)</td>
+                                                        <td class="text-end fw-bold" style="background-color: #e9ecef;"><?php echo number_format($total_seluruh_pelaku, 0, ',', '.'); ?></td>
+                                                        <td class="fw-bold" style="background-color: #e9ecef;">13 Jenis Ternak</td>
+                                                        <td class="text-end fw-bold" style="background-color: #e9ecef;"><?php echo number_format($total_seluruh_pmk, 0, ',', '.'); ?> ekor</td>
+                                                        <td class="text-end fw-bold" style="background-color: #e9ecef;"><?php echo number_format($total_seluruh_ndai, 0, ',', '.'); ?> ekor</td>
+                                                        <td class="text-end fw-bold" style="background-color: #e9ecef;"><?php echo number_format($total_seluruh_lsd, 0, ',', '.'); ?> ekor</td>
+                                                        <td class="text-end fw-bold" style="background-color: #e9ecef;"><?php echo number_format($total_seluruh_klinik, 0, ',', '.'); ?> unit</td>
+                                                        <td class="text-end fw-bold" style="background-color: #e9ecef;"><?php echo number_format($total_seluruh_obat, 0, ',', '.'); ?> toko</td>
+                                                        <td class="text-end fw-bold" style="background-color: #e9ecef;"><?php echo number_format($total_seluruh_pakan, 0, ',', '.'); ?> outlet</td>
+                                                        <td class="text-end fw-bold" style="background-color: #e9ecef;"><?php echo number_format($total_seluruh_rpu, 0, ',', '.'); ?> unit</td>
+                                                    </tr>
+                                                <?php else: ?>
+                                                    <tr>
+                                                        <td colspan="11" class="text-center py-4">Belum ada data tersedia</td>
+                                                    </tr>
+                                                <?php endif; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" style="background: #6b2005 !important; color: #ffffff !important; border: none;" data-bs-dismiss="modal">
+                                        <i class="fas fa-times me-2"></i>Tutup
+                                    </button>
+                                    <button type="button" class="btn btn-primary" style="background: #832706 !important; border: none;" onclick="window.print()">
+                                        <i class="fas fa-print me-2"></i>Cetak
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
        
     <!-- ========== CORE JS FILES ========== -->

@@ -1,14 +1,14 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Laporan_Kepemilikan_Ternak extends CI_Controller {
+class Laporan_kepemilikan_ternak extends CI_Controller {
 
     public function __construct()
     {
         parent::__construct();
         
         $this->load->library('session');
-        $this->load->model('Laporan_Kepemilikan_Ternak_Model');
+        $this->load->model('Laporan_kepemilikan_ternak_model');
         
         if(!$this->session->userdata('logged_in')) {
             redirect('login');
@@ -18,8 +18,8 @@ class Laporan_Kepemilikan_Ternak extends CI_Controller {
     public function index()
     {
         $data['title'] = 'Laporan Kepemilikan Ternak';
-        $data['kecamatan'] = $this->Laporan_Kepemilikan_Ternak_Model->get_kecamatan();
-        $data['tahun'] = $this->Laporan_Kepemilikan_Ternak_Model->get_tahun();
+        $data['kecamatan'] = $this->Laporan_kepemilikan_ternak_model->get_kecamatan();
+        $data['tahun'] = $this->Laporan_kepemilikan_ternak_model->get_tahun();
         $data['bulan'] = [
             '01' => 'Januari', '02' => 'Februari', '03' => 'Maret',
             '04' => 'April', '05' => 'Mei', '06' => 'Juni',
@@ -39,12 +39,12 @@ class Laporan_Kepemilikan_Ternak extends CI_Controller {
         $jenis_data = $this->input->get('jenis_data');
         
         if($jenis_data == 'peternak') {
-            $data = $this->Laporan_Kepemilikan_Ternak_Model->get_data_peternak($tahun, $bulan, $kecamatan);
+            $data = $this->Laporan_kepemilikan_ternak_model->get_data_peternak($tahun, $bulan, $kecamatan);
         } else {
-            $data = $this->Laporan_Kepemilikan_Ternak_Model->get_data_populasi($tahun, $bulan, $kecamatan);
+            $data = $this->Laporan_kepemilikan_ternak_model->get_data_populasi($tahun, $bulan, $kecamatan);
         }
         
-        $total = $this->Laporan_Kepemilikan_Ternak_Model->get_total_data($tahun, $bulan, $kecamatan, $jenis_data);
+        $total = $this->Laporan_kepemilikan_ternak_model->get_total_data($tahun, $bulan, $kecamatan, $jenis_data);
         
         $response = [
             'data' => $data,
@@ -63,12 +63,12 @@ class Laporan_Kepemilikan_Ternak extends CI_Controller {
         $jenis_data = $this->input->get('jenis_data');
         
         if($jenis_data == 'peternak') {
-            $data = $this->Laporan_Kepemilikan_Ternak_Model->get_data_peternak($tahun, $bulan, $kecamatan);
+            $data = $this->Laporan_kepemilikan_ternak_model->get_data_peternak($tahun, $bulan, $kecamatan);
         } else {
-            $data = $this->Laporan_Kepemilikan_Ternak_Model->get_data_populasi($tahun, $bulan, $kecamatan);
+            $data = $this->Laporan_kepemilikan_ternak_model->get_data_populasi($tahun, $bulan, $kecamatan);
         }
         
-        $total = $this->Laporan_Kepemilikan_Ternak_Model->get_total_data($tahun, $bulan, $kecamatan, $jenis_data);
+        $total = $this->Laporan_kepemilikan_ternak_model->get_total_data($tahun, $bulan, $kecamatan, $jenis_data);
         
         $bulanNama = [
             '01' => 'Januari', '02' => 'Februari', '03' => 'Maret',
@@ -165,7 +165,7 @@ class Laporan_Kepemilikan_Ternak extends CI_Controller {
         $this->pdf->setPaper('A4', 'landscape');
         $this->pdf->render();
         
-        $filename = 'Laporan_Kepemilikan_Ternak_' . $jenisDataText . '_' . ($bulanText != 'Semua Bulan' ? $bulanText . '_' : '') . $tahun . '.pdf';
+        $filename = 'Laporan_kepemilikan_ternak_' . $jenisDataText . '_' . ($bulanText != 'Semua Bulan' ? $bulanText . '_' : '') . $tahun . '.pdf';
         $this->pdf->stream($filename, array('Attachment' => 0));
     }
 }

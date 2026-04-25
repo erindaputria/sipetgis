@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Data_Penjual_Obat_Model extends CI_Model {
+class Data_penjual_obat_model extends CI_Model {
 
     public function __construct()
     {

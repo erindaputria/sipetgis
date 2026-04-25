@@ -5,13 +5,13 @@ class Komoditas extends CI_Controller {
     
     public function __construct() {
         parent::__construct();
-        $this->load->model('Komoditas_Model');
+        $this->load->model('Komoditas_model');
         $this->load->library('session');
         $this->load->helper('security');
     }
     
     public function index() {
-        $data['komoditas'] = $this->Komoditas_Model->get_all();
+        $data['komoditas'] = $this->Komoditas_model->get_all();
         $this->load->view('admin/komoditas', $data);
     }
     
@@ -32,7 +32,7 @@ class Komoditas extends CI_Controller {
         
         // Cek nama komoditas sudah ada atau belum
         $nama_komoditas = $this->input->post('nama_komoditas');
-        if ($this->Komoditas_Model->check_nama($nama_komoditas)) {
+        if ($this->Komoditas_model->check_nama($nama_komoditas)) {
             $this->session->set_flashdata('error', 'Nama komoditas sudah terdaftar');
             redirect('komoditas');
         }
@@ -44,7 +44,7 @@ class Komoditas extends CI_Controller {
             'jenis_kelamin' => $this->input->post('jenis_kelamin')
         );
         
-        $result = $this->Komoditas_Model->insert($data);
+        $result = $this->Komoditas_model->insert($data);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data komoditas berhasil disimpan');
@@ -74,7 +74,7 @@ class Komoditas extends CI_Controller {
         
         // Cek nama komoditas sudah ada untuk data lain
         $nama_komoditas = $this->input->post('nama_komoditas');
-        $existing = $this->Komoditas_Model->check_nama_except($nama_komoditas, $id);
+        $existing = $this->Komoditas_model->check_nama_except($nama_komoditas, $id);
         if ($existing) {
             $this->session->set_flashdata('error', 'Nama komoditas sudah digunakan oleh data lain');
             redirect('komoditas');
@@ -87,7 +87,7 @@ class Komoditas extends CI_Controller {
             'jenis_kelamin' => $this->input->post('jenis_kelamin')
         );
         
-        $result = $this->Komoditas_Model->update($id, $data);
+        $result = $this->Komoditas_model->update($id, $data);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data komoditas berhasil diperbarui');
@@ -99,7 +99,7 @@ class Komoditas extends CI_Controller {
     }
     
     public function hapus($id) {
-        $result = $this->Komoditas_Model->delete($id);
+        $result = $this->Komoditas_model->delete($id);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data komoditas berhasil dihapus');

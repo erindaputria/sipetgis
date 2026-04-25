@@ -1,19 +1,19 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Data_Kepemilikan extends CI_Controller {
+class Data_kepemilikan extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('Data_Kepemilikan_Model');
+        $this->load->model('Data_kepemilikan_model');
         $this->load->helper('url');
     }
  
     public function index()
     {
-        $data['jenis_usaha_list'] = $this->Data_Kepemilikan_Model->get_all_jenis_usaha();
-        $data['data_ternak'] = $this->Data_Kepemilikan_Model->get_data_ternak();
-        $data['summary_kecamatan'] = $this->Data_Kepemilikan_Model->get_summary_by_kecamatan();
+        $data['jenis_usaha_list'] = $this->Data_kepemilikan_model->get_all_jenis_usaha();
+        $data['data_ternak'] = $this->Data_kepemilikan_model->get_data_ternak();
+        $data['summary_kecamatan'] = $this->Data_kepemilikan_model->get_summary_by_kecamatan();
         
         $this->load->view('admin/data/data_kepemilikan', $data);
     }
@@ -27,7 +27,7 @@ class Data_Kepemilikan extends CI_Controller {
         }
         
         $jenis_usaha = urldecode($jenis_usaha);
-        $detail = $this->Data_Kepemilikan_Model->get_detail_by_jenis_usaha($jenis_usaha);
+        $detail = $this->Data_kepemilikan_model->get_detail_by_jenis_usaha($jenis_usaha);
         
         $html = '';
         $no = 1;
@@ -56,7 +56,7 @@ class Data_Kepemilikan extends CI_Controller {
 
     public function filter_data() {
         $jenis_usaha = $this->input->post('jenis_usaha');
-        $data = $this->Data_Kepemilikan_Model->get_filtered_data($jenis_usaha);
+        $data = $this->Data_kepemilikan_model->get_filtered_data($jenis_usaha);
         
         $html = '';
         $no = 1;

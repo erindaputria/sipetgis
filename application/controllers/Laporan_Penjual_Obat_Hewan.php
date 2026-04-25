@@ -1,14 +1,14 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Laporan_Penjual_Obat_Hewan extends CI_Controller {
+class Laporan_penjual_obat_hewan extends CI_Controller {
 
     public function __construct()
     {
         parent::__construct();
         
         $this->load->library('session');
-        $this->load->model('Laporan_Penjual_Obat_Hewan_Model');
+        $this->load->model('Laporan_penjual_obat_hewan_model');
         
         if(!$this->session->userdata('logged_in')) {
             redirect('login');
@@ -18,16 +18,16 @@ class Laporan_Penjual_Obat_Hewan extends CI_Controller {
     public function index()
     {
         $data['title'] = 'Laporan Penjual Obat Hewan';
-        $data['kecamatan'] = $this->Laporan_Penjual_Obat_Hewan_Model->get_kecamatan();
-        $data['tahun'] = $this->Laporan_Penjual_Obat_Hewan_Model->get_tahun();
+        $data['kecamatan'] = $this->Laporan_penjual_obat_hewan_model->get_kecamatan();
+        $data['tahun'] = $this->Laporan_penjual_obat_hewan_model->get_tahun();
         
         $this->load->view('laporan/laporan_penjual_obat_hewan', $data);
     }
 
     public function get_all_data()
     {
-        $data = $this->Laporan_Penjual_Obat_Hewan_Model->get_data_penjual_obat('all', 'semua');
-        $total = $this->Laporan_Penjual_Obat_Hewan_Model->get_total_penjual_obat('all', 'semua');
+        $data = $this->Laporan_penjual_obat_hewan_model->get_data_penjual_obat('all', 'semua');
+        $total = $this->Laporan_penjual_obat_hewan_model->get_total_penjual_obat('all', 'semua');
         
         $response = [
             'data' => $data,
@@ -42,8 +42,8 @@ class Laporan_Penjual_Obat_Hewan extends CI_Controller {
         $tahun = $this->input->post('tahun');
         $kecamatan = $this->input->post('kecamatan');
         
-        $data = $this->Laporan_Penjual_Obat_Hewan_Model->get_data_penjual_obat($tahun, $kecamatan);
-        $total = $this->Laporan_Penjual_Obat_Hewan_Model->get_total_penjual_obat($tahun, $kecamatan);
+        $data = $this->Laporan_penjual_obat_hewan_model->get_data_penjual_obat($tahun, $kecamatan);
+        $total = $this->Laporan_penjual_obat_hewan_model->get_total_penjual_obat($tahun, $kecamatan);
         
         $response = [
             'data' => $data,
@@ -57,8 +57,8 @@ class Laporan_Penjual_Obat_Hewan extends CI_Controller {
     {
         $kecamatan = $this->input->post('kecamatan');
         
-        $data = $this->Laporan_Penjual_Obat_Hewan_Model->get_data_penjual_obat('all', $kecamatan);
-        $total = $this->Laporan_Penjual_Obat_Hewan_Model->get_total_penjual_obat('all', $kecamatan);
+        $data = $this->Laporan_penjual_obat_hewan_model->get_data_penjual_obat('all', $kecamatan);
+        $total = $this->Laporan_penjual_obat_hewan_model->get_total_penjual_obat('all', $kecamatan);
         
         $response = [
             'data' => $data,
@@ -115,8 +115,8 @@ class Laporan_Penjual_Obat_Hewan extends CI_Controller {
             $col++;
         }
         
-        $results = $this->Laporan_Penjual_Obat_Hewan_Model->get_data_penjual_obat($tahunFilter, $kecamatan);
-        $total = $this->Laporan_Penjual_Obat_Hewan_Model->get_total_penjual_obat($tahunFilter, $kecamatan);
+        $results = $this->Laporan_penjual_obat_hewan_model->get_data_penjual_obat($tahunFilter, $kecamatan);
+        $total = $this->Laporan_penjual_obat_hewan_model->get_total_penjual_obat($tahunFilter, $kecamatan);
         
         $row = 5;
         $no = 1;
@@ -151,7 +151,7 @@ class Laporan_Penjual_Obat_Hewan extends CI_Controller {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
         
-        $filename = 'Laporan_Penjual_Obat_Hewan_' . date('Ymd') . '.xls';
+        $filename = 'Laporan_penjual_obat_hewan_' . date('Ymd') . '.xls';
         
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Data_Pemotongan_Unggas_Model extends CI_Model {
+class Data_pemotongan_unggas_model extends CI_Model {
     
     protected $table = 'input_pemotongan_unggas';
     

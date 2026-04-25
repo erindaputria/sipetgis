@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Laporan_Penjual_Pakan_Ternak extends CI_Controller {
+class Laporan_penjual_pakan_ternak extends CI_Controller {
 
     public function __construct()
     {
@@ -9,7 +9,7 @@ class Laporan_Penjual_Pakan_Ternak extends CI_Controller {
         
         // Load library yang diperlukan
         $this->load->library('session');
-        $this->load->model('Laporan_Penjual_Pakan_Ternak_Model');
+        $this->load->model('Laporan_penjual_pakan_ternak_model');
         
         // Cek login
         if(!$this->session->userdata('logged_in')) {
@@ -20,8 +20,8 @@ class Laporan_Penjual_Pakan_Ternak extends CI_Controller {
     public function index()
     {
         $data['title'] = 'Laporan Penjual Pakan Ternak';
-        $data['kecamatan'] = $this->Laporan_Penjual_Pakan_Ternak_Model->get_kecamatan();
-        $data['tahun'] = $this->Laporan_Penjual_Pakan_Ternak_Model->get_tahun();
+        $data['kecamatan'] = $this->Laporan_penjual_pakan_ternak_model->get_kecamatan();
+        $data['tahun'] = $this->Laporan_penjual_pakan_ternak_model->get_tahun();
         
         $this->load->view('laporan/laporan_penjual_pakan_ternak', $data);
     }
@@ -31,8 +31,8 @@ class Laporan_Penjual_Pakan_Ternak extends CI_Controller {
         $tahun = $this->input->post('tahun');
         $kecamatan = $this->input->post('kecamatan');
         
-        $data = $this->Laporan_Penjual_Pakan_Ternak_Model->get_data_penjual_pakan($tahun, $kecamatan);
-        $total = $this->Laporan_Penjual_Pakan_Ternak_Model->get_total_penjual_pakan($tahun, $kecamatan);
+        $data = $this->Laporan_penjual_pakan_ternak_model->get_data_penjual_pakan($tahun, $kecamatan);
+        $total = $this->Laporan_penjual_pakan_ternak_model->get_total_penjual_pakan($tahun, $kecamatan);
         
         $response = [
             'data' => $data,
@@ -54,8 +54,8 @@ class Laporan_Penjual_Pakan_Ternak extends CI_Controller {
         }
         
         // Get data from database
-        $results = $this->Laporan_Penjual_Pakan_Ternak_Model->get_data_penjual_pakan($tahun, $kecamatan);
-        $total = $this->Laporan_Penjual_Pakan_Ternak_Model->get_total_penjual_pakan($tahun, $kecamatan);
+        $results = $this->Laporan_penjual_pakan_ternak_model->get_data_penjual_pakan($tahun, $kecamatan);
+        $total = $this->Laporan_penjual_pakan_ternak_model->get_total_penjual_pakan($tahun, $kecamatan);
         
         // Load PHPExcel library
         $this->load->library('excel');
@@ -137,7 +137,7 @@ class Laporan_Penjual_Pakan_Ternak extends CI_Controller {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         } 
         
-        $filename = 'Laporan_Penjual_Pakan_Ternak_' . $tahun . '.xls';
+        $filename = 'Laporan_penjual_pakan_ternak_' . $tahun . '.xls';
         
         // Redirect output to client browser
         header('Content-Type: application/vnd.ms-excel');

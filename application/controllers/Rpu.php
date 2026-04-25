@@ -5,13 +5,13 @@ class Rpu extends CI_Controller {
     
     public function __construct() {
         parent::__construct();
-        $this->load->model('Rpu_Model');
+        $this->load->model('Rpu_model');
         $this->load->library('session');
         $this->load->helper('url');
     }
     
     public function index() {
-        $data['rpu'] = $this->Rpu_Model->get_all();
+        $data['rpu'] = $this->Rpu_model->get_all();
         $this->load->view('admin/rpu', $data); // Load dari folder admin
     }
     
@@ -25,7 +25,7 @@ class Rpu extends CI_Controller {
         }
         
         // Cek apakah pejagal sudah ada
-        $existing = $this->Rpu_Model->check_pejagal($pejagal);
+        $existing = $this->Rpu_model->check_pejagal($pejagal);
         if ($existing) {
             $this->session->set_flashdata('error', 'Nama RPU/Pejagal sudah terdaftar');
             redirect('rpu');
@@ -37,7 +37,7 @@ class Rpu extends CI_Controller {
             'longitude' => $this->input->post('longitude') ?: null
         );
         
-        $result = $this->Rpu_Model->insert($data);
+        $result = $this->Rpu_model->insert($data);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data RPU berhasil disimpan');
@@ -59,7 +59,7 @@ class Rpu extends CI_Controller {
         
         // Jika nama pejagal diubah, cek apakah nama baru sudah ada
         if ($pejagal_lama != $pejagal_baru) {
-            $existing = $this->Rpu_Model->check_pejagal($pejagal_baru);
+            $existing = $this->Rpu_model->check_pejagal($pejagal_baru);
             if ($existing) {
                 $this->session->set_flashdata('error', 'Nama RPU/Pejagal sudah terdaftar');
                 redirect('rpu');
@@ -72,7 +72,7 @@ class Rpu extends CI_Controller {
             'longitude' => $this->input->post('longitude') ?: null
         );
         
-        $result = $this->Rpu_Model->update($pejagal_lama, $data);
+        $result = $this->Rpu_model->update($pejagal_lama, $data);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data RPU berhasil diperbarui');
@@ -87,7 +87,7 @@ class Rpu extends CI_Controller {
         // Decode URL encoding
         $pejagal = urldecode($pejagal);
         
-        $result = $this->Rpu_Model->delete($pejagal);
+        $result = $this->Rpu_model->delete($pejagal);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data RPU berhasil dihapus');

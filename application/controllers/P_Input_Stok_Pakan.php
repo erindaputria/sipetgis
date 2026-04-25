@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class P_Input_Stok_Pakan extends CI_Controller {
+class P_input_stok_pakan extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -15,14 +15,14 @@ class P_Input_Stok_Pakan extends CI_Controller {
             redirect('login');
         }
         
-        $this->load->model('P_Input_Stok_Pakan_Model');
-        $this->load->model('P_Input_Demplot_Model');
+        $this->load->model('P_input_stok_pakan_model');
+        $this->load->model('P_input_demplot_model');
     }
 
     public function index() {
         $user_kecamatan = $this->session->userdata('kecamatan');
-        $data['stok_pakan_data'] = $this->P_Input_Stok_Pakan_Model->get_stok_pakan_by_kecamatan($user_kecamatan);
-        $data['demplot_list'] = $this->P_Input_Demplot_Model->get_demplot_by_kecamatan($user_kecamatan);
+        $data['stok_pakan_data'] = $this->P_input_stok_pakan_model->get_stok_pakan_by_kecamatan($user_kecamatan);
+        $data['demplot_list'] = $this->P_input_demplot_model->get_demplot_by_kecamatan($user_kecamatan);
         $data['kel_list'] = $this->get_all_kelurahan();
         $data['user_kecamatan'] = $user_kecamatan;
         
@@ -114,7 +114,7 @@ class P_Input_Stok_Pakan extends CI_Controller {
         );
 
         // Simpan data
-        $insert_id = $this->P_Input_Stok_Pakan_Model->save_stok_pakan($data);
+        $insert_id = $this->P_input_stok_pakan_model->save_stok_pakan($data);
 
         if ($insert_id) {
             $response = array(
@@ -133,7 +133,7 @@ class P_Input_Stok_Pakan extends CI_Controller {
 
     public function get_all_data() {
         $user_kecamatan = $this->session->userdata('kecamatan');
-        $data = $this->P_Input_Stok_Pakan_Model->get_stok_pakan_by_kecamatan($user_kecamatan);
+        $data = $this->P_input_stok_pakan_model->get_stok_pakan_by_kecamatan($user_kecamatan);
         echo json_encode($data);
     }
 
@@ -145,7 +145,7 @@ class P_Input_Stok_Pakan extends CI_Controller {
             $tahun = date('Y');
         }
         
-        $data = $this->P_Input_Stok_Pakan_Model->get_by_periode($tahun, $kecamatan);
+        $data = $this->P_input_stok_pakan_model->get_by_periode($tahun, $kecamatan);
         
         if (!empty($data)) {
             $response = array(
@@ -164,7 +164,7 @@ class P_Input_Stok_Pakan extends CI_Controller {
     }
 
     public function delete($id) {
-        $result = $this->P_Input_Stok_Pakan_Model->delete_stok_pakan($id);
+        $result = $this->P_input_stok_pakan_model->delete_stok_pakan($id);
         
         if ($result) {
             $response = array(
@@ -183,7 +183,7 @@ class P_Input_Stok_Pakan extends CI_Controller {
 
     public function get_demplot_by_id() {
         $id_demplot = $this->input->post('id_demplot');
-        $data = $this->P_Input_Demplot_Model->get_demplot_by_id($id_demplot);
+        $data = $this->P_input_demplot_model->get_demplot_by_id($id_demplot);
         
         if ($data) {
             echo json_encode($data);

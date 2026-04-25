@@ -75,37 +75,37 @@
                             <h4 class="text-section">Menu Utama</h4>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Pengobatan'); ?>">
+                            <a href="<?php echo base_url('P_input_pengobatan'); ?>">
                                 <i class="fas fa-heartbeat" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Pengobatan</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Vaksinasi'); ?>">
+                            <a href="<?php echo base_url('P_input_vaksinasi'); ?>">
                                 <i class="fas fa-syringe" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Vaksinasi</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Pelaku_Usaha'); ?>">
+                            <a href="<?php echo base_url('P_input_pelaku_usaha'); ?>">
                                 <i class="fas fa-users" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Pelaku Usaha</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Jenis_Usaha'); ?>">
+                            <a href="<?php echo base_url('P_input_jenis_usaha'); ?>">
                                 <i class="fas fa-store" style="color: #832706 !important;"></i>
-                                <p style="color: #832706 !important;">Jenis Usaha</p>
+                                <p style="color: #832706 !important;">Kepemilikan Jenis Usaha</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Penjual'); ?>">
+                            <a href="<?php echo base_url('P_input_penjual'); ?>">
                                 <i class="fas fa-store-alt" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Penjual</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Klinik_Hewan'); ?>">
+                            <a href="<?php echo base_url('P_input_klinik_hewan'); ?>">
                                 <i class="fas fa-stethoscope" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Klinik Hewan</p>
                             </a>
@@ -123,13 +123,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Demplot'); ?>">
+                            <a href="<?php echo base_url('P_input_demplot'); ?>">
                                 <i class="fas fa-seedling" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Demplot</p>
                             </a>
                         </li>
                         <li class="nav-item active">
-                            <a href="<?php echo base_url('P_Input_Stok_Pakan'); ?>">
+                            <a href="<?php echo base_url('P_input_stok_pakan'); ?>">
                                 <i class="fas fa-warehouse" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Stok Pakan</p>
                             </a>

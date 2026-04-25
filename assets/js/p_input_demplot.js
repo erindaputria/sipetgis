@@ -1,8 +1,4 @@
-/**
- * Input Demplot (Demonstration Plot)
- * SIPETGIS - Kota Surabaya
- * Mengikuti pola yang sama dengan P_Input_Pengobatan
- */
+
 
 $(document).ready(function() {
     // Hancurkan DataTable jika sudah ada
@@ -84,7 +80,7 @@ $(document).ready(function() {
         kelSelect.html('<option value="">Loading...</option>');
         
         $.ajax({
-            url: base_url + 'P_Input_Demplot/get_kelurahan_by_kecamatan',
+            url: base_url + 'P_input_demplot/get_kelurahan_by_kecamatan',
             type: 'POST',
             data: { kecamatan: kecamatan },
             dataType: 'json',
@@ -246,7 +242,7 @@ $(document).ready(function() {
             formData.append(csrf_token_name, csrfHash);
         }
         
-        var saveUrl = base_url + 'P_Input_Demplot/save';
+        var saveUrl = base_url + 'P_input_demplot/save';
         
         $.ajax({
             url: saveUrl,

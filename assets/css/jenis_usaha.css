@@ -1,6 +1,3 @@
-/* ==============================================
-   WARNA DASAR: #832706
-   ============================================== */
 :root {
     --primary: #832706;
     --primary-dark: #6b1f04;
@@ -11,7 +8,6 @@
     --text-muted: #475569;
 }
 
-/* Logo */
 .sipetgis-logo {
     color: var(--primary) !important;
     font-weight: 800;
@@ -20,40 +16,27 @@
     letter-spacing: 0.5px;
     line-height: 1;
 }
-
-/* Sidebar Active Menu */
+ 
 .nav-item.active > a {
     background: var(--primary-soft);
     color: var(--primary);
 }
-
 .nav-item.active > a i {
     color: var(--primary);
 }
 
-/* ========== SIDEBAR ICON ========== */
 .sidebar .nav-secondary .nav-item > a i,
 .sidebar .nav-secondary .nav-link i,
 .nav-secondary i,
 .nav-item i,
-.fa-home,
-.fa-home::before,
-.fa-chart-bar,
-.fa-chart-line,
-.fa-chart-pie,
-.fa-database,
-.fa-users,
-.fa-map-marked-alt,
-.fa-map-marker-alt,
+.fa-home, .fa-home::before,
+.fa-chart-bar, .fa-chart-line, .fa-chart-pie,
+.fa-database, .fa-users, .fa-map-marked-alt, .fa-map-marker-alt,
 .sidebar .nav-secondary .collapse .nav-link i,
-.fa-chevron-down,
-.fa-chevron-right,
-.fa-chevron-left,
-.fa-chevron-up {
+.fa-chevron-down, .fa-chevron-right, .fa-chevron-left, .fa-chevron-up {
     color: var(--primary) !important;
 }
 
-/* DataTables */
 .dataTables_wrapper {
     padding: 20px;
 }
@@ -108,7 +91,6 @@ table.dataTable tbody tr:hover {
     transform: translateY(-2px);
 }
 
-/* Tombol Aksi */
 .btn-action {
     width: 35px;
     height: 35px;
@@ -124,7 +106,6 @@ table.dataTable tbody tr:hover {
     background-color: rgba(131, 39, 6, 0.1);
     color: #832706;
 }
-
 .btn-edit:hover {
     background-color: #832706;
     color: white;
@@ -134,55 +115,46 @@ table.dataTable tbody tr:hover {
     background-color: rgba(220, 53, 69, 0.1);
     color: #dc3545;
 }
-
 .btn-delete:hover {
     background-color: #dc3545;
     color: white;
 }
 
-/* Tombol Export - WARNA BERBEDA */
 .dt-buttons .btn-primary {
     background-color: #832706 !important;
     border-color: #832706 !important;
     color: white !important;
 }
-
 .dt-buttons .btn-success {
     background-color: #198754 !important;
     border-color: #198754 !important;
     color: white !important;
 }
-
 .dt-buttons .btn-danger {
     background-color: #dc3545 !important;
     border-color: #dc3545 !important;
     color: white !important;
 }
-
 .dt-buttons .btn-info {
     background-color: #0dcaf0 !important;
     border-color: #0dcaf0 !important;
     color: white !important;
 }
 
-/* Pagination */
 .pagination .page-link {
     border: none;
     color: #495057;
     margin: 0 3px;
     border-radius: 6px !important;
 }
-
 .pagination .page-item.active .page-link {
     background-color: #832706;
     color: white;
 }
-
 .pagination .page-link:hover {
     background-color: #f8f9fa;
 }
 
-/* Tombol Tambah Data */
 .btn-primary-custom {
     background: linear-gradient(135deg, #832706 0%, #6b1f04 100%);
     border: none;
@@ -192,7 +164,6 @@ table.dataTable tbody tr:hover {
     transition: all 0.3s;
     color: white;
 }
-
 .btn-primary-custom:hover {
     background: linear-gradient(135deg, #6b1f04 0%, #541802 100%);
     transform: translateY(-2px);
@@ -200,18 +171,15 @@ table.dataTable tbody tr:hover {
     color: white;
 }
 
-/* Tombol Modal */
 .btn-primary {
     background-color: #832706 !important;
     border-color: #832706 !important;
 }
-
 .btn-primary:hover {
     background-color: #6b1f04 !important;
     border-color: #6b1f04 !important;
 }
 
-/* Alert */
 .alert {
     border-radius: 8px;
     border: none;
@@ -219,29 +187,18 @@ table.dataTable tbody tr:hover {
     margin-bottom: 20px;
 }
 
-/* Alamat Column */
-.alamat-cell {
-    max-width: 250px;
-    white-space: normal;
-    word-wrap: break-word;
-}
-
-/* Card */
 .card {
     border-radius: 16px;
     border: 1px solid #eef2f6;
 }
 
-/* Modal Header */
 .modal-header {
     border-bottom: 2px solid #832706 !important;
 }
-
 .modal-header .modal-title {
     color: #832706 !important;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .dataTables_wrapper {
         padding: 10px;

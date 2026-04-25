@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class P_Input_Demplot extends CI_Controller {
+class P_input_demplot extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -16,12 +16,12 @@ class P_Input_Demplot extends CI_Controller {
             redirect('login');
         }
         
-        $this->load->model('P_Input_Demplot_Model');
+        $this->load->model('P_input_demplot_model');
     }
 
     public function index() {
         $user_kecamatan = $this->session->userdata('kecamatan');
-        $data['demplot_data'] = $this->P_Input_Demplot_Model->get_demplot_by_kecamatan($user_kecamatan);
+        $data['demplot_data'] = $this->P_input_demplot_model->get_demplot_by_kecamatan($user_kecamatan);
         $data['kel_list'] = $this->get_all_kelurahan();
         $data['user_kecamatan'] = $user_kecamatan;
         
@@ -136,7 +136,7 @@ class P_Input_Demplot extends CI_Controller {
         );
 
         // Simpan data
-        $insert_id = $this->P_Input_Demplot_Model->save_demplot($data);
+        $insert_id = $this->P_input_demplot_model->save_demplot($data);
 
         if ($insert_id) {
             $foto_msg = $uploaded_file ? ' dan 1 foto' : ' (tanpa foto)';
@@ -156,7 +156,7 @@ class P_Input_Demplot extends CI_Controller {
 
     public function get_all_data() {
         $user_kecamatan = $this->session->userdata('kecamatan');
-        $data = $this->P_Input_Demplot_Model->get_demplot_by_kecamatan($user_kecamatan);
+        $data = $this->P_input_demplot_model->get_demplot_by_kecamatan($user_kecamatan);
         echo json_encode($data);
     }
 
@@ -168,7 +168,7 @@ class P_Input_Demplot extends CI_Controller {
             $tahun = date('Y');
         }
         
-        $data = $this->P_Input_Demplot_Model->get_by_periode($tahun, $kecamatan);
+        $data = $this->P_input_demplot_model->get_by_periode($tahun, $kecamatan);
         
         if (!empty($data)) {
             $response = array(
@@ -187,7 +187,7 @@ class P_Input_Demplot extends CI_Controller {
     }
 
     public function delete($id) {
-        $result = $this->P_Input_Demplot_Model->delete_demplot($id);
+        $result = $this->P_input_demplot_model->delete_demplot($id);
         
         if ($result) {
             $response = array(

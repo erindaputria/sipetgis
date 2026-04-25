@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class P_Input_Pengobatan extends CI_Controller {
+class P_input_pengobatan extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -16,12 +16,12 @@ class P_Input_Pengobatan extends CI_Controller {
             redirect('login');
         }
         
-        $this->load->model('P_Input_Pengobatan_Model');
+        $this->load->model('P_input_pengobatan_model');
     }
 
     public function index() {
         $user_kecamatan = $this->session->userdata('kecamatan');
-        $data['pengobatan_data'] = $this->P_Input_Pengobatan_Model->get_pengobatan_by_kecamatan($user_kecamatan);
+        $data['pengobatan_data'] = $this->P_input_pengobatan_model->get_pengobatan_by_kecamatan($user_kecamatan);
         $data['kel_list'] = $this->get_all_kelurahan();
         $data['user_kecamatan'] = $user_kecamatan;
         
@@ -209,7 +209,7 @@ class P_Input_Pengobatan extends CI_Controller {
         }
 
         // Simpan multiple data
-        $success_count = $this->P_Input_Pengobatan_Model->save_multiple_pengobatan($data_array);
+        $success_count = $this->P_input_pengobatan_model->save_multiple_pengobatan($data_array);
 
         if ($success_count > 0) {
             $foto_msg = $uploaded_file ? ' dan 1 foto' : ' (tanpa foto)';
@@ -229,7 +229,7 @@ class P_Input_Pengobatan extends CI_Controller {
 
     public function get_all_data() {
         $user_kecamatan = $this->session->userdata('kecamatan');
-        $data = $this->P_Input_Pengobatan_Model->get_pengobatan_by_kecamatan($user_kecamatan);
+        $data = $this->P_input_pengobatan_model->get_pengobatan_by_kecamatan($user_kecamatan);
         echo json_encode($data);
     }
 
@@ -241,7 +241,7 @@ class P_Input_Pengobatan extends CI_Controller {
             $tahun = date('Y');
         }
         
-        $data = $this->P_Input_Pengobatan_Model->get_by_periode($tahun, $kecamatan);
+        $data = $this->P_input_pengobatan_model->get_by_periode($tahun, $kecamatan);
         
         if (!empty($data)) {
             $response = array(
@@ -260,7 +260,7 @@ class P_Input_Pengobatan extends CI_Controller {
     }
 
     public function delete($id) {
-        $result = $this->P_Input_Pengobatan_Model->delete_pengobatan($id);
+        $result = $this->P_input_pengobatan_model->delete_pengobatan($id);
         
         if ($result) {
             $response = array(
@@ -300,7 +300,7 @@ class P_Input_Pengobatan extends CI_Controller {
             return;
         }
         
-        $cek = $this->P_Input_Pengobatan_Model->cek_nik_exists($nik, $kecamatan);
+        $cek = $this->P_input_pengobatan_model->cek_nik_exists($nik, $kecamatan);
         
         if ($cek) {
             echo json_encode([
@@ -324,7 +324,7 @@ class P_Input_Pengobatan extends CI_Controller {
             return;
         }
         
-        $cek = $this->P_Input_Pengobatan_Model->cek_telp_exists($telp, $kecamatan);
+        $cek = $this->P_input_pengobatan_model->cek_telp_exists($telp, $kecamatan);
         
         if ($cek) { 
             echo json_encode([

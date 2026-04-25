@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Laporan_Data_Tpu_Rpu_Model extends CI_Model {
+class Laporan_data_tpu_rpu_model extends CI_Model {
 
     public function __construct()
     {

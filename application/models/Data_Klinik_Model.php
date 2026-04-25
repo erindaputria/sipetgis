@@ -1,12 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Data_Klinik_Model extends CI_Model {
+class Data_klinik_model extends CI_Model {
 
     public function get_all_data()
     {
         // Debug: cek apakah model bisa diload
-        if (!class_exists('Data_Klinik_Model')) {
+        if (!class_exists('Data_klinik_model')) {
             echo json_encode(['error' => 'Model tidak ditemukan']);
             return;
         }
@@ -23,7 +23,7 @@ class Data_Klinik_Model extends CI_Model {
             return;
         }
         
-        $data = $this->Data_Klinik_Model->get_all_klinik();
+        $data = $this->Data_klinik_model->get_all_klinik();
         echo json_encode($data);
     }
 

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class P_Input_Jenis_Usaha extends CI_Controller {
+class P_input_jenis_usaha extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -16,12 +16,13 @@ class P_Input_Jenis_Usaha extends CI_Controller {
             redirect('login');
         }
         
-        $this->load->model('P_Input_Jenis_Usaha_Model');
+        $this->load->model('P_input_jenis_usaha_model');
+        $this->load->model('P_input_pelaku_usaha_model'); // Load model pelaku usaha
     }
 
     public function index() {
         $user_kecamatan = $this->session->userdata('kecamatan');
-        $data['jenis_usaha_data'] = $this->P_Input_Jenis_Usaha_Model->get_jenis_usaha_by_kecamatan($user_kecamatan);
+        $data['jenis_usaha_data'] = $this->P_input_jenis_usaha_model->get_jenis_usaha_by_kecamatan($user_kecamatan);
         $data['kel_list'] = $this->get_all_kelurahan();
         $data['user_kecamatan'] = $user_kecamatan;
         
@@ -62,6 +63,44 @@ class P_Input_Jenis_Usaha extends CI_Controller {
             'Wonocolo' => array('Bendul Merisi', 'Jemur Wonosari', 'Margorejo', 'Sidosermo', 'Siwalankerto'),
             'Wonokromo' => array('Darmo', 'Jagir', 'Ngagel', 'Ngagel Rejo', 'Sawunggaling', 'Wonokromo')
         );
+    }
+
+    // NEW METHOD: Check NIK from pelaku_usaha table
+    public function check_pelaku_usaha_by_nik() {
+        header('Content-Type: application/json');
+        
+        $nik = $this->input->post('nik');
+        
+        if (empty($nik)) {
+            echo json_encode(array('status' => 'error', 'message' => 'NIK tidak boleh kosong'));
+            return;
+        }
+        
+        // Load model if not already loaded
+        if (!isset($this->P_input_pelaku_usaha_model)) {
+            $this->load->model('P_input_pelaku_usaha_model');
+        }
+        
+        $data_pelaku = $this->P_input_pelaku_usaha_model->get_by_nik($nik);
+        
+        if ($data_pelaku) {
+            echo json_encode(array(
+                'status' => 'found',
+                'message' => 'Data ditemukan',
+                'data' => array(
+                    'nama' => $data_pelaku['nama'],
+                    'telepon' => $data_pelaku['telepon'],
+                    'alamat' => $data_pelaku['alamat'],
+                    'kecamatan' => $data_pelaku['kecamatan'],
+                    'kelurahan' => $data_pelaku['kelurahan']
+                )
+            ));
+        } else {
+            echo json_encode(array(
+                'status' => 'not_found',
+                'message' => 'NIK tidak ditemukan di database Pelaku Usaha. Silakan input manual.'
+            ));
+        }
     }
 
     public function save() {
@@ -213,9 +252,6 @@ class P_Input_Jenis_Usaha extends CI_Controller {
         $this->db->trans_begin();
 
         for ($i = 0; $i < $total_rows; $i++) {
-            // PASTIKAN JUMLAH TIDAK BERUBAH
-            $jumlah_value = (int)$jumlah[$i];
-            
             $data = array(
                 'nama_petugas' => $nama_petugas,
                 'nama_peternak' => $nama_peternak,
@@ -233,10 +269,10 @@ class P_Input_Jenis_Usaha extends CI_Controller {
                 'foto_usaha' => $uploaded_file,
                 'jenis_usaha' => $jenis_usaha[$i],
                 'komoditas_ternak' => $komoditas_ternak[$i],
-                'jumlah' => $jumlah_value  // PASTIKAN TIDAK BERUBAH
+                'jumlah' => (int)$jumlah[$i]
             );
             
-            if ($this->P_Input_Jenis_Usaha_Model->save_jenis_usaha($data)) {
+            if ($this->P_input_jenis_usaha_model->save_jenis_usaha($data)) {
                 $success_count++;
             }
         }
@@ -255,11 +291,11 @@ class P_Input_Jenis_Usaha extends CI_Controller {
                 'message' => $success_count . ' data berhasil disimpan' . $foto_msg
             ));
         }
-    }
+    } 
 
     public function get_all_data() {
         $user_kecamatan = $this->session->userdata('kecamatan');
-        $data = $this->P_Input_Jenis_Usaha_Model->get_jenis_usaha_by_kecamatan($user_kecamatan);
+        $data = $this->P_input_jenis_usaha_model->get_jenis_usaha_by_kecamatan($user_kecamatan);
         echo json_encode($data);
     }
 
@@ -271,7 +307,7 @@ class P_Input_Jenis_Usaha extends CI_Controller {
             $tahun = date('Y');
         } 
         
-        $data = $this->P_Input_Jenis_Usaha_Model->get_by_periode($tahun, $kecamatan);
+        $data = $this->P_input_jenis_usaha_model->get_by_periode($tahun, $kecamatan);
         echo json_encode($data);
     }
 

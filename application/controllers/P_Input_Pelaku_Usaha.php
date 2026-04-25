@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class P_Input_Pelaku_Usaha extends CI_Controller {
+class P_input_pelaku_usaha extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -16,7 +16,7 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
             redirect('login'); 
         }
         
-        $this->load->model('P_Input_Pelaku_Usaha_Model');
+        $this->load->model('P_input_pelaku_usaha_model');
     }
 
     public function index() {
@@ -25,9 +25,9 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
         // Check if there's a year parameter
         $tahun = $this->input->get('tahun');
         if ($tahun && $tahun != 'all') {
-            $data['pelaku_usaha_data'] = $this->P_Input_Pelaku_Usaha_Model->get_by_periode($tahun, $user_kecamatan);
+            $data['pelaku_usaha_data'] = $this->P_input_pelaku_usaha_model->get_by_periode($tahun, $user_kecamatan);
         } else {
-            $data['pelaku_usaha_data'] = $this->P_Input_Pelaku_Usaha_Model->get_pelaku_usaha_by_kecamatan($user_kecamatan);
+            $data['pelaku_usaha_data'] = $this->P_input_pelaku_usaha_model->get_pelaku_usaha_by_kecamatan($user_kecamatan);
         }
         
         $data['kel_list'] = $this->get_all_kelurahan();
@@ -110,7 +110,7 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
             $nik = $this->input->post('nik');
             error_log("Checking NIK: " . $nik);
             
-            $existing = $this->P_Input_Pelaku_Usaha_Model->check_nik($nik);
+            $existing = $this->P_input_pelaku_usaha_model->check_nik($nik);
             
             if ($existing) {
                 error_log("NIK already exists for: " . $existing['nama']);
@@ -179,7 +179,7 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
             
             error_log("Data to save: " . print_r($data, true));
 
-            $result = $this->P_Input_Pelaku_Usaha_Model->save_pelaku_usaha($data);
+            $result = $this->P_input_pelaku_usaha_model->save_pelaku_usaha($data);
             
             if ($result) {
                 $foto_msg = $foto_name ? ' dan 1 foto' : '';
@@ -208,7 +208,7 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
 
     public function get_all_data() {
         $user_kecamatan = $this->session->userdata('kecamatan') ?: 'Benowo';
-        $data = $this->P_Input_Pelaku_Usaha_Model->get_pelaku_usaha_by_kecamatan($user_kecamatan);
+        $data = $this->P_input_pelaku_usaha_model->get_pelaku_usaha_by_kecamatan($user_kecamatan);
         echo json_encode($data);
     }
 
@@ -220,7 +220,7 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
             $tahun = date('Y');
         }
         
-        $data = $this->P_Input_Pelaku_Usaha_Model->get_by_periode($tahun, $kecamatan);
+        $data = $this->P_input_pelaku_usaha_model->get_by_periode($tahun, $kecamatan);
         
         if (!empty($data)) {
             echo json_encode(array(
@@ -258,7 +258,7 @@ class P_Input_Pelaku_Usaha extends CI_Controller {
 
     public function check_nik() {
         $nik = $this->input->post('nik');
-        $existing = $this->P_Input_Pelaku_Usaha_Model->check_nik($nik);
+        $existing = $this->P_input_pelaku_usaha_model->check_nik($nik);
         
         if ($existing) { 
             echo json_encode(array(

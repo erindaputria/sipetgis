@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class P_Input_Rpu extends CI_Controller {
+class P_input_rpu extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -16,7 +16,7 @@ class P_Input_Rpu extends CI_Controller {
             redirect('login');
         }
         
-        $this->load->model('P_Input_Rpu_Model'); 
+        $this->load->model('P_input_rpu_model'); 
     }
 
     public function index() {
@@ -25,14 +25,14 @@ class P_Input_Rpu extends CI_Controller {
             $user_kecamatan = 'Benowo';
         }
         
-        $data['rpu_data'] = $this->P_Input_Rpu_Model->get_rpu_by_kecamatan($user_kecamatan);
+        $data['rpu_data'] = $this->P_input_rpu_model->get_rpu_by_kecamatan($user_kecamatan);
         $data['kel_list'] = $this->get_all_kelurahan();
         $data['user_kecamatan'] = $user_kecamatan;
-        $data['pejagal_list'] = $this->P_Input_Rpu_Model->get_distinct_pejagal($user_kecamatan);
-        $data['komoditas_list'] = $this->P_Input_Rpu_Model->get_distinct_komoditas($user_kecamatan);
-        $data['total_ekor'] = $this->P_Input_Rpu_Model->sum_total_ekor($user_kecamatan);
-        $data['total_berat'] = $this->P_Input_Rpu_Model->sum_total_berat($user_kecamatan);
-        $data['total_kegiatan'] = $this->P_Input_Rpu_Model->count_all($user_kecamatan);
+        $data['pejagal_list'] = $this->P_input_rpu_model->get_distinct_pejagal($user_kecamatan);
+        $data['komoditas_list'] = $this->P_input_rpu_model->get_distinct_komoditas($user_kecamatan);
+        $data['total_ekor'] = $this->P_input_rpu_model->sum_total_ekor($user_kecamatan);
+        $data['total_berat'] = $this->P_input_rpu_model->sum_total_berat($user_kecamatan);
+        $data['total_kegiatan'] = $this->P_input_rpu_model->count_all($user_kecamatan);
         
         $this->load->view('petugas/p_input_rpu', $data);
     }
@@ -174,7 +174,7 @@ class P_Input_Rpu extends CI_Controller {
             'keterangan' => $this->input->post('keterangan')
         );
         
-        $rpu_id = $this->P_Input_Rpu_Model->save_rpu($data_rpu);
+        $rpu_id = $this->P_input_rpu_model->save_rpu($data_rpu);
         
         if ($rpu_id && $rpu_id > 0) {
             $data_komoditas = array();
@@ -188,7 +188,7 @@ class P_Input_Rpu extends CI_Controller {
                 );
             }
             
-            if ($this->P_Input_Rpu_Model->save_komoditas($data_komoditas)) {
+            if ($this->P_input_rpu_model->save_komoditas($data_komoditas)) {
                 echo json_encode(['status' => 'success', 'message' => 'Data berhasil disimpan dengan ' . count($data_komoditas) . ' komoditas']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Data RPU tersimpan tapi gagal menyimpan komoditas']);
@@ -207,7 +207,7 @@ class P_Input_Rpu extends CI_Controller {
             return;
         }
         
-        $cek = $this->P_Input_Rpu_Model->cek_nik_exists($nik, $kecamatan);
+        $cek = $this->P_input_rpu_model->cek_nik_exists($nik, $kecamatan);
         
         if ($cek) {
             echo json_encode([

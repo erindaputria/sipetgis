@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Data_Stok_Pakan_Model extends CI_Model {
+class Data_stok_pakan_model extends CI_Model {
     
     protected $table = 'input_stok_pakan';
     

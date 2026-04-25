@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Laporan_Data_Klinik_Hewan extends CI_Controller {
+class Laporan_data_klinik_hewan extends CI_Controller {
 
     public function __construct()
     {
@@ -9,7 +9,7 @@ class Laporan_Data_Klinik_Hewan extends CI_Controller {
         
         // Load library yang diperlukan
         $this->load->library('session');
-        $this->load->model('Laporan_Data_Klinik_Hewan_Model');
+        $this->load->model('Laporan_data_klinik_hewan_model');
         
         // Cek login
         if(!$this->session->userdata('logged_in')) {
@@ -20,12 +20,12 @@ class Laporan_Data_Klinik_Hewan extends CI_Controller {
     public function index()
     {
         $data['title'] = 'Laporan Data Klinik Hewan';
-        $data['kecamatan'] = $this->Laporan_Data_Klinik_Hewan_Model->get_kecamatan();
-        $data['tahun'] = $this->Laporan_Data_Klinik_Hewan_Model->get_tahun();
+        $data['kecamatan'] = $this->Laporan_data_klinik_hewan_model->get_kecamatan();
+        $data['tahun'] = $this->Laporan_data_klinik_hewan_model->get_tahun();
         
         // Load semua data saat pertama kali halaman dibuka
-        $data['data_klinik'] = $this->Laporan_Data_Klinik_Hewan_Model->get_data_klinik(null, null);
-        $data['total'] = $this->Laporan_Data_Klinik_Hewan_Model->get_total_klinik(null, null);
+        $data['data_klinik'] = $this->Laporan_data_klinik_hewan_model->get_data_klinik(null, null);
+        $data['total'] = $this->Laporan_data_klinik_hewan_model->get_total_klinik(null, null);
         
         $this->load->view('laporan/laporan_data_klinik_hewan', $data);
     }
@@ -47,8 +47,8 @@ class Laporan_Data_Klinik_Hewan extends CI_Controller {
             $kecamatan = null;
         }
         
-        $data = $this->Laporan_Data_Klinik_Hewan_Model->get_data_klinik($tahun, $kecamatan);
-        $total = $this->Laporan_Data_Klinik_Hewan_Model->get_total_klinik($tahun, $kecamatan);
+        $data = $this->Laporan_data_klinik_hewan_model->get_data_klinik($tahun, $kecamatan);
+        $total = $this->Laporan_data_klinik_hewan_model->get_total_klinik($tahun, $kecamatan);
         
         $response = [
             'status' => 'success',
@@ -65,8 +65,8 @@ class Laporan_Data_Klinik_Hewan extends CI_Controller {
         $kecamatan = $this->input->get('kecamatan');
         
         // Get data from database
-        $results = $this->Laporan_Data_Klinik_Hewan_Model->get_data_klinik($tahun, $kecamatan);
-        $total = $this->Laporan_Data_Klinik_Hewan_Model->get_total_klinik($tahun, $kecamatan);
+        $results = $this->Laporan_data_klinik_hewan_model->get_data_klinik($tahun, $kecamatan);
+        $total = $this->Laporan_data_klinik_hewan_model->get_total_klinik($tahun, $kecamatan);
         
         // Load PHPExcel library
         $this->load->library('excel');
@@ -154,7 +154,7 @@ class Laporan_Data_Klinik_Hewan extends CI_Controller {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
         
-        $filename = 'Laporan_Data_Klinik_Hewan_' . date('Ymd_His') . '.xls';
+        $filename = 'Laporan_data_klinik_hewan_' . date('Ymd_His') . '.xls';
          
         // Redirect output to client browser
         header('Content-Type: application/vnd.ms-excel');

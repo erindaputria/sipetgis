@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class P_Input_Klinik_Hewan extends CI_Controller {
+class P_input_klinik_hewan extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -16,12 +16,12 @@ class P_Input_Klinik_Hewan extends CI_Controller {
             redirect('login');
         }
         
-        $this->load->model('P_Input_Klinik_Hewan_Model');
+        $this->load->model('P_input_klinik_hewan_model');
     }
  
     public function index() {
         $user_kecamatan = $this->session->userdata('kecamatan');
-        $data['klinik_data'] = $this->P_Input_Klinik_Hewan_Model->get_klinik_by_kecamatan($user_kecamatan);
+        $data['klinik_data'] = $this->P_input_klinik_hewan_model->get_klinik_by_kecamatan($user_kecamatan);
         $data['kel_list'] = $this->get_all_kelurahan();
         $data['user_kecamatan'] = $user_kecamatan;
         
@@ -140,7 +140,7 @@ class P_Input_Klinik_Hewan extends CI_Controller {
             'created_at' => date('Y-m-d H:i:s')
         );
 
-        if ($this->P_Input_Klinik_Hewan_Model->save_klinik($data)) {
+        if ($this->P_input_klinik_hewan_model->save_klinik($data)) {
             $foto_msg = $foto_name ? ' dan 1 foto' : ' (tanpa foto)';
             $response = array(
                 'status' => 'success',
@@ -158,7 +158,7 @@ class P_Input_Klinik_Hewan extends CI_Controller {
 
     public function get_all_data() {
         $user_kecamatan = $this->session->userdata('kecamatan');
-        $data = $this->P_Input_Klinik_Hewan_Model->get_klinik_by_kecamatan($user_kecamatan);
+        $data = $this->P_input_klinik_hewan_model->get_klinik_by_kecamatan($user_kecamatan);
         echo json_encode($data);
     }
 
@@ -175,7 +175,7 @@ class P_Input_Klinik_Hewan extends CI_Controller {
     
     public function delete($id) {
         // Cek apakah data ada
-        $klinik = $this->P_Input_Klinik_Hewan_Model->get_klinik_by_id($id);
+        $klinik = $this->P_input_klinik_hewan_model->get_klinik_by_id($id);
         if (!$klinik) {
             echo json_encode(['status' => 'error', 'message' => 'Data tidak ditemukan']);
             return;
@@ -189,7 +189,7 @@ class P_Input_Klinik_Hewan extends CI_Controller {
             }
         }
         
-        if ($this->P_Input_Klinik_Hewan_Model->delete_klinik($id)) {
+        if ($this->P_input_klinik_hewan_model->delete_klinik($id)) {
             echo json_encode(['status' => 'success', 'message' => 'Data berhasil dihapus']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus data']);

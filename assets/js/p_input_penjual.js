@@ -1,8 +1,4 @@
-/**
- * Input Penjual
- * SIPETGIS - Kota Surabaya
- * Mengikuti pola yang sama dengan P_Input_Pengobatan
- */
+
 
 $(document).ready(function() {
     // Set today's date as default
@@ -241,7 +237,7 @@ $(document).ready(function() {
             formData.append(csrf_token_name, csrfHash);
         }
         
-        var saveUrl = base_url + 'P_Input_Penjual/save';
+        var saveUrl = base_url + 'P_input_penjual/save';
         
         $.ajax({
             url: saveUrl,

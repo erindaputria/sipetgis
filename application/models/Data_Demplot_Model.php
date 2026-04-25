@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Data_Demplot_Model extends CI_Model {
+class Data_demplot_model extends CI_Model {
     
     protected $table = 'input_demplot';
     

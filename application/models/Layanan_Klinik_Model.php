@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Layanan_Klinik_Model extends CI_Model {
+class Layanan_klinik_model extends CI_Model {
     
     protected $table = 'layanan_klinik';
     

@@ -12,7 +12,7 @@ $(document).ready(function() {
     if ($.fn.DataTable.isDataTable('#jenisUsahaTable')) {
         $('#jenisUsahaTable').DataTable().destroy();
     }
-    
+     
     // Initialize DataTable dengan custom buttons termasuk Print
     let dataTable = $('#jenisUsahaTable').DataTable({
         language: {
@@ -426,7 +426,7 @@ $(document).ready(function() {
             formData.append(csrf_token_name, csrfHash);
         }
         
-        var saveUrl = base_url + 'P_Input_Jenis_Usaha/save';
+        var saveUrl = base_url + 'P_input_jenis_usaha/save';
         
         $.ajax({
             url: saveUrl,

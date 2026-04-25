@@ -310,8 +310,8 @@
 
     <!-- Variabel Global untuk URL AJAX -->
     <script>
-        var ajaxFilterUrl = '<?= base_url("Data_Vaksinasi/filter_data") ?>';
-        var ajaxDetailUrl = '<?= base_url("Data_Vaksinasi/get_detail") ?>';
+        var ajaxFilterUrl = '<?= base_url("Data_vaksinasi/filter_data") ?>';
+        var ajaxDetailUrl = '<?= base_url("Data_vaksinasi/get_detail") ?>';
     </script>
 
     <!-- Custom JS Data Vaksinasi -->

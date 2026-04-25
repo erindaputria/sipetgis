@@ -1,12 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Data_Pengobatan extends CI_Controller {
+class Data_pengobatan extends CI_Controller {
 
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Data_Pengobatan_Model');
+        $this->load->model('Data_pengobatan_model');
         $this->load->helper('url');
         $this->load->library('session');
         
@@ -30,8 +30,8 @@ class Data_Pengobatan extends CI_Controller {
         }
         
         // Ambil data untuk filter dropdown
-        $data['komoditas_list'] = $this->Data_Pengobatan_Model->get_distinct_komoditas();
-        $data['kecamatan_list'] = $this->Data_Pengobatan_Model->get_distinct_kecamatan();
+        $data['komoditas_list'] = $this->Data_pengobatan_model->get_distinct_komoditas();
+        $data['kecamatan_list'] = $this->Data_pengobatan_model->get_distinct_kecamatan();
         
         $this->load->view('admin/data/data_pengobatan', $data);
     }
@@ -39,13 +39,13 @@ class Data_Pengobatan extends CI_Controller {
     public function get_all_data()
     {
         header('Content-Type: application/json');
-        $data = $this->Data_Pengobatan_Model->get_all_pengobatan();
+        $data = $this->Data_pengobatan_model->get_all_pengobatan();
         echo json_encode($data);
     }
 
     public function get_detail($id)
     {
-        $data = $this->Data_Pengobatan_Model->get_pengobatan_by_id($id);
+        $data = $this->Data_pengobatan_model->get_pengobatan_by_id($id);
         header('Content-Type: application/json');
         echo json_encode($data);
     }
@@ -74,7 +74,7 @@ class Data_Pengobatan extends CI_Controller {
             }
         }
         
-        $result = $this->Data_Pengobatan_Model->delete_pengobatan($id);
+        $result = $this->Data_pengobatan_model->delete_pengobatan($id);
         $response = [
             'status' => $result ? 'success' : 'error',
             'message' => $result ? 'Data berhasil dihapus' : 'Gagal menghapus data'

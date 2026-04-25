@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class K_Peta_Sebaran_Kepala extends CI_Controller {
+class K_peta_sebaran_kepala extends CI_Controller {
 
     public function index()
     {

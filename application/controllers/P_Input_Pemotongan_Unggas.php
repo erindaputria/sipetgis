@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class P_Input_Pemotongan_Unggas extends CI_Controller {
+class P_input_pemotongan_unggas extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -16,21 +16,24 @@ class P_Input_Pemotongan_Unggas extends CI_Controller {
             redirect('login');
         }
         
-        $this->load->model('P_Input_Pemotongan_Unggas_Model');
+        $this->load->model('P_input_pemotongan_unggas_model');
     }
  
     public function index() {
-        $data['pemotongan_data'] = $this->P_Input_Pemotongan_Unggas_Model->get_all_pemotongan();
+        $data['pemotongan_data'] = $this->P_input_pemotongan_unggas_model->get_all_pemotongan();
         $data['user_kecamatan'] = $this->session->userdata('kecamatan') ?: 'Benowo';
         
         // Hitung total untuk summary cards
-        $data['total_ayam'] = $this->P_Input_Pemotongan_Unggas_Model->sum_ayam();
-        $data['total_itik'] = $this->P_Input_Pemotongan_Unggas_Model->sum_itik();
-        $data['total_dst'] = $this->P_Input_Pemotongan_Unggas_Model->sum_dst();
-        $data['total_unggas'] = $this->P_Input_Pemotongan_Unggas_Model->sum_total_unggas();
+        $data['total_ayam'] = $this->P_input_pemotongan_unggas_model->sum_ayam();
+        $data['total_itik'] = $this->P_input_pemotongan_unggas_model->sum_itik();
+        $data['total_dst'] = $this->P_input_pemotongan_unggas_model->sum_dst();
+        $data['total_unggas'] = $this->P_input_pemotongan_unggas_model->sum_total_unggas();
         
         // Get distinct daerah asal untuk filter
-        $data['daerah_asal_list'] = $this->P_Input_Pemotongan_Unggas_Model->get_distinct_daerah_asal();
+        $data['daerah_asal_list'] = $this->P_input_pemotongan_unggas_model->get_distinct_daerah_asal();
+        
+        // Get all RPU/pejagal from rpu table
+        $data['rpu_list'] = $this->P_input_pemotongan_unggas_model->get_all_rpu();
         
         $this->load->view('petugas/p_input_pemotongan_unggas', $data);
     }
@@ -110,7 +113,7 @@ class P_Input_Pemotongan_Unggas extends CI_Controller {
         );
 
         // Simpan data
-        $result = $this->P_Input_Pemotongan_Unggas_Model->save_pemotongan($data);
+        $result = $this->P_input_pemotongan_unggas_model->save_pemotongan($data);
 
         if ($result) {
             $foto_msg = $uploaded_file ? ' dan 1 foto' : ' (tanpa foto)';
@@ -130,7 +133,7 @@ class P_Input_Pemotongan_Unggas extends CI_Controller {
     }
 
     public function get_all_data() {
-        $data = $this->P_Input_Pemotongan_Unggas_Model->get_all_pemotongan();
+        $data = $this->P_input_pemotongan_unggas_model->get_all_pemotongan();
         echo json_encode($data);
     }
 
@@ -141,7 +144,7 @@ class P_Input_Pemotongan_Unggas extends CI_Controller {
             $tahun = date('Y');
         }
         
-        $data = $this->P_Input_Pemotongan_Unggas_Model->get_by_periode($tahun);
+        $data = $this->P_input_pemotongan_unggas_model->get_by_periode($tahun);
         
         if (!empty($data)) {
             $response = array(
@@ -160,7 +163,7 @@ class P_Input_Pemotongan_Unggas extends CI_Controller {
     }
 
     public function delete($id) {
-        $result = $this->P_Input_Pemotongan_Unggas_Model->delete_pemotongan($id);
+        $result = $this->P_input_pemotongan_unggas_model->delete_pemotongan($id);
         
         if ($result) {
             $response = array(
@@ -179,14 +182,14 @@ class P_Input_Pemotongan_Unggas extends CI_Controller {
     
     /**
      * Get summary data
-     */
+     */ 
     public function get_summary() {
         $summary = array(
-            'total_ayam' => $this->P_Input_Pemotongan_Unggas_Model->sum_ayam(),
-            'total_itik' => $this->P_Input_Pemotongan_Unggas_Model->sum_itik(),
-            'total_dst' => $this->P_Input_Pemotongan_Unggas_Model->sum_dst(),
-            'total_unggas' => $this->P_Input_Pemotongan_Unggas_Model->sum_total_unggas(),
-            'total_record' => $this->P_Input_Pemotongan_Unggas_Model->count_all()
+            'total_ayam' => $this->P_input_pemotongan_unggas_model->sum_ayam(),
+            'total_itik' => $this->P_input_pemotongan_unggas_model->sum_itik(),
+            'total_dst' => $this->P_input_pemotongan_unggas_model->sum_dst(),
+            'total_unggas' => $this->P_input_pemotongan_unggas_model->sum_total_unggas(),
+            'total_record' => $this->P_input_pemotongan_unggas_model->count_all()
         );
         
         echo json_encode($summary);

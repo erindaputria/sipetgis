@@ -1,12 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Data_History_Vaksinasi extends CI_Controller {
+class Data_history_vaksinasi extends CI_Controller {
 
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Data_History_Vaksinasi_Model');
+        $this->load->model('Data_history_vaksinasi_model');
         $this->load->helper('url');
         $this->load->library('session');
         
@@ -24,20 +24,20 @@ class Data_History_Vaksinasi extends CI_Controller {
     public function get_all_data()
     {
         header('Content-Type: application/json');
-        $data = $this->Data_History_Vaksinasi_Model->get_all_vaksinasi();
+        $data = $this->Data_history_vaksinasi_model->get_all_vaksinasi();
         echo json_encode($data);
     }
 
     public function get_detail($id)
     {
         header('Content-Type: application/json');
-        $data = $this->Data_History_Vaksinasi_Model->get_vaksinasi_by_id($id);
+        $data = $this->Data_history_vaksinasi_model->get_vaksinasi_by_id($id);
         echo json_encode($data);
     }
 
     public function delete($id)
     {
-        $result = $this->Data_History_Vaksinasi_Model->delete_vaksinasi($id);
+        $result = $this->Data_history_vaksinasi_model->delete_vaksinasi($id);
         $response = [
             'status' => $result ? 'success' : 'error',
             'message' => $result ? 'Data berhasil dihapus' : 'Gagal menghapus data'

@@ -1,8 +1,3 @@
-/**
- * Input Klinik Hewan
- * SIPETGIS - Kota Surabaya
- * Mengikuti pola yang sama dengan P_Input_Pengobatan
- */
 
 $(document).ready(function() {
     // Hancurkan DataTable jika sudah ada
@@ -201,7 +196,7 @@ $(document).ready(function() {
             formData.append(csrf_token_name, csrfHash);
         }
         
-        var saveUrl = base_url + 'P_Input_Klinik_Hewan/save';
+        var saveUrl = base_url + 'P_input_klinik_hewan/save';
         
         $.ajax({
             url: saveUrl,

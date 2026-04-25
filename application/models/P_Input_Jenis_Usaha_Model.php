@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class P_Input_Jenis_Usaha_Model extends CI_Model {
+class P_input_jenis_usaha_model extends CI_Model {
     
     protected $table = 'input_jenis_usaha';
     
@@ -11,41 +11,7 @@ class P_Input_Jenis_Usaha_Model extends CI_Model {
     }
     
     public function save_jenis_usaha($data) {
-        // Field yang diperbolehkan
-        $allowed_fields = array(
-            'nama_petugas', 
-            'nama_peternak', 
-            'nik', 
-            'telepon', 
-            'tanggal_input', 
-            'keterangan', 
-            'kecamatan', 
-            'kelurahan', 
-            'rt', 
-            'rw', 
-            'alamat',
-            'latitude', 
-            'longitude', 
-            'foto_usaha', 
-            'jenis_usaha', 
-            'komoditas_ternak', 
-            'jumlah',
-            'jenis_kelamin'
-        );
-        
-        $filtered_data = array();
-        foreach ($allowed_fields as $field) {
-            if (isset($data[$field])) {
-                $filtered_data[$field] = $data[$field];
-            }
-        }
-        
-        // PASTIKAN JUMLAH ADALAH INTEGER
-        if (isset($filtered_data['jumlah'])) {
-            $filtered_data['jumlah'] = (int)$filtered_data['jumlah'];
-        }
-        
-        return $this->db->insert($this->table, $filtered_data);
+        return $this->db->insert($this->table, $data);
     }
     
     public function get_jenis_usaha_by_kecamatan($kecamatan) {

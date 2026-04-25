@@ -301,6 +301,8 @@
                     <li>
                        <a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a>
                     </li>
+                      <li>
+                        <a href="<?= site_url('kepemilikan_jenis_usaha') ?>" class="nav-link">Kepemilikan Jenis Usaha</a>
                     <li>
                       <a href="<?php echo base_url(); ?>akses_pengguna" class="nav-link"
                         >Akses Pengguna</a

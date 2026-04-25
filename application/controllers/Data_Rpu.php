@@ -1,12 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Data_Rpu extends CI_Controller {
+class Data_rpu extends CI_Controller {
 
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Data_Rpu_Model');
+        $this->load->model('Data_rpu_model');
         $this->load->library('session');
         $this->load->helper('url');
         
@@ -18,10 +18,10 @@ class Data_Rpu extends CI_Controller {
 
     public function index()
     {
-        $data['rpu_data'] = $this->Data_Rpu_Model->get_all_rpu();
-        $data['pejagal_list'] = $this->Data_Rpu_Model->get_distinct_pejagal();
-        $data['komoditas_list'] = $this->Data_Rpu_Model->get_distinct_komoditas();
-        $data['kecamatan_list'] = $this->Data_Rpu_Model->get_distinct_kecamatan();
+        $data['rpu_data'] = $this->Data_rpu_model->get_all_rpu();
+        $data['pejagal_list'] = $this->Data_rpu_model->get_distinct_pejagal();
+        $data['komoditas_list'] = $this->Data_rpu_model->get_distinct_komoditas();
+        $data['kecamatan_list'] = $this->Data_rpu_model->get_distinct_kecamatan();
         
         $this->load->view('admin/data/data_rpu', $data);
     }
@@ -29,14 +29,14 @@ class Data_Rpu extends CI_Controller {
     // Fungsi untuk mendapatkan data JSON (untuk AJAX)
     public function get_data()
     {
-        $data = $this->Data_Rpu_Model->get_all_rpu();
+        $data = $this->Data_rpu_model->get_all_rpu();
         echo json_encode($data);
     }
 
     // Fungsi untuk mendapatkan detail RPU by ID
     public function detail($id)
     {
-        $data = $this->Data_Rpu_Model->get_rpu_by_id($id);
+        $data = $this->Data_rpu_model->get_rpu_by_id($id);
         if ($data) {
             echo json_encode([
                 'status' => 'success',
@@ -61,7 +61,7 @@ class Data_Rpu extends CI_Controller {
             $end_date = date('Y-m-t');
         }
         
-        $data = $this->Data_Rpu_Model->get_by_periode($start_date, $end_date);
+        $data = $this->Data_rpu_model->get_by_periode($start_date, $end_date);
         
         echo json_encode([
             'status' => 'success',
@@ -74,7 +74,7 @@ class Data_Rpu extends CI_Controller {
     // Fungsi untuk menghapus data
     public function hapus($id)
     {
-        $result = $this->Data_Rpu_Model->delete_rpu($id);
+        $result = $this->Data_rpu_model->delete_rpu($id);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data RPU berhasil dihapus');
@@ -89,10 +89,10 @@ class Data_Rpu extends CI_Controller {
     public function get_statistik()
     {
         $statistik = [
-            'total_kegiatan' => $this->Data_Rpu_Model->count_all(),
-            'total_ekor' => $this->Data_Rpu_Model->sum_total_ekor(),
-            'total_berat' => $this->Data_Rpu_Model->sum_total_berat(),
-            'total_pejagal' => count($this->Data_Rpu_Model->get_distinct_pejagal())
+            'total_kegiatan' => $this->Data_rpu_model->count_all(),
+            'total_ekor' => $this->Data_rpu_model->sum_total_ekor(),
+            'total_berat' => $this->Data_rpu_model->sum_total_berat(),
+            'total_pejagal' => count($this->Data_rpu_model->get_distinct_pejagal())
         ];
         
         echo json_encode($statistik);

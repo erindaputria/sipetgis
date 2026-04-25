@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Peta_Sebaran extends CI_Controller {
+class Peta_sebaran extends CI_Controller {
 
     public function __construct()
     {

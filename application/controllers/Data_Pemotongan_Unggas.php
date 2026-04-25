@@ -1,12 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Data_Pemotongan_Unggas extends CI_Controller {
+class Data_pemotongan_unggas extends CI_Controller {
 
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Data_Pemotongan_Unggas_Model');
+        $this->load->model('Data_pemotongan_unggas_model');
         $this->load->library('session');
         $this->load->helper('url');
         
@@ -18,9 +18,9 @@ class Data_Pemotongan_Unggas extends CI_Controller {
 
     public function index()
     {
-        $data['pemotongan_data'] = $this->Data_Pemotongan_Unggas_Model->get_all_pemotongan();
-        $data['petugas_list'] = $this->Data_Pemotongan_Unggas_Model->get_distinct_petugas();
-        $data['rpu_list'] = $this->Data_Pemotongan_Unggas_Model->get_distinct_rpu();
+        $data['pemotongan_data'] = $this->Data_pemotongan_unggas_model->get_all_pemotongan();
+        $data['petugas_list'] = $this->Data_pemotongan_unggas_model->get_distinct_petugas();
+        $data['rpu_list'] = $this->Data_pemotongan_unggas_model->get_distinct_rpu();
         
         $this->load->view('admin/data/data_pemotongan_unggas', $data);
     }
@@ -28,14 +28,14 @@ class Data_Pemotongan_Unggas extends CI_Controller {
     // Fungsi untuk mendapatkan data JSON (untuk AJAX)
     public function get_data()
     {
-        $data = $this->Data_Pemotongan_Unggas_Model->get_all_pemotongan();
+        $data = $this->Data_pemotongan_unggas_model->get_all_pemotongan();
         echo json_encode($data);
     }
 
     // Fungsi untuk mendapatkan detail pemotongan by ID
     public function detail($id)
     {
-        $data = $this->Data_Pemotongan_Unggas_Model->get_pemotongan_by_id($id);
+        $data = $this->Data_pemotongan_unggas_model->get_pemotongan_by_id($id);
         if ($data) {
             echo json_encode([
                 'status' => 'success',
@@ -60,7 +60,7 @@ class Data_Pemotongan_Unggas extends CI_Controller {
             $end_date = date('Y-m-t');
         }
         
-        $data = $this->Data_Pemotongan_Unggas_Model->get_by_periode($start_date, $end_date);
+        $data = $this->Data_pemotongan_unggas_model->get_by_periode($start_date, $end_date);
         
         echo json_encode([
             'status' => 'success',
@@ -75,7 +75,7 @@ class Data_Pemotongan_Unggas extends CI_Controller {
     {
         // You might need to implement this method in the model
         // For now, we'll get all and filter
-        $data = $this->Data_Pemotongan_Unggas_Model->get_all_pemotongan();
+        $data = $this->Data_pemotongan_unggas_model->get_all_pemotongan();
         $filtered = array_filter($data, function($item) use ($id_rpu) {
             return $item['id_rpu'] == $id_rpu;
         });
@@ -89,7 +89,7 @@ class Data_Pemotongan_Unggas extends CI_Controller {
     // Fungsi untuk menghapus data
     public function hapus($id)
     {
-        $result = $this->Data_Pemotongan_Unggas_Model->delete_pemotongan($id);
+        $result = $this->Data_pemotongan_unggas_model->delete_pemotongan($id);
         
         if ($result) {
             $this->session->set_flashdata('success', 'Data pemotongan unggas berhasil dihapus');
@@ -103,14 +103,14 @@ class Data_Pemotongan_Unggas extends CI_Controller {
     // Fungsi untuk mendapatkan statistik
     public function get_statistik()
     {
-        $total_ekor = $this->Data_Pemotongan_Unggas_Model->sum_total_ekor();
-        $total_berat = $this->Data_Pemotongan_Unggas_Model->sum_total_berat();
+        $total_ekor = $this->Data_pemotongan_unggas_model->sum_total_ekor();
+        $total_berat = $this->Data_pemotongan_unggas_model->sum_total_berat();
         
         $statistik = [
-            'total_kegiatan' => $this->Data_Pemotongan_Unggas_Model->count_all(),
+            'total_kegiatan' => $this->Data_pemotongan_unggas_model->count_all(),
             'total_ekor' => $total_ekor,
             'total_berat' => $total_berat,
-            'total_rpu' => count($this->Data_Pemotongan_Unggas_Model->get_distinct_rpu())
+            'total_rpu' => count($this->Data_pemotongan_unggas_model->get_distinct_rpu())
         ];
         
         echo json_encode($statistik);
@@ -120,14 +120,14 @@ class Data_Pemotongan_Unggas extends CI_Controller {
     public function statistik_per_bulan()
     {
         $tahun = $this->input->get('tahun') ?: date('Y');
-        $data = $this->Data_Pemotongan_Unggas_Model->get_statistik_per_bulan($tahun);
+        $data = $this->Data_pemotongan_unggas_model->get_statistik_per_bulan($tahun);
         echo json_encode($data);
     }
     
     // Fungsi untuk mendapatkan statistik per RPU
     public function statistik_per_rpu()
     {
-        $data = $this->Data_Pemotongan_Unggas_Model->get_statistik_per_rpu();
+        $data = $this->Data_pemotongan_unggas_model->get_statistik_per_rpu();
         echo json_encode($data);
     }
 }

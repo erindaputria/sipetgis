@@ -1,14 +1,14 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Laporan_Stok_Pakan extends CI_Controller {
+class Laporan_stok_pakan extends CI_Controller {
 
     public function __construct()
     {
         parent::__construct();
         
         $this->load->library('session');
-        $this->load->model('Laporan_Stok_Pakan_Model');
+        $this->load->model('Laporan_stok_pakan_model');
         
         if(!$this->session->userdata('logged_in')) {
             redirect('login');
@@ -18,8 +18,8 @@ class Laporan_Stok_Pakan extends CI_Controller {
     public function index()
     {
         $data['title'] = 'Laporan Stok Pakan';
-        $data['demplot'] = $this->Laporan_Stok_Pakan_Model->get_demplot();
-        $data['tahun'] = $this->Laporan_Stok_Pakan_Model->get_tahun();
+        $data['demplot'] = $this->Laporan_stok_pakan_model->get_demplot();
+        $data['tahun'] = $this->Laporan_stok_pakan_model->get_tahun();
         
         $this->load->view('laporan/laporan_stok_pakan', $data);
     }
@@ -34,8 +34,8 @@ class Laporan_Stok_Pakan extends CI_Controller {
         error_log("Tahun: " . $tahun);
         error_log("Demplot: " . $demplot);
         
-        $data = $this->Laporan_Stok_Pakan_Model->get_data_stok_pakan($tahun, $demplot);
-        $total = $this->Laporan_Stok_Pakan_Model->get_total_stok_pakan($tahun, $demplot);
+        $data = $this->Laporan_stok_pakan_model->get_data_stok_pakan($tahun, $demplot);
+        $total = $this->Laporan_stok_pakan_model->get_total_stok_pakan($tahun, $demplot);
         
         error_log("Data count: " . count($data));
         
@@ -58,8 +58,8 @@ class Laporan_Stok_Pakan extends CI_Controller {
             $tahun = date('Y');
         }
         
-        $results = $this->Laporan_Stok_Pakan_Model->get_data_stok_pakan($tahun, $demplot);
-        $total = $this->Laporan_Stok_Pakan_Model->get_total_stok_pakan($tahun, $demplot);
+        $results = $this->Laporan_stok_pakan_model->get_data_stok_pakan($tahun, $demplot);
+        $total = $this->Laporan_stok_pakan_model->get_total_stok_pakan($tahun, $demplot);
         
         $this->load->library('excel');
         
@@ -111,7 +111,7 @@ class Laporan_Stok_Pakan extends CI_Controller {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
         
-        $filename = 'Laporan_Stok_Pakan_' . $tahun . '.xls';
+        $filename = 'Laporan_stok_pakan_' . $tahun . '.xls';
         
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '"');

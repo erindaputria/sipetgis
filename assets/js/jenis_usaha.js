@@ -1,36 +1,45 @@
 $(document).ready(function() {
-    // Inisialisasi DataTable
+    var baseUrl = BASE_URL;
+    var csrfName = CSRF_NAME;
+    var csrfToken = CSRF_HASH;
+    
+    // Hancurkan DataTable jika sudah ada
+    if ($.fn.DataTable.isDataTable('#jenisUsahaTable')) {
+        $('#jenisUsahaTable').DataTable().destroy();
+    }
+    
+    // Initialize DataTable dengan buttons di atas
     var table = $("#jenisUsahaTable").DataTable({
-        dom: "Bfrtip",
+        dom: "<'row'<'col-sm-12'B>>" +
+             "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+             "<'row'<'col-sm-12'tr>>" +
+             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
         buttons: [
             {
                 extend: "copy",
                 text: '<i class="fas fa-copy"></i> Copy',
                 className: 'btn btn-sm btn-primary',
-                exportOptions: { columns: [0,1,2,3,4,5] }
+                exportOptions: { columns: [0,1] }
             },
             {
                 extend: "csv",
                 text: '<i class="fas fa-file-csv"></i> CSV',
                 className: 'btn btn-sm btn-success',
-                exportOptions: { columns: [0,1,2,3,4,5] } 
+                exportOptions: { columns: [0,1] }
             },
             {
                 extend: "excel",
                 text: '<i class="fas fa-file-excel"></i> Excel',
-                className: 'btn btn-sm btn-success', 
-                exportOptions: { columns: [0,1,2,3,4,5] }
+                className: 'btn btn-sm btn-success',
+                exportOptions: { columns: [0,1] }
             },
             {
                 extend: "pdf",
                 text: '<i class="fas fa-file-pdf"></i> PDF',
                 className: 'btn btn-sm btn-danger',
-                exportOptions: { columns: [0,1,2,3,4,5] },
+                exportOptions: { columns: [0,1] },
                 customize: function(doc) {
-                    // Menghapus header default DataTables
                     doc.content.splice(0, 1);
-                    
-                    // Menambahkan judul laporan
                     var currentDate = new Date();
                     var formattedDate = currentDate.toLocaleDateString('id-ID', {
                         day: 'numeric',
@@ -42,70 +51,54 @@ $(document).ready(function() {
                         text: 'LAPORAN DATA JENIS USAHA',
                         style: 'title',
                         alignment: 'center',
-                        margin: [0, 0, 0, 5]
+                        fontSize: 16,
+                        bold: true,
+                        margin: [0, 0, 0, 10]
                     });
-                    
                     doc.content.unshift({
                         text: 'DINAS PETERNAKAN KOTA SURABAYA',
-                        style: 'subtitle',
                         alignment: 'center',
-                        margin: [0, 0, 0, 3]
+                        fontSize: 12,
+                        margin: [0, 0, 0, 5]
                     });
-                    
                     doc.content.unshift({
                         text: 'PEMERINTAH KOTA SURABAYA',
-                        style: 'header',
                         alignment: 'center',
+                        fontSize: 12,
                         margin: [0, 0, 0, 15]
                     });
-                    
                     doc.content.push({
                         text: 'Tanggal Cetak: ' + formattedDate,
-                        style: 'date',
                         alignment: 'center',
-                        margin: [0, 15, 0, 0]
+                        fontSize: 10,
+                        margin: [0, 20, 0, 0]
                     });
                     
-                    // Styling tabel
                     if (doc.content[3] && doc.content[3].table) {
                         var rows = doc.content[3].table.body;
-                        
-                        // Header tabel
                         for (var i = 0; i < rows[0].length; i++) {
                             rows[0][i].fillColor = '#832706';
                             rows[0][i].color = '#ffffff';
                             rows[0][i].bold = true;
                             rows[0][i].alignment = 'center';
                         }
-                        
-                        // Styling body tabel
                         for (var i = 1; i < rows.length; i++) {
                             for (var j = 0; j < rows[i].length; j++) {
-                                if (j === 4) {
-                                    rows[i][j].alignment = 'left';
-                                } else {
-                                    rows[i][j].alignment = 'center';
-                                }
+                                rows[i][j].alignment = (j === 1) ? 'left' : 'center';
                                 rows[i][j].color = '#333333';
                                 rows[i][j].fontSize = 9;
                             }
                         }
                     }
                     
-                    // Konfigurasi margin halaman
                     doc.pageMargins = [20, 60, 20, 40];
-                    
-                    // Header setiap halaman
-                    var headerText = 'SIPETGIS - Sistem Informasi Peternakan Kota Surabaya';
                     doc.header = {
-                        text: headerText,
+                        text: 'SIPETGIS - Sistem Informasi Peternakan Kota Surabaya',
                         alignment: 'center',
                         fontSize: 8,
                         color: '#666666',
                         margin: [20, 15, 20, 0]
                     };
-                    
-                    // Footer setiap halaman
                     doc.footer = function(currentPage, pageCount) {
                         return {
                             text: 'Halaman ' + currentPage + ' dari ' + pageCount,
@@ -121,7 +114,7 @@ $(document).ready(function() {
                 extend: "print",
                 text: '<i class="fas fa-print"></i> Print',
                 className: 'btn btn-sm btn-info',
-                exportOptions: { columns: [0,1,2,3,4,5] },
+                exportOptions: { columns: [0,1] },
                 customize: function(win) {
                     $(win.document.body).find('table').addClass('print-table');
                     $(win.document.body).find('table thead th').css({
@@ -131,16 +124,11 @@ $(document).ready(function() {
                     });
                     $(win.document.body).prepend(
                         '<div style="text-align: center; margin-bottom: 20px;">' +
-                        '<h2 style="color: #832706; margin-bottom: 5px;">LAPORAN DATA JENIS USAHA</h2>' +
-                        '<p style="margin: 0;">Dinas Peternakan Kota Surabaya</p>' +
-                        '<p style="margin: 0;">Pemerintah Kota Surabaya</p>' +
-                        '<hr style="margin: 15px 0;">' +
+                        '<h2 style="color: #832706;">LAPORAN DATA JENIS USAHA</h2>' +
+                        '<p>Dinas Peternakan Kota Surabaya</p>' +
+                        '<p>Pemerintah Kota Surabaya</p>' +
+                        '<hr>' +
                         '<p>Tanggal Cetak: ' + new Date().toLocaleDateString('id-ID') + '</p>' +
-                        '</div>'
-                    );
-                    $(win.document.body).append(
-                        '<div style="text-align: center; margin-top: 30px; font-size: 10px; color: #666;">' +
-                        'SIPETGIS - Sistem Informasi Peternakan Kota Surabaya' +
                         '</div>'
                     );
                 }
@@ -164,45 +152,75 @@ $(document).ready(function() {
         lengthChange: true,
         lengthMenu: [5, 10, 25, 50, 100],
         responsive: true,
-        order: [[0, 'asc']],
-        columnDefs: [
-            { width: '200px', targets: 4 }
-        ]
+        order: [[0, 'asc']]
     });
-
-    // Event untuk tombol edit
-    $(document).on("click", ".btn-edit", function() {
-        $('#edit_id').val($(this).data('id'));
-        $('#edit_nama_peternak').val($(this).data('nama_peternak'));
-        $('#edit_jenis_usaha').val($(this).data('jenis_usaha'));
-        $('#edit_jumlah').val($(this).data('jumlah'));
-        $('#edit_alamat').val($(this).data('alamat'));
-        $('#edit_kecamatan').val($(this).data('kecamatan'));
+    
+    // ========== EDIT BUTTON ==========
+    $(document).on("click", ".btn-edit", function(e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        var jenis_usaha = $(this).data('jenis_usaha');
+        
+        $('#edit_id').val(id);
+        $('#edit_jenis_usaha').val(jenis_usaha);
         $('#editDataModal').modal('show');
     });
-
-    // Event untuk tombol hapus
-    $(document).on("click", ".btn-delete", function() {
+    
+    // ========== DELETE BUTTON ==========
+    $(document).on("click", ".btn-delete", function(e) {
+        e.preventDefault();
         var id = $(this).data('id');
-        var nama = $(this).data('nama');
+        var jenis_usaha = $(this).data('jenis_usaha');
         
-        if (confirm("Apakah Anda yakin ingin menghapus data jenis usaha: " + nama + "?")) {
-            window.location.href = base_url + "jenis_usaha/hapus/" + id;
+        if (confirm("Apakah Anda yakin ingin menghapus data jenis usaha: " + jenis_usaha + "?")) {
+            window.location.href = baseUrl + "jenis_usaha/hapus/" + id;
         }
     });
-
-    // Validasi jumlah (tidak negatif)
-    $("input[name='jumlah'], #edit_jumlah").on("input", function() {
-        if ($(this).val() < 0) {
-            $(this).val(0);
+    
+    // ========== VALIDASI FORM TAMBAH ==========
+    $('#formTambah').on('submit', function(e) {
+        var jenisUsaha = $('input[name="jenis_usaha"]', this).val().trim();
+        if (jenisUsaha === '') {
+            e.preventDefault();
+            alert('Jenis Usaha tidak boleh kosong!');
+            return false;
         }
     });
-
-    // Auto close alerts after 5 seconds
+    
+    // ========== VALIDASI FORM EDIT ==========
+    $('#formEdit').on('submit', function(e) {
+        var jenisUsaha = $('#edit_jenis_usaha').val().trim();
+        if (jenisUsaha === '') {
+            e.preventDefault();
+            alert('Jenis Usaha tidak boleh kosong!');
+            return false;
+        }
+    });
+    
+    // ========== RESET FORM SAAT MODAL DITUTUP ==========
+    $('#tambahDataModal').on('hidden.bs.modal', function() {
+        $('#formTambah')[0].reset();
+    });
+    
+    $('#editDataModal').on('hidden.bs.modal', function() {
+        $('#formEdit')[0].reset();
+    });
+    
+    // ========== AUTO CLOSE ALERTS ==========
     setTimeout(function() {
-        $('.alert').alert('close');
-    }, 5000);
+        $('.alert').fadeOut(500, function() {
+            $(this).remove();
+        });
+    }, 3000);
+    
+    // ========== REFRESH CSRF TOKEN ==========
+    $('#tambahDataModal, #editDataModal').on('hidden.bs.modal', function() {
+        $.get(baseUrl + 'jenis_usaha/get_csrf', function(data) {
+            if (data.csrf_token) {
+                csrfToken = data.csrf_token;
+                $('meta[name="csrf-token"]').attr('content', csrfToken);
+                $('input[name="' + csrfName + '"]').val(csrfToken);
+            }
+        });
+    });
 });
-
-// Base URL untuk redirect
-var base_url = "<?= base_url() ?>";
