@@ -23,7 +23,7 @@
             active: function () {
                 sessionStorage.fonts = true;
             },
-        });
+        }); 
     </script>
 
     <!-- CSS Files -->
@@ -64,7 +64,7 @@
                                 <p>Dashboard</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item active">
                             <a class="nav-link d-flex align-items-center justify-content-between collapsed" data-bs-toggle="collapse" href="#laporanSubmenu" role="button" aria-expanded="false">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-chart-bar me-2" style="color: #832706 !important;"></i>
@@ -74,7 +74,7 @@
                             </a>
                             <div class="collapse" id="laporanSubmenu"> 
                                 <ul class="list-unstyled ps-4">
-                                    <li><a href="<?= site_url('k_laporan_kepala/kepemilikan_ternak') ?>" class="nav-link">Kepemilikan Ternak</a></li>
+                                    <li><a href="<?= site_url('k_laporan_kepala/kepemilikan_ternak') ?>" class="nav-link active">Kepemilikan Ternak</a></li>
                                     <li><a href="<?= site_url('k_laporan_kepala/history_data_ternak') ?>" class="nav-link">History Data Ternak</a></li>
                                     <li><a href="<?= site_url('k_laporan_kepala/vaksinasi') ?>" class="nav-link">Vaksinasi</a></li>
                                     <li><a href="<?= site_url('k_laporan_kepala/history_vaksinasi') ?>" class="nav-link">History Data Vaksinasi</a></li>
@@ -153,7 +153,7 @@
                     <div class="filter-section no-print">
                         <div class="row">
                             <div class="col-md-3 mb-3">
-                                <label class="form-label">Tahun</label>
+                                <label class="form-label">Tahun <span class="text-danger">*</span></label>
                                 <select class="form-select" id="filterTahun">
                                     <option value="">-- Pilih Tahun --</option>
                                     <?php foreach($tahun as $t): ?>
@@ -246,29 +246,20 @@
                                         ];
                                         
                                         foreach($kecamatan_list_display as $no => $kecamatan):
-                                            // Buat URL spesifik untuk setiap jenis ternak
-                                            $baseUrlSapiPotong = base_url('laporan_kepemilikan_ternak/detail_kecamatan/' . urlencode($kecamatan) . '/SapiPotong');
-                                            $baseUrlSapiPerah = base_url('laporan_kepemilikan_ternak/detail_kecamatan/' . urlencode($kecamatan) . '/SapiPerah');
-                                            $baseUrlKambing = base_url('laporan_kepemilikan_ternak/detail_kecamatan/' . urlencode($kecamatan) . '/Kambing');
-                                            $baseUrlDomba = base_url('laporan_kepemilikan_ternak/detail_kecamatan/' . urlencode($kecamatan) . '/Domba');
-                                            $baseUrlAyam = base_url('laporan_kepemilikan_ternak/detail_kecamatan/' . urlencode($kecamatan) . '/Ayam');
-                                            $baseUrlItik = base_url('laporan_kepemilikan_ternak/detail_kecamatan/' . urlencode($kecamatan) . '/Itik');
-                                            $baseUrlAngsa = base_url('laporan_kepemilikan_ternak/detail_kecamatan/' . urlencode($kecamatan) . '/Angsa');
-                                            $baseUrlKalkun = base_url('laporan_kepemilikan_ternak/detail_kecamatan/' . urlencode($kecamatan) . '/Kalkun');
-                                            $baseUrlBurung = base_url('laporan_kepemilikan_ternak/detail_kecamatan/' . urlencode($kecamatan) . '/Burung');
+                                            $baseUrlDetail = base_url('laporan_kepemilikan_ternak/detail_kecamatan/' . urlencode($kecamatan));
                                         ?>
                                         <tr>
                                             <td class="text-center"><?= $no ?></td>
                                             <td class="kecamatan-cell"><?= $kecamatan ?></td>
-                                            <td class="text-center"><a href="<?= $baseUrlSapiPotong ?>" class="data-link" target="_blank">0</a></td>
-                                            <td class="text-center"><a href="<?= $baseUrlSapiPerah ?>" class="data-link" target="_blank">0</a></td>
-                                            <td class="text-center"><a href="<?= $baseUrlKambing ?>" class="data-link" target="_blank">0</a></td>
-                                            <td class="text-center"><a href="<?= $baseUrlDomba ?>" class="data-link" target="_blank">0</a></td>
-                                            <td class="text-center"><a href="<?= $baseUrlAyam ?>" class="data-link" target="_blank">0</a></td>
-                                            <td class="text-center"><a href="<?= $baseUrlItik ?>" class="data-link" target="_blank">0</a></td>
-                                            <td class="text-center"><a href="<?= $baseUrlAngsa ?>" class="data-link" target="_blank">0</a></td>
-                                            <td class="text-center"><a href="<?= $baseUrlKalkun ?>" class="data-link" target="_blank">0</a></td>
-                                            <td class="text-center"><a href="<?= $baseUrlBurung ?>" class="data-link" target="_blank">0</a></td>
+                                            <td class="text-center"><a href="<?= $baseUrlDetail ?>/Sapi Potong" class="data-link" target="_blank">0</a></td>
+                                            <td class="text-center"><a href="<?= $baseUrlDetail ?>/SapiPerah" class="data-link" target="_blank">0</a></td>
+                                            <td class="text-center"><a href="<?= $baseUrlDetail ?>/Kambing" class="data-link" target="_blank">0</a></td>
+                                            <td class="text-center"><a href="<?= $baseUrlDetail ?>/Domba" class="data-link" target="_blank">0</a></td>
+                                            <td class="text-center"><a href="<?= $baseUrlDetail ?>/Ayam" class="data-link" target="_blank">0</a></td>
+                                            <td class="text-center"><a href="<?= $baseUrlDetail ?>/Itik" class="data-link" target="_blank">0</a></td>
+                                            <td class="text-center"><a href="<?= $baseUrlDetail ?>/Angsa" class="data-link" target="_blank">0</a></td>
+                                            <td class="text-center"><a href="<?= $baseUrlDetail ?>/Kalkun" class="data-link" target="_blank">0</a></td>
+                                            <td class="text-center"><a href="<?= $baseUrlDetail ?>/Burung" class="data-link" target="_blank">0</a></td>
                                         </tr>
                                         <?php endforeach; ?>
                                     </tbody>

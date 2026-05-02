@@ -12,7 +12,7 @@ class P_input_pengobatan_model extends CI_Model {
     
     /**
      * Save single pengobatan record
-     */ 
+     */  
     public function save_pengobatan($data) {
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();

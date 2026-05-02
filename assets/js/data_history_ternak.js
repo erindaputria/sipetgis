@@ -1,514 +1,427 @@
-// Data untuk detail history
-const historyDetailData = {
-    1: [
-        {
-            no: 1,
-            jenis: "Penambahan",
-            jumlah: 5,
-            alasan: "Kelahiran",
-            petugas: "Dr. Andi",
-            tanggal: "22-03-2023",
-        },
-    ],
-    2: [
-        {
-            no: 1,
-            jenis: "Penambahan",
-            jumlah: 725,
-            alasan: "Pembelian bibit",
-            petugas: "Dr. Sari",
-            tanggal: "28-10-2022",
-        },
-    ],
-    3: [
-        {
-            no: 1,
-            jenis: "Penambahan",
-            jumlah: 500,
-            alasan: "Pembelian bibit",
-            petugas: "Dr. Budi",
-            tanggal: "27-10-2022",
-        },
-    ],
-    4: [
-        {
-            no: 1,
-            jenis: "Penambahan",
-            jumlah: 3,
-            alasan: "Kelahiran",
-            petugas: "Dr. Andi",
-            tanggal: "15-02-2023",
-        },
-        {
-            no: 2,
-            jenis: "Pengurangan",
-            jumlah: 1,
-            alasan: "Penjualan",
-            petugas: "Dr. Andi",
-            tanggal: "15-02-2023",
-        },
-    ],
-    5: [
-        {
-            no: 1,
-            jenis: "Penambahan",
-            jumlah: 150,
-            alasan: "Pembelian bibit",
-            petugas: "Dr. Rina",
-            tanggal: "10-01-2023",
-        },
-        {
-            no: 2,
-            jenis: "Pengurangan",
-            jumlah: 20,
-            alasan: "Kematian",
-            petugas: "Dr. Rina",
-            tanggal: "10-01-2023",
-        },
-    ],
-};
+/**
+ * Data History Ternak
+ * SIPETGIS - Kota Surabaya
+ * Full CRUD - Edit, Hapus, Map, Print, Export
+ */
 
-// Variable untuk peta
+// ================ VARIABLES ================
 let map = null;
 let mapMarkers = [];
 let currentView = "map";
 let currentFarmMarker = null;
+let dataTable = null;
+let allData = [];
 
-$(document).ready(function() {
-    // Inisialisasi DataTable dengan warna tombol seperti pelaku usaha
-    var table = $("#historyDataTable").DataTable({
-        dom: "Bfrtip",
-        buttons: [
-            {
-                extend: "copy",
-                text: '<i class="fas fa-copy"></i> Copy',
-                className: 'btn btn-sm btn-primary',
-                exportOptions: { columns: [0,1,2,3,4,5,6] }
-            },
-            {
-                extend: "csv",
-                text: '<i class="fas fa-file-csv"></i> CSV',
-                className: 'btn btn-sm btn-success',
-                exportOptions: { columns: [0,1,2,3,4,5,6] }
-            },
-            {
-                extend: "excel",
-                text: '<i class="fas fa-file-excel"></i> Excel',
-                className: 'btn btn-sm btn-success',
-                exportOptions: { columns: [0,1,2,3,4,5,6] }
-            },
-            {
-                extend: "pdf",
-                text: '<i class="fas fa-file-pdf"></i> PDF',
-                className: 'btn btn-sm btn-danger',
-                exportOptions: { columns: [0,1,2,3,4,5,6] },
-                customize: function(doc) {
-                    doc.content.splice(0, 1);
-                    
-                    var currentDate = new Date();
-                    var formattedDate = currentDate.toLocaleDateString('id-ID', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric'
-                    });
-                    
-                    doc.content.unshift({
-                        text: 'LAPORAN HISTORY DATA TERNAK',
-                        style: 'title',
-                        alignment: 'center',
-                        margin: [0, 0, 0, 5]
-                    });
-                    
-                    doc.content.unshift({
-                        text: 'DINAS PETERNAKAN KOTA SURABAYA',
-                        style: 'subtitle',
-                        alignment: 'center',
-                        margin: [0, 0, 0, 3]
-                    });
-                    
-                    doc.content.unshift({
-                        text: 'PEMERINTAH KOTA SURABAYA',
-                        style: 'header',
-                        alignment: 'center',
-                        margin: [0, 0, 0, 15]
-                    });
-                    
-                    doc.content.push({
-                        text: 'Tanggal Cetak: ' + formattedDate,
-                        style: 'date',
-                        alignment: 'center',
-                        margin: [0, 15, 0, 0]
-                    });
-                    
-                    if (doc.content[3] && doc.content[3].table) {
-                        var rows = doc.content[3].table.body;
-                        
-                        for (var i = 0; i < rows[0].length; i++) {
-                            rows[0][i].fillColor = '#832706';
-                            rows[0][i].color = '#ffffff';
-                            rows[0][i].bold = true;
-                            rows[0][i].alignment = 'center';
-                        }
-                        
-                        for (var i = 1; i < rows.length; i++) {
-                            for (var j = 0; j < rows[i].length; j++) {
-                                rows[i][j].alignment = 'center';
-                                rows[i][j].color = '#333333';
-                                rows[i][j].fontSize = 9;
-                            }
-                        }
-                    }
-                    
-                    doc.pageMargins = [20, 60, 20, 40];
-                    
-                    var headerText = 'SIPETGIS - Sistem Informasi Peternakan Kota Surabaya';
-                    doc.header = {
-                        text: headerText,
-                        alignment: 'center',
-                        fontSize: 8,
-                        color: '#666666',
-                        margin: [20, 15, 20, 0]
-                    };
-                    
-                    doc.footer = function(currentPage, pageCount) {
-                        return {
-                            text: 'Halaman ' + currentPage + ' dari ' + pageCount,
-                            alignment: 'center',
-                            fontSize: 8,
-                            color: '#666666',
-                            margin: [20, 0, 20, 15]
-                        };
-                    };
-                }
-            },
-            {
-                extend: "print",
-                text: '<i class="fas fa-print"></i> Print',
-                className: 'btn btn-sm btn-info',
-                exportOptions: { columns: [0,1,2,3,4,5,6] },
-                customize: function(win) {
-                    $(win.document.body).find('table').addClass('print-table');
-                    $(win.document.body).find('table thead th').css({
-                        'background-color': '#832706',
-                        'color': 'white',
-                        'padding': '10px'
-                    });
-                    $(win.document.body).prepend(
-                        '<div style="text-align: center; margin-bottom: 20px;">' +
-                        '<h2 style="color: #832706; margin-bottom: 5px;">LAPORAN HISTORY DATA TERNAK</h2>' +
-                        '<p style="margin: 0;">Dinas Peternakan Kota Surabaya</p>' +
-                        '<p style="margin: 0;">Pemerintah Kota Surabaya</p>' +
-                        '<hr style="margin: 15px 0;">' +
-                        '<p>Tanggal Cetak: ' + new Date().toLocaleDateString('id-ID') + '</p>' +
-                        '</div>'
-                    );
-                    $(win.document.body).append(
-                        '<div style="text-align: center; margin-top: 30px; font-size: 10px; color: #666;">' +
-                        'SIPETGIS - Sistem Informasi Peternakan Kota Surabaya' +
-                        '</div>'
-                    );
-                }
-            }
-        ],
-        language: {
-            search: "Cari:",
-            lengthMenu: "Tampilkan _MENU_ data",
-            info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-            infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
-            infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
-            zeroRecords: "Tidak ada data yang ditemukan",
-            paginate: {
-                first: "Pertama",
-                last: "Terakhir",
-                next: "Berikutnya",
-                previous: "Sebelumnya"
+// Data kelurahan per kecamatan (lengkap)
+const kelurahanData = { 
+    'Asemrowo': ['Asemrowo', 'Genting Kalianak', 'Tambak Sarioso'],
+    'Benowo': ['Benowo', 'Kandangan', 'Romokalisari', 'Sememi', 'Tambak Osowilangun'],
+    'Bubutan': ['Alun-alun Contong', 'Bubutan', 'Gundih', 'Jepara', 'Tembok Dukuh'],
+    'Bulak': ['Bulak', 'Kedung Cowek', 'Kenjeran', 'Sukolilo Baru'],
+    'Dukuh Pakis': ['Dukuh Kupang', 'Dukuh Pakis', 'Gunung Sari', 'Pradah Kalikendal'],
+    'Gayungan': ['Dukuh Menanggal', 'Gayungan', 'Ketintang', 'Menanggal'],
+    'Genteng': ['Embong Kaliasin', 'Genteng', 'Kapasari', 'Ketabang', 'Peneleh'],
+    'Gubeng': ['Airlangga', 'Baratajaya', 'Gubeng', 'Kertajaya', 'Mojo', 'Pucang Sewu'],
+    'Gunung Anyar': ['Gunung Anyar', 'Gunung Anyar Tambak', 'Rungkut Menanggal', 'Rungkut Tengah'],
+    'Jambangan': ['Jambangan', 'Karah', 'Kebonsari', 'Pagesangan'],
+    'Karang Pilang': ['Karang Pilang', 'Kebraon', 'Kedurus', 'Waru Gunung'],
+    'Kenjeran': ['Bulak Banteng', 'Tambak Wedi', 'Tanah Kali Kedinding', 'Sidotopo Wetan'],
+    'Krembangan': ['Dupak', 'Kemayoran', 'Krembangan Selatan', 'Krembangan Utara', 'Morokrembangan', 'Perak Barat'],
+    'Lakarsantri': ['Bangkingan', 'Jeruk', 'Lakarsantri', 'Lidah Kulon', 'Lidah Wetan', 'Sumur Welut'],
+    'Mulyorejo': ['Dukuh Sutorejo', 'Kalijudan', 'Kaliawan', 'Kejawan Putih Tambak', 'Manyar Sabrangan', 'Mulyorejo'],
+    'Pabean Cantian': ['Bongkaran', 'Krembangan Utara', 'Nyamplungan', 'Perak Timur', 'Perak Utara'],
+    'Pakal': ['Babat Jerawat', 'Pakal', 'Sumber Rejo'],
+    'Rungkut': ['Kali Rungkut', 'Kedung Baruk', 'Medokan Ayu', 'Penjaringan Sari', 'Rungkut Kidul', 'Wonorejo'],
+    'Sambikerep': ['Bringin', 'Lontar', 'Madya', 'Sambikerep'],
+    'Sawahan': ['Banyu Urip', 'Kupang Krajan', 'Pakis', 'Patemon', 'Putat Jaya', 'Sawahan'],
+    'Semampir': ['Ampel', 'Pegirian', 'Sidotopo', 'Ujung', 'Wonokusumo'],
+    'Simokerto': ['Kapasan', 'Simokerto', 'Simolawang', 'Tambak Rejo'],
+    'Sukolilo': ['Gebang Putih', 'Keputih', 'Klampis Ngasem', 'Medokan Semampir', 'Menur Pumpungan', 'Nginden Jangkungan', 'Semolowaru'],
+    'Sukomanunggal': ['Putat Gede', 'Simomulyo', 'Simomulyo Baru', 'Sukomanunggal', 'Tanjungsari'],
+    'Tambaksari': ['Gading', 'Kapas Madya', 'Pacar Kembang', 'Pacar Keling', 'Ploso', 'Rangkah', 'Tambaksari'],
+    'Tandes': ['Balongsari', 'Banjar Sugihan', 'Karang Poh', 'Manukan Kulon', 'Manukan Wetan', 'Tandes'],
+    'Tegalsari': ['Dr. Soetomo', 'Kedungdoro', 'Keputran', 'Tegalsari', 'Wonorejo'],
+    'Tenggilis Mejoyo': ['Kendangsari', 'Kutisari', 'Panjang Jiwo', 'Tenggilis Mejoyo'],
+    'Wiyung': ['Babat Jerawat', 'Balas Klumprik', 'Jajar Tunggal', 'Wiyung'],
+    'Wonocolo': ['Bendul Merisi', 'Jemur Wonosari', 'Margorejo', 'Sidosermo', 'Siwalankerto'],
+    'Wonokromo': ['Darmo', 'Jagir', 'Ngagel', 'Ngagel Rejo', 'Sawunggaling', 'Wonokromo']
+};
+
+function updateKelurahanOptions(selectedKec, targetId) {
+    let options = '<option value="">Pilih Kelurahan</option>';
+    if (selectedKec && kelurahanData[selectedKec]) {
+        kelurahanData[selectedKec].sort().forEach(function(kel) {
+            options += '<option value="' + kel + '">' + kel + '</option>';
+        });
+    }
+    $(targetId).html(options);
+}
+
+function formatNumber(num) {
+    if (num === null || num === undefined || num === 0) return '0';
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+
+function formatDate(dateString) {
+    if (!dateString) return '-';
+    let date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+    let day = String(date.getDate()).padStart(2, '0');
+    let month = String(date.getMonth() + 1).padStart(2, '0');
+    let year = date.getFullYear();
+    return day + '-' + month + '-' + year;
+}
+
+// ================ LOAD DATA ================
+function loadData() {
+    $('#historyDataTable tbody').html('<tr><td colspan="7" class="text-center"><div class="spinner-border text-primary"></div><br>Memuat data...</td></tr>');
+    
+    $.ajax({
+        url: base_url + 'index.php/data_history_ternak/get_data',
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            if (response && response.data) {
+                allData = response.data;
+                renderTable();
+                updateFilters();
+            } else {
+                allData = [];
+                renderTable();
             }
         },
-        pageLength: 10,
-        lengthChange: true,
-        lengthMenu: [5, 10, 25, 50, 100],
-        responsive: true,
-        order: [[0, 'asc']]
-    });
-
-    // Filter button event
-    $("#filterBtn").click(function() {
-        const komoditasValue = $("#filterKomoditas").val();
-        const periodeValue = $("#filterPeriode").val();
-        let searchTerm = "";
-
-        if (komoditasValue === "all" && periodeValue === "all") {
-            table.search("").draw();
-            return;
+        error: function() {
+            allData = [];
+            renderTable();
+            Swal.fire('Error', 'Gagal memuat data', 'error');
         }
+    });
+}
 
-        if (komoditasValue !== "all") {
-            let komoditasTerm = "";
-            switch (komoditasValue) {
-                case "sapi_potong":
-                    komoditasTerm = "Sapi Potong";
-                    break;
-                case "ayam_petelur":
-                    komoditasTerm = "Ayam Ras Petelur";
-                    break;
-                case "ayam_kampung":
-                    komoditasTerm = "Ayam Kampung";
-                    break;
-                case "kambing":
-                    komoditasTerm = "Kambing";
-                    break;
-                case "itik":
-                    komoditasTerm = "Itik";
-                    break;
+// ================ UPDATE FILTERS ================
+function updateFilters() {
+    let komoditasSet = new Set();
+    allData.forEach(item => { if (item.komoditas) komoditasSet.add(item.komoditas); });
+    
+    let komoditasHtml = '<option value="all">Semua Komoditas</option>';
+    Array.from(komoditasSet).sort().forEach(k => { komoditasHtml += `<option value="${k}">${k}</option>`; });
+    $('#filterKomoditas').html(komoditasHtml);
+    
+    let tahunSet = new Set();
+    allData.forEach(item => { 
+        if (item.tanggal_update && item.tanggal_update.split('-').length === 3) {
+            tahunSet.add(item.tanggal_update.split('-')[2]);
+        }
+    });
+    
+    let tahunHtml = '<option value="all">Semua Periode</option>';
+    Array.from(tahunSet).sort().reverse().forEach(t => { tahunHtml += `<option value="${t}">Tahun ${t}</option>`; });
+    $('#filterPeriode').html(tahunHtml);
+}
+
+// ================ RENDER TABLE ================
+function renderTable() {
+    let data = allData;
+    
+    // Apply filters
+    let komoditas = $('#filterKomoditas').val();
+    let periode = $('#filterPeriode').val();
+    
+    if (komoditas !== 'all') {
+        data = data.filter(item => item.komoditas === komoditas);
+    }
+    if (periode !== 'all') {
+        data = data.filter(item => item.tanggal_update && item.tanggal_update.split('-')[2] === periode);
+    }
+    
+    let html = '';
+    if (data.length > 0) {
+        data.forEach((item, idx) => {
+            let koordinatText = (item.raw_latitude && item.raw_longitude && item.raw_latitude != 0) ? 
+                `${item.raw_latitude}, ${item.raw_longitude}` : 'Koordinat tidak tersedia';
+            
+            let btnMap = (item.raw_latitude && item.raw_longitude && item.raw_latitude != 0) ? 
+                `<button class="btn btn-sm btn-outline-primary-custom" onclick="showMap('${escapeHtml(item.komoditas)}', '${escapeHtml(item.nama_peternak)}', ${item.raw_latitude}, ${item.raw_longitude})">
+                    <i class="fas fa-map-marker-alt me-1"></i>Lihat Peta
+                </button>` : 
+                `<button class="btn btn-sm btn-secondary" disabled><i class="fas fa-map-marker-alt me-1"></i>No Koordinat</button>`;
+            
+            html += `<tr>
+                <td class="text-center">${idx + 1}</td>
+                <td><span class="fw-bold">${escapeHtml(item.nama_peternak)}</span><br><small class="text-muted">ID: ${item.id}</small></td>
+                <td>${escapeHtml(item.komoditas)}</td>
+                <td class="text-center"><span class="badge" style="background:#832706; color:white; padding:5px 12px; border-radius:20px;">${item.jumlah_ternak_value}</span> Ekor</td>
+                <td><div class="small text-muted mb-1">${koordinatText}</div>${btnMap}</td>
+                <td class="text-center">${item.tanggal_update}</td>
+                <td class="text-center">
+                    <div class="btn-group gap-1">
+                        <button class="btn btn-sm" style="background:#ffc107; border:none; width:32px;" onclick="editData(${item.id})" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" style="width:32px;" onclick="deleteData(${item.id}, '${escapeHtml(item.nama_peternak)}')" title="Hapus"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>`;
+        });
+    } else {
+        html = `<tr><td colspan="7" class="text-center py-5"><i class="fas fa-database fa-3x text-muted mb-3 d-block"></i>Tidak ada data ternak</td></tr>`;
+    }
+    
+    $('#historyDataTable tbody').html(html);
+    
+    if (dataTable) dataTable.destroy();
+    dataTable = $('#historyDataTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            { extend: 'excel', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-sm btn-success', exportOptions: { columns: [0,1,2,3,5] } },
+            { extend: 'print', text: '<i class="fas fa-print"></i> Print', className: 'btn btn-sm btn-info', exportOptions: { columns: [0,1,2,3,5] } }
+        ],
+        language: { search: "Cari:", lengthMenu: "Tampilkan _MENU_ data", info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data", zeroRecords: "Tidak ada data" },
+        pageLength: 15,
+        scrollX: true,
+        ordering: false
+    });
+}
+
+// ================ EDIT DATA ================
+function editData(id) {
+    if (!id || id == 0) {
+        Swal.fire('Error', 'ID data tidak valid!', 'error');
+        return;
+    }
+    
+    $.ajax({
+        url: base_url + 'index.php/data_history_ternak/get_detail/' + id,
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            if (response && response.success && response.data && response.data.length > 0) {
+                let item = response.data[0];
+                $('#edit_id').val(item.id);
+                $('#edit_nama_peternak').val(item.nama_peternak || '');
+                $('#edit_komoditas').val(item.komoditas || '');
+                $('#edit_jumlah').val(item.jumlah || 0);
+                $('#edit_kecamatan').val(item.kecamatan || '');
+                $('#edit_alamat').val(item.alamat || '');
+                $('#edit_rt').val(item.rt || '');
+                $('#edit_rw').val(item.rw || '');
+                $('#edit_latitude').val(item.latitude || '');
+                $('#edit_longitude').val(item.longitude || '');
+                $('#edit_telepon').val(item.telepon || '');
+                $('#edit_nama_petugas').val(item.nama_petugas || '');
+                $('#edit_tanggal_input').val(item.tanggal_input || '');
+                
+                // Update kelurahan
+                if (item.kecamatan) {
+                    updateKelurahanOptions(item.kecamatan, '#edit_kelurahan');
+                    setTimeout(() => { $('#edit_kelurahan').val(item.kelurahan || ''); }, 100);
+                }
+                
+                $('#editModal').modal('show');
+            } else {
+                Swal.fire('Error', response?.message || 'Data tidak ditemukan', 'error');
             }
-            searchTerm += komoditasTerm;
-        }
-
-        if (periodeValue !== "all") {
-            if (searchTerm !== "") searchTerm += " ";
-            searchTerm += periodeValue;
-        }
-
-        table.search(searchTerm).draw();
-    });
-
-    // Reset button event
-    $("#resetBtn").click(function() {
-        $("#filterKomoditas").val("all");
-        $("#filterPeriode").val("all");
-        table.search("").draw();
-    });
-
-    // Close detail button event
-    $("#closeDetailBtn").click(function() {
-        $("#detailSection").hide();
-    });
-
-    // Close map button event
-    $("#closeMapBtn").click(function() {
-        $("#mapSection").hide();
-        if (map) {
-            map.remove();
-            map = null;
+        },
+        error: function() {
+            Swal.fire('Error', 'Gagal mengambil data', 'error');
         }
     });
+}
 
-    // Map view controls
-    $("#btnMapView").click(function() {
-        currentView = "map";
-        updateMapView();
-        $(this).addClass("active");
-        $("#btnSatelliteView").removeClass("active");
-    });
-
-    $("#btnSatelliteView").click(function() {
-        currentView = "satellite";
-        updateMapView();
-        $(this).addClass("active");
-        $("#btnMapView").removeClass("active");
-    });
-
-    $("#btnResetView").click(function() {
-        if (map && currentFarmMarker) {
-            const latlng = currentFarmMarker.getLatLng();
-            map.setView([latlng.lat, latlng.lng], 15);
+// ================ DELETE DATA ================
+function deleteData(id, nama) {
+    Swal.fire({
+        title: 'Yakin hapus?',
+        html: `Hapus data ternak: <strong>${escapeHtml(nama)}</strong>?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#832706',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: base_url + 'index.php/data_history_ternak/delete/' + id,
+                type: 'POST',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire('Terhapus!', 'Data berhasil dihapus', 'success');
+                        loadData();
+                    } else {
+                        Swal.fire('Gagal!', 'Gagal menghapus data', 'error');
+                    }
+                },
+                error: function() {
+                    Swal.fire('Error!', 'Terjadi kesalahan', 'error');
+                }
+            });
         }
     });
+}
 
-    // Auto close alerts
-    setTimeout(function() {
-        $('.alert').alert('close');
-    }, 5000);
-});
-
-// Function to show map
-function showMap(komoditas, peternak, coordinates) {
-    const [lat, lng] = coordinates.split(",").map((coord) => parseFloat(coord.trim()));
-
-    $("#mapTitle").text(`Peta Lokasi Ternak ${komoditas}, Peternak: ${peternak}`);
-    $("#mapInfo").html(`
+// ================ MAP FUNCTION ================
+function showMap(komoditas, peternak, lat, lng) {
+    if (!lat || !lng || isNaN(lat) || isNaN(lng)) {
+        Swal.fire('Error', 'Koordinat tidak valid', 'error');
+        return;
+    }
+    
+    // Find item data
+    let item = allData.find(d => d.nama_peternak === peternak && d.komoditas === komoditas);
+    
+    $('#mapTitle').html(`<i class="fas fa-paw me-2"></i>${escapeHtml(peternak)} - ${escapeHtml(komoditas)}`);
+    $('#mapInfo').html(`
         <div class="row">
             <div class="col-md-6">
-                <span class="fw-bold">Peternak:</span> ${peternak}<br>
-                <span class="fw-bold">Komoditas:</span> ${komoditas}
+                <strong>Peternak:</strong> ${escapeHtml(peternak)}<br>
+                <strong>Komoditas:</strong> ${escapeHtml(komoditas)}
             </div>
             <div class="col-md-6">
-                <span class="fw-bold">Koordinat:</span> <span class="coord-badge">${coordinates}</span><br>
-                <span class="fw-bold">Tanggal Update:</span> Terbaru
+                <strong>Koordinat:</strong> <span class="coord-badge">${lat}, ${lng}</span><br>
+                <strong>Update:</strong> ${item ? item.tanggal_update : '-'}
             </div>
         </div>
     `);
-
-    $("#farmInfo").html(`
-        <div class="mb-2">
-            <span class="fw-bold">Nama Peternak:</span><br>
-            <span class="text-primary fw-bold">${peternak}</span>
-        </div>
-        <div class="mb-2">
-            <span class="fw-bold">Komoditas:</span><br>
-            <span class="badge bg-primary-custom">${komoditas}</span>
-        </div>
-        <div class="mb-2">
-            <span class="fw-bold">Jumlah Ternak:</span><br>
-            <span class="fw-bold">5 Ekor</span>
-        </div>
-        <div class="mb-2">
-            <span class="fw-bold">Status:</span><br>
-            <span class="badge bg-success">Aktif</span>
-        </div>
+    
+    $('#farmInfo').html(`
+        <div class="mb-3"><strong>Nama Peternak:</strong><br><span class="text-primary fw-bold">${escapeHtml(peternak)}</span></div>
+        <div class="mb-3"><strong>Komoditas:</strong><br><span class="badge" style="background:#832706; color:white; padding:5px 12px;">${escapeHtml(komoditas)}</span></div>
+        <div class="mb-3"><strong>Jumlah Ternak:</strong><br><span class="fw-bold fs-4" style="color:#832706;">${item ? item.jumlah_ternak_value : 0}</span> Ekor</div>
+        <div class="mb-3"><strong>Kecamatan:</strong><br>${item ? escapeHtml(item.kecamatan) : '-'}</div>
+        <div class="mb-3"><strong>Kelurahan:</strong><br>${item ? escapeHtml(item.kelurahan) : '-'}</div>
+        <div class="mb-3"><strong>Alamat:</strong><br>${item ? escapeHtml(item.alamat) : '-'}</div>
+        <div class="mb-3"><strong>Telepon:</strong><br>${item ? escapeHtml(item.telepon) : '-'}</div>
     `);
-
-    $("#coordInfo").html(`
-        <div class="mb-2">
-            <span class="fw-bold">Latitude:</span><br>
-            <code>${lat.toFixed(6)}</code>
-        </div>
-        <div class="mb-2">
-            <span class="fw-bold">Longitude:</span><br>
-            <code>${lng.toFixed(6)}</code>
-        </div>
-        <div class="mb-2">
-            <span class="fw-bold">Format Koordinat:</span><br>
-            <small>DD (Decimal Degrees)</small>
-        </div>
-        <div class="mb-2">
-            <span class="fw-bold">Akurasi:</span><br>
-            <small>GPS ± 5 meter</small>
-        </div>
+    
+    $('#coordInfo').html(`
+        <div class="mb-3"><strong>Latitude:</strong><br><code class="bg-light p-2 rounded">${lat.toFixed(6)}</code></div>
+        <div class="mb-3"><strong>Longitude:</strong><br><code class="bg-light p-2 rounded">${lng.toFixed(6)}</code></div>
+        <div class="mb-3"><a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" class="btn btn-sm btn-outline-primary-custom"><i class="fas fa-external-link-alt me-1"></i>Buka Google Maps</a></div>
     `);
-
-    if (!map) {
-        $("#mapContainer").css("height", "500px");
-        
-        setTimeout(() => {
-            map = L.map("mapContainer", {
-                zoomControl: false,
-                attributionControl: false,
-            }).setView([lat, lng], 15);
-
-            L.control.zoom({ position: "topright" }).addTo(map);
-            L.control.attribution({ position: "bottomright" }).addTo(map).addAttribution("© OpenStreetMap contributors");
-
-            updateMapView();
-
-            const farmIcon = L.divIcon({
-                html: `<div style="background-color: #832706; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 14px;">P</div>`,
-                className: "farm-marker",
-                iconSize: [30, 30],
-                iconAnchor: [15, 15],
-            });
-
-            currentFarmMarker = L.marker([lat, lng], { icon: farmIcon }).addTo(map);
-            currentFarmMarker.bindPopup(`
-                <div style="min-width: 200px;">
-                    <h5 style="margin: 0 0 5px 0; color: #832706; text-align: center;">${peternak}</h5>
-                    <hr style="margin: 5px 0;">
-                    <div style="margin-bottom: 3px;"><strong>Komoditas:</strong> ${komoditas}</div>
-                    <div style="margin-bottom: 3px;"><strong>Koordinat:</strong> ${lat.toFixed(6)}, ${lng.toFixed(6)}</div>
-                    <div style="margin-bottom: 3px;"><strong>Jumlah Ternak:</strong> 5 Ekor</div>
-                    <div style="text-align: center; margin-top: 8px;">
-                        <small class="text-muted">Klik di luar popup untuk menutup</small>
-                    </div>
-                </div>
-            `).openPopup();
-            mapMarkers.push(currentFarmMarker);
-
-            const circle = L.circle([lat, lng], {
-                color: "#832706",
-                fillColor: "#832706",
-                fillOpacity: 0.1,
-                radius: 500,
-            }).addTo(map);
-            mapMarkers.push(circle);
-
-            setTimeout(() => {
-                map.invalidateSize();
-            }, 100);
-        }, 100);
-    } else {
-        mapMarkers.forEach((marker) => map.removeLayer(marker));
-        mapMarkers = [];
-
-        map.setView([lat, lng], 15);
-
-        const farmIcon = L.divIcon({
-            html: `<div style="background-color: #832706; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 14px;">P</div>`,
-            className: "farm-marker",
-            iconSize: [30, 30],
-            iconAnchor: [15, 15],
-        });
-
-        currentFarmMarker = L.marker([lat, lng], { icon: farmIcon }).addTo(map);
-        currentFarmMarker.bindPopup(`
-            <div style="min-width: 200px;">
-                <h5 style="margin: 0 0 5px 0; color: #832706; text-align: center;">${peternak}</h5>
-                <hr style="margin: 5px 0;">
-                <div style="margin-bottom: 3px;"><strong>Komoditas:</strong> ${komoditas}</div>
-                <div style="margin-bottom: 3px;"><strong>Koordinat:</strong> ${lat.toFixed(6)}, ${lng.toFixed(6)}</div>
-                <div style="margin-bottom: 3px;"><strong>Jumlah Ternak:</strong> 5 Ekor</div>
-                <div style="text-align: center; margin-top: 8px;">
-                    <small class="text-muted">Klik di luar popup untuk menutup</small>
-                </div>
-            </div>
-        `).openPopup();
-        mapMarkers.push(currentFarmMarker);
-
-        const circle = L.circle([lat, lng], {
-            color: "#832706",
-            fillColor: "#832706",
-            fillOpacity: 0.1,
-            radius: 500,
-        }).addTo(map);
-        mapMarkers.push(circle);
-
-        setTimeout(() => {
-            map.invalidateSize();
-        }, 50);
-    }
-
-    $("#mapSection").show();
-    $("#detailSection").hide();
-
-    $("html, body").animate({
-        scrollTop: $("#mapSection").offset().top - 20
-    }, 500);
-
+    
+    if (map) { map.remove(); map = null; }
+    
     setTimeout(() => {
-        if (map) {
-            map.invalidateSize();
-        }
-    }, 300);
+        map = L.map('mapContainer').setView([lat, lng], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+        
+        let icon = L.divIcon({
+            html: '<div style="background:#832706; width:36px; height:36px; border-radius:50%; border:3px solid white; display:flex; align-items:center; justify-content:center; color:white; font-size:16px;"><i class="fas fa-paw"></i></div>',
+            iconSize: [36, 36], iconAnchor: [18, 18]
+        });
+        
+        currentFarmMarker = L.marker([lat, lng], { icon: icon }).addTo(map);
+        currentFarmMarker.bindPopup(`<b>${escapeHtml(peternak)}</b><br>${escapeHtml(komoditas)}`).openPopup();
+        L.circle([lat, lng], { color: "#832706", fillColor: "#832706", fillOpacity: 0.1, radius: 500 }).addTo(map);
+        
+        setTimeout(() => map.invalidateSize(), 100);
+    }, 100);
+    
+    $('#mapSection').show();
+    $('html, body').animate({ scrollTop: $('#mapSection').offset().top - 20 }, 500);
 }
 
-// Function to update map view
+function closeMap() {
+    $('#mapSection').hide();
+    if (map) { map.remove(); map = null; }
+}
+
 function updateMapView() {
     if (!map) return;
-
-    map.eachLayer((layer) => {
-        if (layer instanceof L.TileLayer) {
-            map.removeLayer(layer);
-        }
-    });
-
-    if (currentView === "map") {
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 19,
-        }).addTo(map);
-    } else if (currentView === "satellite") {
-        L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-            attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
-            maxZoom: 19,
-        }).addTo(map);
-    }
-
-    mapMarkers.forEach((marker) => {
-        if (marker instanceof L.Circle || marker instanceof L.Marker) {
-            map.addLayer(marker);
-        }
-    });
-
-    setTimeout(() => {
-        map.invalidateSize();
-    }, 50);
+    let currentCenter = map.getCenter();
+    let currentZoom = map.getZoom();
+    map.remove();
+    map = L.map('mapContainer').setView([currentCenter.lat, currentCenter.lng], currentZoom);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+    if (currentFarmMarker) currentFarmMarker.addTo(map);
 }
+
+// ================ FILTER FUNCTIONS ================
+function filterData() {
+    renderTable();
+}
+
+function resetFilter() {
+    $('#filterKomoditas').val('all');
+    $('#filterPeriode').val('all');
+    renderTable();
+}
+
+// ================ DOCUMENT READY ================
+$(document).ready(function() {
+    loadData();
+    
+    $('#filterBtn').click(filterData);
+    $('#resetBtn').click(resetFilter);
+    $('#closeMapBtn').click(closeMap);
+    
+    $('#btnMapView').click(function() {
+        currentView = 'map';
+        updateMapView();
+        $(this).addClass('active').siblings().removeClass('active');
+    });
+    
+    $('#btnResetView').click(function() {
+        if (map && currentFarmMarker) {
+            let pos = currentFarmMarker.getLatLng();
+            map.setView([pos.lat, pos.lng], 15);
+        }
+    });
+    
+    // Submit edit form
+    $('#formEdit').submit(function(e) {
+        e.preventDefault();
+        let id = $('#edit_id').val();
+        let formData = {
+            nama_peternak: $('#edit_nama_peternak').val(),
+            komoditas: $('#edit_komoditas').val(),
+            jumlah: $('#edit_jumlah').val(),
+            kecamatan: $('#edit_kecamatan').val(),
+            kelurahan: $('#edit_kelurahan').val(),
+            alamat: $('#edit_alamat').val(),
+            rt: $('#edit_rt').val(),
+            rw: $('#edit_rw').val(),
+            latitude: $('#edit_latitude').val(),
+            longitude: $('#edit_longitude').val(),
+            telepon: $('#edit_telepon').val(),
+            nama_petugas: $('#edit_nama_petugas').val(),
+            tanggal_input: $('#edit_tanggal_input').val()
+        };
+        
+        $('.btn-save-edit').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Menyimpan...');
+        
+        $.ajax({
+            url: base_url + 'index.php/data_history_ternak/update/' + id,
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                $('.btn-save-edit').prop('disabled', false).html('<i class="fas fa-save"></i> Simpan');
+                if (response.success) {
+                    $('#editModal').modal('hide');
+                    Swal.fire('Sukses', 'Data berhasil diupdate', 'success');
+                    loadData();
+                } else {
+                    Swal.fire('Gagal', response.message || 'Gagal update', 'error');
+                }
+            },
+            error: function() {
+                $('.btn-save-edit').prop('disabled', false).html('<i class="fas fa-save"></i> Simpan');
+                Swal.fire('Error', 'Gagal menyimpan perubahan', 'error');
+            }
+        });
+    });
+    
+    $('#edit_kecamatan').change(function() {
+        updateKelurahanOptions($(this).val(), '#edit_kelurahan');
+    });
+});

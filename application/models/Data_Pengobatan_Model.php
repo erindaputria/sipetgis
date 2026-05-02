@@ -15,7 +15,7 @@ class Data_pengobatan_model extends CI_Model {
             id,
             nama_peternak,
             nik, 
-            tanggal_pengobatan,
+            tanggal_pengobatan, 
             keterangan,
             kecamatan,
             kelurahan,

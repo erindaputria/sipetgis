@@ -21,7 +21,7 @@
                 urls: ["<?php echo base_url('assets/SIPETGIS/assets/css/fonts.min.css'); ?>"]
             },
             active: function() {
-                sessionStorage.fonts = true;
+                sessionStorage.fonts = true; 
             }
         });
     </script>

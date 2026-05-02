@@ -240,25 +240,7 @@
 
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label required-field">Nama Petugas</label>
-                                                    <select class="form-control" id="nama_petugas" name="nama_petugas" required>
-                                                        <option value="">Pilih Petugas</option>
-                                                        <option value="Drh. Sunarno Aristono, M.Si">Drh. Sunarno Aristono, M.Si</option>
-                                                        <option value="Drh. Gagat Rahino H S, M.SI">Drh. Gagat Rahino H S, M.SI</option>
-                                                        <option value="Drh. Wafiroh">Drh. Wafiroh</option>
-                                                        <option value="Samsul Arifin">Samsul Arifin</option>
-                                                        <option value="Drh. Arfiandy Noorrahman">Drh. Arfiandy Noorrahman</option>
-                                                        <option value="Drh. Kartika Eka Paksi">Drh. Kartika Eka Paksi</option>
-                                                        <option value="Drh. Romadhony Arif">Drh. Romadhony Arif</option>
-                                                        <option value="Drh. Rinenggo Palupi">Drh. Rinenggo Palupi</option>
-                                                        <option value="Drh. Rieska Nursita">Drh. Rieska Nursita</option>
-                                                        <option value="Drh. Albert Fabio S">Drh. Albert Fabio S</option>
-                                                        <option value="Drh. Rizal Maulana I">Drh. Rizal Maulana I</option>
-                                                        <option value="Drh. Moch Rozali">Drh. Moch Rozali</option>
-                                                        <option value="Drh. Arsanti Arsy">Drh. Arsanti Arsy</option>
-                                                        <option value="Drh. Richa Putri A">Drh. Richa Putri A</option>
-                                                        <option value="Drh. Niken Rahmawati">Drh. Niken Rahmawati</option>
-                                                    </select>
-                                                    <div class="invalid-feedback">Nama petugas harus dipilih</div>
+                                                    <input type="text" class="form-control" id="nama_petugas" name="nama_petugas" placeholder="Masukkan nama petugas" required />          
                                                 </div>
 
                                                 <div class="col-md-6 mb-3">
@@ -547,16 +529,6 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="form-group mb-0">
-                                    <label for="filterObatHewan" class="form-label fw-bold">Filter Obat Hewan:</label>
-                                    <select class="form-select" id="filterObatHewan">
-                                        <option selected value="all">Semua</option>
-                                        <option value="Y">Menjual Obat Hewan</option>
-                                        <option value="N">Tidak Menjual Obat Hewan</option>
-                                    </select>
-                                </div>
-                            </div>
                             <div class="col-md-3 mt-2">
                                 <div class="form-group mb-0">
                                     <label for="filterPeriode" class="form-label fw-bold">Filter Periode:</label>
@@ -564,10 +536,6 @@
                                         <option selected value="all">Semua Periode</option>
                                         <option value="2026">Tahun 2026</option>
                                         <option value="2025">Tahun 2025</option>
-                                        <option value="2024">Tahun 2024</option>
-                                        <option value="2023">Tahun 2023</option>
-                                        <option value="2022">Tahun 2022</option>
-                                        <option value="2021">Tahun 2021</option>
                                     </select>
                                 </div>
                             </div>

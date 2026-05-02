@@ -14,7 +14,7 @@ class Data_vaksinasi_model extends CI_Model {
     public function get_all_vaksinasi()
     {
         $this->db->select('
-            jenis_vaksinasi,
+            jenis_vaksinasi, 
             YEAR(tanggal_vaksinasi) as tahun,
             SUM(jumlah) as total_jumlah
         ');

@@ -21,7 +21,7 @@
                 urls: ["<?php echo base_url('assets/SIPETGIS/assets/css/fonts.min.css'); ?>"]
             },
             active: function() {
-                sessionStorage.fonts = true;
+                sessionStorage.fonts = true; 
             }
         });
     </script>
@@ -37,6 +37,65 @@
     
     <!-- Custom CSS Laporan Data TPU/RPU -->
     <link rel="stylesheet" href="<?php echo base_url('assets/css/laporan_data_tpu_rpu.css'); ?>" />
+    
+    <style>
+        /* Style untuk tabel rekap */
+        .data-link-rekap {
+            display: inline-block;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .data-link-rekap.positive-value {
+            color: #832706 !important;
+            background-color: #fef3ef !important;
+        }
+        .data-link-rekap.positive-value:hover {
+            background-color: #832706 !important;
+            color: white !important;
+            transform: scale(1.05);
+        }
+        .data-link-rekap.zero-value {
+            color: #000000 !important;
+            background-color: transparent !important;
+            font-weight: 400;
+        }
+        .data-link-rekap.zero-value:hover {
+            background-color: #f0f0f0 !important;
+        }
+        .kecamatan-cell {
+            font-weight: 600;
+            background-color: #f8f9fa;
+        }
+        #rekapKecamatanTable thead th {
+            background-color: #832706 !important;
+            color: white !important;
+            text-align: center;
+        }
+        #rekapKecamatanTable tbody td {
+            text-align: center;
+            vertical-align: middle;
+        }
+        #rekapKecamatanTable tbody td:first-child {
+            text-align: center;
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        #rekapKecamatanTable tbody td:nth-child(2) {
+            text-align: left;
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        #rekapKecamatanFooter {
+            background: linear-gradient(135deg, #fef3ef 0%, #fce7e0 100%);
+            font-weight: bold;
+        }
+        #rekapKecamatanFooter td {
+            color: #832706;
+        }
+    </style>
 </head>
 
 <body>
@@ -82,7 +141,7 @@
                                     <li><a href="<?= site_url('k_laporan_kepala/penjual_pakan') ?>" class="nav-link">Penjual Pakan Ternak</a></li>
                                     <li><a href="<?= site_url('k_laporan_kepala/data_klinik_hewan') ?>" class="nav-link">Data Klinik Hewan</a></li>
                                     <li><a href="<?= site_url('k_laporan_kepala/penjual_obat_hewan') ?>" class="nav-link">Penjual Obat Hewan</a></li>
-                                    <li><a href="<?= site_url('k_laporan_kepala/data_tpu_rpu') ?>" class="nav-link">Data TPU / RPU</a></li>
+                                    <li><a href="<?= site_url('k_laporan_kepala/data_tpu_rpu') ?>" class="nav-link active">Data TPU / RPU</a></li>
                                     <li><a href="<?= site_url('k_laporan_kepala/demplot_peternakan') ?>" class="nav-link">Demplot Peternakan</a></li>
                                     <li><a href="<?= site_url('k_laporan_kepala/stok_pakan') ?>" class="nav-link">Stok Pakan</a></li>
                                 </ul>
@@ -215,12 +274,7 @@
                         </div>
                     </div>
 
-                    <!-- Search Box -->
-                    <div class="search-box no-print">
-                        <input type="text" id="searchInput" class="form-control" placeholder="Cari data..." style="width: 300px; display: inline-block;">
-                    </div>
-
-                    <!-- Main Table -->
+                    <!-- Main Table (Detail TPU/RPU) -->
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card">
@@ -251,9 +305,44 @@
                         </div>
                     </div>
 
-                    <!-- Pagination -->
-                    <div class="custom-pagination no-print" id="pagination"></div>
-                    <div class="info-data" id="infoData"></div>
+                    <!-- NEW CARD: REKAP TPU/RPU PER KECAMATAN (0-0-0) -->
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header" style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                                    <div class="card-title fw-bold" style="color: #000000 !important;">
+                                        <i class="fas fa-chart-pie me-2" style="color: #000000 !important;"></i>REKAP TPU/RPU PER KECAMATAN
+                                    </div>
+                                    <div class="card-subtitle text-muted">
+                                        Klik angka untuk melihat detail TPU/RPU per kecamatan
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table id="rekapKecamatanTable" class="table table-bordered table-hover w-100">
+                                            <thead>
+                                                <tr>
+                                                    <th width="50" class="text-center">No</th>
+                                                    <th class="text-center">Kecamatan</th>
+                                                    <th class="text-center">Jumlah TPU/RPU</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="rekapTableBody">
+                                                <!-- Data akan diisi oleh JavaScript -->
+                                            </tbody>
+                                            <tfoot id="rekapKecamatanFooter">
+                                                <tr>
+                                                    <td colspan="2" class="text-center"><strong>TOTAL</strong></td>
+                                                    <td class="text-center"><strong>0</strong></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -284,7 +373,6 @@
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
     
-    <!-- Definisi variabel global -->
     <script>
         var base_url = "<?= base_url() ?>";
     </script>

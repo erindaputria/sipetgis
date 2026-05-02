@@ -1,30 +1,42 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-// Include TCPDF library
-require_once(dirname(__FILE__) . '/tcpdf/tcpdf.php');
+// Gunakan path manual ke dompdf
+require_once APPPATH . 'libraries/dompdf/autoload.inc.php';
 
-class Pdf extends TCPDF
-{
-    public function __construct()
-    {
-        parent::__construct();
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
+class Pdf {
+    
+    public $dompdf;
+    
+    public function __construct() {
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $options->set('isRemoteEnabled', true);
+        
+        $this->dompdf = new Dompdf($options);
     }
     
-    // Page header
-    public function Header()
-    {
-        // You can add custom header here if needed
+    public function loadHtml($html) {
+        $this->dompdf->loadHtml($html);
     }
     
-    // Page footer
-    public function Footer()
-    {
-        // Position at 15 mm from bottom
-        $this->SetY(-15);
-        // Set font
-        $this->SetFont('helvetica', 'I', 8);
-        // Page number
-        $this->Cell(0, 10, 'Halaman ' . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+    public function setPaper($size, $orientation) {
+        $this->dompdf->setPaper($size, $orientation);
+    }
+    
+    public function render() {
+        $this->dompdf->render();
+    }
+    
+    public function stream($filename, $options = array()) {
+        $this->dompdf->stream($filename, $options);
+    }
+    
+    public function output() {
+        return $this->dompdf->output();
     }
 }
+?>

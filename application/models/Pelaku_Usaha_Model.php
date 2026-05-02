@@ -10,7 +10,7 @@ class Pelaku_usaha_model extends CI_Model {
         $this->load->database();
     }
     
-    public function get_all() {
+    public function get_all() { 
         $this->db->order_by('nama', 'ASC');
         return $this->db->get($this->table)->result();
     }

@@ -75,7 +75,7 @@
                             <a class="nav-link d-flex align-items-center justify-content-between collapsed" data-bs-toggle="collapse" href="#masterDataSubmenu" role="button" aria-expanded="false">
                                 <div class="d-flex align-items-center"><i class="fas fa-database me-2" style="color: #832706 !important;"></i><span>Master Data</span></div>
                                 <i class="fas fa-chevron-down ms-2" style="color: #832706 !important;"></i>
-                            </a>
+                            </a> 
                             <div class="collapse" id="masterDataSubmenu">
                                 <ul class="list-unstyled ps-4">
                                     <li><a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a></li>
@@ -253,210 +253,28 @@
                     </div>
 
                     <!-- Data Table -->
-                    <div class="card stat-card">
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table id="historyDataTable" class="table table-hover w-100">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Nama Peternak</th>
-                                            <th>Komoditas</th>
-                                            <th>Jumlah Tambah</th>
-                                            <th>Jumlah Kurang</th>
-                                            <th>Koordinat Lokasi</th>
-                                            <th>Tanggal Update</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>BERSATU</td>
-                                            <td>Sapi Potong</td>
-                                            <td><span>5</span> <span>Ekor</span></td>
-                                            <td><span>0</span> <span>Ekor</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="mb-1">-7.2575, 112.7521</div>
-                                                    <button class="btn btn-sm btn-outline-primary-custom" onclick="showMap('Sapi Potong', 'BERSATU', '-7.2575, 112.7521')">
-                                                        <i class="fas fa-map-marker-alt me-1"></i>Lihat Peta
-                                                    </button>
-                                                </div>
-                                            </td>
-                                            <td>22-03-2023</td>
-                                            <td>
-                                                <div class="d-flex gap-1">
-                                                    <button class="btn btn-sm btn-warning-custom" title="Edit Data">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger-custom" title="Hapus Data">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>LUKAH BANUA BARU</td>
-                                            <td>Ayam Ras Petelur</td>
-                                            <td><span>725</span> <span>Ekor</span></td>
-                                            <td><span>0</span> <span>Ekor</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="mb-1 text-muted">-</div>
-                                                    <button class="btn btn-sm btn-outline-secondary-custom" disabled>
-                                                        <i class="fas fa-map-marker-alt me-1"></i>Lihat Peta
-                                                    </button>
-                                                </div>
-                                            </td>
-                                            <td>28-10-2022</td>
-                                            <td>
-                                                <div class="d-flex gap-1">
-                                                    <button class="btn btn-sm btn-warning-custom" title="Edit Data">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger-custom" title="Hapus Data">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Berdikari (Kandang Jaya)</td>
-                                            <td>Ayam Ras Petelur</td>
-                                            <td><span>500</span> <span>Ekor</span></td>
-                                            <td><span>0</span> <span>Ekor</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="mb-1 text-muted">-</div>
-                                                    <button class="btn btn-sm btn-outline-secondary-custom" disabled>
-                                                        <i class="fas fa-map-marker-alt me-1"></i>Lihat Peta
-                                                    </button>
-                                                </div>
-                                            </td>
-                                            <td>27-10-2022</td>
-                                            <td>
-                                                <div class="d-flex gap-1">
-                                                    <button class="btn btn-sm btn-warning-custom" title="Edit Data">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger-custom" title="Hapus Data">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td>Mekar Sari Farm</td>
-                                            <td>Sapi Potong</td>
-                                            <td><span>3</span> <span>Ekor</span></td>
-                                            <td><span>1</span> <span>Ekor</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="mb-1">-7.2650, 112.7475</div>
-                                                    <button class="btn btn-sm btn-outline-primary-custom" onclick="showMap('Sapi Potong', 'Mekar Sari Farm', '-7.2650, 112.7475')">
-                                                        <i class="fas fa-map-marker-alt me-1"></i>Lihat Peta
-                                                    </button>
-                                                </div>
-                                            </td>
-                                            <td>15-02-2023</td>
-                                            <td>
-                                                <div class="d-flex gap-1">
-                                                    <button class="btn btn-sm btn-warning-custom" title="Edit Data">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger-custom" title="Hapus Data">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>5</td>
-                                            <td>Peternak Mandiri</td>
-                                            <td>Ayam Kampung</td>
-                                            <td><span>150</span> <span>Ekor</span></td>
-                                            <td><span>20</span> <span>Ekor</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="mb-1">-7.2500, 112.7600</div>
-                                                    <button class="btn btn-sm btn-outline-primary-custom" onclick="showMap('Ayam Kampung', 'Peternak Mandiri', '-7.2500, 112.7600')">
-                                                        <i class="fas fa-map-marker-alt me-1"></i>Lihat Peta
-                                                    </button>
-                                                </div>
-                                            </td>
-                                            <td>10-01-2023</td>
-                                            <td>
-                                                <div class="d-flex gap-1">
-                                                    <button class="btn btn-sm btn-warning-custom" title="Edit Data">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger-custom" title="Hapus Data">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>6</td>
-                                            <td>Ternak Sejahtera</td>
-                                            <td>Kambing</td>
-                                            <td><span>12</span> <span>Ekor</span></td>
-                                            <td><span>2</span> <span>Ekor</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="mb-1">-7.2550, 112.7550</div>
-                                                    <button class="btn btn-sm btn-outline-primary-custom" onclick="showMap('Kambing', 'Ternak Sejahtera', '-7.2550, 112.7550')">
-                                                        <i class="fas fa-map-marker-alt me-1"></i>Lihat Peta
-                                                    </button>
-                                                </div>
-                                            </td>
-                                            <td>05-03-2023</td>
-                                            <td>
-                                                <div class="d-flex gap-1">
-                                                    <button class="btn btn-sm btn-warning-custom" title="Edit Data">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger-custom" title="Hapus Data">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>7</td>
-                                            <td>Bebek Unggul Farm</td>
-                                            <td>Itik</td>
-                                            <td><span>80</span> <span>Ekor</span></td>
-                                            <td><span>10</span> <span>Ekor</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="mb-1">-7.2600, 112.7500</div>
-                                                    <button class="btn btn-sm btn-outline-primary-custom" onclick="showMap('Itik', 'Bebek Unggul Farm', '-7.2600, 112.7500')">
-                                                        <i class="fas fa-map-marker-alt me-1"></i>Lihat Peta
-                                                    </button>
-                                                </div>
-                                            </td>
-                                            <td>18-02-2023</td>
-                                            <td>
-                                                <div class="d-flex gap-1">
-                                                    <button class="btn btn-sm btn-warning-custom" title="Edit Data">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger-custom" title="Hapus Data">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+<div class="card stat-card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="historyDataTable" class="table table-hover w-100">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Peternak</th>
+                        <th>Komoditas</th>
+                        <th>Jumlah Ternak</th>
+                        <th>Koordinat Lokasi</th>
+                        <th>Tanggal Update</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data akan diisi via AJAX dari database -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
                     <!-- Detail Section (Initially Hidden) -->
                     <div id="detailSection" class="detail-section" style="display: none;">
@@ -556,9 +374,18 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
 
     <!-- Leaflet JS for Maps -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <!-- Custom JS History Data Ternak -->
-    <script src="<?php echo base_url('assets/js/data_history_ternak.js'); ?>"></script>
+<!-- DECLARE BASE_URL - WAJIB! -->
+<script>
+    var base_url = '<?php echo base_url(); ?>';
+    console.log('base_url =', base_url);
+</script>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Custom JS History Data Ternak -->
+<script src="<?php echo base_url('assets/js/data_history_ternak.js'); ?>"></script>
 </body>
 </html>

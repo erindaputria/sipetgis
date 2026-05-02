@@ -21,7 +21,7 @@
                 urls: ["<?php echo base_url('assets/SIPETGIS/assets/css/fonts.min.css'); ?>"]
             },
             active: function() {
-                sessionStorage.fonts = true;
+                sessionStorage.fonts = true; 
             }
         });
     </script>
@@ -240,27 +240,9 @@
 
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label required-field">Nama Petugas</label>
-                                                    <select class="form-control" id="nama_petugas" name="nama_petugas" required>
-                                                        <option value="">Pilih Petugas</option>
-                                                        <option value="Drh. Sunarno Aristono, M.Si">Drh. Sunarno Aristono, M.Si</option>
-                                                        <option value="Drh. Gagat Rahino H S, M.SI">Drh. Gagat Rahino H S, M.SI</option>
-                                                        <option value="Drh. Wafiroh">Drh. Wafiroh</option>
-                                                        <option value="Samsul Arifin">Samsul Arifin</option>
-                                                        <option value="Drh. Arfiandy Noorrahman">Drh. Arfiandy Noorrahman</option>
-                                                        <option value="Drh. Kartika Eka Paksi">Drh. Kartika Eka Paksi</option>
-                                                        <option value="Drh. Romadhony Arif">Drh. Romadhony Arif</option>
-                                                        <option value="Drh. Rinenggo Palupi">Drh. Rinenggo Palupi</option>
-                                                        <option value="Drh. Rieska Nursita">Drh. Rieska Nursita</option>
-                                                        <option value="Drh. Albert Fabio S">Drh. Albert Fabio S</option>
-                                                        <option value="Drh. Rizal Maulana I">Drh. Rizal Maulana I</option>
-                                                        <option value="Drh. Moch Rozali">Drh. Moch Rozali</option>
-                                                        <option value="Drh. Arsanti Arsy">Drh. Arsanti Arsy</option>
-                                                        <option value="Drh. Richa Putri A">Drh. Richa Putri A</option>
-                                                        <option value="Drh. Niken Rahmawati">Drh. Niken Rahmawati</option>
-                                                    </select>
-                                                    <div class="invalid-feedback">Nama petugas harus dipilih</div>
+                                                    <input type="text" class="form-control" id="nama_petugas" name="nama_petugas" placeholder="Masukkan nama petugas" required />          
                                                 </div>
-
+ 
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label required-field">Bantuan Provinsi</label>
                                                     <select class="form-control" id="bantuan_prov" name="bantuan_prov" required>
@@ -444,44 +426,50 @@
                                             </div>
 
                                             <!-- Foto Pengobatan -->
-                                            <div class="row mt-3">
-                                                <div class="col-md-12">
-                                                    <div class="card address-card">
-                                                        <div class="card-header card-header-address" style="border-bottom: 2px solid #832706;">
-                                                            <h5 class="card-title mb-0" style="color: #832706;">
-                                                                <i class="fas fa-camera me-2"></i>FOTO PENGOBATAN
-                                                            </h5>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <div class="row">
-                                                                <div class="col-md-12 mb-3">
-                                                                    <div class="d-flex align-items-start">
-                                                                        <div class="me-3">
-                                                                            <div class="photo-placeholder" id="photoPlaceholder" onclick="document.getElementById('foto_pengobatan').click()">
-                                                                                <div class="text-center">
-                                                                                    <i class="fas fa-camera fa-2x mb-2"></i>
-                                                                                    <div>Klik untuk upload foto</div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <img id="photoPreview" class="photo-preview" alt="Preview Foto" />
-                                                                        </div>
-                                                                        <div class="flex-grow-1">
-                                                                            <input type="file" class="form-control d-none" id="foto_pengobatan" name="foto_pengobatan" accept="image/jpeg, image/jpg, image/png" />
-                                                                            <small class="text-muted d-block mb-2">Upload foto pengobatan (maks. 5MB, format: JPG, PNG)</small>
-                                                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="document.getElementById('foto_pengobatan').click()">
-                                                                                <i class="fas fa-upload me-1"></i>Pilih File
-                                                                            </button>
-                                                                            <button type="button" class="btn btn-outline-danger btn-sm ms-2" id="btnRemovePhoto" style="display: none">
-                                                                                <i class="fas fa-trash me-1"></i>Hapus
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+<div class="row mt-3">
+    <div class="col-md-12">
+        <div class="card address-card">
+            <div class="card-header card-header-address" style="border-bottom: 2px solid #832706;">
+                <h5 class="card-title mb-0" style="color: #832706;">
+                    <i class="fas fa-camera me-2"></i>FOTO PENGOBATAN (Maksimal 5 Foto)
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <div class="d-flex align-items-start">
+                            <div class="me-3">
+                                <div class="multiple-photo-container" id="multiplePhotoContainer">
+                                    <div class="photo-item photo-placeholder" onclick="document.getElementById('foto_pengobatan').click()">
+                                        <div class="text-center">
+                                            <i class="fas fa-camera fa-2x mb-2"></i>
+                                            <div>Klik untuk upload foto</div>
+                                            <small class="text-muted">(Maks. 5 foto)</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="photo-preview-container" id="photoPreviewContainer"></div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <input type="file" class="form-control d-none" id="foto_pengobatan" name="foto_pengobatan[]" accept="image/jpeg, image/jpg, image/png" multiple />
+                                <small class="text-muted d-block mb-2">Upload foto pengobatan (maks. 5MB per file, format: JPG, PNG, maksimal 5 file)</small>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="document.getElementById('foto_pengobatan').click()">
+                                    <i class="fas fa-upload me-1"></i>Pilih File
+                                </button>
+                                <button type="button" class="btn btn-outline-danger btn-sm ms-2" id="btnRemoveAllPhotos" style="display: none">
+                                    <i class="fas fa-trash me-1"></i>Hapus Semua
+                                </button>
+                                <div class="mt-2">
+                                    <small id="photoCountInfo" class="text-muted">0 dari 5 foto dipilih</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
                                             <!-- Submit Button -->
                                             <div class="row mt-4">
@@ -593,13 +581,18 @@
                                                     <td><?php echo htmlspecialchars($data['alamat'] ?? '-'); ?></td>
                                                     <td><?php echo htmlspecialchars($data['kelurahan'] ?? '-'); ?></td>
                                                     <td><?php echo isset($data['tanggal_pengobatan']) ? date('d-m-Y', strtotime($data['tanggal_pengobatan'])) : '-'; ?></td>
-                                                    <td>
-                                                        <?php if (!empty($data['foto_pengobatan'])): ?>
-                                                            <a href="javascript:void(0)" class="foto-link" onclick="showFoto('<?php echo base_url(); ?>uploads/pengobatan/<?php echo $data['foto_pengobatan']; ?>')">
-                                                                <i class="fas fa-image me-1"></i>Lihat
-                                                            </a>
+                                                   <td class="text-center">
+                                                        <?php if (!empty($data['foto_pengobatan'])): 
+                                                            $foto_list = explode(',', $data['foto_pengobatan']);
+                                                            $total_foto = count($foto_list);
+                                                        ?>
+                                                            <button type="button" class="btn btn-sm btn-photo" onclick="lihatFoto('<?= base_url('uploads/pengobatan/') ?>', '<?= htmlspecialchars($data['foto_pengobatan']) ?>')">
+                                                                <i class="fas fa-images me-1"></i> <?= $total_foto ?> Foto
+                                                            </button>
                                                         <?php else: ?>
-                                                            <span class="badge bg-secondary">Tidak Ada</span>
+                                                            <span class="badge-photo-empty">
+                                                                <i class="fas fa-camera-slash me-1"></i> Tidak Ada
+                                                            </span>
                                                         <?php endif; ?>
                                                     </td>
                                                 </tr>

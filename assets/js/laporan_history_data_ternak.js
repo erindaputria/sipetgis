@@ -8,38 +8,38 @@ $(document).ready(function() {
     dataTable = $('#historyTable').DataTable({
         dom: 'Bfrtip',
         buttons: [
-            {
-                extend: 'copy',
-                text: '<i class="fas fa-copy"></i> Copy',
-                className: 'btn btn-sm btn-primary',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend: 'csv',
-                text: '<i class="fas fa-file-csv"></i> CSV',
-                className: 'btn btn-sm btn-success',
-                action: function(e, dt, button, config) {
-                    exportWithParams('csv');
-                }
-            },
+            // {
+            //     extend: 'copy',
+            //     text: '<i class="fas fa-copy"></i> Copy',
+            //     className: 'btn btn-sm btn-primary',
+            //     exportOptions: {
+            //         columns: ':visible'
+            //     }
+            // },
+            // {
+            //     extend: 'csv',
+            //     text: '<i class="fas fa-file-csv"></i> CSV',
+            //     className: 'btn btn-sm btn-success',
+            //     action: function(e, dt, button, config) {
+            //         exportWithParams('csv');
+            //     }
+            // },
             {
                 extend: 'excel',
-                text: '<i class="fas fa-file-excel"></i> Excel',
+                text: '<i class="fas fa-file-excel"></i> Excel', 
                 className: 'btn btn-sm btn-success',
                 action: function(e, dt, button, config) {
                     exportWithParams('excel');
                 }
             },
-            {
-                extend: 'pdf',
-                text: '<i class="fas fa-file-pdf"></i> PDF',
-                className: 'btn btn-sm btn-danger',
-                action: function(e, dt, button, config) {
-                    exportWithParams('pdf');
-                }
-            },
+            // {
+            //     extend: 'pdf',
+            //     text: '<i class="fas fa-file-pdf"></i> PDF',
+            //     className: 'btn btn-sm btn-danger',
+            //     action: function(e, dt, button, config) {
+            //         exportWithParams('pdf');
+            //     }
+            // },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print"></i> Print',

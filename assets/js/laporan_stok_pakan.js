@@ -8,22 +8,22 @@ $(document).ready(function() {
     stokPakanTable = $('#stokPakanTable').DataTable({
         dom: 'Bfrtip',
         buttons: [
-            {
-                extend: 'copy',
-                text: '<i class="fas fa-copy"></i> Copy',
-                className: 'btn btn-sm btn-primary',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend: 'csv',
-                text: '<i class="fas fa-file-csv"></i> CSV',
-                className: 'btn btn-sm btn-success',
-                action: function(e, dt, button, config) {
-                    exportWithParams('csv');
-                }
-            },
+            // {
+            //     extend: 'copy',
+            //     text: '<i class="fas fa-copy"></i> Copy',
+            //     className: 'btn btn-sm btn-primary',
+            //     exportOptions: {
+            //         columns: ':visible'
+            //     } 
+            // },
+            // {
+            //     extend: 'csv',
+            //     text: '<i class="fas fa-file-csv"></i> CSV',
+            //     className: 'btn btn-sm btn-success',
+            //     action: function(e, dt, button, config) {
+            //         exportWithParams('csv');
+            //     }
+            // },
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Excel',
@@ -32,14 +32,14 @@ $(document).ready(function() {
                     exportWithParams('excel');
                 }
             },
-            {
-                extend: 'pdf',
-                text: '<i class="fas fa-file-pdf"></i> PDF',
-                className: 'btn btn-sm btn-danger',
-                action: function(e, dt, button, config) {
-                    exportWithParams('pdf');
-                }
-            },
+            // {
+            //     extend: 'pdf',
+            //     text: '<i class="fas fa-file-pdf"></i> PDF',
+            //     className: 'btn btn-sm btn-danger',
+            //     action: function(e, dt, button, config) {
+            //         exportWithParams('pdf');
+            //     }
+            // },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print"></i> Print',
@@ -71,58 +71,50 @@ $(document).ready(function() {
         scrollX: true
     });
     
+    // ========== LANGSUNG LOAD SEMUA DATA SAAT HALAMAN DIBUKA ==========
+    loadAllData();
+    
     $("#btnFilter").click(function() {
-        var tahun = $("#filterTahun").val();
-        if(tahun) {
-            loadData();
+        currentData.tahun = $("#filterTahun").val();
+        currentData.demplot = $("#filterDemplot").val();
+        
+        if(currentData.tahun === '' || currentData.tahun === 'semua') {
+            loadAllData();
         } else {
-            alert("Silakan pilih tahun terlebih dahulu!");
+            loadDataWithFilter();
         }
     });
     
     $("#btnReset").click(function() {
         $("#filterTahun").val('');
         $("#filterDemplot").val('semua');
-        $("#reportTitle").html('DATA DETAIL STOK PAKAN DEMPLOT PETERNAKAN');
-        $("#reportSubtitle").html('Silakan pilih tahun terlebih dahulu');
-        stokPakanTable.clear().draw();
-        stokPakanTable.row.add(['-', 'Silakan pilih filter untuk menampilkan data', '-', '-', '-', '-', '-', '-', '-', '-']);
-        stokPakanTable.draw();
-        $("#tableFooter").html('');
-    });
-    
-    $("#btnExport").click(function() {
-        var tahun = $("#filterTahun").val();
-        var demplot = $("#filterDemplot").val();
         
-        if(!tahun) {
-            alert("Silakan pilih tahun terlebih dahulu!");
-            return;
-        }
+        currentData = {
+            tahun: '',
+            demplot: 'semua'
+        };
         
-        window.location.href = base_url + "laporan_stok_pakan/export_excel?tahun=" + encodeURIComponent(tahun) + "&demplot=" + encodeURIComponent(demplot);
+        loadAllData();
     });
     
     $("#refreshBtn").click(function() {
-        var tahun = $("#filterTahun").val();
-        if(tahun) {
-            loadData();
+        if(currentData.tahun && currentData.tahun !== '' && currentData.tahun !== 'semua') {
+            loadDataWithFilter();
         } else {
-            alert("Silakan pilih tahun terlebih dahulu!");
+            loadAllData();
         }
     });
 });
 
 var stokPakanTable = null;
+var currentData = {
+    tahun: '',
+    demplot: 'semua'
+};
 
 function exportWithParams(format) {
-    var tahun = $("#filterTahun").val();
-    var demplot = $("#filterDemplot").val();
-    
-    if(!tahun) {
-        alert("Silakan pilih tahun terlebih dahulu!");
-        return;
-    }
+    var tahun = currentData.tahun || 'all';
+    var demplot = currentData.demplot || 'semua';
     
     var url = base_url + 'laporan_stok_pakan/export_' + format;
     url += "?tahun=" + encodeURIComponent(tahun);
@@ -134,7 +126,6 @@ function exportWithParams(format) {
 function printWithCurrentData() {
     var title = $('#reportTitle').html();
     var subtitle = $('#reportSubtitle').html();
-    var tableHtml = $('#stokPakanTable').clone();
     
     var printWindow = window.open('', '_blank');
     printWindow.document.write('<html><head><title>Laporan Stok Pakan</title>');
@@ -147,6 +138,8 @@ function printWithCurrentData() {
     printWindow.document.write('th, td { border: 1px solid #000; padding: 8px; }');
     printWindow.document.write('th { background-color: #f2f2f2; }');
     printWindow.document.write('.jenis-pakan { background-color: #fef3ef; color: #832706; padding: 2px 8px; border-radius: 12px; }');
+    printWindow.document.write('.positive-value { color: #832706 !important; font-weight: bold; }');
+    printWindow.document.write('.zero-value { color: #000000 !important; }');
     printWindow.document.write('.total-row { background-color: #e8f5e9; font-weight: bold; }');
     printWindow.document.write('@media print { .no-print { display: none; } }');
     printWindow.document.write('</style>');
@@ -170,33 +163,21 @@ function printWithCurrentData() {
     printWindow.print();
 }
 
-function loadData() {
-    var tahun = $("#filterTahun").val();
-    var demplotFilter = $("#filterDemplot").val();
-    
-    if(!tahun || tahun === '') {
-        alert("Silakan pilih tahun terlebih dahulu!");
-        return;
-    }
-    
+function loadAllData() {
     $("#loadingOverlay").fadeIn();
     
-    var demplotText = (demplotFilter && demplotFilter !== 'semua') ? $('#filterDemplot option:selected').text() : 'Seluruh Demplot';
-    $("#reportTitle").html('DATA DETAIL STOK PAKAN DEMPLOT PETERNAKAN TAHUN ' + tahun);
-    $("#reportSubtitle").html(demplotText);
-    
     $.ajax({
-        url: base_url + 'laporan_stok_pakan/get_data',
+        url: base_url + 'laporan_stok_pakan/get_all_data',
         type: "POST",
-        data: {
-            tahun: tahun,
-            demplot: demplotFilter
-        },
         dataType: "json",
         success: function(response) {
+            $("#reportTitle").html('DATA DETAIL STOK PAKAN DEMPLOT PETERNAKAN');
+            $("#reportSubtitle").html('Kota Surabaya - Seluruh Data');
+            
+            // Update tabel detail
             stokPakanTable.clear().draw();
             
-            if(response.data && response.data.length > 0) {
+            if(response.status === 'success' && response.data && response.data.length > 0) {
                 var totalStokAwal = 0;
                 var totalStokMasuk = 0;
                 var totalStokKeluar = 0;
@@ -206,10 +187,18 @@ function loadData() {
                 for (var i = 0; i < response.data.length; i++) {
                     var item = response.data[i];
                     
-                    totalStokAwal += parseInt(item.stok_awal) || 0;
-                    totalStokMasuk += parseInt(item.stok_masuk) || 0;
-                    totalStokKeluar += parseInt(item.stok_keluar) || 0;
-                    totalStokAkhir += parseInt(item.stok_akhir) || 0;
+                    var stokAwal = parseInt(item.stok_awal) || 0;
+                    var stokMasuk = parseInt(item.stok_masuk) || 0;
+                    var stokKeluar = parseInt(item.stok_keluar) || 0;
+                    var stokAkhir = parseInt(item.stok_akhir) || 0;
+                    
+                    totalStokAwal += stokAwal;
+                    totalStokMasuk += stokMasuk;
+                    totalStokKeluar += stokKeluar;
+                    totalStokAkhir += stokAkhir;
+                    
+                    var kelasAwal = stokAwal > 0 ? 'positive-value' : 'zero-value';
+                    var kelasAkhir = stokAkhir > 0 ? 'positive-value' : 'zero-value';
                     
                     var namaDemplot = (item.nama_demplot && item.nama_demplot !== 'null') ? item.nama_demplot : '-';
                     var jenisPakan = item.jenis_pakan || '-';
@@ -222,10 +211,10 @@ function loadData() {
                         '<span class="nama-demplot">' + escapeHtml(namaDemplot) + '</span>',
                         '<span class="jenis-pakan">' + escapeHtml(jenisPakan) + '</span>',
                         '<span class="merk-pakan">' + escapeHtml(merkPakan) + '</span>',
-                        '<span class="stok-awal">' + formatNumber(item.stok_awal) + ' kg</span>',
-                        '<span class="stok-masuk">+' + formatNumber(item.stok_masuk) + ' kg</span>',
-                        '<span class="stok-keluar">-' + formatNumber(item.stok_keluar) + ' kg</span>',
-                        '<span class="stok-akhir">' + formatNumber(item.stok_akhir) + ' kg</span>',
+                        '<span class="' + kelasAwal + '">' + formatNumber(stokAwal) + ' kg</span>',
+                        '<span class="positive-value">+' + formatNumber(stokMasuk) + ' kg</span>',
+                        '<span class="zero-value">-' + formatNumber(stokKeluar) + ' kg</span>',
+                        '<span class="' + kelasAkhir + '">' + formatNumber(stokAkhir) + ' kg</span>',
                         '<span class="keterangan">' + escapeHtml(keterangan) + '</span>'
                     ]);
                     no++;
@@ -234,19 +223,119 @@ function loadData() {
                 stokPakanTable.draw();
                 
                 var totalTransaksi = response.data.length;
-                var footerHtml = '<tr class="total-row">' +
-                    '<td colspan="5" style="text-align: center;"><strong>TOTAL KESELURUHAN</strong></td>' +
-                    '<td><strong>' + formatNumber(totalStokAwal) + ' kg</strong></td>' +
-                    '<td><strong>' + formatNumber(totalStokMasuk) + ' kg</strong></td>' +
-                    '<td><strong>' + formatNumber(totalStokKeluar) + ' kg</strong></td>' +
-                    '<td><strong>' + formatNumber(totalStokAkhir) + ' kg</strong></td>' +
-                    '<td><strong>' + totalTransaksi + ' Transaksi</strong></td>' +
-                    '</tr>';
+                var footerHtml = '<tr class="total-row" style="background-color: #e8f5e9; font-weight: bold;">' +
+                    '<td colspan="5" align="center"><strong>TOTAL KESELURUHAN</strong></td>' +
+                    '<td align="right"><strong>' + formatNumber(totalStokAwal) + ' kg</strong></td>' +
+                    '<td align="right"><strong>' + formatNumber(totalStokMasuk) + ' kg</strong></td>' +
+                    '<td align="right"><strong>' + formatNumber(totalStokKeluar) + ' kg</strong></td>' +
+                    '<td align="right"><strong>' + formatNumber(totalStokAkhir) + ' kg</strong></td>' +
+                    '<td align="center"><strong>' + formatNumber(totalTransaksi) + ' Transaksi</strong></td>' +
+                    '</table>';
                 $("#tableFooter").html(footerHtml);
+                $("#tableFooter").show();
             } else {
                 stokPakanTable.row.add(['1', 'Tidak ada data', '-', '-', '-', '-', '-', '-', '-', '-']);
                 stokPakanTable.draw();
-                $("#tableFooter").html('');
+                $("#tableFooter").hide();
+            }
+            
+            // Set current data untuk export
+            currentData.tahun = '';
+            currentData.demplot = 'semua';
+            
+            $("#loadingOverlay").fadeOut();
+        },
+        error: function(xhr, status, error) {
+            console.error("Error:", error);
+            alert("Gagal memuat data. Silakan coba lagi.");
+            $("#loadingOverlay").fadeOut();
+        }
+    });
+}
+
+function loadDataWithFilter() {
+    var tahun = currentData.tahun;
+    var demplot = currentData.demplot;
+    
+    $("#loadingOverlay").fadeIn();
+    
+    $.ajax({
+        url: base_url + 'laporan_stok_pakan/get_data',
+        type: "POST",
+        data: {
+            tahun: tahun,
+            demplot: demplot
+        },
+        dataType: "json",
+        success: function(response) {
+            var tahunText = 'TAHUN ' + tahun;
+            var demplotText = (demplot && demplot !== 'semua') ? demplot : 'Seluruh Demplot';
+            $("#reportTitle").html('DATA DETAIL STOK PAKAN DEMPLOT PETERNAKAN ' + tahunText);
+            $("#reportSubtitle").html(demplotText);
+            
+            // Update tabel detail
+            stokPakanTable.clear().draw();
+            
+            if(response.data && response.data.length > 0) {
+                var totalStokAwal = 0;
+                var totalStokMasuk = 0;
+                var totalStokKeluar = 0;
+                var totalStokAkhir = 0;
+                var no = 1;
+                
+                for (var i = 0; i < response.data.length; i++) {
+                    var item = response.data[i];
+                    
+                    var stokAwal = parseInt(item.stok_awal) || 0;
+                    var stokMasuk = parseInt(item.stok_masuk) || 0;
+                    var stokKeluar = parseInt(item.stok_keluar) || 0;
+                    var stokAkhir = parseInt(item.stok_akhir) || 0;
+                    
+                    totalStokAwal += stokAwal;
+                    totalStokMasuk += stokMasuk;
+                    totalStokKeluar += stokKeluar;
+                    totalStokAkhir += stokAkhir;
+                    
+                    var kelasAwal = stokAwal > 0 ? 'positive-value' : 'zero-value';
+                    var kelasAkhir = stokAkhir > 0 ? 'positive-value' : 'zero-value';
+                    
+                    var namaDemplot = (item.nama_demplot && item.nama_demplot !== 'null') ? item.nama_demplot : '-';
+                    var jenisPakan = item.jenis_pakan || '-';
+                    var merkPakan = item.merk_pakan || '-';
+                    var keterangan = item.keterangan || '-';
+                    
+                    stokPakanTable.row.add([
+                        no,
+                        formatDate(item.tanggal),
+                        '<span class="nama-demplot">' + escapeHtml(namaDemplot) + '</span>',
+                        '<span class="jenis-pakan">' + escapeHtml(jenisPakan) + '</span>',
+                        '<span class="merk-pakan">' + escapeHtml(merkPakan) + '</span>',
+                        '<span class="' + kelasAwal + '">' + formatNumber(stokAwal) + ' kg</span>',
+                        '<span class="positive-value">+' + formatNumber(stokMasuk) + ' kg</span>',
+                        '<span class="zero-value">-' + formatNumber(stokKeluar) + ' kg</span>',
+                        '<span class="' + kelasAkhir + '">' + formatNumber(stokAkhir) + ' kg</span>',
+                        '<span class="keterangan">' + escapeHtml(keterangan) + '</span>'
+                    ]);
+                    no++;
+                }
+                
+                stokPakanTable.draw();
+                
+                var totalTransaksi = response.data.length;
+                var footerHtml = '<tr class="total-row" style="background-color: #e8f5e9; font-weight: bold;">' +
+                    '<td colspan="5" align="center"><strong>TOTAL KESELURUHAN</strong></td>' +
+                    '<td align="right"><strong>' + formatNumber(totalStokAwal) + ' kg</strong></td>' +
+                    '<td align="right"><strong>' + formatNumber(totalStokMasuk) + ' kg</strong></td>' +
+                    '<td align="right"><strong>' + formatNumber(totalStokKeluar) + ' kg</strong></td>' +
+                    '<td align="right"><strong>' + formatNumber(totalStokAkhir) + ' kg</strong></td>' +
+                    '<td align="center"><strong>' + formatNumber(totalTransaksi) + ' Transaksi</strong></td>' +
+                    '</tr>';
+                $("#tableFooter").html(footerHtml);
+                $("#tableFooter").show();
+            } else {
+                stokPakanTable.row.add(['1', 'Tidak ada data', '-', '-', '-', '-', '-', '-', '-', '-']);
+                stokPakanTable.draw();
+                $("#tableFooter").hide();
             }
             
             $("#loadingOverlay").fadeOut();

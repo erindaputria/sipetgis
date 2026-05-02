@@ -9,12 +9,10 @@ let allData = [];
 
 // ================ FUNGSI AMBIL DATA DARI SERVER ================
 function loadDataFromServer() {
-    $("#dataTableBody").html('<tr><td colspan="9" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><br>Memuat data...</td></tr>');
-    
-    var apiUrl = base_url + 'index.php/data_penjual_pakan/get_all_data';
+    $("#dataTableBody").html('<td><td colspan="9" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><br>Memuat data...</td></tr>');
     
     $.ajax({
-        url: apiUrl,
+        url: base_url + 'index.php/data_penjual_pakan/get_all_data',
         type: 'GET',
         dataType: 'json',
         success: function(response) {
@@ -53,7 +51,7 @@ function loadDataFromServer() {
     });
 }
 
-// ================ RENDER TABLE ================
+// ================ RENDER TABLE (HANYA EXCEL & PRINT AKTIF) ================
 function renderTable(data) {
     var html = "";
     if (data && data.length > 0) {
@@ -70,7 +68,6 @@ function renderTable(data) {
             
             var produkCount = (item.produk && Array.isArray(item.produk)) ? item.produk.length : 0;
             
-            // TELEPON WARNA HITAM (tanpa warna hijau)
             var teleponDisplay = item.telepon ? 
                 '<a href="tel:' + item.telepon + '" class="telp-link" style="color: #212529; text-decoration: none;">' + item.telepon + '</a>' : 
                 '<span class="text-muted">-</span>';
@@ -93,7 +90,7 @@ function renderTable(data) {
                 '</tr>';
         });
     } else {
-        html = '<tr><td colspan="9" class="text-center py-5"><i class="fas fa-store-slash fa-3x text-muted mb-3 d-block"></i>Tidak ada data penjual pakan ternak</td><td style="display:none"><td><td style="display:none"><td><td style="display:none"><td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td></tr>';
+        html = '<tr><td colspan="9" class="text-center py-5"><i class="fas fa-store-slash fa-3x text-muted mb-3 d-block"></i>Tidak ada data penjual pakan ternak</td></tr>';
     }
     
     $("#dataTableBody").html(html);
@@ -102,129 +99,43 @@ function renderTable(data) {
         dataTable.destroy();
     }
     
+    // DataTable dengan buttons (Copy, CSV, PDF dikomentari - HANYA EXCEL & PRINT)
     dataTable = $("#penjualPakanTable").DataTable({
         dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>' +
              '<"row"<"col-sm-12"tr>>' +
              '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
         buttons: [
-            {
-                extend: 'copy',
-                text: '<i class="fas fa-copy"></i> Copy',
-                className: 'btn btn-sm btn-primary',
-                exportOptions: { columns: [0,1,2,3,4,5,7] }
-            },
-            {
-                extend: 'csv',
-                text: '<i class="fas fa-file-csv"></i> CSV',
-                className: 'btn btn-sm btn-success',
-                exportOptions: { columns: [0,1,2,3,4,5,7] }
-            },
+            // {
+            //     extend: 'copy',
+            //     text: '<i class="fas fa-copy"></i> Copy',
+            //     className: 'btn btn-sm btn-primary',
+            //     exportOptions: { columns: [0,1,2,3,4,5,7] }
+            // },
+            // {
+            //     extend: 'csv',
+            //     text: '<i class="fas fa-file-csv"></i> CSV',
+            //     className: 'btn btn-sm btn-success',
+            //     exportOptions: { columns: [0,1,2,3,4,5,7] }
+            // },
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Excel',
                 className: 'btn btn-sm btn-success',
                 exportOptions: { columns: [0,1,2,3,4,5,7] }
             },
-            {
-                extend: 'pdf',
-                text: '<i class="fas fa-file-pdf"></i> PDF',
-                className: 'btn btn-sm btn-danger',
-                exportOptions: { columns: [0,1,2,3,4,5,7] },
-                customize: function(doc) {
-                    doc.content.splice(0, 1);
-                    var currentDate = new Date();
-                    var formattedDate = currentDate.toLocaleDateString('id-ID');
-                    doc.content.unshift({
-                        text: 'LAPORAN DATA PENJUAL PAKAN TERNAK',
-                        style: 'title',
-                        alignment: 'center',
-                        margin: [0, 0, 0, 5],
-                        fontSize: 14,
-                        bold: true
-                    });
-                    doc.content.unshift({
-                        text: 'DINAS PETERNAKAN KOTA SURABAYA',
-                        style: 'subtitle',
-                        alignment: 'center',
-                        margin: [0, 0, 0, 3],
-                        fontSize: 12
-                    });
-                    doc.content.unshift({
-                        text: 'PEMERINTAH KOTA SURABAYA',
-                        style: 'header',
-                        alignment: 'center',
-                        margin: [0, 0, 0, 15],
-                        fontSize: 10
-                    });
-                    doc.content.push({
-                        text: 'Tanggal Cetak: ' + formattedDate,
-                        style: 'date',
-                        alignment: 'center',
-                        margin: [0, 15, 0, 0],
-                        fontSize: 9,
-                        color: '#666666'
-                    });
-                    if (doc.content[3] && doc.content[3].table) {
-                        var rows = doc.content[3].table.body;
-                        for (var i = 0; i < rows[0].length; i++) {
-                            rows[0][i].fillColor = '#832706';
-                            rows[0][i].color = '#ffffff';
-                            rows[0][i].bold = true;
-                            rows[0][i].alignment = 'center';
-                        }
-                        for (var i = 1; i < rows.length; i++) {
-                            for (var j = 0; j < rows[i].length; j++) {
-                                rows[i][j].alignment = 'center';
-                                rows[i][j].color = '#333333';
-                                rows[i][j].fontSize = 9;
-                            }
-                        }
-                    }
-                    doc.pageMargins = [20, 60, 20, 40];
-                    doc.header = {
-                        text: 'SIPETGIS - Sistem Informasi Peternakan Kota Surabaya',
-                        alignment: 'center',
-                        fontSize: 8,
-                        color: '#666666',
-                        margin: [20, 15, 20, 0]
-                    };
-                    doc.footer = function(currentPage, pageCount) {
-                        return {
-                            text: 'Halaman ' + currentPage + ' dari ' + pageCount,
-                            alignment: 'center',
-                            fontSize: 8,
-                            color: '#666666',
-                            margin: [20, 0, 20, 15]
-                        };
-                    };
-                }
-            },
+            // {
+            //     extend: 'pdf',
+            //     text: '<i class="fas fa-file-pdf"></i> PDF',
+            //     className: 'btn btn-sm btn-danger',
+            //     exportOptions: { columns: [0,1,2,3,4,5,7] }
+            // },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print"></i> Print',
                 className: 'btn btn-sm btn-info',
                 exportOptions: { columns: [0,1,2,3,4,5,7] },
-                customize: function(win) {
-                    $(win.document.body).find('table').addClass('print-table');
-                    $(win.document.body).find('table thead th').css({
-                        'background-color': '#832706',
-                        'color': 'white',
-                        'padding': '10px'
-                    });
-                    $(win.document.body).prepend(
-                        '<div style="text-align: center; margin-bottom: 20px;">' +
-                        '<h2 style="color: #832706; margin-bottom: 5px;">LAPORAN DATA PENJUAL PAKAN TERNAK</h2>' +
-                        '<p style="margin: 0;">Dinas Peternakan Kota Surabaya</p>' +
-                        '<p style="margin: 0;">Pemerintah Kota Surabaya</p>' +
-                        '<hr style="margin: 15px 0;">' +
-                        '<p>Tanggal Cetak: ' + new Date().toLocaleDateString('id-ID') + '</p>' +
-                        '</div>'
-                    );
-                    $(win.document.body).append(
-                        '<div style="text-align: center; margin-top: 30px; font-size: 10px; color: #666;">' +
-                        'SIPETGIS - Sistem Informasi Peternakan Kota Surabaya' +
-                        '</div>'
-                    );
+                action: function(e, dt, button, config) {
+                    printWithCurrentData();
                 }
             }
         ],
@@ -243,9 +154,8 @@ function renderTable(data) {
                 previous: "Sebelumnya"
             }
         },
-        pageLength: 10,
-        lengthChange: true,
-        lengthMenu: [5, 10, 25, 50, 100],
+        pageLength: 15,
+        lengthChange: false,
         scrollX: true,
         responsive: true,
         columnDefs: [
@@ -254,6 +164,110 @@ function renderTable(data) {
         ],
         order: [[0, 'asc']]
     });
+}
+
+// ================ FUNCTION PRINT RAPI (SAMA PERSIS PELAKU USAHA) ================
+function printWithCurrentData() {
+    var printWindow = window.open('', '_blank');
+    
+    // Ambil data dari tabel yang tampil di layar
+    var table = $('#penjualPakanTable').DataTable();
+    var rows = table.rows({ search: 'applied' }).data();
+    
+    var totalData = rows.length;
+    
+    // Current date
+    var currentDate = new Date();
+    var formattedDateTime = currentDate.toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    }) + ' ' + currentDate.toLocaleTimeString('id-ID');
+    
+    printWindow.document.write('<html><head><title>Laporan Data Penjual Pakan Ternak</title>');
+    printWindow.document.write('<style>');
+    printWindow.document.write('body { font-family: Arial, sans-serif; margin: 20px; }');
+    printWindow.document.write('.header { text-align: center; margin-bottom: 20px; }');
+    printWindow.document.write('.header h2 { margin: 0; color: #000000; }');
+    printWindow.document.write('.header h3 { margin: 5px 0; color: #000000; }');
+    printWindow.document.write('.header p { margin: 5px 0; color: #000000; }');
+    printWindow.document.write('table { width: 100%; border-collapse: collapse; margin-top: 20px; }');
+    printWindow.document.write('th, td { border: 1px solid #000; padding: 8px; }');
+    printWindow.document.write('th { background-color: #832706; color: #000000; text-align: center; }');
+    printWindow.document.write('td { color: #000000; }');
+    printWindow.document.write('.total-row { background-color: #e8f5e9; font-weight: bold; }');
+    printWindow.document.write('.total-row td { color: #000000; }');
+    printWindow.document.write('.footer-note { margin-top: 30px; font-size: 10px; color: #000000; text-align: center; }');
+    printWindow.document.write('@media print { .no-print { display: none; } }');
+    printWindow.document.write('</style>');
+    printWindow.document.write('</head><body>');
+    
+    // Header Laporan
+    printWindow.document.write('<div class="header">');
+    printWindow.document.write('<h2>LAPORAN DATA PENJUAL PAKAN TERNAK</h2>');
+    printWindow.document.write('<h3>DINAS KETAHANAN PANGAN DAN PERTANIAN</h3>');
+    printWindow.document.write('<h3>KOTA SURABAYA</h3>');
+    printWindow.document.write('<hr>');
+    printWindow.document.write('<p>Tanggal Cetak: ' + formattedDateTime + '</p>');
+    printWindow.document.write('</div>');
+    
+    // Tabel Data untuk Print
+    printWindow.document.write('<table>');
+    printWindow.document.write('<thead>');
+    printWindow.document.write('<tr>');
+    printWindow.document.write('<th width="40">No</th>');
+    printWindow.document.write('<th>Nama Toko</th>');
+    printWindow.document.write('<th>Pemilik</th>');
+    printWindow.document.write('<th>Kecamatan</th>');
+    printWindow.document.write('<th>Alamat</th>');
+    printWindow.document.write('<th>Telepon</th>');
+    printWindow.document.write('<th>Status</th>');
+    printWindow.document.write('</thead>');
+    printWindow.document.write('<tbody>');
+    
+    // Loop data dari tabel
+    for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        printWindow.document.write('<tr>');
+        printWindow.document.write('<td align="center">' + (i + 1) + '</td>');
+        printWindow.document.write('<td align="left">' + stripHtml(row[1] || '-') + '</td>');
+        printWindow.document.write('<td align="left">' + stripHtml(row[2] || '-') + '</td>');
+        printWindow.document.write('<td align="left">' + stripHtml(row[3] || '-') + '</td>');
+        printWindow.document.write('<td align="left">' + stripHtml(row[4] || '-') + '</td>');
+        printWindow.document.write('<td align="center">' + stripHtml(row[5] || '-') + '</td>');
+        printWindow.document.write('<td align="center">' + stripHtml(row[7] || '-') + '</td>');
+        printWindow.document.write('</tr>');
+    }
+    
+    // Total row
+    printWindow.document.write('<tr class="total-row">');
+    printWindow.document.write('<td colspan="6" align="center"><strong>TOTAL KESELURUHAN</strong></td>');
+    printWindow.document.write('<td align="center"><strong>' + formatNumber(totalData) + ' Toko</strong></td>');
+    printWindow.document.write('</tr>');
+    
+    printWindow.document.write('</tbody>');
+    printWindow.document.write('<tr>');
+    
+    // Footer Note
+    printWindow.document.write('<div class="footer-note">');
+    printWindow.document.write('SIPETGIS - Sistem Informasi Peternakan Kota Surabaya');
+    printWindow.document.write('</div>');
+    
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
+}
+
+function formatNumber(num) {
+    if (num === null || num === undefined || num === 0) return '0';
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+function stripHtml(html) {
+    if (!html) return '-';
+    var tmp = document.createElement('DIV');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '-';
 }
 
 function truncateText(text, maxLength) {

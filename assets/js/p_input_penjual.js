@@ -1,5 +1,3 @@
-
-
 $(document).ready(function() {
     // Set today's date as default
     const today = new Date().toISOString().split('T')[0];
@@ -32,17 +30,7 @@ $(document).ready(function() {
         responsive: true,
         dom: 'Bfrtip',
         buttons: [
-            { extend: 'copy', text: '<i class="fas fa-copy"></i> Copy', className: 'btn btn-sm btn-primary' },
-            { extend: 'csv', text: '<i class="fas fa-file-csv"></i> CSV', className: 'btn btn-sm btn-success' },
             { extend: 'excel', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-sm btn-success' },
-            { 
-                extend: 'pdf', 
-                text: '<i class="fas fa-file-pdf"></i> PDF', 
-                className: 'btn btn-sm btn-danger',
-                action: function(e, dt, button, config) {
-                    printWithCurrentData();
-                }
-            },
             { 
                 extend: 'print', 
                 text: '<i class="fas fa-print"></i> Print', 
@@ -70,7 +58,7 @@ $(document).ready(function() {
     });
 
     // Cancel Button
-    $('#btnCancel').click(function() {
+    $('#btnCancel').click(function() { 
         resetForm();
         $('#formContainer').removeClass('show');
         $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT DATA PENJUAL');
@@ -280,7 +268,7 @@ $(document).ready(function() {
     };
 });
 
-// Fungsi Print/PDF - SAMA PERSIS DENGAN LAPORAN_PENGOBATAN
+// Fungsi Print/PDF - Menghapus kolom foto saat ekspor
 function printWithCurrentData() {
     var title = $('#reportTitle').length ? $('#reportTitle').html() : 'DATA PENJUAL';
     var subtitle = $('#reportSubtitle').length ? $('#reportSubtitle').html() : 'Kota Surabaya';
@@ -309,6 +297,15 @@ function printWithCurrentData() {
     $(tableContent).find('.dataTables_length').remove();
     $(tableContent).find('.dataTables_info').remove();
     $(tableContent).find('.dataTables_paginate').remove();
+    
+    // HAPUS KOLOM FOTO (kolom terakhir)
+    $(tableContent).find('thead tr').each(function() {
+        $(this).find('th:last-child').remove();
+    });
+    
+    $(tableContent).find('tbody tr').each(function() {
+        $(this).find('td:last-child').remove();
+    });
     
     printWindow.document.write('<div class="header">');
     printWindow.document.write('<h2>' + title + '</h2>');

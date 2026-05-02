@@ -263,6 +263,11 @@
                                                     <input type="text" class="form-control" id="merk_pakan" name="merk_pakan" placeholder="Masukkan merk pakan" required />
                                                     <div class="invalid-feedback">Merk pakan harus diisi</div>
                                                 </div>
+
+                                                <div class="col-md-12 mb-3">
+                                                    <label class="form-label required-field">Nama Petugas</label>
+                                                    <input type="text" class="form-control" id="nama_petugas" name="nama_petugas" placeholder="Masukkan nama petugas" required />          
+                                                </div>
                                             </div>
 
                                             <!-- Data Stok Section -->
@@ -373,10 +378,6 @@
                                         <option selected value="all">Semua Periode</option>
                                         <option value="2026">Tahun 2026</option>
                                         <option value="2025">Tahun 2025</option>
-                                        <option value="2024">Tahun 2024</option>
-                                        <option value="2023">Tahun 2023</option>
-                                        <option value="2022">Tahun 2022</option>
-                                        <option value="2021">Tahun 2021</option>
                                     </select>
                                 </div>
                             </div>

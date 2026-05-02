@@ -12,7 +12,7 @@
 /* Logo */
 .sipetgis-logo {
     color: var(--primary) !important;
-    font-weight: 800;
+    font-weight: 800; 
     font-size: 24px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     letter-spacing: 0.5px;
@@ -523,3 +523,4 @@ table.dataTable tbody tr:hover {
         margin-top: 10px;
     }
 }
+

@@ -9,34 +9,35 @@ class Layanan_klinik extends CI_Controller {
         $this->load->library('session');
         $this->load->library('form_validation');
         $this->load->helper('security');
+        
+        // Cek login
+        if(!$this->session->userdata('logged_in')) {
+            redirect('login');
+        }
     }
     
     public function index() {
         $data['layanan_klinik'] = $this->Layanan_klinik_model->get_all();
+        $data['title'] = 'Master Layanan Klinik';
         $this->load->view('admin/layanan_klinik', $data);
     }
     
     public function simpan() {
-        // Validasi input
         $this->form_validation->set_rules('nama_layanan', 'Nama Layanan', 'required|min_length[3]|max_length[100]');
         
         if ($this->form_validation->run() == FALSE) {
-            $errors = validation_errors();
+            $errors = validation_errors(); 
             $this->session->set_flashdata('error', $errors);
             redirect('layanan_klinik');
         }
         
-        // Cek nama layanan sudah ada atau belum
         $nama_layanan = $this->input->post('nama_layanan');
         if ($this->Layanan_klinik_model->check_nama($nama_layanan)) {
             $this->session->set_flashdata('error', 'Nama layanan sudah terdaftar');
             redirect('layanan_klinik');
         }
         
-        $data = array(
-            'nama_layanan' => $nama_layanan
-        );
-        
+        $data = array('nama_layanan' => $nama_layanan);
         $result = $this->Layanan_klinik_model->insert($data);
         
         if ($result) {
@@ -56,7 +57,6 @@ class Layanan_klinik extends CI_Controller {
             redirect('layanan_klinik');
         }
         
-        // Validasi input
         $this->form_validation->set_rules('nama_layanan', 'Nama Layanan', 'required|min_length[3]|max_length[100]');
         
         if ($this->form_validation->run() == FALSE) {
@@ -65,7 +65,6 @@ class Layanan_klinik extends CI_Controller {
             redirect('layanan_klinik');
         }
         
-        // Cek nama layanan sudah ada untuk data lain
         $nama_layanan = $this->input->post('nama_layanan');
         $existing = $this->Layanan_klinik_model->check_nama_except($nama_layanan, $id);
         if ($existing) {
@@ -73,10 +72,7 @@ class Layanan_klinik extends CI_Controller {
             redirect('layanan_klinik');
         }
         
-        $data = array(
-            'nama_layanan' => $nama_layanan
-        );
-        
+        $data = array('nama_layanan' => $nama_layanan);
         $result = $this->Layanan_klinik_model->update($id, $data);
         
         if ($result) {
@@ -105,3 +101,4 @@ class Layanan_klinik extends CI_Controller {
         redirect('layanan_klinik');
     }
 }
+?>

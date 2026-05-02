@@ -15,7 +15,7 @@ class P_input_pemotongan_unggas_model extends CI_Model {
      */
     public function save_pemotongan($data) {
         $this->db->insert($this->table, $data);
-        return $this->db->insert_id();
+        return $this->db->insert_id(); 
     }
     
     /** 

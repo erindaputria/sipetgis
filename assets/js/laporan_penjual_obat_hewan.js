@@ -8,22 +8,22 @@ $(document).ready(function() {
     obatHewanTable = $('#obatHewanTable').DataTable({
         dom: 'Bfrtip',
         buttons: [
-            {
-                extend: 'copy',
-                text: '<i class="fas fa-copy"></i> Copy',
-                className: 'btn btn-sm btn-primary',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend: 'csv',
-                text: '<i class="fas fa-file-csv"></i> CSV',
-                className: 'btn btn-sm btn-success',
-                action: function(e, dt, button, config) {
-                    exportWithParams('csv');
-                }
-            },
+            // {
+            //     extend: 'copy',
+            //     text: '<i class="fas fa-copy"></i> Copy',
+            //     className: 'btn btn-sm btn-primary',
+            //     exportOptions: {
+            //         columns: ':visible'
+            //     } 
+            // },
+            // { 
+            //     extend: 'csv',
+            //     text: '<i class="fas fa-file-csv"></i> CSV',
+            //     className: 'btn btn-sm btn-success',
+            //     action: function(e, dt, button, config) {
+            //         exportWithParams('csv');
+            //     }
+            // },
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Excel',
@@ -32,14 +32,14 @@ $(document).ready(function() {
                     exportWithParams('excel');
                 }
             },
-            {
-                extend: 'pdf',
-                text: '<i class="fas fa-file-pdf"></i> PDF',
-                className: 'btn btn-sm btn-danger',
-                action: function(e, dt, button, config) {
-                    exportWithParams('pdf');
-                }
-            },
+            // {
+            //     extend: 'pdf',
+            //     text: '<i class="fas fa-file-pdf"></i> PDF',
+            //     className: 'btn btn-sm btn-danger',
+            //     action: function(e, dt, button, config) {
+            //         exportWithParams('pdf');
+            //     }
+            // },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print"></i> Print',
@@ -70,17 +70,15 @@ $(document).ready(function() {
         }
     });
     
-    // Load semua data saat halaman pertama dibuka
+    // ========== LANGSUNG LOAD SEMUA DATA SAAT HALAMAN DIBUKA ==========
     loadAllData();
     
     $("#btnFilter").click(function() {
         currentData.tahun = $("#filterTahun").val();
         currentData.kecamatan = $("#filterKecamatan").val();
         
-        if(currentData.tahun === '' && (currentData.kecamatan === 'semua' || currentData.kecamatan === '')) {
+        if(currentData.tahun === '') {
             loadAllData();
-        } else if(currentData.tahun === '') {
-            loadDataWithKecamatanOnly();
         } else {
             loadDataWithFilter();
         }
@@ -99,12 +97,10 @@ $(document).ready(function() {
     });
     
     $("#refreshBtn").click(function() {
-        if(currentData.tahun === '' && (currentData.kecamatan === 'semua' || currentData.kecamatan === '')) {
-            loadAllData();
-        } else if(currentData.tahun === '') {
-            loadDataWithKecamatanOnly();
-        } else {
+        if(currentData.tahun) {
             loadDataWithFilter();
+        } else {
+            loadAllData();
         }
     });
 });
@@ -129,7 +125,6 @@ function exportWithParams(format) {
 function printWithCurrentData() {
     var title = $('#reportTitle').html();
     var subtitle = $('#reportSubtitle').html();
-    var tableHtml = $('#obatHewanTable').clone();
     
     var printWindow = window.open('', '_blank');
     printWindow.document.write('<html><head><title>Laporan Penjual Obat Hewan</title>');
@@ -142,6 +137,9 @@ function printWithCurrentData() {
     printWindow.document.write('th, td { border: 1px solid #000; padding: 8px; }');
     printWindow.document.write('th { background-color: #f2f2f2; }');
     printWindow.document.write('.nama-toko { font-weight: bold; }');
+    printWindow.document.write('.positive-value { color: #832706 !important; font-weight: bold; }');
+    printWindow.document.write('.zero-value { color: #000000 !important; }');
+    printWindow.document.write('.total-row { background-color: #e8f5e9; font-weight: bold; }');
     printWindow.document.write('@media print { .no-print { display: none; } }');
     printWindow.document.write('</style>');
     printWindow.document.write('</head><body>');
@@ -159,6 +157,16 @@ function printWithCurrentData() {
     printWindow.document.write('<p>' + subtitle + '</p>');
     printWindow.document.write('</div>');
     printWindow.document.write(tableContent.outerHTML);
+    
+    printWindow.document.write('<div class="header" style="margin-top: 30px;">');
+    printWindow.document.write('<h3>REKAP PENJUAL OBAT PER KECAMATAN</h3>');
+    printWindow.document.write('</div>');
+    
+    var rekapTable = $('#rekapKecamatanTable').clone();
+    $(rekapTable).find('.dataTables_empty').remove();
+    rekapTable.find('tfoot').show();
+    printWindow.document.write(rekapTable[0].outerHTML);
+    
     printWindow.document.write('</body></html>');
     printWindow.document.close();
     printWindow.print();
@@ -175,6 +183,7 @@ function loadAllData() {
             $("#reportTitle").html('DATA PENJUAL OBAT HEWAN KOTA SURABAYA');
             $("#reportSubtitle").html('Seluruh Data');
             
+            // Update tabel detail
             obatHewanTable.clear().draw();
             
             if(response.data && response.data.length > 0) {
@@ -198,13 +207,19 @@ function loadAllData() {
                 });
                 
                 obatHewanTable.draw();
-                $("#tableFooter").html('');
-                
             } else {
-                obatHewanTable.row.add(['-', 'Tidak ada data', '-', '-', '-', '-', '-', '-', '-']);
+                obatHewanTable.row.add(['1', 'Tidak ada data', '-', '-', '-', '-', '-', '-', '-']);
                 obatHewanTable.draw();
-                $("#tableFooter").html('');
             }
+            
+            // Update tabel rekap
+            if(response.rekap_kecamatan && response.rekap_kecamatan.length > 0) {
+                updateRekapTable(response.rekap_kecamatan, response.total_rekap);
+            }
+            
+            // Set current data untuk export
+            currentData.tahun = '';
+            currentData.kecamatan = 'semua';
             
             $("#loadingOverlay").fadeOut();
         },
@@ -231,10 +246,12 @@ function loadDataWithFilter() {
         },
         dataType: "json",
         success: function(response) {
+            var tahunText = 'TAHUN ' + tahun;
             var kecamatanText = (kecamatan && kecamatan !== 'semua') ? 'Kecamatan ' + kecamatan : 'Seluruh Kecamatan';
-            $("#reportTitle").html('DATA PENJUAL OBAT HEWAN KOTA SURABAYA TAHUN ' + tahun);
+            $("#reportTitle").html('DATA PENJUAL OBAT HEWAN KOTA SURABAYA ' + tahunText);
             $("#reportSubtitle").html(kecamatanText);
             
+            // Update tabel detail
             obatHewanTable.clear().draw();
             
             if(response.data && response.data.length > 0) {
@@ -258,12 +275,14 @@ function loadDataWithFilter() {
                 });
                 
                 obatHewanTable.draw();
-                $("#tableFooter").html('');
-                
             } else {
-                obatHewanTable.row.add(['-', 'Tidak ada data', '-', '-', '-', '-', '-', '-', '-']);
+                obatHewanTable.row.add(['1', 'Tidak ada data', '-', '-', '-', '-', '-', '-', '-']);
                 obatHewanTable.draw();
-                $("#tableFooter").html('');
+            }
+            
+            // Update tabel rekap
+            if(response.rekap_kecamatan && response.rekap_kecamatan.length > 0) {
+                updateRekapTable(response.rekap_kecamatan, response.total_rekap);
             }
             
             $("#loadingOverlay").fadeOut();
@@ -276,72 +295,53 @@ function loadDataWithFilter() {
     });
 }
 
-function loadDataWithKecamatanOnly() {
-    var kecamatan = currentData.kecamatan;
+// Fungsi update tabel rekap
+function updateRekapTable(data, totals) {
+    if(!data || data.length === 0) {
+        return;
+    }
     
-    $("#loadingOverlay").fadeIn();
+    var tbody = '';
+    var no = 1;
+    var totalToko = 0;
     
-    $.ajax({
-        url: base_url + 'laporan_penjual_obat_hewan/get_data_by_kecamatan',
-        type: "POST",
-        data: {
-            kecamatan: kecamatan
-        },
-        dataType: "json",
-        success: function(response) {
-            var kecamatanText = (kecamatan && kecamatan !== 'semua') ? 'Kecamatan ' + kecamatan : 'Seluruh Kecamatan';
-            $("#reportTitle").html('DATA PENJUAL OBAT HEWAN KOTA SURABAYA');
-            $("#reportSubtitle").html(kecamatanText);
-            
-            obatHewanTable.clear().draw();
-            
-            if(response.data && response.data.length > 0) {
-                var no = 1;
-                
-                $.each(response.data, function(index, item) {
-                    var daganganText = item.dagangan || '-';
-                    
-                    obatHewanTable.row.add([
-                        no,
-                        '<span class="nama-toko">' + escapeHtml(item.nama_toko) + '</span>',
-                        escapeHtml(item.nama_pemilik) || '-',
-                        escapeHtml(item.nib) || '-',
-                        escapeHtml(item.alamat) || '-',
-                        escapeHtml(item.kecamatan) || '-',
-                        escapeHtml(item.kelurahan) || '-',
-                        daganganText,
-                        escapeHtml(item.telp) || '-'
-                    ]);
-                    no++;
-                });
-                
-                obatHewanTable.draw();
-                $("#tableFooter").html('');
-                
-            } else {
-                obatHewanTable.row.add(['-', 'Tidak ada data', '-', '-', '-', '-', '-', '-', '-']);
-                obatHewanTable.draw();
-                $("#tableFooter").html('');
-            }
-            
-            $("#loadingOverlay").fadeOut();
-        },
-        error: function(xhr, status, error) {
-            console.error("Error:", error);
-            alert("Gagal memuat data. Silakan coba lagi.");
-            $("#loadingOverlay").fadeOut();
-        }
-    });
+    for(var i = 0; i < data.length; i++) {
+        var item = data[i];
+        var jumlah = item.jumlah_toko || 0;
+        totalToko += jumlah;
+        
+        var kelas = jumlah > 0 ? 'positive-value' : 'zero-value';
+        var baseUrl = base_url + 'laporan_penjual_obat_hewan/detail_kecamatan/' + encodeURIComponent(item.kecamatan);
+        var tahunParam = currentData.tahun ? '?tahun=' + currentData.tahun : '';
+        
+        tbody += '<tr>' +
+            '<td class="text-center">' + no++ + '</td>' +
+            '<td class="kecamatan-cell">' + escapeHtml(item.kecamatan) + '</td>' +
+            '<td class="text-center"><a href="' + baseUrl + tahunParam + '" class="data-link-rekap ' + kelas + '" target="_blank">' + formatNumber(jumlah) + '</a></td>' +
+            '</tr>';
+    }
+    
+    $('#rekapTableBody').html(tbody);
+    
+    // Update footer total
+    var footerRow = '<table>' +
+        '<td colspan="2" class="text-center"><strong>TOTAL</strong></td>' +
+        '<td class="text-center"><strong>' + formatNumber(totalToko) + '</strong></td>' +
+        '</tr>';
+    $('#rekapKecamatanFooter').html(footerRow);
+}
+
+function formatNumber(num) { 
+    if(num === null || num === undefined || num === 0) return '0';
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
 function escapeHtml(text) {
     if(!text) return '-';
-    var map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-    return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }

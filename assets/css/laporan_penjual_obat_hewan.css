@@ -14,7 +14,7 @@
 
 /* Logo */
 .sipetgis-logo {
-    color: var(--primary) !important;
+    color: var(--primary) !important; 
     font-weight: 800;
     font-size: 24px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -341,5 +341,170 @@ table.dataTable tbody tr:hover {
     table.dataTable tbody td {
         font-size: 11px;
         padding: 8px 5px;
+    }
+}
+
+/* ==============================================
+   STYLE TABEL REKAP PENJUAL OBAT PER KECAMATAN
+   ============================================== */
+
+/* Header tabel rekap - background coklat, teks putih */
+#rekapKecamatanTable thead th {
+    background-color: #832706 !important;
+    color: white !important;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px 8px;
+    border: none;
+}
+
+/* Header kolom pertama border radius kiri */
+#rekapKecamatanTable thead th:first-child {
+    border-radius: 8px 0 0 0;
+}
+
+/* Header kolom terakhir border radius kanan */
+#rekapKecamatanTable thead th:last-child {
+    border-radius: 0 8px 0 0;
+}
+
+/* Baris body tabel - zebra striping */
+#rekapKecamatanTable tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+#rekapKecamatanTable tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+/* Hover effect pada baris */
+#rekapKecamatanTable tbody tr:hover {
+    background-color: #fef3ef !important;
+    transition: all 0.2s ease;
+}
+
+/* Kolom No - HITAM, background abu tipis */
+#rekapKecamatanTable tbody td:first-child {
+    text-align: center;
+    font-weight: 600;
+    background-color: #f8f9fa;
+    color: #000000 !important;
+    width: 50px;
+}
+
+/* Kolom Kecamatan - HITAM, background abu tipis */
+#rekapKecamatanTable tbody td:nth-child(2) {
+    text-align: left;
+    font-weight: 600;
+    background-color: #f8f9fa;
+    color: #000000 !important;
+}
+
+/* Rata tengah untuk kolom angka */
+#rekapKecamatanTable tbody td:nth-child(3) {
+    text-align: center;
+}
+
+/* ==============================================
+   STYLE ANGKA > 0 - LEBIH MENCOLOK
+   ANGKA 0 TETAP HITAM BIASA
+   ============================================== */
+
+/* Style dasar link angka di tabel rekap */
+.data-link-rekap {
+    display: inline-block;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 4px;
+    min-width: 45px;
+}
+
+/* Angka 0 di tabel rekap - HITAM biasa */
+.data-link-rekap.zero-value {
+    color: #000000 !important;
+    background: transparent !important;
+    font-weight: 400 !important;
+    border: none !important;
+    padding: 4px 8px !important;
+}
+
+/* Angka yang BUKAN 0 di tabel rekap - PUTIH dengan BACKGROUND COKLAT */
+.data-link-rekap.positive-value {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    background: #832706 !important;
+    border-radius: 20px !important;
+    padding: 4px 12px !important;
+    box-shadow: 0 2px 5px rgba(131, 39, 6, 0.3);
+}
+
+/* Hover untuk angka > 0 di tabel rekap */
+.data-link-rekap.positive-value:hover {
+    background: #6b1f04 !important;
+    transform: scale(1.08);
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(131, 39, 6, 0.4);
+}
+
+/* Hover untuk angka 0 di tabel rekap */
+.data-link-rekap.zero-value:hover {
+    background-color: #f0f0f0 !important;
+    border-radius: 20px !important;
+    color: #333333 !important;
+}
+
+/* ==============================================
+   STYLE CARD TOTAL - BACKGROUND COKLAT, ANGKA HITAM
+   ============================================== */
+
+/* Footer tabel rekap */
+#rekapKecamatanFooter {
+    background: linear-gradient(135deg, #832706 0%, #6b1f04 100%) !important;
+    font-weight: bold;
+}
+
+#rekapKecamatanFooter td {
+    padding: 12px 8px;
+    font-weight: 700;
+    border-top: 2px solid #fef3ef;
+    color: #000000 !important;
+}
+
+#rekapKecamatanFooter td strong {
+    color: #000000 !important;
+}
+
+/* Border radius tabel */
+#rekapKecamatanTable {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Print - reset styling saat export */
+@media print {
+    .data-link-rekap {
+        padding: 0 !important;
+        background: none !important;
+        color: black !important;
+        box-shadow: none !important;
+    }
+    .data-link-rekap.positive-value,
+    .data-link-rekap.zero-value {
+        color: black !important;
+        background: none !important;
+        border: none !important;
+    }
+    #rekapKecamatanFooter {
+        background: none !important;
+    }
+    #rekapKecamatanFooter td {
+        color: black !important;
+        border-top: 1px solid #000 !important;
+    }
+    #rekapKecamatanFooter td strong {
+        color: black !important;
     }
 }

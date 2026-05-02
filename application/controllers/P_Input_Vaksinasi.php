@@ -11,14 +11,13 @@ class P_input_vaksinasi extends CI_Controller {
         $this->load->library('form_validation');
         $this->load->helper(array('form', 'url', 'file'));
         
-        // CEK SESSION LOGIN
         if (!$this->session->userdata('logged_in')) {
             redirect('login');
         }
         
         $this->load->model('P_input_vaksinasi_model');
     }
-
+ 
     public function index() {
         $user_kecamatan = $this->session->userdata('kecamatan');
         $data['vaksinasi_data'] = $this->P_input_vaksinasi_model->get_vaksinasi_by_kecamatan($user_kecamatan);
@@ -65,6 +64,25 @@ class P_input_vaksinasi extends CI_Controller {
     }
 
     public function save() {
+        // Set validation rules
+        $this->form_validation->set_rules('nama_peternak', 'Nama Peternak', 'required|trim');
+        $this->form_validation->set_rules('nama_petugas', 'Nama Petugas', 'required|trim');
+        $this->form_validation->set_rules('tanggal_vaksinasi', 'Tanggal Vaksinasi', 'required');
+        $this->form_validation->set_rules('bantuan_prov', 'Bantuan Provinsi', 'required|trim');
+        $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required|trim');
+        $this->form_validation->set_rules('latitude', 'Latitude', 'required|trim');
+        $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim');
+        $this->form_validation->set_rules('alamat', 'Alamat', 'required|trim');
+
+        if ($this->form_validation->run() == FALSE) {
+            $response = array(
+                'status' => 'error',
+                'message' => validation_errors()
+            );
+            echo json_encode($response);
+            return;
+        }
+
         // Validasi array data (multiple komoditas)
         $komoditas = $this->input->post('komoditas_ternak');
         $jenis = $this->input->post('jenis_vaksinasi');
@@ -74,7 +92,7 @@ class P_input_vaksinasi extends CI_Controller {
         if (empty($komoditas) || !is_array($komoditas)) {
             $response = array(
                 'status' => 'error',
-                'message' => 'Data komoditas harus diisi minimal 1'
+                'message' => 'Data hewan ternak harus diisi minimal 1'
             );
             echo json_encode($response);
             return;
@@ -118,73 +136,120 @@ class P_input_vaksinasi extends CI_Controller {
             }
         }
 
-        // Upload foto
-        $uploaded_file = null;
+        // MULTIPLE FILE UPLOAD - MANUAL METHOD
+        $uploaded_files = array();
         $upload_path = './uploads/vaksinasi/';
         
         if (!is_dir($upload_path)) {
             mkdir($upload_path, 0777, TRUE);
         }
-
-        if (isset($_FILES['foto_vaksinasi']) && $_FILES['foto_vaksinasi']['error'] != 4) {
+        
+        // Cek apakah ada file yang diupload
+        if (isset($_FILES['foto_vaksinasi']) && !empty($_FILES['foto_vaksinasi']['name'][0])) {
+            $files = $_FILES['foto_vaksinasi'];
+            $file_count = count($files['name']);
             
-            $config['upload_path'] = $upload_path;
-            $config['allowed_types'] = 'jpg|jpeg|png';
-            $config['max_size'] = 5120;
-            $config['encrypt_name'] = TRUE;
+            // Batasi maksimal 5 file
+            $file_count = min($file_count, 5);
             
-            $this->upload->initialize($config);
-            
-            if ($this->upload->do_upload('foto_vaksinasi')) {
-                $upload_data = $this->upload->data();
-                $uploaded_file = $upload_data['file_name'];
-            } else {
-                $error = $this->upload->display_errors();
-                $response = array(
-                    'status' => 'error',
-                    'message' => 'Gagal upload foto: ' . strip_tags($error)
-                );
-                echo json_encode($response);
-                return;
+            for ($i = 0; $i < $file_count; $i++) {
+                if ($files['error'][$i] == 0) {
+                    $file_name = $files['name'][$i];
+                    $file_tmp = $files['tmp_name'][$i];
+                    $file_size = $files['size'][$i];
+                    $file_type = $files['type'][$i];
+                    
+                    // Validasi tipe file
+                    $allowed_types = array('image/jpeg', 'image/jpg', 'image/png');
+                    if (!in_array($file_type, $allowed_types)) {
+                        $response = array(
+                            'status' => 'error',
+                            'message' => 'File ' . $file_name . ' harus format JPG atau PNG'
+                        );
+                        echo json_encode($response);
+                        return;
+                    }
+                    
+                    // Validasi ukuran file (max 5MB)
+                    if ($file_size > 5 * 1024 * 1024) {
+                        $response = array(
+                            'status' => 'error',
+                            'message' => 'File ' . $file_name . ' melebihi 5MB'
+                        );
+                        echo json_encode($response);
+                        return;
+                    }
+                    
+                    // Generate nama file unik
+                    $ext = pathinfo($file_name, PATHINFO_EXTENSION);
+                    $new_name = time() . '_' . uniqid() . '.' . $ext;
+                    $destination = $upload_path . $new_name;
+                    
+                    // Upload file
+                    if (move_uploaded_file($file_tmp, $destination)) {
+                        $uploaded_files[] = $new_name;
+                    } else {
+                        $response = array(
+                            'status' => 'error',
+                            'message' => 'Gagal upload file: ' . $file_name
+                        );
+                        echo json_encode($response);
+                        return;
+                    }
+                }
             }
         }
+        
+        // Konversi array foto ke string (comma separated)
+        $foto_string = !empty($uploaded_files) ? implode(',', $uploaded_files) : null;
 
-        // Simpan setiap baris komoditas sebagai record terpisah
-        $success_count = 0;
+        // Siapkan data dasar
+        $nik_val = $this->input->post('nik');
+        $telp_val = $this->input->post('telp');
+        $keterangan_val = $this->input->post('keterangan');
+        $alamat_val = $this->input->post('alamat');
+        $rt_val = $this->input->post('rt');
+        $rw_val = $this->input->post('rw');
+        
+        $base_data = array(
+            'nama_petugas' => $this->input->post('nama_petugas'),
+            'nama_peternak' => $this->input->post('nama_peternak'),
+            'nik' => (!empty($nik_val)) ? $nik_val : NULL,
+            'tanggal_vaksinasi' => $this->input->post('tanggal_vaksinasi'),
+            'keterangan' => (!empty($keterangan_val)) ? $keterangan_val : NULL,
+            'bantuan_prov' => $this->input->post('bantuan_prov'),
+            'kecamatan' => $this->session->userdata('kecamatan'),
+            'kelurahan' => $this->input->post('kelurahan'),
+            'alamat' => (!empty($alamat_val)) ? $alamat_val : NULL,
+            'rt' => (!empty($rt_val)) ? $rt_val : NULL,
+            'rw' => (!empty($rw_val)) ? $rw_val : NULL,
+            'latitude' => $this->input->post('latitude'),
+            'longitude' => $this->input->post('longitude'),
+            'telp' => (!empty($telp_val)) ? $telp_val : NULL,
+            'foto_vaksinasi' => $foto_string
+        );
+
+        // Buat array data untuk multiple rows
+        $data_array = array();
         
         foreach ($komoditas as $index => $k) {
-            $data = array(
-                'nama_petugas' => $this->input->post('nama_petugas'),
-                'nama_peternak' => $this->input->post('nama_peternak'),
-                'nik' => $this->input->post('nik') ?: NULL,
-                'tanggal_vaksinasi' => $this->input->post('tanggal_vaksinasi'),
-                'alamat' => $this->input->post('alamat'),
-                'keterangan' => $this->input->post('keterangan') ?: NULL,
-                'bantuan_prov' => $this->input->post('bantuan_prov'),
-                'kecamatan' => $this->session->userdata('kecamatan'),
-                'kelurahan' => $this->input->post('kelurahan'),
-                'rt' => $this->input->post('rt') ?: NULL,
-                'rw' => $this->input->post('rw') ?: NULL,
-                'latitude' => $this->input->post('latitude'),
-                'longitude' => $this->input->post('longitude'),
-                'telp' => $this->input->post('telp') ?: NULL,
-                'foto_vaksinasi' => $uploaded_file,
-                'komoditas_ternak' => $k,
-                'jenis_vaksinasi' => $jenis[$index],
-                'dosis' => $dosis[$index],
-                'jumlah' => $jumlah[$index]
-            );
+            $data_row = $base_data;
+            $data_row['komoditas_ternak'] = $k;
+            $data_row['jenis_vaksinasi'] = $jenis[$index];
+            $data_row['dosis'] = $dosis[$index];
+            $data_row['jumlah'] = $jumlah[$index];
             
-            if ($this->P_input_vaksinasi_model->save_vaksinasi($data)) {
-                $success_count++;
-            }
+            $data_array[] = $data_row;
         }
 
+        // Simpan multiple data
+        $success_count = $this->P_input_vaksinasi_model->save_multiple_vaksinasi($data_array);
+
         if ($success_count > 0) {
-            $foto_msg = $uploaded_file ? ' dan 1 foto' : '';
+            $foto_msg = !empty($uploaded_files) ? count($uploaded_files) . ' foto berhasil diupload' : 'tanpa foto';
             $response = array(
                 'status' => 'success',
-                'message' => $success_count . ' data vaksinasi berhasil disimpan' . $foto_msg
+                'message' => $success_count . ' data vaksinasi berhasil disimpan dengan ' . $foto_msg
             );
         } else {
             $response = array(
@@ -260,3 +325,4 @@ class P_input_vaksinasi extends CI_Controller {
         }
     }
 }
+?>

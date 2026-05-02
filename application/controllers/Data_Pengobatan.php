@@ -9,13 +9,13 @@ class Data_pengobatan extends CI_Controller {
         $this->load->model('Data_pengobatan_model');
         $this->load->helper('url');
         $this->load->library('session');
-        
+         
         // CEK SESSION LOGIN
         if (!$this->session->userdata('logged_in')) {
             redirect('login');
         }
     } 
-
+ 
     public function index()
     {
         $user_kecamatan = $this->session->userdata('kecamatan');

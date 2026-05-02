@@ -8,22 +8,22 @@ $(document).ready(function() {
     dataTable = $('#tpuRpuTable').DataTable({
         dom: 'Bfrtip',
         buttons: [
-            {
-                extend: 'copy',
-                text: '<i class="fas fa-copy"></i> Copy',
-                className: 'btn btn-sm btn-primary',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend: 'csv',
-                text: '<i class="fas fa-file-csv"></i> CSV',
-                className: 'btn btn-sm btn-success',
-                action: function(e, dt, button, config) {
-                    exportWithParams('csv');
-                }
-            },
+            // {
+            //     extend: 'copy',
+            //     text: '<i class="fas fa-copy"></i> Copy',
+            //     className: 'btn btn-sm btn-primary',
+            //     exportOptions: {
+            //         columns: ':visible'
+            //     }
+            // }, 
+            // {
+            //     extend: 'csv',
+            //     text: '<i class="fas fa-file-csv"></i> CSV',
+            //     className: 'btn btn-sm btn-success',
+            //     action: function(e, dt, button, config) {
+            //         exportWithParams('csv');
+            //     }
+            // },
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Excel',
@@ -32,14 +32,14 @@ $(document).ready(function() {
                     exportWithParams('excel');
                 }
             },
-            {
-                extend: 'pdf',
-                text: '<i class="fas fa-file-pdf"></i> PDF',
-                className: 'btn btn-sm btn-danger',
-                action: function(e, dt, button, config) {
-                    exportWithParams('pdf');
-                }
-            },
+            // {
+            //     extend: 'pdf',
+            //     text: '<i class="fas fa-file-pdf"></i> PDF',
+            //     className: 'btn btn-sm btn-danger',
+            //     action: function(e, dt, button, config) {
+            //         exportWithParams('pdf');
+            //     }
+            // },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print"></i> Print',
@@ -70,27 +70,34 @@ $(document).ready(function() {
         }
     });
     
-    // Load semua data saat halaman pertama dibuka (tanpa filter tahun)
+    // ========== LANGSUNG LOAD SEMUA DATA SAAT HALAMAN DIBUKA ==========
     loadAllData();
     
     $("#btnFilter").click(function() {
-        var tahun = $("#filterTahun").val();
-        if(tahun) {
-            loadDataWithFilter();
-        } else {
+        currentData.tahun = $("#filterTahun").val();
+        currentData.kecamatan = $("#filterKecamatan").val();
+        
+        if(currentData.tahun === '') {
             loadAllData();
+        } else {
+            loadDataWithFilter();
         }
     });
     
     $("#btnReset").click(function() {
         $("#filterTahun").val('');
         $("#filterKecamatan").val('semua');
+        
+        currentData = {
+            tahun: '',
+            kecamatan: 'semua'
+        };
+        
         loadAllData();
     });
     
     $("#refreshBtn").click(function() {
-        var tahun = $("#filterTahun").val();
-        if(tahun) {
+        if(currentData.tahun) {
             loadDataWithFilter();
         } else {
             loadAllData();
@@ -99,20 +106,18 @@ $(document).ready(function() {
 });
 
 var dataTable = null;
+var currentData = {
+    tahun: '',
+    kecamatan: 'semua'
+};
 
 function exportWithParams(format) {
-    var tahun = $("#filterTahun").val();
-    var kecamatan = $("#filterKecamatan").val();
+    var tahun = currentData.tahun || 'all';
+    var kecamatan = currentData.kecamatan || 'semua';
     
     var url = base_url + 'laporan_data_tpu_rpu/export_' + format;
-    
-    if(tahun) {
-        url += "?tahun=" + encodeURIComponent(tahun);
-        url += "&kecamatan=" + encodeURIComponent(kecamatan);
-    } else {
-        url += "?tahun=all";
-        url += "&kecamatan=" + encodeURIComponent(kecamatan);
-    }
+    url += "?tahun=" + encodeURIComponent(tahun);
+    url += "&kecamatan=" + encodeURIComponent(kecamatan);
     
     window.location.href = url;
 }
@@ -120,7 +125,6 @@ function exportWithParams(format) {
 function printWithCurrentData() {
     var title = $('#reportTitle').html();
     var subtitle = $('#reportSubtitle').html();
-    var tableHtml = $('#tpuRpuTable').clone();
     
     var printWindow = window.open('', '_blank');
     printWindow.document.write('<html><head><title>Laporan Data TPU/RPU</title>');
@@ -135,6 +139,9 @@ function printWithCurrentData() {
     printWindow.document.write('.badge-izin { background-color: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 12px; }');
     printWindow.document.write('.badge-juleha-ya { background-color: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 12px; }');
     printWindow.document.write('.badge-juleha-tidak { background-color: #ffebee; color: #c62828; padding: 2px 8px; border-radius: 12px; }');
+    printWindow.document.write('.positive-value { color: #832706 !important; font-weight: bold; }');
+    printWindow.document.write('.zero-value { color: #000000 !important; }');
+    printWindow.document.write('.total-row { background-color: #e8f5e9; font-weight: bold; }');
     printWindow.document.write('@media print { .no-print { display: none; } }');
     printWindow.document.write('</style>');
     printWindow.document.write('</head><body>');
@@ -152,27 +159,33 @@ function printWithCurrentData() {
     printWindow.document.write('<p>' + subtitle + '</p>');
     printWindow.document.write('</div>');
     printWindow.document.write(tableContent.outerHTML);
+    
+    printWindow.document.write('<div class="header" style="margin-top: 30px;">');
+    printWindow.document.write('<h3>REKAP TPU/RPU PER KECAMATAN</h3>');
+    printWindow.document.write('</div>');
+    
+    var rekapTable = $('#rekapKecamatanTable').clone();
+    $(rekapTable).find('.dataTables_empty').remove();
+    rekapTable.find('tfoot').show();
+    printWindow.document.write(rekapTable[0].outerHTML);
+    
     printWindow.document.write('</body></html>');
     printWindow.document.close();
     printWindow.print();
 }
 
 function loadAllData() {
-    $("#reportTitle").html('DATA TEMPAT PEMOTONGAN UNGGAS KOTA SURABAYA');
-    $("#reportSubtitle").html('Seluruh Data');
-    
     $("#loadingOverlay").fadeIn();
     
-    // Gunakan get_data dengan tahun kosong untuk mengambil semua data
     $.ajax({
-        url: base_url + 'laporan_data_tpu_rpu/get_data',
+        url: base_url + 'laporan_data_tpu_rpu/get_all_data',
         type: "POST",
-        data: {
-            tahun: '',
-            kecamatan: 'semua'
-        },
         dataType: "json",
         success: function(response) {
+            $("#reportTitle").html('DATA TEMPAT PEMOTONGAN UNGGAS KOTA SURABAYA');
+            $("#reportSubtitle").html('Seluruh Data');
+            
+            // Update tabel detail
             dataTable.clear().draw();
             
             if(response.status === 'success' && response.data && response.data.length > 0) {
@@ -186,9 +199,11 @@ function loadAllData() {
                                         '<br>Itik: ' + formatNumber(item.jumlah_pemotongan.itik) + 
                                         '<br>Lainnya: ' + formatNumber(item.jumlah_pemotongan.lainnya) + '</span>';
                     
+                    var kelasTpu = (item.nama_tpu) ? 'positive-value' : 'zero-value';
+                    
                     dataTable.row.add([
                         no,
-                        '<span class="nama-tpu">' + escapeHtml(item.nama_tpu) + '</span>',
+                        '<span class="nama-tpu ' + kelasTpu + '">' + escapeHtml(item.nama_tpu) + '</span>',
                         '<span class="badge-izin">' + escapeHtml(item.perizinan) + '</span>',
                         escapeHtml(item.alamat) || '-',
                         escapeHtml(item.kecamatan) || '-',
@@ -205,29 +220,29 @@ function loadAllData() {
             }
             
             dataTable.draw();
+            
+            // Update tabel rekap
+            if(response.rekap_kecamatan && response.rekap_kecamatan.length > 0) {
+                updateRekapTable(response.rekap_kecamatan, response.total_rekap);
+            }
+            
+            // Set current data untuk export
+            currentData.tahun = '';
+            currentData.kecamatan = 'semua';
+            
             $("#loadingOverlay").fadeOut();
         },
         error: function(xhr, status, error) {
             console.error("Error:", error);
-            alert("Gagal memuat data. Silakan coba lagi.");
+            alert("Gagal memuat data: " + error);
             $("#loadingOverlay").fadeOut();
         }
     });
 }
 
 function loadDataWithFilter() {
-    var tahun = $("#filterTahun").val();
-    var kecamatan = $("#filterKecamatan").val();
-    
-    if(!tahun) {
-        alert("Silakan pilih tahun terlebih dahulu!");
-        return;
-    }
-    
-    // Update title
-    var teksKecamatan = (kecamatan && kecamatan !== 'semua') ? 'Kecamatan ' + kecamatan : 'Seluruh Kecamatan';
-    $("#reportTitle").html('DATA TEMPAT PEMOTONGAN UNGGAS KOTA SURABAYA TAHUN ' + tahun);
-    $("#reportSubtitle").html(teksKecamatan);
+    var tahun = currentData.tahun;
+    var kecamatan = currentData.kecamatan;
     
     $("#loadingOverlay").fadeIn();
     
@@ -240,6 +255,12 @@ function loadDataWithFilter() {
         },
         dataType: "json",
         success: function(response) {
+            var tahunText = 'TAHUN ' + tahun;
+            var kecamatanText = (kecamatan && kecamatan !== 'semua') ? 'Kecamatan ' + kecamatan : 'Seluruh Kecamatan';
+            $("#reportTitle").html('DATA TEMPAT PEMOTONGAN UNGGAS KOTA SURABAYA');
+            $("#reportSubtitle").html(kecamatanText + ' - ' + tahunText);
+            
+            // Update tabel detail
             dataTable.clear().draw();
             
             if(response.status === 'success' && response.data && response.data.length > 0) {
@@ -253,9 +274,11 @@ function loadDataWithFilter() {
                                         '<br>Itik: ' + formatNumber(item.jumlah_pemotongan.itik) + 
                                         '<br>Lainnya: ' + formatNumber(item.jumlah_pemotongan.lainnya) + '</span>';
                     
+                    var kelasTpu = (item.nama_tpu) ? 'positive-value' : 'zero-value';
+                    
                     dataTable.row.add([
                         no,
-                        '<span class="nama-tpu">' + escapeHtml(item.nama_tpu) + '</span>',
+                        '<span class="nama-tpu ' + kelasTpu + '">' + escapeHtml(item.nama_tpu) + '</span>',
                         '<span class="badge-izin">' + escapeHtml(item.perizinan) + '</span>',
                         escapeHtml(item.alamat) || '-',
                         escapeHtml(item.kecamatan) || '-',
@@ -272,14 +295,56 @@ function loadDataWithFilter() {
             }
             
             dataTable.draw();
+            
+            // Update tabel rekap
+            if(response.rekap_kecamatan && response.rekap_kecamatan.length > 0) {
+                updateRekapTable(response.rekap_kecamatan, response.total_rekap);
+            }
+            
             $("#loadingOverlay").fadeOut();
         },
         error: function(xhr, status, error) {
             console.error("Error:", error);
-            alert("Gagal memuat data. Silakan coba lagi.");
+            alert("Gagal memuat data: " + error);
             $("#loadingOverlay").fadeOut();
         }
     });
+}
+
+// Fungsi update tabel rekap
+function updateRekapTable(data, totals) {
+    if(!data || data.length === 0) {
+        return;
+    }
+    
+    var tbody = '';
+    var no = 1;
+    var totalTPU = 0;
+    
+    for(var i = 0; i < data.length; i++) {
+        var item = data[i];
+        var jumlah = item.jumlah_tpu || 0;
+        totalTPU += jumlah;
+        
+        var kelas = jumlah > 0 ? 'positive-value' : 'zero-value';
+        var baseUrl = base_url + 'laporan_data_tpu_rpu/detail_kecamatan/' + encodeURIComponent(item.kecamatan);
+        var tahunParam = currentData.tahun ? '?tahun=' + currentData.tahun : '';
+        
+        tbody += '<tr>' +
+            '<td class="text-center">' + no++ + '</td>' +
+            '<td class="kecamatan-cell">' + escapeHtml(item.kecamatan) + '</td>' +
+            '<td class="text-center"><a href="' + baseUrl + tahunParam + '" class="data-link-rekap ' + kelas + '" target="_blank">' + formatNumber(jumlah) + '</a></td>' +
+            '</tr>';
+    }
+    
+    $('#rekapTableBody').html(tbody);
+    
+    // Update footer total
+    var footerRow = '<tr>' +
+        '<td colspan="2" class="text-center"><strong>TOTAL</strong></td>' +
+        '<td class="text-center"><strong>' + formatNumber(totalTPU) + '</strong></td>' +
+        '</tr>';
+    $('#rekapKecamatanFooter').html(footerRow);
 }
 
 function formatNumber(num) {
@@ -289,12 +354,10 @@ function formatNumber(num) {
 
 function escapeHtml(text) {
     if(!text) return '-';
-    var map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-    return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }

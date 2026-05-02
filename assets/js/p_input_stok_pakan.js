@@ -32,17 +32,17 @@ $(document).ready(function() {
         responsive: true,
         dom: 'Bfrtip',
         buttons: [
-            { extend: 'copy', text: '<i class="fas fa-copy"></i> Copy', className: 'btn btn-sm btn-primary' },
-            { extend: 'csv', text: '<i class="fas fa-file-csv"></i> CSV', className: 'btn btn-sm btn-success' },
+            // { extend: 'copy', text: '<i class="fas fa-copy"></i> Copy', className: 'btn btn-sm btn-primary' },
+            // { extend: 'csv', text: '<i class="fas fa-file-csv"></i> CSV', className: 'btn btn-sm btn-success' },
             { extend: 'excel', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-sm btn-success' },
-            { 
-                extend: 'pdf', 
-                text: '<i class="fas fa-file-pdf"></i> PDF', 
-                className: 'btn btn-sm btn-danger',
-                action: function(e, dt, button, config) {
-                    printWithCurrentData();
-                }
-            },
+            // { 
+            //     extend: 'pdf', 
+            //     text: '<i class="fas fa-file-pdf"></i> PDF', 
+            //     className: 'btn btn-sm btn-danger',
+            //     action: function(e, dt, button, config) {
+            //         printWithCurrentData();
+            //     }
+            // },
             { 
                 extend: 'print', 
                 text: '<i class="fas fa-print"></i> Print', 

@@ -8,23 +8,26 @@ class Laporan_penjual_obat_hewan_model extends CI_Model {
         parent::__construct();
     }
 
+    // Daftar kecamatan urutan tetap (31 kecamatan)
+    private $kecamatan_order = [
+        'Asemrowo', 'Krembangan', 'Pabean Cantian', 'Semampir', 'Bulak',
+        'Kenjeran', 'Simokerto', 'Tambaksari', 'Mulyorejo', 'Sukolilo',
+        'Gubeng', 'Rungkut', 'Gunung Anyar', 'Tenggilis Mejoyo', 'Wonocolo',
+        'Benowo', 'Pakal', 'Sambikerep', 'Tandes', 'Sukomanunggal',
+        'Lakarsantri', 'Wiyung', 'Sawahan', 'Dukuh Pakis', 'Karangpilang',
+        'Gayungan', 'Jambangan', 'Wonokromo', 'Tegalsari', 'Genteng', 'Bubutan'
+    ];
+
     public function get_kecamatan()
     {
         // Ambil kecamatan unik dari database (hanya yang dagangan Obat)
         $sql = "SELECT DISTINCT kecamatan FROM penjual WHERE dagangan = 'Obat' AND kecamatan IS NOT NULL AND kecamatan != '' ORDER BY kecamatan ASC";
         $query = $this->db->query($sql);
         $result = $query->result();
-        
+         
         // Jika tidak ada data, gunakan daftar kecamatan default
         if(empty($result)) {
-            $kecamatan_list = [
-                'Asemrowo', 'Benowo', 'Bubutan', 'Bulak', 'Dukuh Pakis',
-                'Gayungan', 'Genteng', 'Gubeng', 'Gunung Anyar', 'Jambangan',
-                'Karangpilang', 'Kenjeran', 'Krembangan', 'Lakarsantri', 'Mulyorejo',
-                'Pabean Cantian', 'Pakal', 'Rungkut', 'Sambikerep', 'Sawahan',
-                'Semampir', 'Simokerto', 'Sukolilo', 'Sukomanunggal', 'Tambaksari',
-                'Tandes', 'Tegalsari', 'Tenggilis Mejoyo', 'Wiyung', 'Wonocolo', 'Wonokromo'
-            ];
+            $kecamatan_list = $this->kecamatan_order;
             foreach($kecamatan_list as $kec) {
                 $result[] = (object)['kecamatan' => $kec];
             }
@@ -99,6 +102,101 @@ class Laporan_penjual_obat_hewan_model extends CI_Model {
         return (object)[
             'total_toko' => $result->total_toko ?? 0
         ];
+    }
+
+    // ========== METHOD REKAP PER KECAMATAN (0-0-0) ==========
+
+    /**
+     * Get rekap jumlah penjual obat per kecamatan
+     */
+    public function get_rekap_per_kecamatan($tahun = null, $kecamatan_filter = null)
+    {
+        $this->db->select('kecamatan, COUNT(*) as jumlah_toko');
+        $this->db->from('penjual');
+        
+        // HANYA YANG DAGANGAN OBAT
+        $this->db->where('dagangan', 'Obat');
+        
+        if($tahun && $tahun != 'all' && $tahun != '') {
+            $this->db->where('YEAR(tanggal_input)', $tahun);
+        }
+        
+        if($kecamatan_filter && $kecamatan_filter != 'semua') {
+            $this->db->where('kecamatan', $kecamatan_filter);
+        }
+        
+        $this->db->group_by('kecamatan');
+        $query = $this->db->get();
+        $results = $query->result();
+        
+        // Map data ke array
+        $dataMap = [];
+        foreach($results as $row) {
+            $kec = ucwords(strtolower($row->kecamatan));
+            $dataMap[$kec] = (int)$row->jumlah_toko;
+        }
+        
+        // Tentukan kecamatan yang ditampilkan
+        $kecamatanList = [];
+        if($kecamatan_filter && $kecamatan_filter != 'semua') {
+            $kecamatanList = [ucwords(strtolower($kecamatan_filter))];
+        } else {
+            $kecamatanList = $this->kecamatan_order;
+        }
+        
+        // Build hasil
+        $result = [];
+        foreach($kecamatanList as $kec) {
+            $row = (object)[
+                'kecamatan' => $kec,
+                'jumlah_toko' => isset($dataMap[$kec]) ? $dataMap[$kec] : 0
+            ];
+            $result[] = $row;
+        }
+        
+        return $result;
+    }
+
+    /**
+     * Get total rekap per kecamatan
+     */
+    public function get_total_rekap($tahun = null, $kecamatan_filter = null)
+    {
+        $data = $this->get_rekap_per_kecamatan($tahun, $kecamatan_filter);
+        
+        $total = (object)[
+            'jumlah_toko' => 0
+        ];
+        
+        foreach($data as $row) {
+            $total->jumlah_toko += $row->jumlah_toko;
+        }
+        
+        return $total;
+    }
+
+    /**
+     * Get all data tanpa filter (untuk load awal)
+     */
+    public function get_all_data_penjual_obat()
+    {
+        return $this->get_data_penjual_obat('all', 'semua');
+    }
+
+    /**
+     * Get all rekap per kecamatan (tanpa filter tahun)
+     */
+    public function get_all_rekap_per_kecamatan()
+    {
+        return $this->get_rekap_per_kecamatan(null, null);
+    }
+
+    /**
+     * Get all total rekap (tanpa filter tahun)
+     */
+    public function get_all_total_rekap()
+    {
+        return $this->get_total_rekap(null, null);
     }
 }
 ?>

@@ -1,207 +1,76 @@
 /**
- * Peta Sebaran Peternakan
- * SIPETGIS - Kota Surabaya
+ * Peta Sebaran Peternakan - SIPETGIS
+ * VERSI: AWAL KOSONG, MUNCUL SETELAH FILTER DIPILIH
  */
-
-// DATA LENGKAP
-const dataDariServer = {
-    pengobatan: Array(50).fill().map((_, i) => ({
-        id: i + 1,
-        nama_peternak: `Peternak ${i + 1}`,
-        alamat: `Jl. Contoh No. ${i + 1}, Surabaya`,
-        latitude: -7.2575 + (Math.random() - 0.5) * 0.1,
-        longitude: 112.7521 + (Math.random() - 0.5) * 0.1,
-        id_kecamatan: Math.floor(Math.random() * 31) + 1,
-        tanggal_pengobatan: `2024-${String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}`,
-        diagnosa: ['Demam', 'Diare', 'Mastitis', 'Cacingan', 'Luka'][Math.floor(Math.random() * 5)],
-        keterangan: 'Pengobatan rutin'
-    })),
-
-    vaksinasi: Array(40).fill().map((_, i) => ({
-        id: i + 1,
-        nama_peternak: `Peternak Vaksin ${i + 1}`,
-        alamat: `Jl. Vaksin No. ${i + 1}, Surabaya`,
-        latitude: -7.2575 + (Math.random() - 0.5) * 0.1,
-        longitude: 112.7521 + (Math.random() - 0.5) * 0.1,
-        id_kecamatan: Math.floor(Math.random() * 31) + 1,
-        tanggal_vaksinasi: `2024-${String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}`,
-        jenis_vaksin: ['ND', 'AI', 'PMK', 'LSD'][Math.floor(Math.random() * 4)],
-        jumlah_ternak: Math.floor(Math.random() * 100) + 10,
-        keterangan: 'Vaksinasi rutin'
-    })),
-
-    pelaku_usaha: Array(30).fill().map((_, i) => ({
-        id: i + 1,
-        nama_pelaku: `Pengusaha ${i + 1}`,
-        alamat: `Jl. Usaha No. ${i + 1}, Surabaya`,
-        latitude: -7.2575 + (Math.random() - 0.5) * 0.1,
-        longitude: 112.7521 + (Math.random() - 0.5) * 0.1,
-        id_kecamatan: Math.floor(Math.random() * 31) + 1,
-        jenis_usaha: ['Peternakan', 'Pembibitan', 'Penggemukan'][Math.floor(Math.random() * 3)],
-        skala_usaha: ['Kecil', 'Menengah', 'Besar'][Math.floor(Math.random() * 3)],
-        no_hp: '08123456789'
-    })),
-
-    penjual_pakan: Array(25).fill().map((_, i) => ({
-        id: i + 1,
-        nama_toko: `Toko Pakan ${i + 1}`,
-        pemilik: `Pemilik ${i + 1}`,
-        alamat: `Jl. Pakan No. ${i + 1}, Surabaya`,
-        latitude: -7.2575 + (Math.random() - 0.5) * 0.1,
-        longitude: 112.7521 + (Math.random() - 0.5) * 0.1,
-        id_kecamatan: Math.floor(Math.random() * 31) + 1,
-        jenis_pakan: ['Konsentrat', 'Hijauan', 'Pelet', 'Jagung'][Math.floor(Math.random() * 4)],
-        no_hp: '08123456789'
-    })),
-
-    klinik_hewan: Array(15).fill().map((_, i) => ({
-        id: i + 1,
-        nama_klinik: `Klinik Hewan ${i + 1}`,
-        dokter_hewan: `Dokter ${i + 1}`,
-        alamat: `Jl. Klinik No. ${i + 1}, Surabaya`,
-        latitude: -7.2575 + (Math.random() - 0.5) * 0.1,
-        longitude: 112.7521 + (Math.random() - 0.5) * 0.1,
-        id_kecamatan: Math.floor(Math.random() * 31) + 1,
-        layanan: ['Umum', 'Spesialis', '24 Jam'][Math.floor(Math.random() * 3)],
-        no_hp: '08123456789',
-        jam_operasional: '08:00 - 20:00'
-    })),
-
-    penjual_obat: Array(20).fill().map((_, i) => ({
-        id: i + 1,
-        nama_toko: `Apotek Hewan ${i + 1}`,
-        pemilik: `Pemilik ${i + 1}`,
-        alamat: `Jl. Obat No. ${i + 1}, Surabaya`,
-        latitude: -7.2575 + (Math.random() - 0.5) * 0.1,
-        longitude: 112.7521 + (Math.random() - 0.5) * 0.1,
-        id_kecamatan: Math.floor(Math.random() * 31) + 1,
-        no_sipa: 'SIPA/' + String(Math.floor(Math.random() * 1000)).padStart(3, '0'),
-        no_hp: '08123456789'
-    })),
-
-    rpu: Array(12).fill().map((_, i) => ({
-        id: i + 1,
-        nama_rpu: `RPU ${i + 1}`,
-        alamat: `Jl. RPU No. ${i + 1}, Surabaya`,
-        latitude: -7.2575 + (Math.random() - 0.5) * 0.1,
-        longitude: 112.7521 + (Math.random() - 0.5) * 0.1,
-        id_kecamatan: Math.floor(Math.random() * 31) + 1,
-        tanggal_rpu: `2024-${String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}`,
-        jumlah_ekor: Math.floor(Math.random() * 500) + 50,
-        tersedia_juleha: Math.random() > 0.5 ? 'Ya' : 'Tidak'
-    })),
-
-    pemotongan_unggas: Array(35).fill().map((_, i) => ({
-        id: i + 1,
-        alamat: `Jl. Pemotongan No. ${i + 1}, Surabaya`,
-        latitude: -7.2575 + (Math.random() - 0.5) * 0.1,
-        longitude: 112.7521 + (Math.random() - 0.5) * 0.1,
-        id_kecamatan: Math.floor(Math.random() * 31) + 1,
-        tanggal: `2024-${String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}`,
-        ayam: Math.floor(Math.random() * 200),
-        itik: Math.floor(Math.random() * 100),
-        dst: Math.floor(Math.random() * 50),
-        daerah_asal: ['Surabaya', 'Sidoarjo', 'Gresik', 'Mojokerto'][Math.floor(Math.random() * 4)]
-    })),
-
-    demplot: Array(18).fill().map((_, i) => ({
-        id: i + 1,
-        nama_demplot: `Demplot ${i + 1}`,
-        alamat: `Jl. Demplot No. ${i + 1}, Surabaya`,
-        latitude: -7.2575 + (Math.random() - 0.5) * 0.1,
-        longitude: 112.7521 + (Math.random() - 0.5) * 0.1,
-        id_kecamatan: Math.floor(Math.random() * 31) + 1,
-        luas_m2: Math.floor(Math.random() * 1000) + 100,
-        jenis_hewan: ['Sapi', 'Kambing', 'Ayam', 'Itik'][Math.floor(Math.random() * 4)],
-        jumlah_hewan: Math.floor(Math.random() * 50) + 5,
-        stok_pakan: Math.floor(Math.random() * 1000) + 100 + ' kg'
-    })),
-
-    kecamatan: [
-        { id: 1, nama_kecamatan: 'Asemrowo', latitude: -7.2050, longitude: 112.7079 },
-        { id: 2, nama_kecamatan: 'Benowo', latitude: -7.2296, longitude: 112.6523 },
-        { id: 3, nama_kecamatan: 'Bubutan', latitude: -7.2455, longitude: 112.7293 },
-        { id: 4, nama_kecamatan: 'Bulak', latitude: -7.2299, longitude: 112.7871 },
-        { id: 5, nama_kecamatan: 'Dukuh Pakis', latitude: -7.2759, longitude: 112.6907 },
-        { id: 6, nama_kecamatan: 'Gayungan', latitude: -7.3246, longitude: 112.7349 },
-        { id: 7, nama_kecamatan: 'Genteng', latitude: -7.2569, longitude: 112.7482 },
-        { id: 8, nama_kecamatan: 'Gubeng', latitude: -7.2841, longitude: 112.7536 },
-        { id: 9, nama_kecamatan: 'Gununganyar', latitude: -7.3331, longitude: 112.7866 },
-        { id: 10, nama_kecamatan: 'Jambangan', latitude: -7.3249, longitude: 112.7135 },
-        { id: 11, nama_kecamatan: 'Karangpilang', latitude: -7.3193, longitude: 112.6768 },
-        { id: 12, nama_kecamatan: 'Kenjeran', latitude: -7.2478, longitude: 112.7799 },
-        { id: 13, nama_kecamatan: 'Krembangan', latitude: -7.2372, longitude: 112.7377 },
-        { id: 14, nama_kecamatan: 'Lakarsantri', latitude: -7.2914, longitude: 112.6495 },
-        { id: 15, nama_kecamatan: 'Mulyorejo', latitude: -7.2760, longitude: 112.7856 },
-        { id: 16, nama_kecamatan: 'Pabean Cantian', latitude: -7.2337, longitude: 112.7311 },
-        { id: 17, nama_kecamatan: 'Pakal', latitude: -7.2876, longitude: 112.6298 },
-        { id: 18, nama_kecamatan: 'Rungkut', latitude: -7.3177, longitude: 112.7785 },
-        { id: 19, nama_kecamatan: 'Sambikerep', latitude: -7.2971, longitude: 112.6668 },
-        { id: 20, nama_kecamatan: 'Sawahan', latitude: -7.2771, longitude: 112.7291 },
-        { id: 21, nama_kecamatan: 'Semampir', latitude: -7.2347, longitude: 112.7453 },
-        { id: 22, nama_kecamatan: 'Simokerto', latitude: -7.2448, longitude: 112.7434 },
-        { id: 23, nama_kecamatan: 'Sukolilo', latitude: -7.2875, longitude: 112.7772 },
-        { id: 24, nama_kecamatan: 'Sukomanunggal', latitude: -7.2963, longitude: 112.6982 },
-        { id: 25, nama_kecamatan: 'Tambaksari', latitude: -7.2593, longitude: 112.7604 },
-        { id: 26, nama_kecamatan: 'Tandes', latitude: -7.2591, longitude: 112.6728 },
-        { id: 27, nama_kecamatan: 'Tegalsari', latitude: -7.2645, longitude: 112.7428 },
-        { id: 28, nama_kecamatan: 'Tenggilis Mejoyo', latitude: -7.3158, longitude: 112.7635 },
-        { id: 29, nama_kecamatan: 'Wiyung', latitude: -7.3202, longitude: 112.6983 },
-        { id: 30, nama_kecamatan: 'Wonocolo', latitude: -7.3101, longitude: 112.7246 },
-        { id: 31, nama_kecamatan: 'Wonokromo', latitude: -7.2995, longitude: 112.7377 }
-    ]
-};
 
 // Variabel global
 let map;
 let markerCluster;
 let allMarkers = [];
-let activeDataTypes = new Set(['pengobatan', 'vaksinasi', 'pelaku_usaha', 'penjual_pakan', 'klinik_hewan', 'penjual_obat', 'rpu', 'pemotongan_unggas', 'demplot']);
-let selectedKecamatan = new Set(dataDariServer.kecamatan.map(k => k.id));
+
+let activeDataTypes = new Set(); // AWALNYA KOSONG!
+let selectedKecamatan = new Set(); // AWALNYA KOSONG!
 let tanggalMulai = null;
 let tanggalSelesai = null;
 
+// Data per jenis
+let dataPengobatan = [], dataVaksinasi = [], dataPelakuUsaha = [];
+let dataPenjualPakan = [], dataPenjualObat = [], dataKlinikHewan = [];
+let dataRpu = [], dataPemotonganUnggas = [], dataDemplot = [];
+
+let dataKecamatan = [];
+
 // Warna marker
 const warnaMarker = {
-    pengobatan: '#ff5252',
-    vaksinasi: '#4caf50',
-    pelaku_usaha: '#2196f3',
-    penjual_pakan: '#ff9800',
-    klinik_hewan: '#9c27b0',
-    penjual_obat: '#00bcd4',
-    rpu: '#795548',
-    pemotongan_unggas: '#e91e63',
-    demplot: '#8bc34a'
+    pengobatan: '#ff5252', vaksinasi: '#4caf50', pelaku_usaha: '#2196f3',
+    penjual_pakan: '#ff9800', klinik_hewan: '#9c27b0', penjual_obat: '#00bcd4',
+    rpu: '#795548', pemotongan_unggas: '#e91e63', demplot: '#8bc34a'
 };
 
 const ikonMarker = {
-    pengobatan: 'fa-notes-medical',
-    vaksinasi: 'fa-syringe',
-    pelaku_usaha: 'fa-users',
-    penjual_pakan: 'fa-seedling',
-    klinik_hewan: 'fa-clinic-medical',
-    penjual_obat: 'fa-pills',
-    rpu: 'fa-cut',
-    pemotongan_unggas: 'fa-drumstick-bite',
-    demplot: 'fa-seedling'
+    pengobatan: 'fa-notes-medical', vaksinasi: 'fa-syringe', pelaku_usaha: 'fa-users',
+    penjual_pakan: 'fa-seedling', klinik_hewan: 'fa-clinic-medical', penjual_obat: 'fa-pills',
+    rpu: 'fa-cut', pemotongan_unggas: 'fa-drumstick-bite', demplot: 'fa-seedling'
 };
 
-// Inisialisasi
+// Label untuk detail panel
+const fieldLabels = {
+    nama_petugas: 'Petugas', nama_peternak: 'Peternak', nama_pelaku: 'Nama',
+    nama_klinik: 'Klinik', nama_toko: 'Toko', nama_pemilik: 'Pemilik',
+    nama_rpu: 'Nama RPU', nama_demplot: 'Nama Demplot', nama_pj: 'Penanggung Jawab',
+    tanggal_pengobatan: 'Tanggal', tanggal_vaksinasi: 'Tanggal', tanggal_rpu: 'Tanggal',
+    tanggal_input: 'Tgl Input', created_at: 'Tgl Input', tanggal: 'Tanggal',
+    jumlah: 'Jumlah (ekor)', jumlah_dokter: 'Jumlah Dokter', jumlah_hewan: 'Jumlah Hewan',
+    luas_m2: 'Luas (m²)', ayam: 'Ayam (ekor)', itik: 'Itik (ekor)', dst: 'Lainnya (ekor)',
+    tersedia_juleha: 'Tersedia Juleha', stok_pakan: 'Stok Pakan', jenis_hewan: 'Jenis Hewan',
+    jenis_layanan: 'Jenis Layanan', jenis_vaksinasi: 'Jenis Vaksin', komoditas_ternak: 'Komoditas',
+    diagnosa: 'Gejala Klinis', daerah_asal: 'Daerah Asal', perizinan: 'Perizinan',
+    nib: 'NIB', surat_ijin: 'Surat Ijin', sertifikat_standar: 'Sertifikat',
+    obat_hewan: 'Obat Hewan', kategori_obat: 'Kategori Obat', jenis_obat: 'Jenis Obat',
+    dosis: 'Dosis', bantuan_prov: 'Bantuan Prov', kelurahan: 'Kelurahan',
+    kecamatan: 'Kecamatan', lokasi: 'Lokasi', alamat: 'Alamat', telp: 'No. Telp',
+    telepon: 'No. Telp', telp_pj: 'No. Telp PJ', rt: 'RT', rw: 'RW',
+    nik: 'NIK', nik_pj: 'NIK PJ', pejagal: 'Pejagal', keterangan: 'Keterangan'
+};
+
+// ============================================
+// INISIALISASI
+// ============================================
 $(document).ready(function() {
+    console.log('Peta Sebaran - Starting...');
     initMap();
     makeDraggable();
     initToggles();
     initResizable();
+    loadInitialData();
+    setupEventListeners();
 });
 
-// Inisialisasi peta
 function initMap() {
     map = L.map('map').setView([-7.2575, 112.7521], 12);
-    
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
-
     map.removeControl(map.zoomControl);
 
     markerCluster = L.markerClusterGroup({
@@ -210,868 +79,696 @@ function initMap() {
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true
     });
-
     map.addLayer(markerCluster);
-
-    loadKecamatanToFilter();
-    loadDataKePeta();
-    setupEventListeners();
 }
 
-// Buat elemen bisa digeser
 function makeDraggable() {
-    $("#filterPanel").draggable({
-        handle: "#filterHeader",
-        containment: "window"
-    });
-
-    $("#mapLegend").draggable({
-        handle: "#legendHeader",
-        containment: "window"
-    });
-
-    $("#detailPanel").draggable({
-        handle: "#detailHeader",
-        containment: "window"
-    });
+    $("#filterPanel").draggable({ handle: "#filterHeader", containment: "window" });
+    $("#mapLegend").draggable({ handle: "#legendHeader", containment: "window" });
+    $("#detailPanel").draggable({ handle: "#detailHeader", containment: "window" });
 }
 
-// Inisialisasi toggle untuk filter dan legenda
 function initToggles() {
     $("#toggleFilter").click(function() {
         $("#filterContent").slideToggle();
         $(this).find('i').toggleClass('fa-chevron-up fa-chevron-down');
     });
-
     $("#toggleLegend").click(function() {
         $("#legendContent").slideToggle();
         $(this).find('i').toggleClass('fa-chevron-up fa-chevron-down');
     });
-
     $("#filterToggleMobile").click(function() {
         $("#filterPanel").toggleClass('active');
     });
 }
 
-// Resize filter panel
 function initResizable() {
     const panel = document.getElementById('filterPanel');
     const handle = document.getElementById('resizeHandle');
-    
     if (handle) {
         handle.addEventListener('mousedown', function(e) {
             e.preventDefault();
-            const startX = e.clientX;
-            const startY = e.clientY;
+            const startX = e.clientX, startY = e.clientY;
             const startWidth = parseInt(document.defaultView.getComputedStyle(panel).width, 10);
             const startHeight = parseInt(document.defaultView.getComputedStyle(panel).height, 10);
 
             function doDrag(e) {
-                const newWidth = startWidth + (e.clientX - startX);
-                const newHeight = startHeight + (e.clientY - startY);
-                panel.style.width = Math.max(280, newWidth) + 'px';
-                panel.style.height = Math.max(200, newHeight) + 'px';
+                panel.style.width = Math.max(280, startWidth + (e.clientX - startX)) + 'px';
+                panel.style.height = Math.max(200, startHeight + (e.clientY - startY)) + 'px';
             }
-
             function stopDrag() {
-                document.documentElement.removeEventListener('mousemove', doDrag, false);
-                document.documentElement.removeEventListener('mouseup', stopDrag, false);
+                document.documentElement.removeEventListener('mousemove', doDrag);
+                document.documentElement.removeEventListener('mouseup', stopDrag);
             }
-
-            document.documentElement.addEventListener('mousemove', doDrag, false);
-            document.documentElement.addEventListener('mouseup', stopDrag, false);
+            document.documentElement.addEventListener('mousemove', doDrag);
+            document.documentElement.addEventListener('mouseup', stopDrag);
         });
     }
 }
 
-// Load kecamatan ke filter
+// ============================================
+// LOAD DATA AWAL (HANYA KECAMATAN, TIDAK ADA DATA)
+// ============================================
+
+function loadInitialData() {
+    showLoading();
+    console.log('Loading initial data (kosong)...');
+    
+    // Reset semua data
+    dataPengobatan = [];
+    dataVaksinasi = [];
+    dataPelakuUsaha = [];
+    dataPenjualPakan = [];
+    dataPenjualObat = [];
+    dataKlinikHewan = [];
+    dataRpu = [];
+    dataPemotonganUnggas = [];
+    dataDemplot = [];
+    
+    // Load kecamatan saja
+    loadKecamatan();
+    
+    // Set counter ke 0
+    $('#totalMarkers, #totalFiltered').text('0');
+    $('#countPengobatan, #countVaksinasi, #countPelakuUsaha').text('0');
+    $('#countPenjualPakan, #countKlinik, #countPenjualObat').text('0');
+    $('#countRPU, #countPemotonganUnggas, #countDemplot').text('0');
+    
+    hideLoading();
+}
+
+function loadKecamatan() {
+    $.ajax({
+        url: base_url + 'index.php/Peta_sebaran/get_all_kecamatan',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            if (data && data.length) {
+                dataKecamatan = data;
+            } else {
+                dataKecamatan = [
+                    {id:1, nama_kecamatan:'Jambangan'}, {id:2, nama_kecamatan:'Benowo'},
+                    {id:3, nama_kecamatan:'Dukuh Pakis'}, {id:4, nama_kecamatan:'Bulak'},
+                    {id:5, nama_kecamatan:'Kenjeran'}, {id:6, nama_kecamatan:'Pakal'}
+                ];
+            }
+            loadKecamatanToFilter();
+        },
+        error: function() {
+            dataKecamatan = [{id:1, nama_kecamatan:'Jambangan'}];
+            loadKecamatanToFilter();
+        }
+    });
+}
+
 function loadKecamatanToFilter() {
     const list = document.getElementById('kecamatanList');
+    if (!list) return;
     list.innerHTML = '';
     
-    dataDariServer.kecamatan.forEach(k => {
+    dataKecamatan.forEach(k => {
+        const namaKec = k.nama_kecamatan;
         const item = document.createElement('div');
         item.className = 'kecamatan-item';
         item.innerHTML = `
-            <input type="checkbox" class="kecamatan-checkbox form-check-input" 
-                   id="kec_${k.id}" value="${k.id}" checked>
-            <label class="kecamatan-name" for="kec_${k.id}">${k.nama_kecamatan}</label>
+            <input type="checkbox" class="kecamatan-checkbox" id="kec_${k.id}" value="${namaKec}">
+            <label class="kecamatan-name" for="kec_${k.id}">${namaKec}</label>
             <span class="kecamatan-count" id="count_${k.id}">0</span>
         `;
         list.appendChild(item);
     });
-
+    
+    // Event listener untuk checkbox kecamatan
     document.querySelectorAll('.kecamatan-checkbox').forEach(cb => {
         cb.addEventListener('change', function() {
-            const id = parseInt(this.value);
-            if (this.checked) {
-                selectedKecamatan.add(id);
-            } else {
-                selectedKecamatan.delete(id);
-            }
+            if (this.checked) selectedKecamatan.add(this.value);
+            else selectedKecamatan.delete(this.value);
             updateSelectAllCheckbox();
-            loadDataKePeta();
-        });
-    });
-
-    document.getElementById('selectAllKecamatan').addEventListener('change', function() {
-        const checked = this.checked;
-        document.querySelectorAll('.kecamatan-checkbox').forEach(cb => {
-            cb.checked = checked;
-            const id = parseInt(cb.value);
-            if (checked) {
-                selectedKecamatan.add(id);
-            } else {
-                selectedKecamatan.delete(id);
+            if (activeDataTypes.size > 0) {
+                applyFiltersAndReload();
             }
         });
-        loadDataKePeta();
     });
+    
+    const selectAll = document.getElementById('selectAllKecamatan');
+    if (selectAll) {
+        // PASTIKAN "PILIH SEMUA KECAMATAN" TIDAK DICENTANG DI AWAL
+        selectAll.checked = false;
+        
+        selectAll.addEventListener('change', function() {
+            const checked = this.checked;
+            document.querySelectorAll('.kecamatan-checkbox').forEach(cb => {
+                cb.checked = checked;
+                if (checked) selectedKecamatan.add(cb.value);
+                else selectedKecamatan.delete(cb.value);
+            });
+            if (activeDataTypes.size > 0) {
+                applyFiltersAndReload();
+            }
+        });
+    }
 }
 
 function updateSelectAllCheckbox() {
-    const allChecked = document.querySelectorAll('.kecamatan-checkbox:checked').length === dataDariServer.kecamatan.length;
-    document.getElementById('selectAllKecamatan').checked = allChecked;
+    const checkboxes = document.querySelectorAll('.kecamatan-checkbox');
+    const selectAll = document.getElementById('selectAllKecamatan');
+    if (selectAll && checkboxes.length) {
+        const allChecked = document.querySelectorAll('.kecamatan-checkbox:checked').length === checkboxes.length;
+        selectAll.checked = allChecked;
+    }
 }
 
-// Load data ke peta
-function loadDataKePeta() {
+// ============================================
+// FUNGSI LOAD DATA BERDASARKAN FILTER
+// ============================================
+
+function applyFiltersAndReload() {
+    if (activeDataTypes.size === 0) {
+        // Tidak ada jenis data yang dipilih -> peta kosong
+        clearMap();
+        return;
+    }
+    
     showLoading();
     
-    markerCluster.clearLayers();
-    allMarkers = [];
-
-    let totalMarkers = 0;
-    const counts = {
-        pengobatan: 0,
-        vaksinasi: 0,
-        pelaku_usaha: 0,
-        penjual_pakan: 0,
-        klinik_hewan: 0,
-        penjual_obat: 0,
-        rpu: 0,
-        pemotongan_unggas: 0,
-        demplot: 0
-    };
-
-    activeDataTypes.forEach(jenis => {
-        const data = dataDariServer[jenis] || [];
-        
-        data.forEach(item => {
-            if (!selectedKecamatan.has(item.id_kecamatan)) {
-                return;
-            }
-
-            if ((jenis === 'pengobatan' || jenis === 'vaksinasi' || jenis === 'rpu' || jenis === 'pemotongan_unggas')) {
-                if (tanggalMulai && tanggalSelesai) {
-                    let tglItem = null;
-                    if (jenis === 'pengobatan') tglItem = item.tanggal_pengobatan;
-                    else if (jenis === 'vaksinasi') tglItem = item.tanggal_vaksinasi;
-                    else if (jenis === 'rpu') tglItem = item.tanggal_rpu;
-                    else if (jenis === 'pemotongan_unggas') tglItem = item.tanggal;
-                    
-                    if (tglItem && (tglItem < tanggalMulai || tglItem > tanggalSelesai)) {
-                        return;
-                    }
-                }
-            }
-
-            const marker = createMarker(item, jenis);
-            markerCluster.addLayer(marker);
-            
-            allMarkers.push({ marker, data: item, jenis });
-            totalMarkers++;
-            counts[jenis]++;
-        });
+    const kecamatanArray = Array.from(selectedKecamatan);
+    
+    // Load data berdasarkan jenis data yang aktif
+    const promises = [];
+    
+    if (activeDataTypes.has('pengobatan')) {
+        promises.push(loadDataPengobatan(kecamatanArray, tanggalMulai, tanggalSelesai));
+    } else {
+        dataPengobatan = [];
+    }
+    
+    if (activeDataTypes.has('vaksinasi')) {
+        promises.push(loadDataVaksinasi(kecamatanArray, tanggalMulai, tanggalSelesai));
+    } else {
+        dataVaksinasi = [];
+    }
+    
+    if (activeDataTypes.has('pelaku_usaha')) {
+        promises.push(loadDataPelakuUsaha(kecamatanArray));
+    } else {
+        dataPelakuUsaha = [];
+    }
+    
+    if (activeDataTypes.has('penjual_pakan')) {
+        promises.push(loadDataPenjualPakan(kecamatanArray));
+    } else {
+        dataPenjualPakan = [];
+    }
+    
+    if (activeDataTypes.has('penjual_obat')) {
+        promises.push(loadDataPenjualObat(kecamatanArray));
+    } else {
+        dataPenjualObat = [];
+    }
+    
+    if (activeDataTypes.has('klinik_hewan')) {
+        promises.push(loadDataKlinikHewan(kecamatanArray));
+    } else {
+        dataKlinikHewan = [];
+    }
+    
+    if (activeDataTypes.has('rpu')) {
+        promises.push(loadDataRpu(kecamatanArray, tanggalMulai, tanggalSelesai));
+    } else {
+        dataRpu = [];
+    }
+    
+    if (activeDataTypes.has('pemotongan_unggas')) {
+        promises.push(loadDataPemotonganUnggas(kecamatanArray, tanggalMulai, tanggalSelesai));
+    } else {
+        dataPemotonganUnggas = [];
+    }
+    
+    if (activeDataTypes.has('demplot')) {
+        promises.push(loadDataDemplot(kecamatanArray));
+    } else {
+        dataDemplot = [];
+    }
+    
+    Promise.all(promises).finally(() => {
+        refreshMap();
+        hideLoading();
     });
-
-    document.getElementById('totalMarkers').innerText = totalMarkers;
-    document.getElementById('totalFiltered').innerText = totalMarkers;
-    
-    // Update legend counts
-    document.getElementById('countPengobatan').innerText = counts.pengobatan;
-    document.getElementById('countVaksinasi').innerText = counts.vaksinasi;
-    document.getElementById('countPelakuUsaha').innerText = counts.pelaku_usaha;
-    document.getElementById('countPenjualPakan').innerText = counts.penjual_pakan;
-    document.getElementById('countKlinik').innerText = counts.klinik_hewan;
-    document.getElementById('countPenjualObat').innerText = counts.penjual_obat;
-    document.getElementById('countRPU').innerText = counts.rpu;
-    document.getElementById('countPemotonganUnggas').innerText = counts.pemotongan_unggas;
-    document.getElementById('countDemplot').innerText = counts.demplot;
-    
-    updateKecamatanCounts();
-    hideLoading();
 }
 
-// Buat marker
-function createMarker(item, jenis) {
-    const icon = L.divIcon({
-        html: `<div style="background-color: ${warnaMarker[jenis]}; width: 28px; height: 28px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;">
-                <i class="fas ${ikonMarker[jenis]}"></i>
-               </div>`,
-        className: 'custom-marker',
-        iconSize: [28, 28],
-        iconAnchor: [14, 14],
-        popupAnchor: [0, -14]
+function loadDataPengobatan(kecamatan, tglMulai, tglSelesai) {
+    let params = {};
+    if (kecamatan && kecamatan.length) params.kecamatan = JSON.stringify(kecamatan);
+    if (tglMulai && tglSelesai) {
+        params.tgl_mulai = tglMulai;
+        params.tgl_selesai = tglSelesai;
+    }
+    return $.ajax({
+        url: base_url + 'index.php/Peta_sebaran/get_data_pengobatan',
+        type: 'GET',
+        data: params,
+        dataType: 'json',
+        success: function(data) { dataPengobatan = data || []; },
+        error: function() { dataPengobatan = []; }
     });
+}
 
-    const marker = L.marker([item.latitude, item.longitude], { icon });
+function loadDataVaksinasi(kecamatan, tglMulai, tglSelesai) {
+    let params = {};
+    if (kecamatan && kecamatan.length) params.kecamatan = JSON.stringify(kecamatan);
+    if (tglMulai && tglSelesai) {
+        params.tgl_mulai = tglMulai;
+        params.tgl_selesai = tglSelesai;
+    }
+    return $.ajax({
+        url: base_url + 'index.php/Peta_sebaran/get_data_vaksinasi',
+        type: 'GET',
+        data: params,
+        dataType: 'json',
+        success: function(data) { dataVaksinasi = data || []; },
+        error: function() { dataVaksinasi = []; }
+    });
+}
+
+function loadDataPelakuUsaha(kecamatan) {
+    let params = {};
+    if (kecamatan && kecamatan.length) params.kecamatan = JSON.stringify(kecamatan);
+    return $.ajax({
+        url: base_url + 'index.php/Peta_sebaran/get_data_pelaku_usaha',
+        type: 'GET',
+        data: params,
+        dataType: 'json',
+        success: function(data) { dataPelakuUsaha = data || []; },
+        error: function() { dataPelakuUsaha = []; }
+    });
+}
+
+function loadDataPenjualPakan(kecamatan) {
+    let params = {};
+    if (kecamatan && kecamatan.length) params.kecamatan = JSON.stringify(kecamatan);
+    return $.ajax({
+        url: base_url + 'index.php/Peta_sebaran/get_data_penjual_pakan',
+        type: 'GET',
+        data: params,
+        dataType: 'json',
+        success: function(data) { dataPenjualPakan = data || []; },
+        error: function() { dataPenjualPakan = []; }
+    });
+}
+
+function loadDataPenjualObat(kecamatan) {
+    let params = {};
+    if (kecamatan && kecamatan.length) params.kecamatan = JSON.stringify(kecamatan);
+    return $.ajax({
+        url: base_url + 'index.php/Peta_sebaran/get_data_penjual_obat',
+        type: 'GET',
+        data: params,
+        dataType: 'json',
+        success: function(data) { dataPenjualObat = data || []; },
+        error: function() { dataPenjualObat = []; }
+    });
+}
+
+function loadDataKlinikHewan(kecamatan) {
+    let params = {};
+    if (kecamatan && kecamatan.length) params.kecamatan = JSON.stringify(kecamatan);
+    return $.ajax({
+        url: base_url + 'index.php/Peta_sebaran/get_data_klinik_hewan',
+        type: 'GET',
+        data: params,
+        dataType: 'json',
+        success: function(data) { dataKlinikHewan = data || []; },
+        error: function() { dataKlinikHewan = []; }
+    });
+}
+
+function loadDataRpu(kecamatan, tglMulai, tglSelesai) {
+    let params = {};
+    if (kecamatan && kecamatan.length) params.kecamatan = JSON.stringify(kecamatan);
+    if (tglMulai && tglSelesai) {
+        params.tgl_mulai = tglMulai;
+        params.tgl_selesai = tglSelesai;
+    }
+    return $.ajax({
+        url: base_url + 'index.php/Peta_sebaran/get_data_rpu',
+        type: 'GET',
+        data: params,
+        dataType: 'json',
+        success: function(data) { dataRpu = data || []; },
+        error: function() { dataRpu = []; }
+    });
+}
+
+function loadDataPemotonganUnggas(kecamatan, tglMulai, tglSelesai) {
+    let params = {};
+    if (kecamatan && kecamatan.length) params.kecamatan = JSON.stringify(kecamatan);
+    if (tglMulai && tglSelesai) {
+        params.tgl_mulai = tglMulai;
+        params.tgl_selesai = tglSelesai;
+    }
+    return $.ajax({
+        url: base_url + 'index.php/Peta_sebaran/get_data_pemotongan_unggas',
+        type: 'GET',
+        data: params,
+        dataType: 'json',
+        success: function(data) { dataPemotonganUnggas = data || []; },
+        error: function() { dataPemotonganUnggas = []; }
+    });
+}
+
+function loadDataDemplot(kecamatan) {
+    let params = {};
+    if (kecamatan && kecamatan.length) params.kecamatan = JSON.stringify(kecamatan);
+    return $.ajax({
+        url: base_url + 'index.php/Peta_sebaran/get_data_demplot',
+        type: 'GET',
+        data: params,
+        dataType: 'json',
+        success: function(data) { dataDemplot = data || []; },
+        error: function() { dataDemplot = []; }
+    });
+}
+
+function clearMap() {
+    if (markerCluster) {
+        markerCluster.clearLayers();
+    }
+    allMarkers = [];
+    $('#totalMarkers, #totalFiltered').text('0');
+    $('#countPengobatan, #countVaksinasi, #countPelakuUsaha').text('0');
+    $('#countPenjualPakan, #countKlinik, #countPenjualObat').text('0');
+    $('#countRPU, #countPemotonganUnggas, #countDemplot').text('0');
     
-    const popupContent = createPopupContent(item, jenis);
-    marker.bindPopup(popupContent);
-
-    marker.on('click', () => {
-        showDetailPanel(item, jenis);
+    // Reset counter kecamatan
+    dataKecamatan.forEach(k => {
+        const el = document.getElementById(`count_${k.id}`);
+        if (el) el.innerText = '0';
     });
+}
 
+// ============================================
+// REFRESH MAP - TAMPILKAN MARKER
+// ============================================
+
+function refreshMap() {
+    if (!markerCluster) return;
+    markerCluster.clearLayers();
+    allMarkers = [];
+    
+    // Reset counter kecamatan
+    let kecamatanCounts = {};
+    dataKecamatan.forEach(k => kecamatanCounts[k.nama_kecamatan] = 0);
+    
+    let totalMarkers = 0;
+    let legendCounts = {
+        pengobatan: 0, vaksinasi: 0, pelaku_usaha: 0,
+        penjual_pakan: 0, penjual_obat: 0, klinik_hewan: 0,
+        rpu: 0, pemotongan_unggas: 0, demplot: 0
+    };
+    
+    // Data configuration: [dataArray, jenis]
+    const dataConfigs = [
+        [dataPengobatan, 'pengobatan'], [dataVaksinasi, 'vaksinasi'],
+        [dataPelakuUsaha, 'pelaku_usaha'], [dataPenjualPakan, 'penjual_pakan'],
+        [dataPenjualObat, 'penjual_obat'], [dataKlinikHewan, 'klinik_hewan'],
+        [dataRpu, 'rpu'], [dataPemotonganUnggas, 'pemotongan_unggas'],
+        [dataDemplot, 'demplot']
+    ];
+    
+    dataConfigs.forEach(([dataArr, jenis]) => {
+        if (!activeDataTypes.has(jenis)) return;
+        
+        (dataArr || []).forEach(item => {
+            // Filter kecamatan (sudah terfilter dari API, tapi double check)
+            const kecamatan = (item.nama_kecamatan || item.kecamatan || '').toLowerCase();
+            if (selectedKecamatan.size > 0 && !Array.from(selectedKecamatan).some(k => k.toLowerCase() === kecamatan)) {
+                return;
+            }
+            
+            totalMarkers++;
+            legendCounts[jenis]++;
+            
+            // Update counter kecamatan
+            for (let k of dataKecamatan) {
+                if (k.nama_kecamatan.toLowerCase() === kecamatan) {
+                    kecamatanCounts[k.nama_kecamatan]++;
+                    break;
+                }
+            }
+            
+            // Buat marker
+            let lat = parseFloat(item.latitude);
+            let lng = parseFloat(item.longitude);
+            if (!isNaN(lat) && lat !== 0 && !isNaN(lng) && lng !== 0) {
+                lat = lat || -7.2575;
+                lng = lng || 112.7521;
+                const marker = createMarker(item, jenis, lat, lng);
+                markerCluster.addLayer(marker);
+                allMarkers.push({ marker, data: item, jenis });
+            }
+        });
+    });
+    
+    // Update legend counts
+    $('#totalMarkers, #totalFiltered').text(totalMarkers);
+    $('#countPengobatan').text(legendCounts.pengobatan);
+    $('#countVaksinasi').text(legendCounts.vaksinasi);
+    $('#countPelakuUsaha').text(legendCounts.pelaku_usaha);
+    $('#countPenjualPakan').text(legendCounts.penjual_pakan);
+    $('#countKlinik').text(legendCounts.klinik_hewan);
+    $('#countPenjualObat').text(legendCounts.penjual_obat);
+    $('#countRPU').text(legendCounts.rpu);
+    $('#countPemotonganUnggas').text(legendCounts.pemotongan_unggas);
+    $('#countDemplot').text(legendCounts.demplot);
+    
+    // Update counter kecamatan
+    dataKecamatan.forEach(k => {
+        const el = document.getElementById(`count_${k.id}`);
+        if (el) el.innerText = kecamatanCounts[k.nama_kecamatan] || 0;
+    });
+    
+    // Zoom ke marker jika ada
+    if (allMarkers.length > 0) {
+        const group = L.featureGroup(allMarkers.map(m => m.marker));
+        map.fitBounds(group.getBounds().pad(0.1));
+    }
+}
+
+function createMarker(item, jenis, lat, lng) {
+    const icon = L.divIcon({
+        html: `<div style="background-color: ${warnaMarker[jenis]}; width: 28px; height: 28px; border-radius: 50%; border: 3px solid white; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"><i class="fas ${ikonMarker[jenis]}"></i></div>`,
+        className: 'custom-marker', iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -14]
+    });
+    const marker = L.marker([lat, lng], { icon });
+    marker.bindPopup(createPopupContent(item, jenis));
+    marker.on('click', () => showDetail(item, jenis));
     return marker;
 }
 
-// Buat konten popup
 function createPopupContent(item, jenis) {
-    let content = `<div class="popup-title">`;
-    let namaKecamatan = dataDariServer.kecamatan.find(k => k.id === item.id_kecamatan)?.nama_kecamatan || '-';
+    let title = '', fields = '';
+    const kec = item.nama_kecamatan || item.kecamatan || '-';
     
     switch(jenis) {
         case 'pengobatan':
-            content += `<i class="fas fa-notes-medical me-2" style="color: ${warnaMarker[jenis]}"></i>Data Pengobatan`;
+            title = 'Pengobatan';
+            fields = `<b>Peternak:</b> ${item.nama_peternak || '-'}<br><b>Tanggal:</b> ${item.tanggal_pengobatan || '-'}<br><b>Diagnosa:</b> ${item.diagnosa || '-'}`;
             break;
         case 'vaksinasi':
-            content += `<i class="fas fa-syringe me-2" style="color: ${warnaMarker[jenis]}"></i>Data Vaksinasi`;
+            title = 'Vaksinasi';
+            fields = `<b>Peternak:</b> ${item.nama_peternak || '-'}<br><b>Tanggal:</b> ${item.tanggal_vaksinasi || '-'}<br><b>Jenis Vaksin:</b> ${item.jenis_vaksinasi || '-'}`;
             break;
         case 'pelaku_usaha':
-            content += `<i class="fas fa-users me-2" style="color: ${warnaMarker[jenis]}"></i>Pelaku Usaha`;
+            title = 'Pelaku Usaha';
+            fields = `<b>Nama:</b> ${item.nama_pelaku || '-'}<br><b>Alamat:</b> ${item.alamat || '-'}<br><b>Telepon:</b> ${item.telepon || '-'}`;
             break;
         case 'penjual_pakan':
-            content += `<i class="fas fa-seedling me-2" style="color: ${warnaMarker[jenis]}"></i>Penjual Pakan`;
-            break;
-        case 'klinik_hewan':
-            content += `<i class="fas fa-clinic-medical me-2" style="color: ${warnaMarker[jenis]}"></i>Klinik Hewan`;
+            title = 'Penjual Pakan';
+            fields = `<b>Toko:</b> ${item.nama_toko || '-'}<br><b>Pemilik:</b> ${item.nama_pemilik || '-'}`;
             break;
         case 'penjual_obat':
-            content += `<i class="fas fa-pills me-2" style="color: ${warnaMarker[jenis]}"></i>Penjual Obat`;
+            title = 'Penjual Obat';
+            fields = `<b>Toko:</b> ${item.nama_toko || '-'}<br><b>Pemilik:</b> ${item.nama_pemilik || '-'}<br><b>Kategori:</b> ${item.kategori_obat || '-'}`;
             break;
-        case 'rpu':
-            content += `<i class="fas fa-cut me-2" style="color: ${warnaMarker[jenis]}"></i>RPU`;
-            break;
-        case 'pemotongan_unggas':
-            content += `<i class="fas fa-drumstick-bite me-2" style="color: ${warnaMarker[jenis]}"></i>Pemotongan Unggas`;
-            break;
-        case 'demplot':
-            content += `<i class="fas fa-seedling me-2" style="color: ${warnaMarker[jenis]}"></i>Demplot`;
-            break;
-    }
-    
-    content += `</div>`;
-
-    switch(jenis) {
-        case 'pengobatan':
-            content += `
-                <div class="popup-item">
-                    <span class="popup-label">Peternak:</span>
-                    <span class="popup-value">${item.nama_peternak || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Tanggal:</span>
-                    <span class="popup-value">${item.tanggal_pengobatan || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Diagnosa:</span>
-                    <span class="popup-value">${item.diagnosa || '-'}</span>
-                </div>
-            `;
-            break;
-            
-        case 'vaksinasi':
-            content += `
-                <div class="popup-item">
-                    <span class="popup-label">Peternak:</span>
-                    <span class="popup-value">${item.nama_peternak || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Tanggal:</span>
-                    <span class="popup-value">${item.tanggal_vaksinasi || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Jenis Vaksin:</span>
-                    <span class="popup-value">${item.jenis_vaksin || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Jumlah:</span>
-                    <span class="popup-value">${item.jumlah_ternak || '0'} ekor</span>
-                </div>
-            `;
-            break;
-            
-        case 'pelaku_usaha':
-            content += `
-                <div class="popup-item">
-                    <span class="popup-label">Nama:</span>
-                    <span class="popup-value">${item.nama_pelaku || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Jenis Usaha:</span>
-                    <span class="popup-value">${item.jenis_usaha || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Skala:</span>
-                    <span class="popup-value">${item.skala_usaha || '-'}</span>
-                </div>
-            `;
-            break;
-            
-        case 'penjual_pakan':
-            content += `
-                <div class="popup-item">
-                    <span class="popup-label">Toko:</span>
-                    <span class="popup-value">${item.nama_toko || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Pemilik:</span>
-                    <span class="popup-value">${item.pemilik || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Jenis Pakan:</span>
-                    <span class="popup-value">${item.jenis_pakan || '-'}</span>
-                </div>
-            `;
-            break;
-            
         case 'klinik_hewan':
-            content += `
-                <div class="popup-item">
-                    <span class="popup-label">Klinik:</span>
-                    <span class="popup-value">${item.nama_klinik || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Dokter:</span>
-                    <span class="popup-value">${item.dokter_hewan || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Layanan:</span>
-                    <span class="popup-value">${item.layanan || '-'}</span>
-                </div>
-            `;
+            title = 'Klinik Hewan';
+            fields = `<b>Klinik:</b> ${item.nama_klinik || '-'}<br><b>Alamat:</b> ${item.alamat || '-'}<br><b>Dokter:</b> ${item.jumlah_dokter || 0}`;
             break;
-            
-        case 'penjual_obat':
-            content += `
-                <div class="popup-item">
-                    <span class="popup-label">Toko:</span>
-                    <span class="popup-value">${item.nama_toko || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Pemilik:</span>
-                    <span class="popup-value">${item.pemilik || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">No. SIPA:</span>
-                    <span class="popup-value">${item.no_sipa || '-'}</span>
-                </div>
-            `;
-            break;
-            
         case 'rpu':
-            content += `
-                <div class="popup-item">
-                    <span class="popup-label">Nama RPU:</span>
-                    <span class="popup-value">${item.nama_rpu || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Tanggal:</span>
-                    <span class="popup-value">${item.tanggal_rpu || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Jumlah Potong:</span>
-                    <span class="popup-value">${item.jumlah_ekor || '0'} ekor</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Tersedia Juleha:</span>
-                    <span class="popup-value">${item.tersedia_juleha || '-'}</span>
-                </div>
-            `;
+            title = 'RPU';
+            fields = `<b>Nama RPU:</b> ${item.nama_rpu || '-'}<br><b>Tanggal:</b> ${item.tanggal_rpu || '-'}<br><b>Juleha:</b> ${item.tersedia_juleha || '-'}`;
             break;
-            
         case 'pemotongan_unggas':
-            const total = (item.ayam || 0) + (item.itik || 0) + (item.dst || 0);
-            content += `
-                <div class="popup-item">
-                    <span class="popup-label">Tanggal:</span>
-                    <span class="popup-value">${item.tanggal || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Ayam:</span>
-                    <span class="popup-value">${item.ayam || 0} ekor</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Itik:</span>
-                    <span class="popup-value">${item.itik || 0} ekor</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Lainnya:</span>
-                    <span class="popup-value">${item.dst || 0} ekor</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Total:</span>
-                    <span class="popup-value">${total} ekor</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Daerah Asal:</span>
-                    <span class="popup-value">${item.daerah_asal || '-'}</span>
-                </div>
-            `;
+            title = 'Pemotongan Unggas';
+            const total = (item.ayam||0)+(item.itik||0)+(item.dst||0);
+            fields = `<b>Tanggal:</b> ${item.tanggal || '-'}<br><b>Total:</b> ${total} ekor<br><b>Daerah Asal:</b> ${item.daerah_asal || '-'}`;
             break;
-            
         case 'demplot':
-            content += `
-                <div class="popup-item">
-                    <span class="popup-label">Nama Demplot:</span>
-                    <span class="popup-value">${item.nama_demplot || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Luas Lahan:</span>
-                    <span class="popup-value">${item.luas_m2 || 0} m²</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Jenis Hewan:</span>
-                    <span class="popup-value">${item.jenis_hewan || '-'}</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Jumlah:</span>
-                    <span class="popup-value">${item.jumlah_hewan || 0} ekor</span>
-                </div>
-                <div class="popup-item">
-                    <span class="popup-label">Stok Pakan:</span>
-                    <span class="popup-value">${item.stok_pakan || '-'}</span>
-                </div>
-            `;
+            title = 'Demplot';
+            fields = `<b>Nama:</b> ${item.nama_demplot || '-'}<br><b>Luas:</b> ${item.luas_m2 || 0} m²<br><b>Hewan:</b> ${item.jenis_hewan || '-'}<br><b>Jumlah:</b> ${item.jumlah_hewan || 0} ekor`;
             break;
     }
-
-    content += `
-        <div class="popup-item">
-            <span class="popup-label">Kecamatan:</span>
-            <span class="popup-value">${namaKecamatan}</span>
-        </div>
-        <div class="popup-item">
-            <span class="popup-label">Alamat:</span>
-            <span class="popup-value">${item.alamat || '-'}</span>
-        </div>
-        <button class="popup-btn" onclick="window.showDetailFromPopup('${jenis}', ${item.id})">
-            <i class="fas fa-info-circle me-1"></i>Lihat Detail
-        </button>
-    `;
-
-    return content;
+    return `<div style="min-width:250px;"><b style="color:${warnaMarker[jenis]};">${title}</b><hr>${fields}<br><b>Kecamatan:</b> ${kec}<br><button onclick='showDetailById("${jenis}", ${item.id})' style="margin-top:8px;padding:5px 10px;background:${warnaMarker[jenis]};color:white;border:none;border-radius:4px;cursor:pointer;">Detail</button></div>`;
 }
 
-window.showDetailFromPopup = function(jenis, id) {
-    const data = dataDariServer[jenis];
-    const item = data.find(d => d.id == id);
-    if (item) {
-        showDetailPanel(item, jenis);
+window.showDetailById = function(jenis, id) {
+    let item = null;
+    switch(jenis) {
+        case 'pengobatan': item = dataPengobatan.find(d=>d.id==id); break;
+        case 'vaksinasi': item = dataVaksinasi.find(d=>d.id==id); break;
+        case 'pelaku_usaha': item = dataPelakuUsaha.find(d=>d.id==id); break;
+        case 'penjual_pakan': item = dataPenjualPakan.find(d=>d.id==id); break;
+        case 'penjual_obat': item = dataPenjualObat.find(d=>d.id==id); break;
+        case 'klinik_hewan': item = dataKlinikHewan.find(d=>d.id==id); break;
+        case 'rpu': item = dataRpu.find(d=>d.id==id); break;
+        case 'pemotongan_unggas': item = dataPemotonganUnggas.find(d=>d.id==id); break;
+        case 'demplot': item = dataDemplot.find(d=>d.id==id); break;
     }
+    if (item) showDetail(item, jenis);
 };
 
-function showDetailPanel(item, jenis) {
+function showDetail(item, jenis) {
     const panel = document.getElementById('detailPanel');
     const body = document.getElementById('detailBody');
-    let namaKecamatan = dataDariServer.kecamatan.find(k => k.id === item.id_kecamatan)?.nama_kecamatan || '-';
+    let html = `<div class="detail-row"><span class="detail-label">Jenis Data:</span><span class="detail-value">${jenis.toUpperCase().replace(/_/g,' ')}</span></div>`;
     
-    let html = '';
+    const fieldsMap = {
+        pengobatan: ['nama_petugas','nama_peternak','nik','tanggal_pengobatan','kelurahan','rt','rw','komoditas_ternak','diagnosa','jenis_pengobatan','jumlah','keterangan','bantuan_prov','alamat','telp'],
+        vaksinasi: ['nama_petugas','nama_peternak','nik','tanggal_vaksinasi','kelurahan','rt','rw','komoditas_ternak','jenis_vaksinasi','dosis','jumlah','keterangan','bantuan_prov','alamat','telp'],
+        pelaku_usaha: ['nama_petugas','nama_pelaku','nik','tanggal_input','kelurahan','alamat','telepon'],
+        penjual_pakan: ['nama_petugas','nama_toko','nama_pemilik','nik','tanggal_input','kelurahan','alamat','telp','nib','surat_ijin'],
+        penjual_obat: ['nama_petugas','nama_toko','nama_pemilik','nik','tanggal_input','kelurahan','alamat','telp','kategori_obat','jenis_obat','nib','surat_ijin','obat_hewan'],
+        klinik_hewan: ['nama_klinik','nama_pemilik','created_at','kelurahan','alamat','telp','jumlah_dokter','jenis_layanan','surat_ijin','sertifikat_standar','nib'],
+        rpu: ['nama_rpu','tanggal_rpu','kelurahan','lokasi','nama_pj','telp_pj','tersedia_juleha','perizinan','nama_petugas','keterangan'],
+        pemotongan_unggas: ['tanggal','ayam','itik','dst','daerah_asal','nama_petugas','keterangan','nama_rpu'],
+        demplot: ['nama_demplot','created_at','kelurahan','alamat','luas_m2','jenis_hewan','jumlah_hewan','stok_pakan','nama_petugas','keterangan']
+    };
     
-    switch(jenis) {
-        case 'pengobatan':
-            html = `
-                <div class="detail-row">
-                    <span class="detail-label">Jenis Data:</span>
-                    <span class="detail-value">Pengobatan</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Peternak:</span>
-                    <span class="detail-value">${item.nama_peternak || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Tanggal:</span>
-                    <span class="detail-value">${item.tanggal_pengobatan || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Diagnosa:</span>
-                    <span class="detail-value">${item.diagnosa || '-'}</span>
-                </div>
-            `;
-            break;
-            
-        case 'vaksinasi':
-            html = `
-                <div class="detail-row">
-                    <span class="detail-label">Jenis Data:</span>
-                    <span class="detail-value">Vaksinasi</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Peternak:</span>
-                    <span class="detail-value">${item.nama_peternak || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Tanggal:</span>
-                    <span class="detail-value">${item.tanggal_vaksinasi || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Jenis Vaksin:</span>
-                    <span class="detail-value">${item.jenis_vaksin || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Jumlah:</span>
-                    <span class="detail-value">${item.jumlah_ternak || '0'} ekor</span>
-                </div>
-            `;
-            break;
-            
-        case 'pelaku_usaha':
-            html = `
-                <div class="detail-row">
-                    <span class="detail-label">Jenis Data:</span>
-                    <span class="detail-value">Pelaku Usaha</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Nama:</span>
-                    <span class="detail-value">${item.nama_pelaku || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Jenis Usaha:</span>
-                    <span class="detail-value">${item.jenis_usaha || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Skala:</span>
-                    <span class="detail-value">${item.skala_usaha || '-'}</span>
-                </div>
-            `;
-            break;
-            
-        case 'penjual_pakan':
-            html = `
-                <div class="detail-row">
-                    <span class="detail-label">Jenis Data:</span>
-                    <span class="detail-value">Penjual Pakan</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Toko:</span>
-                    <span class="detail-value">${item.nama_toko || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Pemilik:</span>
-                    <span class="detail-value">${item.pemilik || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Jenis Pakan:</span>
-                    <span class="detail-value">${item.jenis_pakan || '-'}</span>
-                </div>
-            `;
-            break;
-            
-        case 'klinik_hewan':
-            html = `
-                <div class="detail-row">
-                    <span class="detail-label">Jenis Data:</span>
-                    <span class="detail-value">Klinik Hewan</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Klinik:</span>
-                    <span class="detail-value">${item.nama_klinik || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Dokter:</span>
-                    <span class="detail-value">${item.dokter_hewan || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Layanan:</span>
-                    <span class="detail-value">${item.layanan || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Jam Operasional:</span>
-                    <span class="detail-value">${item.jam_operasional || '-'}</span>
-                </div>
-            `;
-            break;
-            
-        case 'penjual_obat':
-            html = `
-                <div class="detail-row">
-                    <span class="detail-label">Jenis Data:</span>
-                    <span class="detail-value">Penjual Obat</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Toko:</span>
-                    <span class="detail-value">${item.nama_toko || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Pemilik:</span>
-                    <span class="detail-value">${item.pemilik || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">No. SIPA:</span>
-                    <span class="detail-value">${item.no_sipa || '-'}</span>
-                </div>
-            `;
-            break;
-            
-        case 'rpu':
-            html = `
-                <div class="detail-row">
-                    <span class="detail-label">Jenis Data:</span>
-                    <span class="detail-value">RPU</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Nama RPU:</span>
-                    <span class="detail-value">${item.nama_rpu || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Tanggal:</span>
-                    <span class="detail-value">${item.tanggal_rpu || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Jumlah Potong:</span>
-                    <span class="detail-value">${item.jumlah_ekor || '0'} ekor</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Tersedia Juleha:</span>
-                    <span class="detail-value">${item.tersedia_juleha || '-'}</span>
-                </div>
-            `;
-            break;
-            
-        case 'pemotongan_unggas':
-            const total = (item.ayam || 0) + (item.itik || 0) + (item.dst || 0);
-            html = `
-                <div class="detail-row">
-                    <span class="detail-label">Jenis Data:</span>
-                    <span class="detail-value">Pemotongan Unggas</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Tanggal:</span>
-                    <span class="detail-value">${item.tanggal || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Ayam:</span>
-                    <span class="detail-value">${item.ayam || 0} ekor</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Itik:</span>
-                    <span class="detail-value">${item.itik || 0} ekor</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Lainnya:</span>
-                    <span class="detail-value">${item.dst || 0} ekor</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Total:</span>
-                    <span class="detail-value">${total} ekor</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Daerah Asal:</span>
-                    <span class="detail-value">${item.daerah_asal || '-'}</span>
-                </div>
-            `;
-            break;
-            
-        case 'demplot':
-            html = `
-                <div class="detail-row">
-                    <span class="detail-label">Jenis Data:</span>
-                    <span class="detail-value">Demplot</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Nama Demplot:</span>
-                    <span class="detail-value">${item.nama_demplot || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Luas Lahan:</span>
-                    <span class="detail-value">${item.luas_m2 || 0} m²</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Jenis Hewan:</span>
-                    <span class="detail-value">${item.jenis_hewan || '-'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Jumlah:</span>
-                    <span class="detail-value">${item.jumlah_hewan || 0} ekor</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Stok Pakan:</span>
-                    <span class="detail-value">${item.stok_pakan || '-'}</span>
-                </div>
-            `;
-            break;
-    }
+    (fieldsMap[jenis] || []).forEach(field => {
+        let val = item[field];
+        if (val && val !== '-') html += `<div class="detail-row"><span class="detail-label">${fieldLabels[field]||field}:</span><span class="detail-value">${val}</span></div>`;
+    });
     
-    html += `
-        <div class="detail-row">
-            <span class="detail-label">Kecamatan:</span>
-            <span class="detail-value">${namaKecamatan}</span>
-        </div>
-        <div class="detail-row">
-            <span class="detail-label">Alamat:</span>
-            <span class="detail-value">${item.alamat || '-'}</span>
-        </div>
-        <div class="detail-row">
-            <span class="detail-label">No. HP:</span>
-            <span class="detail-value">${item.no_hp || '-'}</span>
-        </div>
-    `;
+    const kec = item.nama_kecamatan || item.kecamatan;
+    if (kec && kec !== '-') html += `<div class="detail-row"><span class="detail-label">Kecamatan:</span><span class="detail-value">${kec}</span></div>`;
     
     body.innerHTML = html;
     panel.classList.add('active');
 }
 
-function updateKecamatanCounts() {
-    const counts = {};
-    dataDariServer.kecamatan.forEach(k => counts[k.id] = 0);
-
-    allMarkers.forEach(({ data }) => {
-        const idKec = data.id_kecamatan;
-        if (counts[idKec] !== undefined) {
-            counts[idKec]++;
-        }
-    });
-
-    Object.keys(counts).forEach(idKec => {
-        const el = document.getElementById(`count_${idKec}`);
-        if (el) {
-            el.innerText = counts[idKec];
-        }
-    });
-}
+// ============================================
+// EVENT LISTENERS
+// ============================================
 
 function setupEventListeners() {
-    // Data type selector
+    // Data type selector - AWALNYA SEMUA TIDAK AKTIF
     document.querySelectorAll('.data-type-btn').forEach(btn => {
+        // Hapus class active di awal
+        btn.classList.remove('active');
+        
         btn.addEventListener('click', function() {
             this.classList.toggle('active');
-            const dataType = this.dataset.type;
+            const type = this.dataset.type;
             
             if (this.classList.contains('active')) {
-                activeDataTypes.add(dataType);
+                activeDataTypes.add(type);
             } else {
-                activeDataTypes.delete(dataType);
+                activeDataTypes.delete(type);
             }
             
             document.getElementById('activeDataCount').innerText = `${activeDataTypes.size}/9`;
-            loadDataKePeta();
+            
+            // Jika ada jenis data yang dipilih, load data
+            if (activeDataTypes.size > 0) {
+                applyFiltersAndReload();
+            } else {
+                // Jika tidak ada jenis data yang dipilih, kosongkan peta
+                clearMap();
+            }
         });
     });
-
-    // Apply filter
-    document.getElementById('applyFilter').addEventListener('click', function() {
-        tanggalMulai = document.getElementById('tanggalMulai').value;
-        tanggalSelesai = document.getElementById('tanggalSelesai').value;
-        loadDataKePeta();
+    
+    // Apply filter (tanggal)
+    document.getElementById('applyFilter')?.addEventListener('click', function() {
+        const newTglMulai = document.getElementById('tanggalMulai').value || null;
+        const newTglSelesai = document.getElementById('tanggalSelesai').value || null;
+        
+        if (newTglMulai !== tanggalMulai || newTglSelesai !== tanggalSelesai) {
+            tanggalMulai = newTglMulai;
+            tanggalSelesai = newTglSelesai;
+            if (activeDataTypes.size > 0) {
+                applyFiltersAndReload();
+            }
+        }
     });
-
+    
     // Reset filter
-    document.getElementById('resetFilter').addEventListener('click', function() {
+    document.getElementById('resetFilter')?.addEventListener('click', function() {
+        // Reset jenis data
         document.querySelectorAll('.data-type-btn').forEach(btn => {
-            btn.classList.add('active');
+            btn.classList.remove('active');
         });
-        activeDataTypes = new Set(['pengobatan', 'vaksinasi', 'pelaku_usaha', 'penjual_pakan', 'klinik_hewan', 'penjual_obat', 'rpu', 'pemotongan_unggas', 'demplot']);
-        document.getElementById('activeDataCount').innerText = '9/9';
-
+        activeDataTypes.clear();
+        document.getElementById('activeDataCount').innerText = '0/9';
+        
+        // Reset kecamatan - SEMUA CHECKBOX TIDAK DICENTANG
         document.querySelectorAll('.kecamatan-checkbox').forEach(cb => {
-            cb.checked = true;
-            selectedKecamatan.add(parseInt(cb.value));
+            cb.checked = false;
         });
-        document.getElementById('selectAllKecamatan').checked = true;
-
+        selectedKecamatan.clear();
+        
+        // Reset "Pilih Semua Kecamatan" - TIDAK DICENTANG
+        const selectAll = document.getElementById('selectAllKecamatan');
+        if (selectAll) selectAll.checked = false;
+        
+        // Reset tanggal
         document.getElementById('tanggalMulai').value = '';
         document.getElementById('tanggalSelesai').value = '';
         tanggalMulai = null;
         tanggalSelesai = null;
-
-        document.getElementById('searchInput').value = '';
-
-        loadDataKePeta();
-    });
-
-    // Search
-    document.getElementById('searchInput').addEventListener('input', function(e) {
-        const keyword = e.target.value.toLowerCase();
         
+        // Reset search
+        document.getElementById('searchInput').value = '';
+        
+        // Kosongkan peta
+        clearMap();
+    });
+    
+    // Search
+    document.getElementById('searchInput')?.addEventListener('input', function(e) {
+        const keyword = e.target.value.toLowerCase();
         if (keyword.length < 3) return;
-
         for (let { marker, data, jenis } of allMarkers) {
             let match = false;
-            
-            switch(jenis) {
-                case 'pengobatan':
-                case 'vaksinasi':
-                    match = data.nama_peternak && data.nama_peternak.toLowerCase().includes(keyword);
-                    break;
-                case 'pelaku_usaha':
-                    match = data.nama_pelaku && data.nama_pelaku.toLowerCase().includes(keyword);
-                    break;
-                case 'penjual_pakan':
-                case 'penjual_obat':
-                    match = (data.nama_toko && data.nama_toko.toLowerCase().includes(keyword)) ||
-                           (data.pemilik && data.pemilik.toLowerCase().includes(keyword));
-                    break;
-                case 'klinik_hewan':
-                    match = (data.nama_klinik && data.nama_klinik.toLowerCase().includes(keyword)) ||
-                           (data.dokter_hewan && data.dokter_hewan.toLowerCase().includes(keyword));
-                    break;
-                case 'rpu':
-                    match = data.nama_rpu && data.nama_rpu.toLowerCase().includes(keyword);
-                    break;
-                case 'demplot':
-                    match = data.nama_demplot && data.nama_demplot.toLowerCase().includes(keyword);
-                    break;
-                case 'pemotongan_unggas':
-                    match = data.daerah_asal && data.daerah_asal.toLowerCase().includes(keyword);
-                    break;
-            }
-
-            if (match) {
-                marker.openPopup();
-                map.setView(marker.getLatLng(), 15);
-                break;
-            }
+            if (jenis === 'pengobatan') match = data.nama_peternak?.toLowerCase().includes(keyword);
+            if (jenis === 'vaksinasi') match = data.nama_peternak?.toLowerCase().includes(keyword);
+            if (jenis === 'pelaku_usaha') match = data.nama_pelaku?.toLowerCase().includes(keyword);
+            if (jenis === 'penjual_pakan' || jenis === 'penjual_obat') match = data.nama_toko?.toLowerCase().includes(keyword);
+            if (jenis === 'klinik_hewan') match = data.nama_klinik?.toLowerCase().includes(keyword);
+            if (jenis === 'rpu') match = data.nama_rpu?.toLowerCase().includes(keyword);
+            if (jenis === 'demplot') match = data.nama_demplot?.toLowerCase().includes(keyword);
+            if (match) { marker.openPopup(); map.setView(marker.getLatLng(), 15); break; }
         }
     });
-
-    // Map controls
-    document.getElementById('zoomInBtn').addEventListener('click', () => map.zoomIn());
-    document.getElementById('zoomOutBtn').addEventListener('click', () => map.zoomOut());
-    document.getElementById('resetViewBtn').addEventListener('click', () => map.setView([-7.2575, 112.7521], 12));
     
-    document.getElementById('locateMeBtn').addEventListener('click', function() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                position => map.setView([position.coords.latitude, position.coords.longitude], 15),
-                () => alert('Tidak dapat mengakses lokasi Anda')
-            );
-        } else {
-            alert('Browser tidak mendukung geolokasi');
-        }
+    // Map controls
+    document.getElementById('zoomInBtn')?.addEventListener('click', () => map.zoomIn());
+    document.getElementById('zoomOutBtn')?.addEventListener('click', () => map.zoomOut());
+    document.getElementById('resetViewBtn')?.addEventListener('click', () => map.setView([-7.2575,112.7521],12));
+    document.getElementById('locateMeBtn')?.addEventListener('click', () => {
+        if (navigator.geolocation) navigator.geolocation.getCurrentPosition(p => map.setView([p.coords.latitude,p.coords.longitude],15), () => alert('Gagal mendapatkan lokasi'));
+        else alert('Browser tidak mendukung geolokasi');
     });
-
+    
     // Close detail panel
-    document.getElementById('closeDetailBtn').addEventListener('click', function() {
-        document.getElementById('detailPanel').classList.remove('active');
-    });
-
-    // Click outside to close detail panel
-    document.addEventListener('click', function(e) {
+    document.getElementById('closeDetailBtn')?.addEventListener('click', () => document.getElementById('detailPanel').classList.remove('active'));
+    document.addEventListener('click', (e) => {
         const panel = document.getElementById('detailPanel');
-        if (panel.classList.contains('active') && 
-            !panel.contains(e.target) && 
-            !e.target.closest('.leaflet-popup-content')) {
+        if (panel?.classList.contains('active') && !panel.contains(e.target) && !e.target.closest('.leaflet-popup-content')) {
             panel.classList.remove('active');
         }
     });
 }
 
-function showLoading() {
-    document.getElementById('loadingOverlay').classList.add('active');
-}
-
-function hideLoading() {
-    document.getElementById('loadingOverlay').classList.remove('active');
-}
+function showLoading() { document.getElementById('loadingOverlay')?.classList.add('active'); }
+function hideLoading() { document.getElementById('loadingOverlay')?.classList.remove('active'); }

@@ -13,7 +13,7 @@ class P_dashboard_petugas_model extends CI_Model {
         $result = array();
         
         // Total pengobatan
-        $this->db->where('kecamatan', $kecamatan);
+        $this->db->where('kecamatan', $kecamatan); 
         $result['total_pengobatan'] = $this->db->count_all_results('input_pengobatan');
         
         // Total vaksinasi

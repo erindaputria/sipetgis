@@ -9,7 +9,7 @@ class P_input_jenis_usaha extends CI_Controller {
         $this->load->library('session');
         $this->load->library('upload');
         $this->load->library('form_validation');
-        $this->load->helper(array('form', 'url', 'file'));
+        $this->load->helper(array('form', 'url', 'file')); 
         
         // CEK SESSION LOGIN
         if (!$this->session->userdata('logged_in')) {
@@ -104,194 +104,172 @@ class P_input_jenis_usaha extends CI_Controller {
     }
 
     public function save() {
-        header('Content-Type: application/json');
+    header('Content-Type: application/json');
+    
+    // Validasi form dasar
+    $this->form_validation->set_rules('nama_peternak', 'Nama Peternak', 'required|trim');
+    $this->form_validation->set_rules('nama_petugas', 'Nama Petugas', 'required|trim');
+    $this->form_validation->set_rules('tanggal_input', 'Tanggal Input', 'required');
+    $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required|trim');
+    $this->form_validation->set_rules('latitude', 'Latitude', 'required|trim');
+    $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim');
+
+    // Validasi NIK jika diisi
+    $nik = $this->input->post('nik');
+    if (!empty($nik)) {
+        $this->form_validation->set_rules('nik', 'NIK', 'trim|exact_length[16]|numeric');
+    }
+
+    if ($this->form_validation->run() == FALSE) {
+        echo json_encode(array(
+            'status' => 'error',
+            'message' => validation_errors()
+        ));
+        return;
+    }
+
+    // Ambil data array dari form
+    $jenis_usaha = $this->input->post('jenis_usaha');
+    $komoditas_ternak = $this->input->post('komoditas_ternak');
+    $jumlah = $this->input->post('jumlah');
+
+    // Validasi array
+    if (empty($jenis_usaha) || !is_array($jenis_usaha) || empty($komoditas_ternak) || !is_array($komoditas_ternak) || empty($jumlah) || !is_array($jumlah)) {
+        echo json_encode(array('status' => 'error', 'message' => 'Data tidak valid'));
+        return;
+    }
+
+    $total_rows = count($jenis_usaha);
+    if ($total_rows != count($komoditas_ternak) || $total_rows != count($jumlah)) {
+        echo json_encode(array('status' => 'error', 'message' => 'Data tidak konsisten.'));
+        return;
+    }
+
+    // Validasi setiap baris
+    for ($i = 0; $i < $total_rows; $i++) {
+        if (empty($jenis_usaha[$i])) {
+            echo json_encode(array('status' => 'error', 'message' => 'Jenis usaha baris ke-' . ($i + 1) . ' harus diisi'));
+            return;
+        }
+        if (empty($komoditas_ternak[$i])) {
+            echo json_encode(array('status' => 'error', 'message' => 'Komoditas ternak baris ke-' . ($i + 1) . ' harus diisi'));
+            return;
+        }
+        if (!isset($jumlah[$i]) || $jumlah[$i] === '' || $jumlah[$i] < 0) {
+            echo json_encode(array('status' => 'error', 'message' => 'Jumlah baris ke-' . ($i + 1) . ' harus diisi dengan angka valid'));
+            return;
+        }
+    }
+
+    // MULTIPLE FILE UPLOAD - MANUAL METHOD
+    $uploaded_files = array();
+    $upload_path = './uploads/jenis_usaha/';
+    
+    if (!is_dir($upload_path)) {
+        mkdir($upload_path, 0777, TRUE);
+    }
+    
+    if (isset($_FILES['foto_usaha']) && !empty($_FILES['foto_usaha']['name'][0])) {
+        $files = $_FILES['foto_usaha'];
+        $file_count = count($files['name']);
+        $file_count = min($file_count, 5);
         
-        // Validasi form dasar
-        $this->form_validation->set_rules('nama_peternak', 'Nama Peternak', 'required|trim');
-        $this->form_validation->set_rules('nama_petugas', 'Nama Petugas', 'required|trim');
-        $this->form_validation->set_rules('tanggal_input', 'Tanggal Input', 'required');
-        $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required|trim');
-        $this->form_validation->set_rules('latitude', 'Latitude', 'required|trim');
-        $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim');
-
-        // Validasi NIK jika diisi
-        $nik = $this->input->post('nik');
-        if (!empty($nik)) {
-            $this->form_validation->set_rules('nik', 'NIK', 'trim|exact_length[16]|numeric');
-        }
-
-        // Validasi Telepon jika diisi
-        $telepon = $this->input->post('telepon');
-        if (!empty($telepon)) {
-            $this->form_validation->set_rules('telepon', 'Telepon', 'trim|max_length[15]|numeric');
-        }
-
-        if ($this->form_validation->run() == FALSE) {
-            echo json_encode(array(
-                'status' => 'error',
-                'message' => validation_errors()
-            ));
-            return;
-        }
-
-        // Ambil data array dari form
-        $jenis_usaha = $this->input->post('jenis_usaha');
-        $komoditas_ternak = $this->input->post('komoditas_ternak');
-        $jumlah = $this->input->post('jumlah');
-
-        // Validasi array harus ada dan tidak kosong
-        if (empty($jenis_usaha) || !is_array($jenis_usaha)) {
-            echo json_encode(array(
-                'status' => 'error',
-                'message' => 'Data jenis usaha tidak valid'
-            ));
-            return;
-        }
-
-        if (empty($komoditas_ternak) || !is_array($komoditas_ternak)) {
-            echo json_encode(array(
-                'status' => 'error',
-                'message' => 'Data komoditas ternak tidak valid'
-            ));
-            return;
-        }
-
-        if (empty($jumlah) || !is_array($jumlah)) {
-            echo json_encode(array(
-                'status' => 'error',
-                'message' => 'Data jumlah tidak valid'
-            ));
-            return;
-        }
-
-        // Validasi jumlah baris harus sama
-        $total_rows = count($jenis_usaha);
-        if ($total_rows != count($komoditas_ternak) || $total_rows != count($jumlah)) {
-            echo json_encode(array(
-                'status' => 'error',
-                'message' => 'Data tidak konsisten.'
-            ));
-            return;
-        }
-
-        // Validasi setiap baris
-        for ($i = 0; $i < $total_rows; $i++) {
-            if (empty($jenis_usaha[$i])) {
-                echo json_encode(array(
-                    'status' => 'error',
-                    'message' => 'Jenis usaha baris ke-' . ($i + 1) . ' harus diisi'
-                ));
-                return;
-            }
-            
-            if (empty($komoditas_ternak[$i])) {
-                echo json_encode(array(
-                    'status' => 'error',
-                    'message' => 'Komoditas ternak baris ke-' . ($i + 1) . ' harus diisi'
-                ));
-                return;
-            }
-            
-            if (!isset($jumlah[$i]) || $jumlah[$i] === '' || $jumlah[$i] < 0) {
-                echo json_encode(array(
-                    'status' => 'error',
-                    'message' => 'Jumlah baris ke-' . ($i + 1) . ' harus diisi dengan angka valid'
-                ));
-                return;
+        for ($i = 0; $i < $file_count; $i++) {
+            if ($files['error'][$i] == 0) {
+                $file_name = $files['name'][$i];
+                $file_tmp = $files['tmp_name'][$i];
+                $file_size = $files['size'][$i];
+                $file_type = $files['type'][$i];
+                
+                $allowed_types = array('image/jpeg', 'image/jpg', 'image/png');
+                if (!in_array($file_type, $allowed_types)) {
+                    echo json_encode(array('status' => 'error', 'message' => 'File ' . $file_name . ' harus format JPG atau PNG'));
+                    return;
+                }
+                
+                if ($file_size > 5 * 1024 * 1024) {
+                    echo json_encode(array('status' => 'error', 'message' => 'File ' . $file_name . ' melebihi 5MB'));
+                    return;
+                }
+                
+                $ext = pathinfo($file_name, PATHINFO_EXTENSION);
+                $new_name = time() . '_' . uniqid() . '.' . $ext;
+                $destination = $upload_path . $new_name;
+                
+                if (move_uploaded_file($file_tmp, $destination)) {
+                    $uploaded_files[] = $new_name;
+                } else {
+                    echo json_encode(array('status' => 'error', 'message' => 'Gagal upload file: ' . $file_name));
+                    return;
+                }
             }
         }
+    }
+    
+    $foto_string = !empty($uploaded_files) ? implode(',', $uploaded_files) : null;
 
-        // Upload foto
-        $uploaded_file = null;
-        $upload_path = './uploads/jenis_usaha/';
+    // Siapkan data dasar
+    $kecamatan_user = $this->session->userdata('kecamatan');
+    $nik_val = $this->input->post('nik');
+    $telepon_val = $this->input->post('telepon');
+    $keterangan_val = $this->input->post('keterangan');
+    $rt_val = $this->input->post('rt');
+    $rw_val = $this->input->post('rw');
+    $alamat_val = $this->input->post('alamat');
+    
+    $nama_peternak = $this->input->post('nama_peternak');
+    $nama_petugas = $this->input->post('nama_petugas');
+    $tanggal_input = $this->input->post('tanggal_input');
+    $kelurahan = $this->input->post('kelurahan');
+    $latitude = $this->input->post('latitude');
+    $longitude = $this->input->post('longitude');
+
+    // Simpan setiap baris data
+    $success_count = 0;
+    
+    $this->db->trans_begin();
+
+    for ($i = 0; $i < $total_rows; $i++) {
+        $data = array(
+            'nama_petugas' => $nama_petugas,
+            'nama_peternak' => $nama_peternak,
+            'nik' => !empty($nik_val) ? $nik_val : null,
+            'telepon' => !empty($telepon_val) ? $telepon_val : null,
+            'tanggal_input' => $tanggal_input,
+            'keterangan' => !empty($keterangan_val) ? $keterangan_val : null,
+            'kecamatan' => $kecamatan_user,
+            'kelurahan' => $kelurahan,
+            'rt' => !empty($rt_val) ? $rt_val : null,
+            'rw' => !empty($rw_val) ? $rw_val : null,
+            'alamat' => !empty($alamat_val) ? $alamat_val : null,
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+            'foto_usaha' => $foto_string,
+            'jenis_usaha' => $jenis_usaha[$i],
+            'komoditas_ternak' => $komoditas_ternak[$i],
+            'jumlah' => (int)$jumlah[$i]
+        );
         
-        if (!is_dir($upload_path)) {
-            mkdir($upload_path, 0777, TRUE);
+        if ($this->P_input_jenis_usaha_model->save_jenis_usaha($data)) {
+            $success_count++;
         }
+    }
 
-        if (isset($_FILES['foto_usaha']) && $_FILES['foto_usaha']['error'] != 4) {
-            $config['upload_path'] = $upload_path;
-            $config['allowed_types'] = 'jpg|jpeg|png';
-            $config['max_size'] = 5120;
-            $config['encrypt_name'] = TRUE;
-            
-            $this->upload->initialize($config);
-            
-            if ($this->upload->do_upload('foto_usaha')) {
-                $upload_data = $this->upload->data();
-                $uploaded_file = $upload_data['file_name'];
-            } else {
-                echo json_encode(array(
-                    'status' => 'error',
-                    'message' => 'Gagal upload foto: ' . strip_tags($this->upload->display_errors())
-                ));
-                return;
-            }
-        }
-
-        // Ambil data dari form
-        $kecamatan_user = $this->session->userdata('kecamatan');
-        $nik_val = $this->input->post('nik');
-        $telepon_val = $this->input->post('telepon');
-        $keterangan_val = $this->input->post('keterangan');
-        $rt_val = $this->input->post('rt');
-        $rw_val = $this->input->post('rw');
-        $alamat_val = $this->input->post('alamat');
-        
-        $nama_peternak = $this->input->post('nama_peternak');
-        $nama_petugas = $this->input->post('nama_petugas');
-        $tanggal_input = $this->input->post('tanggal_input');
-        $kelurahan = $this->input->post('kelurahan');
-        $latitude = $this->input->post('latitude');
-        $longitude = $this->input->post('longitude');
-
-        // Simpan setiap baris data
-        $success_count = 0;
-        
-        // Mulai transaksi
-        $this->db->trans_begin();
-
-        for ($i = 0; $i < $total_rows; $i++) {
-            $data = array(
-                'nama_petugas' => $nama_petugas,
-                'nama_peternak' => $nama_peternak,
-                'nik' => !empty($nik_val) ? $nik_val : null,
-                'telepon' => !empty($telepon_val) ? $telepon_val : null,
-                'tanggal_input' => $tanggal_input,
-                'keterangan' => !empty($keterangan_val) ? $keterangan_val : null,
-                'kecamatan' => $kecamatan_user,
-                'kelurahan' => $kelurahan,
-                'rt' => !empty($rt_val) ? $rt_val : null,
-                'rw' => !empty($rw_val) ? $rw_val : null,
-                'alamat' => !empty($alamat_val) ? $alamat_val : null,
-                'latitude' => $latitude,
-                'longitude' => $longitude,
-                'foto_usaha' => $uploaded_file,
-                'jenis_usaha' => $jenis_usaha[$i],
-                'komoditas_ternak' => $komoditas_ternak[$i],
-                'jumlah' => (int)$jumlah[$i]
-            );
-            
-            if ($this->P_input_jenis_usaha_model->save_jenis_usaha($data)) {
-                $success_count++;
-            }
-        }
-
-        if ($this->db->trans_status() === FALSE || $success_count != $total_rows) {
-            $this->db->trans_rollback();
-            echo json_encode(array(
-                'status' => 'error',
-                'message' => 'Gagal menyimpan data. Hanya ' . $success_count . ' dari ' . $total_rows . ' data yang tersimpan.'
-            ));
-        } else {
-            $this->db->trans_commit();
-            $foto_msg = $uploaded_file ? ' dan 1 foto' : '';
-            echo json_encode(array(
-                'status' => 'success',
-                'message' => $success_count . ' data berhasil disimpan' . $foto_msg
-            ));
-        }
-    } 
+    if ($this->db->trans_status() === FALSE || $success_count != $total_rows) {
+        $this->db->trans_rollback();
+        echo json_encode(array(
+            'status' => 'error',
+            'message' => 'Gagal menyimpan data. Hanya ' . $success_count . ' dari ' . $total_rows . ' data yang tersimpan.'
+        ));
+    } else {
+        $this->db->trans_commit();
+        $foto_msg = !empty($uploaded_files) ? count($uploaded_files) . ' foto berhasil diupload' : 'tanpa foto';
+        echo json_encode(array(
+            'status' => 'success',
+            'message' => $success_count . ' data berhasil disimpan dengan ' . $foto_msg
+        ));
+    }
+}
 
     public function get_all_data() {
         $user_kecamatan = $this->session->userdata('kecamatan');
@@ -321,5 +299,22 @@ class P_input_jenis_usaha extends CI_Controller {
             echo json_encode([]);
         }
     }
+
+    public function get_pelaku_usaha_by_nik() {
+    $nik = $this->input->post('nik');
+    if (empty($nik)) {
+        echo json_encode(['status' => 'error', 'message' => 'NIK tidak boleh kosong']);
+        return;
+    }
+    
+    $this->db->where('nik', $nik);
+    $data = $this->db->get('pelaku_usaha')->row_array();
+    
+    if ($data) {
+        echo json_encode(['status' => 'success', 'data' => $data]);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Data tidak ditemukan']);
+    }
+}
 }
 ?>

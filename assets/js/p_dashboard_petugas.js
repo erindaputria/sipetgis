@@ -14,7 +14,7 @@ $(document).ready(function() {
     function openSidebar() {
         sidebar.classList.add('show');
         overlay.classList.add('show');
-        document.body.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden'; 
     }
     
     function closeSidebar() {

@@ -8,22 +8,22 @@ $(document).ready(function() {
     dataTable = $('#vaksinasiTable').DataTable({
         dom: 'Bfrtip',
         buttons: [
-            {
-                extend: 'copy',
-                text: '<i class="fas fa-copy"></i> Copy',
-                className: 'btn btn-sm btn-primary',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            { 
-                extend: 'csv',
-                text: '<i class="fas fa-file-csv"></i> CSV',
-                className: 'btn btn-sm btn-success',
-                action: function(e, dt, button, config) {
-                    exportWithParams('csv');
-                }
-            },
+            // {
+            //     extend: 'copy',
+            //     text: '<i class="fas fa-copy"></i> Copy',
+            //     className: 'btn btn-sm btn-primary',
+            //     exportOptions: {
+            //         columns: ':visible'
+            //     }
+            // },
+            // { 
+            //     extend: 'csv',
+            //     text: '<i class="fas fa-file-csv"></i> CSV',
+            //     className: 'btn btn-sm btn-success',
+            //     action: function(e, dt, button, config) { 
+            //         exportWithParams('csv');
+            //     }
+            // },
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Excel',
@@ -32,14 +32,14 @@ $(document).ready(function() {
                     exportWithParams('excel');
                 }
             },
-            {
-                extend: 'pdf',
-                text: '<i class="fas fa-file-pdf"></i> PDF',
-                className: 'btn btn-sm btn-danger',
-                action: function(e, dt, button, config) {
-                    exportWithParams('pdf');
-                }
-            },
+            // {
+            //     extend: 'pdf',
+            //     text: '<i class="fas fa-file-pdf"></i> PDF',
+            //     className: 'btn btn-sm btn-danger',
+            //     action: function(e, dt, button, config) {
+            //         exportWithParams('pdf');
+            //     }
+            // },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print"></i> Print',
@@ -58,6 +58,20 @@ $(document).ready(function() {
             zeroRecords: "Tidak ada data ditemukan"
         }
     });
+    
+    // LOAD OTOMATIS SAAT HALAMAN PERTAMA DIBUKA
+    var firstYear = $("#filterTahun option:eq(1)").val();
+    if(firstYear) {
+        currentData.tahun = firstYear;
+        currentData.kecamatan = 'semua';
+        currentData.jenis_vaksin = 'PMK';
+        
+        $("#filterTahun").val(firstYear);
+        $("#filterKecamatan").val('semua');
+        $("#filterJenisVaksin").val('PMK');
+        
+        loadData();
+    }
     
     $("#btnFilter").click(function() {
         currentData.tahun = $("#filterTahun").val();
@@ -83,34 +97,42 @@ $(document).ready(function() {
             jenis_vaksin: 'PMK'
         };
         
-        // Reset semua cell ke 0 dengan format yang benar
-        $("#vaksinasiTable tbody tr").each(function(index, row) {
-            if($(row).hasClass('total-row-bottom')) return;
-            var kecamatan = $(row).data('kecamatan');
-            var baseUrl = base_url + 'laporan_vaksinasi/detail_kecamatan/' + encodeURIComponent(kecamatan) + "/";
+        var firstYear = $("#filterTahun option:eq(1)").val();
+        if(firstYear) {
+            currentData.tahun = firstYear;
+            $("#filterTahun").val(firstYear);
+            loadData();
+        } else {
+            $("#vaksinasiTable tbody tr").each(function(index, row) {
+                if($(row).hasClass('total-row-bottom')) return;
+                var kecamatan = $(row).data('kecamatan');
+                var baseUrl = base_url + 'laporan_vaksinasi/detail_kecamatan/' + encodeURIComponent(kecamatan) + "/";
+                
+                $(row).find("td:eq(2)").html('<a href="' + baseUrl + 'Sapi Potong" class="data-link zero-value" target="_blank">0</a>');
+                $(row).find("td:eq(3)").html('<a href="' + baseUrl + 'Sapi Perah" class="data-link zero-value" target="_blank">0</a>');
+                $(row).find("td:eq(4)").html('<a href="' + baseUrl + 'Kambing" class="data-link zero-value" target="_blank">0</a>');
+                $(row).find("td:eq(5)").html('<a href="' + baseUrl + 'Domba" class="data-link zero-value" target="_blank">0</a>');
+            });
             
-            $(row).find("td:eq(2)").html('<a href="' + baseUrl + 'Sapi Potong" class="data-link" target="_blank">0</a>');
-            $(row).find("td:eq(3)").html('<a href="' + baseUrl + 'Sapi Perah" class="data-link" target="_blank">0</a>');
-            $(row).find("td:eq(4)").html('<a href="' + baseUrl + 'Kambing" class="data-link" target="_blank">0</a>');
-            $(row).find("td:eq(5)").html('<a href="' + baseUrl + 'Domba" class="data-link" target="_blank">0</a>');
-        });
-        
-        // Reset total row
-        $("#vaksinasiTable tbody tr.total-row-bottom").remove();
-        
-        // Reset title
-        $('#reportTitle').html('REKAP DATA VAKSIN PMK');
-        $('#reportSubtitle').html('Kota Surabaya');
-        
-        // Reset header ke default PMK
-        updateTableHeader(['Sapi Potong', 'Sapi Perah', 'Kambing', 'Domba']);
+            $("#vaksinasiTable tbody tr.total-row-bottom").remove();
+            $('#reportTitle').html('REKAP DATA VAKSIN PMK');
+            $('#reportSubtitle').html('Kota Surabaya');
+            updateTableHeader(['Sapi Potong', 'Sapi Perah', 'Kambing', 'Domba']);
+        }
     });
     
     $("#refreshBtn").click(function() {
         if(currentData.tahun) {
             loadData();
         } else {
-            alert("Silakan pilih filter terlebih dahulu!");
+            var firstYear = $("#filterTahun option:eq(1)").val();
+            if(firstYear) {
+                currentData.tahun = firstYear;
+                $("#filterTahun").val(firstYear);
+                loadData();
+            } else {
+                alert("Silakan pilih filter terlebih dahulu!");
+            }
         }
     });
 });
@@ -120,6 +142,24 @@ var currentData = {
     tahun: '',
     kecamatan: 'semua',
     jenis_vaksin: 'PMK'
+};
+
+var columnConfig = {
+    'PMK': {
+        title: 'REKAP DATA VAKSIN PMK',
+        columns: ['Sapi Potong', 'Sapi Perah', 'Kambing', 'Domba'],
+        fields: ['sapi_potong', 'sapi_perah', 'kambing', 'domba']
+    },
+    'LSD': {
+        title: 'REKAP DATA VAKSIN LSD',
+        columns: ['Sapi Potong', 'Sapi Perah', 'Kambing', 'Domba'],
+        fields: ['sapi_potong', 'sapi_perah', 'kambing', 'domba']
+    },
+    'ND-AI': {
+        title: 'REKAP DATA VAKSIN ND-AI',
+        columns: ['Ayam', 'Itik', 'Angsa', 'Kalkun', 'Burung'],
+        fields: ['ayam', 'itik', 'angsa', 'kalkun', 'burung']
+    }
 };
 
 function exportWithParams(format) {
@@ -257,21 +297,24 @@ function loadData() {
                     
                     totals[field] += value;
                     
+                    var kelas = value > 0 ? 'positive-value' : 'zero-value';
                     var columnName = config.columns[i];
                     var url = baseUrlDetail + encodeURIComponent(columnName) + "?tahun=" + tahun;
-                    $(row).find("td:eq(" + (i + 2) + ")").html('<a href="'+ url +'" class="data-link" target="_blank">' + formatNumber(value) + '</a>');
+                    $(row).find("td:eq(" + (i + 2) + ")").html('<a href="'+ url +'" class="data-link ' + kelas + '" target="_blank">' + formatNumber(value) + '</a>');
                 }
             });
             
             // Hapus baris total sebelumnya
             $("#vaksinasiTable tbody tr.total-row-bottom").remove();
             
-            // Tambahkan baris total
+            // Buat baris total
             var totalRow = '<tr class="total-row-bottom" style="background-color: #fef3ef; font-weight: bold;">' +
                 '<td colspan="2" style="text-align: center;"><strong>TOTAL KESELURUHAN</strong></td>';
             
             for(var i = 0; i < config.fields.length; i++) {
-                totalRow += '<td><strong>' + formatNumber(totals[config.fields[i]]) + '</strong></td>';
+                var totalValue = totals[config.fields[i]];
+                var totalClass = totalValue > 0 ? 'positive-value' : 'zero-value';
+                totalRow += '<td><strong class="' + totalClass + '">' + formatNumber(totalValue) + '</strong></td>';
             }
             totalRow += '</tr>';
             
@@ -283,7 +326,7 @@ function loadData() {
             console.error("Error:", error);
             alert("Gagal memuat data. Silakan coba lagi.");
             $("#loadingOverlay").fadeOut();
-        }
+        } 
     });
 }
 

@@ -13,7 +13,7 @@
             google: { families: ["Public Sans:300,400,500,600,700"] },
             custom: {
                 families: [
-                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Solid", 
                     "Font Awesome 5 Regular",
                     "Font Awesome 5 Brands",
                     "simple-line-icons",
@@ -73,32 +73,32 @@
                             <span class="sidebar-mini-icon"><i class="fa fa-ellipsis-h"></i></span>
                             <h4 class="text-section">Menu Utama</h4>
                         </li>
-                        <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Pengobatan'); ?>">
+                        <li class="nav-item"> 
+                            <a href="<?php echo base_url('P_input_pengobatan'); ?>">
                                 <i class="fas fa-heartbeat" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Pengobatan</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Vaksinasi'); ?>">
+                            <a href="<?php echo base_url('P_input_vaksinasi'); ?>">
                                 <i class="fas fa-syringe" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Vaksinasi</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Pelaku_Usaha'); ?>">
+                            <a href="<?php echo base_url('P_input_pelaku_usaha'); ?>">
                                 <i class="fas fa-users" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Pelaku Usaha</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Jenis_Usaha'); ?>">
+                            <a href="<?php echo base_url('P_input_jenis_usaha'); ?>">
                                 <i class="fas fa-store" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Kepemilikan Jenis Usaha</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('P_Input_Penjual'); ?>">
+                            <a href="<?php echo base_url('P_input_penjual'); ?>">
                                 <i class="fas fa-store-alt" style="color: #832706 !important;"></i>
                                 <p style="color: #832706 !important;">Penjual</p>
                             </a>
@@ -242,7 +242,7 @@
                     <div class="row mt-4">
                         <!-- Card Pengobatan -->
                         <div class="col-12 mb-3">
-                            <a href="<?php echo base_url('P_Input_Pengobatan'); ?>" class="action-link">
+                            <a href="<?php echo base_url('P_input_pengobatan'); ?>" class="action-link">
                                 <div class="card action-card">
                                     <div class="card-body py-3">
                                         <div class="row align-items-center">
@@ -264,7 +264,7 @@
 
                         <!-- Card Vaksinasi -->
                         <div class="col-12 mb-3">
-                            <a href="<?php echo base_url('P_Input_Vaksinasi'); ?>" class="action-link">
+                            <a href="<?php echo base_url('P_input_vaksinasi'); ?>" class="action-link">
                                 <div class="card action-card">
                                     <div class="card-body py-3">
                                         <div class="row align-items-center">
@@ -286,7 +286,7 @@
 
                         <!-- Card Pelaku Usaha -->
                         <div class="col-12 mb-3">
-                            <a href="<?php echo base_url('P_Input_Pelaku_Usaha'); ?>" class="action-link">
+                            <a href="<?php echo base_url('P_input_pelaku_usaha'); ?>" class="action-link">
                                 <div class="card action-card">
                                     <div class="card-body py-3">
                                         <div class="row align-items-center">
@@ -308,7 +308,7 @@
 
                         <!-- Card Jenis Usaha -->
                         <div class="col-12 mb-3">
-                            <a href="<?php echo base_url('P_Input_Jenis_Usaha'); ?>" class="action-link">
+                            <a href="<?php echo base_url('P_input_jenis_usaha   '); ?>" class="action-link">
                                 <div class="card action-card">
                                     <div class="card-body py-3">
                                         <div class="row align-items-center">
@@ -330,7 +330,7 @@
 
                         <!-- Card Penjual -->
                         <div class="col-12 mb-3">
-                            <a href="<?php echo base_url('P_Input_Penjual'); ?>" class="action-link">
+                            <a href="<?php echo base_url('P_input_penjual'); ?>" class="action-link">
                                 <div class="card action-card">
                                     <div class="card-body py-3">
                                         <div class="row align-items-center">

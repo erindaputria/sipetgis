@@ -12,7 +12,7 @@ class Data_klinik_model extends CI_Model {
         }
         
         // Debug: cek apakah database terhubung
-        if (!$this->db->conn_id) {
+        if (!$this->db->conn_id) { 
             echo json_encode(['error' => 'Database tidak terhubung']);
             return;
         }

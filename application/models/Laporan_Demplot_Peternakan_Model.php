@@ -77,7 +77,6 @@ class Laporan_demplot_peternakan_model extends CI_Model {
         if($tahun && $tahun != '' && $tahun != null && $tahun != 'semua') {
             $this->db->where('YEAR(created_at)', $tahun);
         }
-        // Jika tahun = 'semua' atau null, tidak ada filter tahun (tampilkan semua)
         
         if($demplot_filter && $demplot_filter != 'semua' && $demplot_filter != '') {
             $this->db->where('nama_demplot', $demplot_filter);
@@ -124,6 +123,16 @@ class Laporan_demplot_peternakan_model extends CI_Model {
         
         $query = $this->db->get();
         return $query->result();
+    }
+
+    // ==================== METHOD UNTUK SEMUA DATA (TANPA FILTER) ====================
+    public function get_all_data_demplot()
+    {
+        // Gunakan tabel yang BENAR: input_demplot (bukan demplot)
+        $this->db->select('*');
+        $this->db->from('input_demplot'); // <-- PERBAIKAN: ganti 'demplot' menjadi 'input_demplot'
+        $this->db->order_by('nama_demplot', 'ASC');
+        return $this->db->get()->result();
     }
 }
 ?>

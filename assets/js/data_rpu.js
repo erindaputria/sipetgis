@@ -8,14 +8,12 @@ let deleteId = null;
 
 // ================ EDIT DATA ================
 function editData(id) {
-    // Ambil data dari tombol yang diklik
     var btn = $('.btn-edit[data-id="' + id + '"]');
     
     if (btn.length > 0) {
         $('#edit_id').val(btn.data('id'));
         $('#edit_pejagal').val(btn.data('pejagal'));
         
-        // Format tanggal dari YYYY-MM-DD ke format date input
         var tanggal = btn.data('tanggal');
         if (tanggal) {
             $('#edit_tanggal').val(tanggal);
@@ -104,7 +102,6 @@ function updateTableWithData(data, searchTerm) {
     }
 }
 
-// Helper function to format date
 function formatDate(dateString) {
     if (!dateString) return '-';
     const date = new Date(dateString);
@@ -114,7 +111,6 @@ function formatDate(dateString) {
     return day + '-' + month + '-' + year;
 }
 
-// Helper function to escape HTML
 function escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');
@@ -122,7 +118,6 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// Helper function to format coordinate cell
 function formatCoordinateCell(lat, lng, pejagal, kecamatan, kelurahan, lokasi, telp, totalEkor, totalBerat, foto, id) {
     if (!lat || !lng) {
         return '<span class="empty-coord">Tidak ada</span>';
@@ -135,7 +130,6 @@ function formatCoordinateCell(lat, lng, pejagal, kecamatan, kelurahan, lokasi, t
         '</div>';
 }
 
-// Helper function to format action buttons (HANYA EDIT DAN HAPUS)
 function formatActionButtons(id, pejagal) {
     return '<div class="btn-action-group">' +
         '<button class="btn btn-action btn-edit" title="Edit" data-id="' + id + '" data-pejagal="' + escapeHtml(pejagal) + '" onclick="editData(' + id + ')"><i class="fas fa-edit"></i></button>' +
@@ -143,7 +137,6 @@ function formatActionButtons(id, pejagal) {
         '</div>';
 }
 
-// Function to show map
 function showMap(namaRpu, kecamatan, kelurahan, coordinates, alamat, telp, totalEkor, totalBerat, id) {
     const [lat, lng] = coordinates.split(",").map(function(coord) { return parseFloat(coord.trim()); });
 
@@ -288,135 +281,173 @@ function closeMap() {
     }
 }
 
-// Inisialisasi DataTable
+// ================ FUNCTION PRINT RAPI (SAMA PERSIS PELAKU USAHA) ================
+function printWithCurrentData() {
+    var printWindow = window.open('', '_blank');
+    
+    // Ambil data dari tabel yang tampil di layar
+    var table = $('#rpuTable').DataTable();
+    var rows = table.rows({ search: 'applied' }).data();
+    
+    var totalData = rows.length;
+    var totalEkor = 0;
+    var totalBerat = 0;
+    
+    // Current date
+    var currentDate = new Date();
+    var formattedDateTime = currentDate.toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    }) + ' ' + currentDate.toLocaleTimeString('id-ID');
+    
+    printWindow.document.write('<html><head><title>Laporan Data Rumah Potong Unggas</title>');
+    printWindow.document.write('<style>');
+    printWindow.document.write('body { font-family: Arial, sans-serif; margin: 20px; }');
+    printWindow.document.write('.header { text-align: center; margin-bottom: 20px; }');
+    printWindow.document.write('.header h2 { margin: 0; color: #000000; }');
+    printWindow.document.write('.header h3 { margin: 5px 0; color: #000000; }');
+    printWindow.document.write('.header p { margin: 5px 0; color: #000000; }');
+    printWindow.document.write('table { width: 100%; border-collapse: collapse; margin-top: 20px; }');
+    printWindow.document.write('th, td { border: 1px solid #000; padding: 8px; }');
+    printWindow.document.write('th { background-color: #832706; color: #000000; text-align: center; }');
+    printWindow.document.write('td { color: #000000; }');
+    printWindow.document.write('.total-row { background-color: #e8f5e9; font-weight: bold; }');
+    printWindow.document.write('.total-row td { color: #000000; }');
+    printWindow.document.write('.footer-note { margin-top: 30px; font-size: 10px; color: #000000; text-align: center; }');
+    printWindow.document.write('@media print { .no-print { display: none; } }');
+    printWindow.document.write('</style>');
+    printWindow.document.write('</head><body>');
+    
+    // Header Laporan
+    printWindow.document.write('<div class="header">');
+    printWindow.document.write('<h2>LAPORAN DATA RUMAH POTONG UNGGAS (RPU)</h2>');
+    printWindow.document.write('<h3>DINAS KETAHANAN PANGAN DAN PERTANIAN</h3>');
+    printWindow.document.write('<h3>KOTA SURABAYA</h3>');
+    printWindow.document.write('<hr>');
+    printWindow.document.write('<p>Tanggal Cetak: ' + formattedDateTime + '</p>');
+    printWindow.document.write('</div>');
+    
+    // Tabel Data untuk Print
+    printWindow.document.write('<table>');
+    printWindow.document.write('<thead>');
+    printWindow.document.write('<tr>');
+    printWindow.document.write('<th width="40">No</th>');
+    printWindow.document.write('<th>Tanggal</th>');
+    printWindow.document.write('<th>RPU/Pejagal</th>');
+    printWindow.document.write('<th>Penanggung Jawab</th>');
+    printWindow.document.write('<th>Kecamatan</th>');
+    printWindow.document.write('<th>Kelurahan</th>');
+    printWindow.document.write('<th>Komoditas</th>');
+    printWindow.document.write('<th>Total Ekor</th>');
+    printWindow.document.write('<th>Total Berat (kg)</th>');
+    printWindow.document.write('</thead>');
+    printWindow.document.write('<tbody>');
+    
+    // Loop data dari tabel
+    for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        
+        // Kolom 7 (index 7) berisi total potong: "X ekor, Y kg"
+        var totalText = stripHtml(row[7] || '0');
+        var ekor = '0';
+        var berat = '0';
+        
+        // Extract ekor
+        var ekorMatch = totalText.match(/(\d+)\s*ekor/i);
+        if (ekorMatch) {
+            ekor = ekorMatch[1];
+            totalEkor += parseInt(ekor) || 0;
+        }
+        
+        // Extract berat
+        var beratMatch = totalText.match(/([\d,]+\.?\d*)\s*kg/i);
+        if (beratMatch) {
+            berat = beratMatch[1].replace(/,/g, '');
+            totalBerat += parseFloat(berat) || 0;
+        }
+        
+        printWindow.document.write('<tr>');
+        printWindow.document.write('<td align="center">' + (i + 1) + '</td>');
+        printWindow.document.write('<td align="center">' + stripHtml(row[1] || '-') + '</td>');
+        printWindow.document.write('<td align="left">' + stripHtml(row[2] || '-') + '</td>');
+        printWindow.document.write('<td align="left">' + stripHtml(row[3] || '-') + '</td>');
+        printWindow.document.write('<td align="left">' + stripHtml(row[4] || '-') + '</td>');
+        printWindow.document.write('<td align="left">' + stripHtml(row[5] || '-') + '</td>');
+        printWindow.document.write('<td align="left">' + stripHtml(row[6] || '-') + '</td>');
+        printWindow.document.write('<td align="center">' + ekor + ' Ekor' + '</td>');
+        printWindow.document.write('<td align="center">' + formatNumber(parseFloat(berat)) + ' kg' + '</td>');
+        printWindow.document.write('</tr>');
+    }
+    
+    // Total row
+    printWindow.document.write('<tr class="total-row">');
+    printWindow.document.write('<td colspan="7" align="center"><strong>TOTAL KESELURUHAN</strong></td>');
+    printWindow.document.write('<td align="center"><strong>' + formatNumber(totalEkor) + ' Ekor</strong></td>');
+    printWindow.document.write('<td align="center"><strong>' + formatNumber(totalBerat) + ' kg</strong></td>');
+    printWindow.document.write('</tr>');
+    
+    printWindow.document.write('</tbody>');
+    printWindow.document.write('</table>');
+    
+    // Footer Note
+    printWindow.document.write('<div class="footer-note">');
+    printWindow.document.write('SIPETGIS - Sistem Informasi Peternakan Kota Surabaya');
+    printWindow.document.write('</div>');
+    
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
+}
+
+function formatNumber(num) {
+    if (num === null || num === undefined || num === 0) return '0';
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+function stripHtml(html) {
+    if (!html) return '-';
+    var tmp = document.createElement('DIV');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '-';
+}
+
+// ================ INISIALISASI DATATABLE ================
 $(document).ready(function() {
-    $("#rpuTable").DataTable({
+    dataTable = $("#rpuTable").DataTable({
         dom: "Bfrtip",
         buttons: [
-            {
-                extend: "copy",
-                text: '<i class="fas fa-copy"></i> Copy',
-                className: 'btn btn-sm btn-primary',
-                exportOptions: { columns: [0,1,2,3,4,5,6,7,8] }
-            },
-            {
-                extend: "csv",
-                text: '<i class="fas fa-file-csv"></i> CSV',
-                className: 'btn btn-sm btn-success',
-                exportOptions: { columns: [0,1,2,3,4,5,6,7,8] }
-            },
+            // {
+            //     extend: "copy",
+            //     text: '<i class="fas fa-copy"></i> Copy',
+            //     className: 'btn btn-sm btn-primary',
+            //     exportOptions: { columns: [0,1,2,3,4,5,6,7,8] }
+            // },
+            // {
+            //     extend: "csv",
+            //     text: '<i class="fas fa-file-csv"></i> CSV',
+            //     className: 'btn btn-sm btn-success',
+            //     exportOptions: { columns: [0,1,2,3,4,5,6,7,8] }
+            // },
             {
                 extend: "excel",
                 text: '<i class="fas fa-file-excel"></i> Excel',
                 className: 'btn btn-sm btn-success',
                 exportOptions: { columns: [0,1,2,3,4,5,6,7,8] }
             },
-            {
-                extend: "pdf",
-                text: '<i class="fas fa-file-pdf"></i> PDF',
-                className: 'btn btn-sm btn-danger',
-                exportOptions: { columns: [0,1,2,3,4,5,6,7,8] },
-                customize: function(doc) {
-                    doc.content.splice(0, 1);
-                    
-                    var currentDate = new Date();
-                    var formattedDate = currentDate.toLocaleDateString('id-ID', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric'
-                    });
-                    
-                    doc.content.unshift({
-                        text: 'LAPORAN DATA RUMAH POTONG UNGGAS (RPU)',
-                        style: 'title',
-                        alignment: 'center',
-                        margin: [0, 0, 0, 5]
-                    });
-                    
-                    doc.content.unshift({
-                        text: 'DINAS PETERNAKAN KOTA SURABAYA',
-                        style: 'subtitle',
-                        alignment: 'center',
-                        margin: [0, 0, 0, 3]
-                    });
-                    
-                    doc.content.unshift({
-                        text: 'PEMERINTAH KOTA SURABAYA',
-                        style: 'header',
-                        alignment: 'center',
-                        margin: [0, 0, 0, 15]
-                    });
-                    
-                    doc.content.push({
-                        text: 'Tanggal Cetak: ' + formattedDate,
-                        style: 'date',
-                        alignment: 'center',
-                        margin: [0, 15, 0, 0]
-                    });
-                    
-                    if (doc.content[3] && doc.content[3].table) {
-                        var rows = doc.content[3].table.body;
-                        for (var i = 0; i < rows[0].length; i++) {
-                            rows[0][i].fillColor = '#832706';
-                            rows[0][i].color = '#ffffff';
-                            rows[0][i].bold = true;
-                            rows[0][i].alignment = 'center';
-                        }
-                        for (var i = 1; i < rows.length; i++) {
-                            for (var j = 0; j < rows[i].length; j++) {
-                                rows[i][j].alignment = 'center';
-                                rows[i][j].color = '#333333';
-                                rows[i][j].fontSize = 9;
-                            }
-                        }
-                    }
-                    
-                    doc.pageMargins = [20, 60, 20, 40];
-                    var headerText = 'SIPETGIS - Sistem Informasi Peternakan Kota Surabaya';
-                    doc.header = {
-                        text: headerText,
-                        alignment: 'center',
-                        fontSize: 8,
-                        color: '#666666',
-                        margin: [20, 15, 20, 0]
-                    };
-                    doc.footer = function(currentPage, pageCount) {
-                        return {
-                            text: 'Halaman ' + currentPage + ' dari ' + pageCount,
-                            alignment: 'center',
-                            fontSize: 8,
-                            color: '#666666',
-                            margin: [20, 0, 20, 15]
-                        };
-                    };
-                }
-            },
+            // {
+            //     extend: "pdf",
+            //     text: '<i class="fas fa-file-pdf"></i> PDF',
+            //     className: 'btn btn-sm btn-danger',
+            //     exportOptions: { columns: [0,1,2,3,4,5,6,7,8] }
+            // },
             {
                 extend: "print",
                 text: '<i class="fas fa-print"></i> Print',
                 className: 'btn btn-sm btn-info',
                 exportOptions: { columns: [0,1,2,3,4,5,6,7,8] },
-                customize: function(win) {
-                    $(win.document.body).find('table').addClass('print-table');
-                    $(win.document.body).find('table thead th').css({
-                        'background-color': '#832706',
-                        'color': 'white',
-                        'padding': '10px'
-                    });
-                    $(win.document.body).prepend(
-                        '<div style="text-align: center; margin-bottom: 20px;">' +
-                        '<h2 style="color: #832706; margin-bottom: 5px;">LAPORAN DATA RUMAH POTONG UNGGAS (RPU)</h2>' +
-                        '<p style="margin: 0;">Dinas Peternakan Kota Surabaya</p>' +
-                        '<p style="margin: 0;">Pemerintah Kota Surabaya</p>' +
-                        '<hr style="margin: 15px 0;">' +
-                        '<p>Tanggal Cetak: ' + new Date().toLocaleDateString('id-ID') + '</p>' +
-                        '</div>'
-                    );
-                    $(win.document.body).append(
-                        '<div style="text-align: center; margin-top: 30px; font-size: 10px; color: #666;">' +
-                        'SIPETGIS - Sistem Informasi Peternakan Kota Surabaya' +
-                        '</div>'
-                    );
+                action: function(e, dt, button, config) {
+                    printWithCurrentData();
                 }
             }
         ],
@@ -434,9 +465,8 @@ $(document).ready(function() {
                 previous: "Sebelumnya"
             }
         },
-        pageLength: 10,
-        lengthChange: true,
-        lengthMenu: [5, 10, 25, 50, 100],
+        pageLength: 15,
+        lengthChange: false,
         responsive: true,
         order: [[1, 'desc']],
         columnDefs: [
@@ -445,7 +475,6 @@ $(document).ready(function() {
         ]
     });
 
-    // Event listener untuk tombol edit (delegasi)
     $(document).on("click", ".btn-edit", function() {
         var id = $(this).data('id');
         if (id) {
@@ -453,7 +482,6 @@ $(document).ready(function() {
         }
     });
 
-    // Event listener untuk tombol hapus (delegasi)
     $(document).on("click", ".btn-delete", function() {
         var id = $(this).data('id');
         var nama = $(this).data('nama');
@@ -462,7 +490,6 @@ $(document).ready(function() {
         }
     });
 
-    // Filter button event
     $("#filterBtn").click(function() {
         const pejagalValue = $("#filterPejagal").val();
         const komoditasValue = $("#filterKomoditas").val();
@@ -491,7 +518,6 @@ $(document).ready(function() {
         }
     });
 
-    // Reset button event
     $("#resetBtn").click(function() {
         $("#filterPejagal").val("all");
         $("#filterKomoditas").val("all");
@@ -501,7 +527,6 @@ $(document).ready(function() {
         $("#rpuTable").DataTable().search("").draw();
     });
 
-    // Close map button event
     $("#closeMapBtn").click(function() {
         $("#mapSection").hide();
         if (map) {
@@ -510,7 +535,6 @@ $(document).ready(function() {
         }
     });
 
-    // Map view controls
     $("#btnMapView").click(function() {
         currentView = "map";
         updateMapView();
@@ -532,14 +556,12 @@ $(document).ready(function() {
         }
     });
 
-    // Confirm delete button
     $("#confirmDelete").click(function() {
         if (deleteId) {
             deleteData(deleteId);
         }
     });
     
-    // Form edit submit
     $("#formEdit").submit(function(e) {
         e.preventDefault();
         var formData = $(this).serialize();
@@ -575,5 +597,4 @@ function getLastDayOfMonth() {
     return lastDay.toISOString().split('T')[0];
 }
 
-// Base URL
 var base_url = "<?= base_url() ?>";

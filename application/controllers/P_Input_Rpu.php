@@ -16,7 +16,7 @@ class P_input_rpu extends CI_Controller {
             redirect('login');
         }
         
-        $this->load->model('P_input_rpu_model'); 
+        $this->load->model('P_input_rpu_model');  
     }
 
     public function index() {
@@ -74,129 +74,154 @@ class P_input_rpu extends CI_Controller {
     }
 
     public function save() {
-        $this->output->set_content_type('application/json');
+    $this->output->set_content_type('application/json');
+    
+    // Validation rules
+    $this->form_validation->set_rules('tanggal_rpu', 'Tanggal RPU', 'required');
+    $this->form_validation->set_rules('pejagal', 'Nama RPU/Pejagal', 'required|trim');
+    $this->form_validation->set_rules('nama_pj', 'Nama Penanggung Jawab', 'required|trim');
+    $this->form_validation->set_rules('nama_petugas', 'Nama Petugas', 'required|trim');
+    $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required|trim');
+    $this->form_validation->set_rules('latitude', 'Latitude', 'required|trim');
+    $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim');
+    $this->form_validation->set_rules('lokasi', 'Alamat', 'required|trim');
+
+    if ($this->form_validation->run() == FALSE) {
+        echo json_encode(['status' => 'error', 'message' => validation_errors('<div>', '</div>')]);
+        return;
+    }
+
+    // Ambil data komoditas
+    $komoditas = $this->input->post('komoditas');
+    $jumlah_ekor = $this->input->post('jumlah_ekor');
+    $berat_kg = $this->input->post('berat_kg');
+    $asal_unggas = $this->input->post('asal_unggas');
+
+    if (empty($komoditas) || !is_array($komoditas)) {
+        echo json_encode(['status' => 'error', 'message' => 'Data komoditas harus diisi minimal 1']);
+        return;
+    }
+
+    // Validasi dan filter komoditas
+    $valid_komoditas = array();
+    foreach ($komoditas as $index => $k) {
+        if (empty($k)) continue;
         
-        // Validation rules
-        $this->form_validation->set_rules('tanggal_rpu', 'Tanggal RPU', 'required');
-        $this->form_validation->set_rules('pejagal', 'Nama RPU/Pejagal', 'required|trim');
-        $this->form_validation->set_rules('nama_pj', 'Nama Penanggung Jawab', 'required|trim');
-        $this->form_validation->set_rules('nama_petugas', 'Nama Petugas', 'required|trim');
-        $this->form_validation->set_rules('kelurahan', 'Kelurahan', 'required|trim');
-        $this->form_validation->set_rules('latitude', 'Latitude', 'required|trim');
-        $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim');
-        $this->form_validation->set_rules('lokasi', 'Alamat', 'required|trim');
-
-        if ($this->form_validation->run() == FALSE) {
-            echo json_encode(['status' => 'error', 'message' => validation_errors('<div>', '</div>')]);
+        if (empty($jumlah_ekor[$index]) || $jumlah_ekor[$index] < 1) {
+            echo json_encode(['status' => 'error', 'message' => 'Jumlah ekor baris ke-' . ($index + 1) . ' harus diisi (minimal 1)']);
             return;
         }
-
-        // Ambil data komoditas
-        $komoditas = $this->input->post('komoditas');
-        $jumlah_ekor = $this->input->post('jumlah_ekor');
-        $berat_kg = $this->input->post('berat_kg');
-        $asal_unggas = $this->input->post('asal_unggas');
-
-        if (empty($komoditas) || !is_array($komoditas)) {
-            echo json_encode(['status' => 'error', 'message' => 'Data komoditas harus diisi minimal 1']);
+        
+        if (empty($berat_kg[$index]) || $berat_kg[$index] <= 0) {
+            echo json_encode(['status' => 'error', 'message' => 'Berat (kg) baris ke-' . ($index + 1) . ' harus diisi (minimal 0.1)']);
             return;
         }
-
-        // Validasi dan filter komoditas
-        $valid_komoditas = array();
-        foreach ($komoditas as $index => $k) {
-            if (empty($k)) continue;
-            
-            if (empty($jumlah_ekor[$index]) || $jumlah_ekor[$index] < 1) {
-                echo json_encode(['status' => 'error', 'message' => 'Jumlah ekor baris ke-' . ($index + 1) . ' harus diisi (minimal 1)']);
-                return;
-            }
-            
-            if (empty($berat_kg[$index]) || $berat_kg[$index] <= 0) {
-                echo json_encode(['status' => 'error', 'message' => 'Berat (kg) baris ke-' . ($index + 1) . ' harus diisi (minimal 0.1)']);
-                return;
-            }
-            
-            $valid_komoditas[] = array(
-                'komoditas' => $k,
-                'jumlah_ekor' => $jumlah_ekor[$index],
-                'berat_kg' => $berat_kg[$index],
-                'asal_unggas' => isset($asal_unggas[$index]) ? $asal_unggas[$index] : 'Surabaya'
-            );
-        }
-
-        if (empty($valid_komoditas)) {
-            echo json_encode(['status' => 'error', 'message' => 'Minimal satu data komoditas harus diisi lengkap']);
-            return;
-        }
-
-        // Upload foto
-        $uploaded_file = null;
-        $upload_path = FCPATH . 'uploads/rpu/';
-        if (!is_dir($upload_path)) {
-            mkdir($upload_path, 0777, TRUE);
-        }
-
-        if (isset($_FILES['foto_kegiatan']) && $_FILES['foto_kegiatan']['error'] != 4) {
-            $config['upload_path'] = $upload_path;
-            $config['allowed_types'] = 'jpg|jpeg|png';
-            $config['max_size'] = 5120;
-            $config['encrypt_name'] = TRUE;
-            
-            $this->upload->initialize($config);
-            
-            if ($this->upload->do_upload('foto_kegiatan')) {
-                $uploaded_file = $this->upload->data('file_name');
-            } else {
-                echo json_encode(['status' => 'error', 'message' => 'Gagal upload foto: ' . strip_tags($this->upload->display_errors())]);
-                return;
-            }
-        }
-
-        // Data RPU - gunakan 'lokasi' sesuai dengan kolom di tabel
-        $data_rpu = array(
-            'tanggal_rpu' => $this->input->post('tanggal_rpu'),
-            'pejagal' => $this->input->post('pejagal'),
-            'perizinan' => $this->input->post('perizinan'),
-            'tersedia_juleha' => $this->input->post('tersedia_juleha'),
-            'lokasi' => $this->input->post('lokasi'),
-            'kecamatan' => $this->session->userdata('kecamatan') ?: 'Benowo',
-            'kelurahan' => $this->input->post('kelurahan'),
-            'rt' => $this->input->post('rt'),
-            'rw' => $this->input->post('rw'),
-            'latitude' => $this->input->post('latitude'),
-            'longitude' => $this->input->post('longitude'),
-            'nama_pj' => $this->input->post('nama_pj'),
-            'nik_pj' => $this->input->post('nik_pj'),
-            'telp_pj' => $this->input->post('telp_pj'),
-            'nama_petugas' => $this->input->post('nama_petugas'),
-            'foto_kegiatan' => $uploaded_file,
-            'keterangan' => $this->input->post('keterangan')
+        
+        $valid_komoditas[] = array(
+            'komoditas' => $k,
+            'jumlah_ekor' => $jumlah_ekor[$index],
+            'berat_kg' => $berat_kg[$index],
+            'asal_unggas' => isset($asal_unggas[$index]) ? $asal_unggas[$index] : 'Surabaya'
         );
+    }
+
+    if (empty($valid_komoditas)) {
+        echo json_encode(['status' => 'error', 'message' => 'Minimal satu data komoditas harus diisi lengkap']);
+        return;
+    }
+
+    // MULTIPLE FILE UPLOAD - MANUAL METHOD
+    $uploaded_files = array();
+    $upload_path = FCPATH . 'uploads/rpu/';
+    
+    if (!is_dir($upload_path)) {
+        mkdir($upload_path, 0777, TRUE);
+    }
+    
+    if (isset($_FILES['foto_kegiatan']) && !empty($_FILES['foto_kegiatan']['name'][0])) {
+        $files = $_FILES['foto_kegiatan'];
+        $file_count = count($files['name']);
+        $file_count = min($file_count, 5);
         
-        $rpu_id = $this->P_input_rpu_model->save_rpu($data_rpu);
-        
-        if ($rpu_id && $rpu_id > 0) {
-            $data_komoditas = array();
-            foreach ($valid_komoditas as $kom) {
-                $data_komoditas[] = array(
-                    'input_rpu_id' => $rpu_id,
-                    'komoditas' => $kom['komoditas'],
-                    'jumlah_ekor' => $kom['jumlah_ekor'],
-                    'berat_kg' => $kom['berat_kg'],
-                    'asal_unggas' => $kom['asal_unggas']
-                );
+        for ($i = 0; $i < $file_count; $i++) {
+            if ($files['error'][$i] == 0) {
+                $file_name = $files['name'][$i];
+                $file_tmp = $files['tmp_name'][$i];
+                $file_size = $files['size'][$i];
+                $file_type = $files['type'][$i];
+                
+                $allowed_types = array('image/jpeg', 'image/jpg', 'image/png');
+                if (!in_array($file_type, $allowed_types)) {
+                    echo json_encode(['status' => 'error', 'message' => 'File ' . $file_name . ' harus format JPG atau PNG']);
+                    return;
+                }
+                
+                if ($file_size > 5 * 1024 * 1024) {
+                    echo json_encode(['status' => 'error', 'message' => 'File ' . $file_name . ' melebihi 5MB']);
+                    return;
+                }
+                
+                $ext = pathinfo($file_name, PATHINFO_EXTENSION);
+                $new_name = time() . '_' . uniqid() . '.' . $ext;
+                $destination = $upload_path . $new_name;
+                
+                if (move_uploaded_file($file_tmp, $destination)) {
+                    $uploaded_files[] = $new_name;
+                } else {
+                    echo json_encode(['status' => 'error', 'message' => 'Gagal upload file: ' . $file_name]);
+                    return;
+                }
             }
-            
-            if ($this->P_input_rpu_model->save_komoditas($data_komoditas)) {
-                echo json_encode(['status' => 'success', 'message' => 'Data berhasil disimpan dengan ' . count($data_komoditas) . ' komoditas']);
-            } else {
-                echo json_encode(['status' => 'error', 'message' => 'Data RPU tersimpan tapi gagal menyimpan komoditas']);
-            }
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan data RPU']);
         }
     }
+    
+    $foto_string = !empty($uploaded_files) ? implode(',', $uploaded_files) : null;
+
+    // Data RPU
+    $data_rpu = array(
+        'tanggal_rpu' => $this->input->post('tanggal_rpu'),
+        'pejagal' => $this->input->post('pejagal'),
+        'perizinan' => $this->input->post('perizinan'),
+        'tersedia_juleha' => $this->input->post('tersedia_juleha'),
+        'lokasi' => $this->input->post('lokasi'),
+        'kecamatan' => $this->session->userdata('kecamatan') ?: 'Benowo',
+        'kelurahan' => $this->input->post('kelurahan'),
+        'rt' => $this->input->post('rt'),
+        'rw' => $this->input->post('rw'),
+        'latitude' => $this->input->post('latitude'),
+        'longitude' => $this->input->post('longitude'),
+        'nama_pj' => $this->input->post('nama_pj'),
+        'nik_pj' => $this->input->post('nik_pj'),
+        'telp_pj' => $this->input->post('telp_pj'),
+        'nama_petugas' => $this->input->post('nama_petugas'),
+        'foto_kegiatan' => $foto_string,
+        'keterangan' => $this->input->post('keterangan')
+    );
+    
+    $rpu_id = $this->P_input_rpu_model->save_rpu($data_rpu);
+    
+    if ($rpu_id && $rpu_id > 0) {
+        $data_komoditas = array();
+        foreach ($valid_komoditas as $kom) {
+            $data_komoditas[] = array(
+                'input_rpu_id' => $rpu_id,
+                'komoditas' => $kom['komoditas'],
+                'jumlah_ekor' => $kom['jumlah_ekor'],
+                'berat_kg' => $kom['berat_kg'],
+                'asal_unggas' => $kom['asal_unggas']
+            );
+        }
+        
+        if ($this->P_input_rpu_model->save_komoditas($data_komoditas)) {
+            $foto_msg = !empty($uploaded_files) ? count($uploaded_files) . ' foto berhasil diupload' : 'tanpa foto';
+            echo json_encode(['status' => 'success', 'message' => 'Data berhasil disimpan dengan ' . count($data_komoditas) . ' komoditas dan ' . $foto_msg]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Data RPU tersimpan tapi gagal menyimpan komoditas']);
+        }
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan data RPU']);
+    }
+}
 
     public function cek_nik() {
         $nik = $this->input->post('nik');

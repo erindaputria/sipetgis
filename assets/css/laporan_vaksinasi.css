@@ -169,34 +169,71 @@ table.dataTable tbody tr:hover {
     color: var(--text-main);
 }
 
-/* Data Link */
+/* ==============================================
+   STYLE ANGKA > 0 - LEBIH MENCOLOK (SAMA SEPERTI KEPEMILIKAN)
+   ============================================== */
+
+/* Default link angka - untuk angka 0 */
 .data-link {
-    color: #000000 !important;
+    color: #000000;
     text-decoration: none;
-    font-weight: 600;
-    transition: all 0.2s;
+    font-weight: 400;
+    transition: all 0.2s ease;
     display: inline-block;
     padding: 4px 8px;
-    border-radius: 6px;
-    min-width: 40px;
+    border-radius: 4px;
+    min-width: 45px;
 }
 
-.data-link:hover {
+/* Angka 0 - HITAM biasa, tanpa background khusus */
+.data-link.zero-value {
     color: #000000 !important;
-    text-decoration: underline;
-    background-color: #f1f5f9;
+    background: transparent !important;
+    font-weight: 400 !important;
+    border: none !important;
+    padding: 4px 8px !important;
 }
 
-/* Total Row */
-.total-row {
-    background: linear-gradient(135deg, #fef3ef 0%, #fce7e0 100%) !important;
-    font-weight: 700;
+/* Angka yang BUKAN 0 - PUTIH dengan BACKGROUND COKLAT mencolok */
+.data-link.positive-value {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    background: #832706 !important;
+    border-radius: 20px !important;
+    padding: 4px 12px !important;
+    box-shadow: 0 2px 5px rgba(131, 39, 6, 0.3);
 }
 
-.total-row td {
-    font-weight: 700;
-    color: var(--primary);
-    border-top: 2px solid var(--primary);
+/* Hover untuk angka > 0 */
+.data-link.positive-value:hover {
+    background: #6b1f04 !important;
+    transform: scale(1.08);
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(131, 39, 6, 0.4);
+}
+
+/* Hover untuk angka 0 */
+.data-link.zero-value:hover {
+    background-color: #f0f0f0 !important;
+    border-radius: 20px !important;
+    color: #333333 !important;
+}
+
+/* Style untuk total di footer */
+.total-row-bottom strong.positive-value {
+    color: #ffffff !important;
+    background: #832706 !important;
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 5px rgba(131, 39, 6, 0.3);
+}
+
+.total-row-bottom strong.zero-value {
+    color: #000000 !important;
+    background: transparent !important;
+    font-weight: 400 !important;
 }
 
 /* Tombol Export */
@@ -310,7 +347,7 @@ table.dataTable tbody tr:hover {
     margin-bottom: 20px;
 }
 
-/* Print */
+/* Print - ekspor ke PDF/Excel tetep polos */
 @media print {
     .no-print {
         display: none !important;
@@ -341,6 +378,23 @@ table.dataTable tbody tr:hover {
     .data-link {
         color: black !important;
         text-decoration: none !important;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+    .data-link.positive-value {
+        background: none !important;
+        color: black !important;
+    }
+    .data-link.zero-value {
+        background: none !important;
+        color: black !important;
+    }
+    .total-row-bottom strong.positive-value {
+        background: none !important;
+        color: black !important;
+        box-shadow: none !important;
     }
 }
 

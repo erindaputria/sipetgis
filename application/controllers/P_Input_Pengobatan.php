@@ -11,10 +11,9 @@ class P_input_pengobatan extends CI_Controller {
         $this->load->library('form_validation');
         $this->load->helper(array('form', 'url', 'file'));
         
-        // CEK SESSION LOGIN
         if (!$this->session->userdata('logged_in')) { 
             redirect('login');
-        }
+        } 
         
         $this->load->model('P_input_pengobatan_model');
     }
@@ -65,7 +64,7 @@ class P_input_pengobatan extends CI_Controller {
     }
 
     public function save() {
-        // Set validation rules - TAMBAHKAN ALAMAT
+        // Set validation rules
         $this->form_validation->set_rules('nama_peternak', 'Nama Peternak', 'required|trim');
         $this->form_validation->set_rules('nama_petugas', 'Nama Petugas', 'required|trim');
         $this->form_validation->set_rules('tanggal_pengobatan', 'Tanggal Pengobatan', 'required');
@@ -74,6 +73,7 @@ class P_input_pengobatan extends CI_Controller {
         $this->form_validation->set_rules('latitude', 'Latitude', 'required|trim');
         $this->form_validation->set_rules('longitude', 'Longitude', 'required|trim');
         $this->form_validation->set_rules('alamat', 'Alamat', 'required|trim');
+        $this->form_validation->set_rules('keterangan', 'Keterangan', 'required|trim');
 
         if ($this->form_validation->run() == FALSE) {
             $response = array(
@@ -137,38 +137,81 @@ class P_input_pengobatan extends CI_Controller {
             }
         }
 
-        // Upload foto
-        $uploaded_file = null;
+        // MULTIPLE FILE UPLOAD - MANUAL METHOD (tanpa library upload)
+        $uploaded_files = array();
         $upload_path = './uploads/pengobatan/';
         
         if (!is_dir($upload_path)) {
             mkdir($upload_path, 0777, TRUE);
         }
-
-        if (isset($_FILES['foto_pengobatan']) && $_FILES['foto_pengobatan']['error'] != 4) {
+        
+        // Cek apakah ada file yang diupload
+        if (isset($_FILES['foto_pengobatan']) && !empty($_FILES['foto_pengobatan']['name'][0])) {
+            $files = $_FILES['foto_pengobatan'];
+            $file_count = count($files['name']);
             
-            $config['upload_path'] = $upload_path;
-            $config['allowed_types'] = 'jpg|jpeg|png';
-            $config['max_size'] = 5120;
-            $config['encrypt_name'] = TRUE;
+            // Batasi maksimal 5 file
+            $file_count = min($file_count, 5);
             
-            $this->upload->initialize($config);
-            
-            if ($this->upload->do_upload('foto_pengobatan')) {
-                $upload_data = $this->upload->data();
-                $uploaded_file = $upload_data['file_name'];
-            } else {
-                $error = $this->upload->display_errors();
-                $response = array(
-                    'status' => 'error',
-                    'message' => 'Gagal upload foto: ' . strip_tags($error)
-                );
-                echo json_encode($response);
-                return;
+            for ($i = 0; $i < $file_count; $i++) {
+                if ($files['error'][$i] == 0) {
+                    $file_name = $files['name'][$i];
+                    $file_tmp = $files['tmp_name'][$i];
+                    $file_size = $files['size'][$i];
+                    $file_type = $files['type'][$i];
+                    
+                    // Validasi tipe file
+                    $allowed_types = array('image/jpeg', 'image/jpg', 'image/png');
+                    if (!in_array($file_type, $allowed_types)) {
+                        $response = array(
+                            'status' => 'error',
+                            'message' => 'File ' . $file_name . ' harus format JPG atau PNG'
+                        );
+                        echo json_encode($response);
+                        return;
+                    }
+                    
+                    // Validasi ukuran file (max 5MB)
+                    if ($file_size > 5 * 1024 * 1024) {
+                        $response = array(
+                            'status' => 'error',
+                            'message' => 'File ' . $file_name . ' melebihi 5MB'
+                        );
+                        echo json_encode($response);
+                        return;
+                    }
+                    
+                    // Generate nama file unik
+                    $ext = pathinfo($file_name, PATHINFO_EXTENSION);
+                    $new_name = time() . '_' . uniqid() . '.' . $ext;
+                    $destination = $upload_path . $new_name;
+                    
+                    // Upload file
+                    if (move_uploaded_file($file_tmp, $destination)) {
+                        $uploaded_files[] = $new_name;
+                    } else {
+                        $response = array(
+                            'status' => 'error',
+                            'message' => 'Gagal upload file: ' . $file_name
+                        );
+                        echo json_encode($response);
+                        return;
+                    }
+                } else if ($files['error'][$i] != 4) {
+                    $response = array(
+                        'status' => 'error',
+                        'message' => 'Error pada file: ' . $files['name'][$i]
+                    );
+                    echo json_encode($response);
+                    return;
+                }
             }
         }
+        
+        // Konversi array foto ke string (comma separated)
+        $foto_string = !empty($uploaded_files) ? implode(',', $uploaded_files) : null;
 
-        // Siapkan data dasar yang sama untuk semua baris
+        // Siapkan data dasar
         $nik_val = $this->input->post('nik');
         $telp_val = $this->input->post('telp');
         $keterangan_val = $this->input->post('keterangan');
@@ -176,7 +219,6 @@ class P_input_pengobatan extends CI_Controller {
         $rt_val = $this->input->post('rt');
         $rw_val = $this->input->post('rw');
         
-        // Data dasar - TAMBAHKAN ALAMAT
         $base_data = array(
             'nama_petugas' => $this->input->post('nama_petugas'),
             'nama_peternak' => $this->input->post('nama_peternak'),
@@ -192,7 +234,7 @@ class P_input_pengobatan extends CI_Controller {
             'latitude' => $this->input->post('latitude'),
             'longitude' => $this->input->post('longitude'),
             'telp' => (!empty($telp_val)) ? $telp_val : NULL,
-            'foto_pengobatan' => $uploaded_file
+            'foto_pengobatan' => $foto_string
         );
 
         // Buat array data untuk multiple rows
@@ -212,10 +254,10 @@ class P_input_pengobatan extends CI_Controller {
         $success_count = $this->P_input_pengobatan_model->save_multiple_pengobatan($data_array);
 
         if ($success_count > 0) {
-            $foto_msg = $uploaded_file ? ' dan 1 foto' : ' (tanpa foto)';
+            $foto_msg = !empty($uploaded_files) ? count($uploaded_files) . ' foto berhasil diupload' : 'tanpa foto';
             $response = array(
                 'status' => 'success',
-                'message' => $success_count . ' data pengobatan berhasil disimpan' . $foto_msg
+                'message' => $success_count . ' data pengobatan berhasil disimpan dengan ' . $foto_msg
             );
         } else {
             $response = array(
@@ -288,9 +330,6 @@ class P_input_pengobatan extends CI_Controller {
         }
     }
     
-    /**
-     * Cek apakah NIK sudah pernah digunakan
-     */
     public function cek_nik() {
         $nik = $this->input->post('nik');
         $kecamatan = $this->session->userdata('kecamatan');
@@ -312,9 +351,6 @@ class P_input_pengobatan extends CI_Controller {
         }
     }
     
-    /**
-     * Cek apakah telp sudah pernah digunakan
-     */
     public function cek_telp() {
         $telp = $this->input->post('telp');
         $kecamatan = $this->session->userdata('kecamatan');
@@ -336,3 +372,4 @@ class P_input_pengobatan extends CI_Controller {
         }
     }
 }
+?>

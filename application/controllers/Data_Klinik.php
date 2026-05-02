@@ -8,7 +8,7 @@ class Data_klinik extends CI_Controller {
         parent::__construct();
         $this->load->database();
     }
-
+ 
     public function index()
     {
         $this->load->view('admin/data/data_klinik');

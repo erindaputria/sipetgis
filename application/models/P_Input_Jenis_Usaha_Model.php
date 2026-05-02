@@ -13,7 +13,7 @@ class P_input_jenis_usaha_model extends CI_Model {
     public function save_jenis_usaha($data) {
         return $this->db->insert($this->table, $data);
     }
-    
+     
     public function get_jenis_usaha_by_kecamatan($kecamatan) {
         $this->db->select('*');
         $this->db->from($this->table);

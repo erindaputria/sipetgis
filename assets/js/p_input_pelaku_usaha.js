@@ -27,17 +27,7 @@ $(document).ready(function() {
         order: [[0, 'asc']],
         dom: 'Bfrtip',
         buttons: [
-            { extend: 'copy', text: '<i class="fas fa-copy"></i> Copy', className: 'btn btn-sm btn-primary' },
-            { extend: 'csv', text: '<i class="fas fa-file-csv"></i> CSV', className: 'btn btn-sm btn-success' },
             { extend: 'excel', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-sm btn-success' },
-            { 
-                extend: 'pdf', 
-                text: '<i class="fas fa-file-pdf"></i> PDF', 
-                className: 'btn btn-sm btn-danger',
-                action: function(e, dt, button, config) {
-                    printWithCurrentData();
-                }
-            },
             { 
                 extend: 'print', 
                 text: '<i class="fas fa-print"></i> Print', 
@@ -116,7 +106,7 @@ $(document).ready(function() {
                 showAlert('danger', 'Format harus JPG/PNG');
                 $(this).val('');
                 return;
-            }
+            } 
             const reader = new FileReader();
             reader.onload = function(e) {
                 $('#photoPreview').attr('src', e.target.result).show();
@@ -176,19 +166,17 @@ $(document).ready(function() {
     }
 
     function resetForm() {
-    $('#formPelakuUsaha')[0].reset();
-    // Kecamatan tidak perlu direset karena readonly
-    // $('#kecamatan').val(user_kecamatan); // Hapus atau comment
-    $('#coordinateInfo').hide();
-    $('#photoPreview').hide();
-    $('#photoPlaceholder').show();
-    $('#btnRemovePhoto').hide();
-    $('#nik-status').html('');
-    $('.is-invalid').removeClass('is-invalid');
-    
-    // Load kelurahan untuk kecamatan yang sudah ditentukan
-    loadKelurahan(user_kecamatan);
-}
+        $('#formPelakuUsaha')[0].reset();
+        $('#coordinateInfo').hide();
+        $('#photoPreview').hide();
+        $('#photoPlaceholder').show();
+        $('#btnRemovePhoto').hide();
+        $('#nik-status').html('');
+        $('.is-invalid').removeClass('is-invalid');
+        
+        // Load kelurahan untuk kecamatan yang sudah ditentukan
+        loadKelurahan(user_kecamatan);
+    }
     
     // Load kelurahan based on kecamatan
     function loadKelurahan(kecamatan) {
@@ -382,7 +370,7 @@ $(document).ready(function() {
     };
 });
 
-// Fungsi Print/PDF
+// Fungsi Print/PDF - Menghapus kolom foto
 function printWithCurrentData() {
     var title = $('#reportTitle').length ? $('#reportTitle').html() : 'DATA PELAKU USAHA';
     var subtitle = $('#reportSubtitle').length ? $('#reportSubtitle').html() : 'Kota Surabaya';
@@ -409,7 +397,16 @@ function printWithCurrentData() {
     $(tableContent).find('.dataTables_filter').remove();
     $(tableContent).find('.dataTables_length').remove();
     $(tableContent).find('.dataTables_info').remove();
-    $(tableContent).find('.dataTables_paginate').remove(); 
+    $(tableContent).find('.dataTables_paginate').remove();
+    
+    // HAPUS KOLOM FOTO (kolom terakhir)
+    $(tableContent).find('thead tr').each(function() {
+        $(this).find('th:last-child').remove();
+    });
+    
+    $(tableContent).find('tbody tr').each(function() {
+        $(this).find('td:last-child').remove();
+    });
     
     printWindow.document.write('<div class="header">');
     printWindow.document.write('<h2>' + title + '</h2>');

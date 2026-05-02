@@ -9,40 +9,37 @@ class Laporan_data_tpu_rpu_model extends CI_Model {
         $this->load->database();
     }
 
+    // Daftar kecamatan urutan tetap (31 kecamatan)
+    private $kecamatan_order = [
+        'Asemrowo', 'Krembangan', 'Pabean Cantian', 'Semampir', 'Bulak',
+        'Kenjeran', 'Simokerto', 'Tambaksari', 'Mulyorejo', 'Sukolilo',
+        'Gubeng', 'Rungkut', 'Gunung Anyar', 'Tenggilis Mejoyo', 'Wonocolo',
+        'Benowo', 'Pakal', 'Sambikerep', 'Tandes', 'Sukomanunggal',
+        'Lakarsantri', 'Wiyung', 'Sawahan', 'Dukuh Pakis', 'Karangpilang',
+        'Gayungan', 'Jambangan', 'Wonokromo', 'Tegalsari', 'Genteng', 'Bubutan'
+    ];
+
     public function get_kecamatan()
     {
-        // Cara 1: Gunakan query manual (RECOMMENDED)
         $sql = "SELECT DISTINCT kecamatan FROM input_rpu WHERE kecamatan IS NOT NULL AND kecamatan != '' ORDER BY kecamatan ASC";
         $query = $this->db->query($sql);
         $result = $query->result();
         
-        // Jika tidak ada data, gunakan data default
         if(empty($result)) {
-            $kecamatan_list = [
-                'Asemrowo', 'Benowo', 'Bubutan', 'Bulak', 'Dukuh Pakis',
-                'Gayungan', 'Genteng', 'Gubeng', 'Gunung Anyar', 'Jambangan',
-                'Karangpilang', 'Kenjeran', 'Krembangan', 'Lakarsantri', 'Mulyorejo',
-                'Pabean Cantian', 'Pakal', 'Rungkut', 'Sambikerep', 'Sawahan',
-                'Semampir', 'Simokerto', 'Sukolilo', 'Sukomanunggal', 'Tambaksari',
-                'Tandes', 'Tegalsari', 'Tenggilis Mejoyo', 'Wiyung', 'Wonocolo', 'Wonokromo'
-            ];
-            
-            foreach($kecamatan_list as $kec) {
+            foreach($this->kecamatan_order as $kec) {
                 $result[] = (object)['kecamatan' => $kec];
             }
         }
         
         return $result;
-    }
+    } 
 
     public function get_tahun()
     {
-        // Cara 1: Gunakan query manual (RECOMMENDED)
         $sql = "SELECT DISTINCT YEAR(tanggal_rpu) as tahun FROM input_rpu WHERE tanggal_rpu IS NOT NULL ORDER BY tahun DESC";
         $query = $this->db->query($sql);
         $result = $query->result();
         
-        // Jika tidak ada data, gunakan data default
         if(empty($result)) {
             $currentYear = date('Y');
             for($i = $currentYear; $i >= $currentYear - 5; $i--) {
@@ -53,9 +50,8 @@ class Laporan_data_tpu_rpu_model extends CI_Model {
         return $result;
     }
 
-    public function get_data_tpu_rpu($tahun, $kecamatan_filter = null)
+    public function get_data_tpu_rpu($tahun = null, $kecamatan_filter = null)
     {
-        // Query untuk mengambil data RPU dengan komoditas
         $sql = "SELECT 
                     r.*,
                     GROUP_CONCAT(
@@ -66,11 +62,15 @@ class Laporan_data_tpu_rpu_model extends CI_Model {
                     COALESCE(SUM(k.berat_kg), 0) as total_berat
                 FROM input_rpu r
                 LEFT JOIN input_rpu_komoditas k ON r.id = k.input_rpu_id
-                WHERE YEAR(r.tanggal_rpu) = ?";
+                WHERE 1=1";
         
-        $params = [$tahun];
+        $params = [];
         
-        // Tambah filter kecamatan
+        if($tahun && $tahun != '') {
+            $sql .= " AND YEAR(r.tanggal_rpu) = ?";
+            $params[] = $tahun;
+        }
+        
         if($kecamatan_filter && $kecamatan_filter != 'semua') {
             $sql .= " AND r.kecamatan = ?";
             $params[] = $kecamatan_filter;
@@ -82,11 +82,8 @@ class Laporan_data_tpu_rpu_model extends CI_Model {
         $query = $this->db->query($sql, $params);
         $results = $query->result();
         
-        // Format data untuk ditampilkan
         $data = [];
         foreach($results as $row) {
-            // Parse komoditas detail
-            $komoditas_list = [];
             $total_ayam = 0;
             $total_itik = 0;
             $total_lainnya = 0;
@@ -101,10 +98,8 @@ class Laporan_data_tpu_rpu_model extends CI_Model {
                         $jumlah = intval($parts[1]);
                         $asal = $parts[3];
                         
-                        $komoditas_list[] = $komoditas;
                         $asal_unggas_list[] = $asal;
                         
-                        // Kategorikan jenis komoditas
                         if(strpos($komoditas, 'Ayam') !== false || strpos($komoditas, 'Broiler') !== false || strpos($komoditas, 'Kampung') !== false || strpos($komoditas, 'Layer') !== false) {
                             $total_ayam += $jumlah;
                         } elseif(strpos($komoditas, 'Itik') !== false) {
@@ -116,12 +111,10 @@ class Laporan_data_tpu_rpu_model extends CI_Model {
                 }
             }
             
-            // Jika tidak ada komoditas detail, gunakan total_ekor
-            if(empty($komoditas_list) && $row->total_ekor > 0) {
+            if(empty($komoditas_items) && $row->total_ekor > 0) {
                 $total_ayam = intval($row->total_ekor);
             }
             
-            // Gabungkan daerah asal unggas
             $asal_unggas_unique = array_unique($asal_unggas_list);
             $daerah_asal = !empty($asal_unggas_unique) ? implode(', ', $asal_unggas_unique) : '-';
             
@@ -140,20 +133,18 @@ class Laporan_data_tpu_rpu_model extends CI_Model {
                     'lainnya' => $total_lainnya
                 ],
                 'daerah_asal' => $daerah_asal,
-                'tersedia_juleha' => $row->tersedia_juleha ?: 'Tidak',
+                'tersedia_juleha' => ($row->tersedia_juleha == 'Y' || $row->tersedia_juleha == 'Ya') ? 'Ya' : 'Tidak',
                 'tanggal_rpu' => $row->tanggal_rpu,
                 'nama_petugas' => $row->nama_petugas,
                 'latitude' => $row->latitude,
-                'longitude' => $row->longitude,
-                'foto_kegiatan' => $row->foto_kegiatan,
-                'komoditas_list' => $komoditas_list
+                'longitude' => $row->longitude
             ];
         }
         
         return $data;
     }
     
-    public function get_total_tpu_rpu($tahun, $kecamatan_filter)
+    public function get_total_tpu_rpu($tahun = null, $kecamatan_filter = null)
     {
         $data = $this->get_data_tpu_rpu($tahun, $kecamatan_filter);
         
@@ -175,10 +166,111 @@ class Laporan_data_tpu_rpu_model extends CI_Model {
             'total_lainnya' => $total_lainnya
         ];
     }
-    
-    public function get_all_data_for_export($tahun, $kecamatan_filter = null)
+
+    // ========== METHOD REKAP PER KECAMATAN (0-0-0) ==========
+
+    /**
+     * Get rekap jumlah TPU/RPU per kecamatan
+     */
+    public function get_rekap_tpu_per_kecamatan($tahun = null, $kecamatan_filter = null)
     {
-        return $this->get_data_tpu_rpu($tahun, $kecamatan_filter);
+        $sql = "SELECT kecamatan, COUNT(*) as jumlah_tpu, COALESCE(SUM(
+            (SELECT COALESCE(SUM(jumlah_ekor), 0) FROM input_rpu_komoditas WHERE input_rpu_id = input_rpu.id)
+        ), 0) as total_pemotongan
+        FROM input_rpu
+        WHERE 1=1";
+        
+        $params = [];
+        
+        if($tahun && $tahun != '') {
+            $sql .= " AND YEAR(tanggal_rpu) = ?";
+            $params[] = $tahun;
+        }
+        
+        if($kecamatan_filter && $kecamatan_filter != 'semua') {
+            $sql .= " AND kecamatan = ?";
+            $params[] = $kecamatan_filter;
+        }
+        
+        $sql .= " GROUP BY kecamatan";
+        
+        $query = $this->db->query($sql, $params);
+        $results = $query->result();
+        
+        // Map data ke array
+        $dataMap = [];
+        foreach($results as $row) {
+            $kec = ucwords(strtolower($row->kecamatan));
+            $dataMap[$kec] = (object)[
+                'jumlah_tpu' => (int)$row->jumlah_tpu,
+                'total_pemotongan' => (int)$row->total_pemotongan
+            ];
+        }
+        
+        // Tentukan kecamatan yang ditampilkan
+        $kecamatanList = [];
+        if($kecamatan_filter && $kecamatan_filter != 'semua') {
+            $kecamatanList = [ucwords(strtolower($kecamatan_filter))];
+        } else {
+            $kecamatanList = $this->kecamatan_order;
+        }
+        
+        // Build hasil
+        $result = [];
+        foreach($kecamatanList as $kec) {
+            $row = (object)[
+                'kecamatan' => $kec,
+                'jumlah_tpu' => isset($dataMap[$kec]) ? $dataMap[$kec]->jumlah_tpu : 0,
+                'total_pemotongan' => isset($dataMap[$kec]) ? $dataMap[$kec]->total_pemotongan : 0
+            ];
+            $result[] = $row;
+        }
+        
+        return $result;
+    }
+
+    /**
+     * Get total rekap per kecamatan
+     */
+    public function get_total_rekap_tpu($tahun = null, $kecamatan_filter = null)
+    {
+        $data = $this->get_rekap_tpu_per_kecamatan($tahun, $kecamatan_filter);
+        
+        $total = (object)[
+            'jumlah_tpu' => 0,
+            'total_pemotongan' => 0
+        ];
+        
+        foreach($data as $row) {
+            $total->jumlah_tpu += $row->jumlah_tpu;
+            $total->total_pemotongan += $row->total_pemotongan;
+        }
+        
+        return $total;
+    }
+
+    /**
+     * Get all data tanpa filter tahun (untuk load awal)
+     */
+    public function get_all_data_tpu_rpu()
+    {
+        return $this->get_data_tpu_rpu(null, null);
+    }
+
+    /**
+     * Get all rekap per kecamatan (tanpa filter tahun)
+     */
+    public function get_all_rekap_tpu()
+    {
+        return $this->get_rekap_tpu_per_kecamatan(null, null);
+    }
+
+    /**
+     * Get all total rekap (tanpa filter tahun)
+     */
+    public function get_all_total_rekap_tpu()
+    {
+        return $this->get_total_rekap_tpu(null, null);
     }
 }
 ?>

@@ -80,7 +80,7 @@
                             <a class="nav-link d-flex align-items-center justify-content-between collapsed" data-bs-toggle="collapse" href="#masterDataSubmenu" role="button" aria-expanded="false">
                                 <div class="d-flex align-items-center"><i class="fas fa-database me-2" style="color: #832706 !important;"></i><span>Master Data</span></div>
                                 <i class="fas fa-chevron-down ms-2" style="color: #832706 !important;"></i>
-                            </a>
+                            </a> 
                             <div class="collapse" id="masterDataSubmenu">
                                 <ul class="list-unstyled ps-4">
                                     <li><a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a></li>

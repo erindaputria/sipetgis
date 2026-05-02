@@ -67,6 +67,30 @@ class Laporan_history_data_vaksinasi_model extends CI_Model {
         return $result;
     }
 
+    public function get_jenis_vaksin()
+    {
+        // Ambil jenis vaksin unik
+        $this->db->distinct();
+        $this->db->select('jenis_vaksinasi');
+        $this->db->from($this->table);
+        $this->db->where('jenis_vaksinasi IS NOT NULL');
+        $this->db->where('jenis_vaksinasi !=', '');
+        $this->db->order_by('jenis_vaksinasi', 'ASC');
+        $query = $this->db->get();
+        
+        $result = $query->result();
+        
+        if(empty($result)) {
+            $result = [
+                (object)['jenis_vaksinasi' => 'PMK'],
+                (object)['jenis_vaksinasi' => 'LSD'],
+                (object)['jenis_vaksinasi' => 'ND-AI']
+            ];
+        }
+        
+        return $result;
+    }
+
     public function get_history_data($tahun, $kecamatan_filter = null, $jenis_vaksin_filter = null, $jenis_hewan_filter = null)
     {
         $this->db->select('
@@ -180,4 +204,64 @@ class Laporan_history_data_vaksinasi_model extends CI_Model {
         
         return $result->total_dosis ? (int)$result->total_dosis : 0;
     }
+
+    // ==================== METHOD UNTUK SEMUA DATA (TANPA FILTER) ====================
+    public function get_all_history_data()
+    {
+        // Gunakan tabel yang sama: input_vaksinasi
+        $this->db->select('
+            id_vaksinasi,
+            tanggal_vaksinasi,
+            nama_petugas,
+            nama_peternak,
+            nik,
+            alamat,
+            kecamatan,
+            kelurahan,
+            komoditas_ternak as jenis_hewan,
+            jenis_vaksinasi,
+            dosis,
+            jumlah
+        ');
+        $this->db->from($this->table);
+        $this->db->order_by('tanggal_vaksinasi', 'DESC');
+        $query = $this->db->get();
+        
+        $results = $query->result();
+        
+        // Format data untuk ditampilkan
+        $formatted_data = [];
+        foreach($results as $item) {
+            // Format tanggal
+            $tanggal = '-';
+            if($item->tanggal_vaksinasi && $item->tanggal_vaksinasi != '0000-00-00') {
+                $tanggal = date('d/m/Y', strtotime($item->tanggal_vaksinasi));
+            }
+            
+            $formatted_data[] = (object)[
+                'tanggal' => $tanggal,
+                'petugas' => $item->nama_petugas ?: '-',
+                'peternak' => $item->nama_peternak ?: '-',
+                'nik' => $item->nik ?: '-',
+                'alamat' => $item->alamat ?: '-',
+                'kecamatan' => $item->kecamatan ?: '-',
+                'kelurahan' => $item->kelurahan ?: '-',
+                'jenis_hewan' => $item->jenis_hewan ?: '-',
+                'jenis_vaksinasi' => $item->jenis_vaksinasi ?: '-',
+                'dosis' => $item->dosis ?: '-',
+                'jumlah' => $item->jumlah ? (int)$item->jumlah : 0
+            ];
+        }
+        
+        return $formatted_data;
+    }
+
+    public function get_all_total_dosis()
+    {
+        $this->db->select('SUM(jumlah) as total');
+        $this->db->from($this->table);
+        $result = $this->db->get()->row();
+        return $result->total ?? 0;
+    }
 }
+?>

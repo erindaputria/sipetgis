@@ -237,7 +237,7 @@
                                                     <input type="number" class="form-control" id="jumlah_dokter" name="jumlah_dokter" placeholder="Jumlah dokter" min="0" />
                                                 </div>
 
-                                                <div class="col-md-4 mb-3">
+                                                <div class="col-md-6 mb-3">
                                                     <label class="form-label required-field">Jenis Layanan</label>
                                                     <select class="form-control" id="jenis_layanan" name="jenis_layanan" required>
                                                         <option value="">Pilih Jenis Layanan</option>
@@ -249,7 +249,7 @@
                                                     <div class="invalid-feedback">Jenis layanan harus dipilih</div>
                                                 </div>
 
-                                                <div class="col-md-4 mb-3">
+                                                <div class="col-md-6 mb-3">
                                                     <label class="form-label required-field">Surat Ijin</label>
                                                     <select class="form-control" id="surat_ijin" name="surat_ijin" required>
                                                         <option value="">Pilih Status Ijin</option>
@@ -259,10 +259,15 @@
                                                     <div class="invalid-feedback">Status surat ijin harus dipilih</div>
                                                 </div>
 
-                                                <div class="col-md-4 mb-3">
+                                                <div class="col-md-6 mb-3">
                                                     <label class="form-label">NIB</label>
                                                     <input type="text" class="form-control" id="nib" name="nib" placeholder="Nomor Induk Berusaha" maxlength="50" />
                                                     <small class="text-muted">Nomor Induk Berusaha (opsional)</small>
+                                                </div>
+
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label required-field">Nama Petugas</label>
+                                                    <input type="text" class="form-control" id="nama_petugas" name="nama_petugas" placeholder="Masukkan nama petugas" required />          
                                                 </div>
 
                                                 <div class="col-md-12 mb-3">
@@ -467,10 +472,6 @@
                                         <option selected value="all">Semua Periode</option>
                                         <option value="2026">Tahun 2026</option>
                                         <option value="2025">Tahun 2025</option>
-                                        <option value="2024">Tahun 2024</option>
-                                        <option value="2023">Tahun 2023</option>
-                                        <option value="2022">Tahun 2022</option>
-                                        <option value="2021">Tahun 2021</option>
                                     </select>
                                 </div>
                             </div>

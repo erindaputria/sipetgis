@@ -24,7 +24,7 @@ class Laporan_vaksinasi_model extends CI_Model {
         
         if($query->num_rows() > 0) {
             $result = [];
-            foreach($query->result() as $row) {
+            foreach($query->result() as $row) { 
                 $result[] = (object)['kecamatan' => ucwords(strtolower($row->kecamatan))];
             }
             return $result;
@@ -95,7 +95,6 @@ class Laporan_vaksinasi_model extends CI_Model {
         // Normalisasi nama kecamatan
         foreach($results as $item) {
             $item->kecamatan = ucwords(strtolower($item->kecamatan));
-            // Pastikan integer
             $item->sapi_potong = (int)$item->sapi_potong;
             $item->sapi_perah = (int)$item->sapi_perah;
             $item->kambing = (int)$item->kambing;
@@ -107,7 +106,6 @@ class Laporan_vaksinasi_model extends CI_Model {
     
     public function get_data_ndai($tahun, $bulan, $kecamatan_filter = null)
     {
-        // Query untuk mengambil data dari database
         $sql = "SELECT 
                     kecamatan,
                     COALESCE(SUM(CASE WHEN komoditas_ternak IN ('Ayam', 'Ayam Buras', 'Ayam Ras Pedaging', 'Ayam Ras Petelur') THEN CAST(jumlah AS UNSIGNED) ELSE 0 END), 0) as ayam,
@@ -135,11 +133,9 @@ class Laporan_vaksinasi_model extends CI_Model {
         $query = $this->db->query($sql);
         $dbResults = $query->result();
         
-        // Normalisasi nama kecamatan dari database dan pastikan integer
         $dataMap = [];
         foreach($dbResults as $item) {
             $kecamatanNormalized = ucwords(strtolower($item->kecamatan));
-            // Pastikan semua nilai integer
             $item->ayam = (int)$item->ayam;
             $item->itik = (int)$item->itik;
             $item->angsa = (int)$item->angsa;
@@ -148,7 +144,6 @@ class Laporan_vaksinasi_model extends CI_Model {
             $dataMap[$kecamatanNormalized] = $item;
         }
         
-        // Tentukan daftar kecamatan yang akan ditampilkan
         $kecamatanList = [];
         if($kecamatan_filter && $kecamatan_filter != 'semua' && $kecamatan_filter != 'Surabaya') {
             $kecamatanList = [ucwords(strtolower($kecamatan_filter))];
@@ -156,13 +151,11 @@ class Laporan_vaksinasi_model extends CI_Model {
             $kecamatanList = $this->kecamatan_order;
         }
         
-        // Buat hasil untuk semua kecamatan (isi 0 jika tidak ada data)
         $results = [];
         foreach($kecamatanList as $kecamatan) {
             if(isset($dataMap[$kecamatan])) {
                 $results[] = $dataMap[$kecamatan];
             } else {
-                // Buat object dengan nilai 0 untuk kecamatan yang tidak memiliki data
                 $emptyObj = new stdClass();
                 $emptyObj->kecamatan = $kecamatan;
                 $emptyObj->ayam = 0;
@@ -237,3 +230,4 @@ class Laporan_vaksinasi_model extends CI_Model {
         ];
     }
 }
+?>

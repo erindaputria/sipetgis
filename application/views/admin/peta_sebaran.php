@@ -85,7 +85,7 @@
                                 <div class="d-flex align-items-center"><i class="fas fa-database me-2" style="color: #832706 !important;"></i><span>Master</span></div>
                                 <i class="fas fa-chevron-down ms-2" style="color: #832706 !important;"></i>
                             </a>
-                            <div class="collapse" id="masterDataSubmenu">
+                            <div class="collapse" id="masterDataSubmenu"> 
                                 <ul class="list-unstyled ps-4">
                                     <li><a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a></li>
                                     <li><a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a></li>

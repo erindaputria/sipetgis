@@ -1,5 +1,3 @@
-
-
 $(document).ready(function() {
     // Hancurkan DataTable jika sudah ada
     if ($.fn.DataTable.isDataTable('#demplotTable')) {
@@ -25,20 +23,10 @@ $(document).ready(function() {
         pageLength: 10,
         lengthChange: true,
         lengthMenu: [5, 10, 25, 50, 100],
-        responsive: true,
+        responsive: true, 
         dom: 'Bfrtip',
         buttons: [
-            { extend: 'copy', text: '<i class="fas fa-copy"></i> Copy', className: 'btn btn-sm btn-primary' },
-            { extend: 'csv', text: '<i class="fas fa-file-csv"></i> CSV', className: 'btn btn-sm btn-success' },
             { extend: 'excel', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-sm btn-success' },
-            { 
-                extend: 'pdf', 
-                text: '<i class="fas fa-file-pdf"></i> PDF', 
-                className: 'btn btn-sm btn-danger',
-                action: function(e, dt, button, config) {
-                    printWithCurrentData();
-                }
-            },
             { 
                 extend: 'print', 
                 text: '<i class="fas fa-print"></i> Print', 
@@ -285,7 +273,7 @@ $(document).ready(function() {
     };
 });
 
-// Fungsi Print/PDF - SAMA PERSIS DENGAN LAPORAN_PENGOBATAN
+// Fungsi Print/PDF - Menghapus kolom foto
 function printWithCurrentData() {
     var title = $('#reportTitle').length ? $('#reportTitle').html() : 'DATA DEMPLOT';
     var subtitle = $('#reportSubtitle').length ? $('#reportSubtitle').html() : 'Kota Surabaya';
@@ -313,6 +301,15 @@ function printWithCurrentData() {
     $(tableContent).find('.dataTables_length').remove();
     $(tableContent).find('.dataTables_info').remove();
     $(tableContent).find('.dataTables_paginate').remove();
+    
+    // HAPUS KOLOM FOTO (kolom terakhir)
+    $(tableContent).find('thead tr').each(function() {
+        $(this).find('th:last-child').remove();
+    });
+    
+    $(tableContent).find('tbody tr').each(function() {
+        $(this).find('td:last-child').remove();
+    });
     
     printWindow.document.write('<div class="header">');
     printWindow.document.write('<h2>' + title + '</h2>');

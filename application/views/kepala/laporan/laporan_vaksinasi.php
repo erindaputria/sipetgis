@@ -23,7 +23,7 @@
             active: function() {
                 sessionStorage.fonts = true;
             }
-        });
+        }); 
     </script>
 
     <!-- CSS Files -->
@@ -268,10 +268,10 @@
                                                 <tr data-kecamatan="<?= $kecamatan ?>">
                                                     <td class="text-center"><?= $no ?></td>
                                                     <td class="kecamatan-cell"><?= $kecamatan ?></td>
-                                                    <td class="text-center"><a href="<?= $baseUrl ?>/Sapi Potong" class="data-link" target="_blank">0</a></td>
-                                                    <td class="text-center"><a href="<?= $baseUrl ?>/Sapi Perah" class="data-link" target="_blank">0</a></td>
-                                                    <td class="text-center"><a href="<?= $baseUrl ?>/Kambing" class="data-link" target="_blank">0</a></td>
-                                                    <td class="text-center"><a href="<?= $baseUrl ?>/Domba" class="data-link" target="_blank">0</a></td>
+                                                    <td class="text-center"><a href="<?= $baseUrl ?>/Sapi Potong" class="data-link zero-value" target="_blank">0</a></td>
+                                                    <td class="text-center"><a href="<?= $baseUrl ?>/Sapi Perah" class="data-link zero-value" target="_blank">0</a></td>
+                                                    <td class="text-center"><a href="<?= $baseUrl ?>/Kambing" class="data-link zero-value" target="_blank">0</a></td>
+                                                    <td class="text-center"><a href="<?= $baseUrl ?>/Domba" class="data-link zero-value" target="_blank">0</a></td>
                                                 </tr>
                                                 <?php endforeach; ?>
                                             </tbody>

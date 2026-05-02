@@ -12,7 +12,7 @@ class Laporan_kepemilikan_ternak extends CI_Controller {
         
         if(!$this->session->userdata('logged_in')) {
             redirect('login');
-        }
+        } 
     }
 
     public function index()
@@ -23,7 +23,7 @@ class Laporan_kepemilikan_ternak extends CI_Controller {
         $data['bulan'] = [
             '01' => 'Januari', '02' => 'Februari', '03' => 'Maret',
             '04' => 'April', '05' => 'Mei', '06' => 'Juni',
-            '07' => 'Juli', '08' => 'Agustus', '09' => 'September',
+            '07' => 'Juli', '08' => 'Agustus', '09' => 'September', 
             '10' => 'Oktober', '11' => 'November', '12' => 'Desember'
         ]; 
         
@@ -32,36 +32,88 @@ class Laporan_kepemilikan_ternak extends CI_Controller {
 
     public function get_data()
     {
-        // PERBAIKAN: Ubah dari POST menjadi GET
-        $tahun = $this->input->get('tahun');
-        $bulan = $this->input->get('bulan');
-        $kecamatan = $this->input->get('kecamatan');
-        $jenis_data = $this->input->get('jenis_data');
+        $tahun = $this->input->post('tahun');
+        $bulan = $this->input->post('bulan');
+        $kecamatan = $this->input->post('kecamatan');
+        $jenis_data = $this->input->post('jenis_data');
         
-        if($jenis_data == 'peternak') {
-            $data = $this->Laporan_kepemilikan_ternak_model->get_data_peternak($tahun, $bulan, $kecamatan);
-        } else {
-            $data = $this->Laporan_kepemilikan_ternak_model->get_data_populasi($tahun, $bulan, $kecamatan);
+        try {
+            if($jenis_data == 'peternak') {
+                $data = $this->Laporan_kepemilikan_ternak_model->get_data_peternak($tahun, $bulan, $kecamatan);
+            } else {
+                $data = $this->Laporan_kepemilikan_ternak_model->get_data_populasi($tahun, $bulan, $kecamatan);
+            }
+            
+            $total = $this->Laporan_kepemilikan_ternak_model->get_total_data($tahun, $bulan, $kecamatan, $jenis_data);
+            
+            $response = [
+                'status' => 'success',
+                'data' => $data,
+                'total' => $total,
+                'jenis_data' => $jenis_data
+            ];
+            
+            echo json_encode($response);
+        } catch (Exception $e) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => [],
+                'total' => null
+            ]);
         }
-        
-        $total = $this->Laporan_kepemilikan_ternak_model->get_total_data($tahun, $bulan, $kecamatan, $jenis_data);
-        
-        $response = [
-            'data' => $data,
-            'total' => $total,
-            'jenis_data' => $jenis_data
-        ];
-        
-        echo json_encode($response);
     }
     
-    public function export_pdf()
+    public function detail_kecamatan($kecamatan, $jenis_ternak)
+    {
+        $kecamatan = urldecode($kecamatan);
+        $jenis_ternak = urldecode($jenis_ternak);
+        $tahun = $this->input->get('tahun');
+        $bulan = $this->input->get('bulan');
+        
+        $komoditas_map = [
+            'Sapi Potong' => 'Sapi Potong',
+            'SapiPerah' => 'Sapi Perah',
+            'Kambing' => 'Kambing',
+            'Domba' => 'Domba',
+            'Ayam' => 'Ayam',
+            'Itik' => 'Itik',
+            'Angsa' => 'Angsa',
+            'Kalkun' => 'Kalkun',
+            'Burung' => 'Burung'
+        ];
+        
+        $komoditas = isset($komoditas_map[$jenis_ternak]) ? $komoditas_map[$jenis_ternak] : $jenis_ternak;
+        
+        $data['kecamatan'] = $kecamatan;
+        $data['jenis_ternak'] = $komoditas;
+        $data['tahun'] = $tahun;
+        $data['bulan'] = $bulan;
+        
+        $this->db->select('*');
+        $this->db->from('input_jenis_usaha');
+        $this->db->where('kecamatan', $kecamatan);
+        $this->db->where('komoditas_ternak', $komoditas);
+        if($tahun) {
+            $this->db->where('YEAR(tanggal_input)', $tahun);
+        }
+        if($bulan) {
+            $this->db->where('MONTH(tanggal_input)', $bulan);
+        }
+        $data['details'] = $this->db->get()->result();
+        
+        $this->load->view('laporan/detail_kepemilikan_kecamatan', $data);
+    }
+    
+    // ==================== EXPORT EXCEL (TANPA LIBRARY) ====================
+    public function export_excel()
     {
         $tahun = $this->input->get('tahun');
         $bulan = $this->input->get('bulan');
         $kecamatan = $this->input->get('kecamatan');
         $jenis_data = $this->input->get('jenis_data');
         
+        // Ambil data
         if($jenis_data == 'peternak') {
             $data = $this->Laporan_kepemilikan_ternak_model->get_data_peternak($tahun, $bulan, $kecamatan);
         } else {
@@ -70,6 +122,7 @@ class Laporan_kepemilikan_ternak extends CI_Controller {
         
         $total = $this->Laporan_kepemilikan_ternak_model->get_total_data($tahun, $bulan, $kecamatan, $jenis_data);
         
+        // Format judul
         $bulanNama = [
             '01' => 'Januari', '02' => 'Februari', '03' => 'Maret',
             '04' => 'April', '05' => 'Mei', '06' => 'Juni',
@@ -81,91 +134,89 @@ class Laporan_kepemilikan_ternak extends CI_Controller {
         $bulanText = ($bulan && $bulan != '') ? $bulanNama[$bulan] : 'Semua Bulan';
         $kecamatanText = ($kecamatan && $kecamatan != 'semua') ? 'Kecamatan ' . $kecamatan : 'Seluruh Kecamatan';
         
-        // Load DOMPDF
-        $this->load->library('pdf');
+        // Header untuk download file Excel
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment; filename="Laporan_Kepemilikan_Ternak_' . $jenisDataText . '_' . $tahun . '.xls"');
+        header('Cache-Control: max-age=0');
         
-        $html = '<!DOCTYPE html>
-        <html>
-        <head>
-            <title>Laporan Kepemilikan Ternak</title>
-            <style>
-                body { font-family: Arial, sans-serif; }
-                .header { text-align: center; margin-bottom: 20px; }
-                .header h2 { margin: 0; }
-                .header p { margin: 5px 0; }
-                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                th, td { border: 1px solid #000; padding: 8px; text-align: center; }
-                th { background-color: #f2f2f2; font-weight: bold; }
-                .kecamatan-cell { text-align: left; }
-                .total-row { background-color: #e8f5e9; font-weight: bold; }
-                .footer { margin-top: 30px; text-align: right; }
-            </style>
-        </head>
-        <body>
-            <div class="header">
-                <h2>REKAP DATA JUMLAH ' . $jenisDataText . '</h2>
-                <p>Kota Surabaya - ' . $kecamatanText . '</p>
-                <p>Periode: ' . $bulanText . ' ' . $tahun . '</p>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Kecamatan</th>
-                        <th>Sapi Potong</th>
-                        <th>Sapi Perah</th>
-                        <th>Kambing</th>
-                        <th>Domba</th>
-                        <th>Ayam</th>
-                        <th>Itik</th>
-                        <th>Angsa</th>
-                        <th>Kalkun</th>
-                        <th>Burung</th>
-                    </tr>
-                </thead>
-                <tbody>';
+        // Mulai output HTML sebagai Excel
+        echo '<html>';
+        echo '<head>';
+        echo '<meta charset="UTF-8">';
+        echo '<style>';
+        echo 'td, th { border: 1px solid #000; padding: 6px; }';
+        echo 'th { background-color: #f2f2f2; }';
+        echo '.total-row { background-color: #e8f5e9; font-weight: bold; }';
+        echo '</style>';
+        echo '</head>';
+        echo '<body>';
         
+        echo '<table border="1" cellpadding="5" cellspacing="0">';
+        
+        // Judul Laporan
+        echo '<tr>';
+        echo '<td colspan="11" align="center"><b>REKAP DATA JUMLAH ' . $jenisDataText . '</b></td>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<td colspan="11" align="center">Kota Surabaya - ' . $kecamatanText . '</td>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<td colspan="11" align="center">Periode: ' . $bulanText . ' ' . $tahun . '</td>';
+        echo '</tr>';
+        echo '<tr><td colspan="11">&nbsp;</td></tr>';
+        
+        // Header Tabel
+        echo '<tr>';
+        echo '<th>No</th>';
+        echo '<th>Kecamatan</th>';
+        echo '<th>Sapi Potong</th>';
+        echo '<th>Sapi Perah</th>';
+        echo '<th>Kambing</th>';
+        echo '<th>Domba</th>';
+        echo '<th>Ayam</th>';
+        echo '<th>Itik</th>';
+        echo '<th>Angsa</th>';
+        echo '<th>Kalkun</th>';
+        echo '<th>Burung</th>';
+        echo '</tr>';
+        
+        // Data per kecamatan
         $no = 1;
         foreach($data as $item) {
-            $html .= '<tr>
-                        <td>' . $no++ . '</td>
-                        <td class="kecamatan-cell">' . $item->kecamatan . '</td>
-                        <td>' . number_format($item->sapi_potong, 0, ',', '.') . '</td>
-                        <td>' . number_format($item->sapi_perah, 0, ',', '.') . '</td>
-                        <td>' . number_format($item->kambing, 0, ',', '.') . '</td>
-                        <td>' . number_format($item->domba, 0, ',', '.') . '</td>
-                        <td>' . number_format($item->ayam, 0, ',', '.') . '</td>
-                        <td>' . number_format($item->itik, 0, ',', '.') . '</td>
-                        <td>' . number_format($item->angsa, 0, ',', '.') . '</td>
-                        <td>' . number_format($item->kalkun, 0, ',', '.') . '</td>
-                        <td>' . number_format($item->burung, 0, ',', '.') . '</td>
-                     </tr>';
+            echo '<tr>';
+            echo '<td align="center">' . $no++ . '</td>';
+            echo '<td>' . $item->kecamatan . '</td>';
+            echo '<td align="right">' . number_format((int)$item->sapi_potong, 0, ',', '.') . '</td>';
+            echo '<td align="right">' . number_format((int)$item->sapi_perah, 0, ',', '.') . '</td>';
+            echo '<td align="right">' . number_format((int)$item->kambing, 0, ',', '.') . '</td>';
+            echo '<td align="right">' . number_format((int)$item->domba, 0, ',', '.') . '</td>';
+            echo '<td align="right">' . number_format((int)$item->ayam, 0, ',', '.') . '</td>';
+            echo '<td align="right">' . number_format((int)$item->itik, 0, ',', '.') . '</td>';
+            echo '<td align="right">' . number_format((int)$item->angsa, 0, ',', '.') . '</td>';
+            echo '<td align="right">' . number_format((int)$item->kalkun, 0, ',', '.') . '</td>';
+            echo '<td align="right">' . number_format((int)$item->burung, 0, ',', '.') . '</td>';
+            echo '</tr>';
         }
         
-        // Baris TOTAL
-        $html .= '<tr class="total-row">
-                    <td colspan="2" style="text-align: center;"><strong>TOTAL KESELURUHAN</strong></td>
-                    <td><strong>' . number_format($total->sapi_potong, 0, ',', '.') . '</strong></td>
-                    <td><strong>' . number_format($total->sapi_perah, 0, ',', '.') . '</strong></td>
-                    <td><strong>' . number_format($total->kambing, 0, ',', '.') . '</strong></td>
-                    <td><strong>' . number_format($total->domba, 0, ',', '.') . '</strong></td>
-                    <td><strong>' . number_format($total->ayam, 0, ',', '.') . '</strong></td>
-                    <td><strong>' . number_format($total->itik, 0, ',', '.') . '</strong></td>
-                    <td><strong>' . number_format($total->angsa, 0, ',', '.') . '</strong></td>
-                    <td><strong>' . number_format($total->kalkun, 0, ',', '.') . '</strong></td>
-                    <td><strong>' . number_format($total->burung, 0, ',', '.') . '</strong></td>
-                  </tr>';
+        // Total Keseluruhan
+        echo '<tr class="total-row">';
+        echo '<td colspan="2" align="center"><b>TOTAL KESELURUHAN</b></td>';
+        echo '<td align="right"><b>' . number_format((int)$total->sapi_potong, 0, ',', '.') . '</b></td>';
+        echo '<td align="right"><b>' . number_format((int)$total->sapi_perah, 0, ',', '.') . '</b></td>';
+        echo '<td align="right"><b>' . number_format((int)$total->kambing, 0, ',', '.') . '</b></td>';
+        echo '<td align="right"><b>' . number_format((int)$total->domba, 0, ',', '.') . '</b></td>';
+        echo '<td align="right"><b>' . number_format((int)$total->ayam, 0, ',', '.') . '</b></td>';
+        echo '<td align="right"><b>' . number_format((int)$total->itik, 0, ',', '.') . '</b></td>';
+        echo '<td align="right"><b>' . number_format((int)$total->angsa, 0, ',', '.') . '</b></td>';
+        echo '<td align="right"><b>' . number_format((int)$total->kalkun, 0, ',', '.') . '</b></td>';
+        echo '<td align="right"><b>' . number_format((int)$total->burung, 0, ',', '.') . '</b></td>';
+        echo '</tr>';
         
-        $html .= '</tbody>
-            </table>
-        </body>
-        </html>';
+        echo '</table>';
+        echo '</body>';
+        echo '</html>';
         
-        $this->pdf->loadHtml($html);
-        $this->pdf->setPaper('A4', 'landscape');
-        $this->pdf->render();
-        
-        $filename = 'Laporan_kepemilikan_ternak_' . $jenisDataText . '_' . ($bulanText != 'Semua Bulan' ? $bulanText . '_' : '') . $tahun . '.pdf';
-        $this->pdf->stream($filename, array('Attachment' => 0));
+        exit;
     }
 }
+?>

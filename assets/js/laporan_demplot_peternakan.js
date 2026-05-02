@@ -8,22 +8,22 @@ $(document).ready(function() {
     dataTable = $('#demplotTable').DataTable({
         dom: 'Bfrtip',
         buttons: [
-            {
-                extend: 'copy',
-                text: '<i class="fas fa-copy"></i> Copy',
-                className: 'btn btn-sm btn-primary',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend: 'csv',
-                text: '<i class="fas fa-file-csv"></i> CSV',
-                className: 'btn btn-sm btn-success',
-                action: function(e, dt, button, config) {
-                    exportWithParams('csv');
-                }
-            },
+            // {
+            //     extend: 'copy',
+            //     text: '<i class="fas fa-copy"></i> Copy',
+            //     className: 'btn btn-sm btn-primary',
+            //     exportOptions: { 
+            //         columns: ':visible'
+            //     }
+            // },
+            // {
+            //     extend: 'csv',
+            //     text: '<i class="fas fa-file-csv"></i> CSV',
+            //     className: 'btn btn-sm btn-success',
+            //     action: function(e, dt, button, config) {
+            //         exportWithParams('csv');
+            //     }
+            // },
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Excel',
@@ -32,14 +32,14 @@ $(document).ready(function() {
                     exportWithParams('excel');
                 }
             },
-            {
-                extend: 'pdf',
-                text: '<i class="fas fa-file-pdf"></i> PDF',
-                className: 'btn btn-sm btn-danger',
-                action: function(e, dt, button, config) {
-                    exportWithParams('pdf');
-                }
-            },
+            // {
+            //     extend: 'pdf',
+            //     text: '<i class="fas fa-file-pdf"></i> PDF',
+            //     className: 'btn btn-sm btn-danger',
+            //     action: function(e, dt, button, config) {
+            //         exportWithParams('pdf');
+            //     }
+            // },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print"></i> Print',
@@ -71,43 +71,60 @@ $(document).ready(function() {
         scrollX: true
     });
     
-    // Load data langsung saat halaman dibuka
-    loadData();
+    // ========== LANGSUNG LOAD SEMUA DATA SAAT HALAMAN DIBUKA ==========
+    loadAllData();
     
     $("#btnFilter").click(function() {
         currentData.tahun = $("#filterTahun").val();
         currentData.kecamatan = $("#filterKecamatan").val();
         currentData.demplot = $("#filterDemplot").val();
-        loadData();
+        
+        if(currentData.tahun === '' || currentData.tahun === 'semua') {
+            loadAllData();
+        } else {
+            loadDataWithFilter();
+        }
     });
     
     $("#btnReset").click(function() {
-        $("#filterTahun").val('semua');
+        $("#filterTahun").val('');
         $("#filterKecamatan").val('semua');
         $("#filterDemplot").val('semua');
-        currentData.tahun = 'semua';
-        currentData.kecamatan = 'semua';
-        currentData.demplot = 'semua';
-        loadData();
+        
+        currentData = {
+            tahun: '',
+            kecamatan: 'semua',
+            demplot: 'semua'
+        };
+        
+        loadAllData();
     });
     
     $("#refreshBtn").click(function() {
-        loadData();
+        if(currentData.tahun && currentData.tahun !== '' && currentData.tahun !== 'semua') {
+            loadDataWithFilter();
+        } else {
+            loadAllData();
+        }
     });
 });
 
 var dataTable = null;
 var currentData = {
-    tahun: 'semua',
+    tahun: '',
     kecamatan: 'semua',
     demplot: 'semua'
 };
 
 function exportWithParams(format) {
+    var tahun = currentData.tahun || 'all';
+    var kecamatan = currentData.kecamatan || 'semua';
+    var demplot = currentData.demplot || 'semua';
+    
     var url = base_url + 'laporan_demplot_peternakan/export_' + format;
-    url += "?tahun=" + encodeURIComponent(currentData.tahun);
-    url += "&kecamatan=" + encodeURIComponent(currentData.kecamatan);
-    url += "&demplot=" + encodeURIComponent(currentData.demplot);
+    url += "?tahun=" + encodeURIComponent(tahun);
+    url += "&kecamatan=" + encodeURIComponent(kecamatan);
+    url += "&demplot=" + encodeURIComponent(demplot);
     
     window.location.href = url;
 }
@@ -115,7 +132,6 @@ function exportWithParams(format) {
 function printWithCurrentData() {
     var title = $('#reportTitle').html();
     var subtitle = $('#reportSubtitle').html();
-    var tableHtml = $('#demplotTable').clone();
     
     var printWindow = window.open('', '_blank');
     printWindow.document.write('<html><head><title>Laporan Demplot Peternakan</title>');
@@ -127,10 +143,10 @@ function printWithCurrentData() {
     printWindow.document.write('table { width: 100%; border-collapse: collapse; margin-top: 20px; }');
     printWindow.document.write('th, td { border: 1px solid #000; padding: 8px; }');
     printWindow.document.write('th { background-color: #f2f2f2; }');
-    printWindow.document.write('td:first-child { text-align: center; }');
-    printWindow.document.write('td:nth-child(2) { text-align: left; }');
     printWindow.document.write('.badge-jenis { background-color: #fef3ef; color: #832706; padding: 2px 8px; border-radius: 12px; }');
     printWindow.document.write('.stok-pakan { background-color: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 12px; }');
+    printWindow.document.write('.positive-value { color: #832706 !important; font-weight: bold; }');
+    printWindow.document.write('.zero-value { color: #000000 !important; }');
     printWindow.document.write('.total-row { background-color: #e8f5e9; font-weight: bold; }');
     printWindow.document.write('@media print { .no-print { display: none; } }');
     printWindow.document.write('</style>');
@@ -154,18 +170,76 @@ function printWithCurrentData() {
     printWindow.print();
 }
 
-function loadData() {
+function loadAllData() {
+    $("#loadingOverlay").fadeIn();
+    
+    $.ajax({
+        url: base_url + 'laporan_demplot_peternakan/get_all_data',
+        type: "POST",
+        dataType: "json",
+        success: function(response) {
+            $("#reportTitle").html('DATA DEMPLOT PETERNAKAN');
+            $("#reportSubtitle").html('Kota Surabaya - Seluruh Data');
+            
+            // Update tabel detail
+            dataTable.clear().draw();
+            
+            if(response.status === 'success' && response.data && response.data.length > 0) {
+                var no = 1;
+                var totalLuas = 0;
+                var totalJumlah = 0;
+                
+                $.each(response.data, function(index, item) {
+                    var luas = parseFloat(item.luas_m2 || 0);
+                    var jumlah = parseInt(item.jumlah_hewan || 0);
+                    
+                    totalLuas += luas;
+                    totalJumlah += jumlah;
+                    
+                    var kelasLuas = luas > 0 ? 'positive-value' : 'zero-value';
+                    var kelasJumlah = jumlah > 0 ? 'positive-value' : 'zero-value';
+                    var detailUrl = base_url + 'laporan_demplot_peternakan/detail_demplot/' + encodeURIComponent(item.nama_demplot);
+                    
+                    dataTable.row.add([
+                        no,
+                        '<a href="' + detailUrl + '" class="data-link ' + kelasLuas + '" target="_blank">' + escapeHtml(item.nama_demplot) + '</a>',
+                        escapeHtml(item.alamat) || '-',
+                        escapeHtml(item.kecamatan) || '-',
+                        escapeHtml(item.kelurahan) || '-',
+                        '<span class="' + kelasLuas + '">' + formatNumber(luas) + ' m²</span>',
+                        '<span class="badge-jenis">' + escapeHtml(item.jenis_hewan) + '</span>',
+                        '<span class="' + kelasJumlah + '">' + formatNumber(jumlah) + ' ekor</span>',
+                        '<span class="stok-pakan">' + escapeHtml(item.stok_pakan) + '</span>',
+                        escapeHtml(item.keterangan) || '-'
+                    ]);
+                    no++;
+                });
+                
+                dataTable.draw();
+            } else {
+                dataTable.row.add(['1', 'Tidak ada data', '-', '-', '-', '-', '-', '-', '-', '-']);
+                dataTable.draw();
+            }
+            
+            // Set current data untuk export
+            currentData.tahun = '';
+            currentData.kecamatan = 'semua';
+            currentData.demplot = 'semua';
+            
+            $("#loadingOverlay").fadeOut();
+        },
+        error: function(xhr, status, error) {
+            console.error("Error:", error);
+            alert("Gagal memuat data. Silakan coba lagi.");
+            $("#loadingOverlay").fadeOut();
+        }
+    });
+}
+
+function loadDataWithFilter() {
     var tahun = currentData.tahun;
     var kecamatan = currentData.kecamatan;
     var demplot = currentData.demplot;
-    
-    // Update title
-    var titleText = 'DATA DEMPLOT PETERNAKAN';
-    if(tahun && tahun !== 'semua') {
-        titleText += ' TAHUN ' + tahun;
-    }
-    $("#reportTitle").html(titleText);
-    $("#reportSubtitle").html('Kota Surabaya');
     
     $("#loadingOverlay").fadeIn();
     
@@ -179,34 +253,53 @@ function loadData() {
         },
         dataType: "json",
         success: function(response) {
+            var titleText = 'DATA DEMPLOT PETERNAKAN';
+            if(tahun && tahun !== 'semua') {
+                titleText += ' TAHUN ' + tahun;
+            }
+            $("#reportTitle").html(titleText);
+            
+            var subtitleText = 'Kota Surabaya';
+            if(demplot && demplot !== 'semua') {
+                subtitleText += ' - ' + demplot;
+            }
+            if(kecamatan && kecamatan !== 'semua') {
+                subtitleText += ' - Kecamatan ' + kecamatan;
+            }
+            $("#reportSubtitle").html(subtitleText);
+            
+            // Update tabel detail
             dataTable.clear().draw();
             
-            if(response.data && response.data.length > 0) {
+            if(response.status === 'success' && response.data && response.data.length > 0) {
                 var no = 1;
                 var totalLuas = 0;
                 var totalJumlah = 0;
                 
                 $.each(response.data, function(index, item) {
+                    var luas = parseFloat(item.luas_m2 || 0);
+                    var jumlah = parseInt(item.jumlah_hewan || 0);
+                    
+                    totalLuas += luas;
+                    totalJumlah += jumlah;
+                    
+                    var kelasLuas = luas > 0 ? 'positive-value' : 'zero-value';
+                    var kelasJumlah = jumlah > 0 ? 'positive-value' : 'zero-value';
                     var detailUrl = base_url + 'laporan_demplot_peternakan/detail_demplot/' + encodeURIComponent(item.nama_demplot);
-                    if(tahun && tahun !== 'semua') {
-                        detailUrl += '?tahun=' + tahun;
-                    }
+                    var tahunParam = tahun ? '?tahun=' + tahun : '';
                     
                     dataTable.row.add([
                         no,
-                        '<a href="' + detailUrl + '" class="data-link" target="_blank">' + escapeHtml(item.nama_demplot) + '</a>',
+                        '<a href="' + detailUrl + tahunParam + '" class="data-link ' + kelasLuas + '" target="_blank">' + escapeHtml(item.nama_demplot) + '</a>',
                         escapeHtml(item.alamat) || '-',
                         escapeHtml(item.kecamatan) || '-',
                         escapeHtml(item.kelurahan) || '-',
-                        '<span class="luas-cell">' + formatNumber(parseFloat(item.luas_m2 || 0)) + ' m²</span>',
+                        '<span class="' + kelasLuas + '">' + formatNumber(luas) + ' m²</span>',
                         '<span class="badge-jenis">' + escapeHtml(item.jenis_hewan) + '</span>',
-                        '<span class="jumlah-cell">' + formatNumber(parseInt(item.jumlah_hewan || 0)) + ' ekor</span>',
+                        '<span class="' + kelasJumlah + '">' + formatNumber(jumlah) + ' ekor</span>',
                         '<span class="stok-pakan">' + escapeHtml(item.stok_pakan) + '</span>',
                         escapeHtml(item.keterangan) || '-'
                     ]);
-                    
-                    totalLuas += parseFloat(item.luas_m2 || 0);
-                    totalJumlah += parseInt(item.jumlah_hewan || 0);
                     no++;
                 });
                 

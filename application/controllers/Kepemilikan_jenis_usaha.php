@@ -22,7 +22,7 @@ class Kepemilikan_jenis_usaha extends CI_Controller {
         if ($this->input->get('csrf_test_name')) {
             $this->security->csrf_verify();
         }
-        
+         
         $search = $this->input->get('q');
         
         if (empty($search) || strlen($search) < 2) {
@@ -160,5 +160,90 @@ class Kepemilikan_jenis_usaha extends CI_Controller {
         
         redirect('kepemilikan_jenis_usaha');
     }
+
+    // ==================== EXPORT EXCEL ====================
+public function export_excel()
+{
+    $results = $this->Kepemilikan_jenis_usaha_model->get_all_combined();
+    
+    header('Content-Type: application/vnd.ms-excel');
+    header('Content-Disposition: attachment; filename="Laporan_Kepemilikan_Jenis_Usaha.xls"');
+    header('Cache-Control: max-age=0');
+    
+    echo '<html>';
+    echo '<head>';
+    echo '<meta charset="UTF-8">';
+    echo '<style>';
+    echo 'body { margin: 20px; font-family: Arial, sans-serif; }';
+    echo '.header-title { font-size: 18pt; font-weight: bold; color: #000000; text-align: center; margin-bottom: 5px; }';
+    echo '.subtitle { font-size: 12pt; color: #000000; text-align: center; margin-bottom: 3px; }';
+    echo 'table { border-collapse: collapse; width: 100%; margin-top: 20px; }';
+    echo 'th, td { border: 1px solid #000000; padding: 8px; }';
+    echo 'th { background-color: #832706; color: #000000; text-align: center; font-weight: bold; }';
+    echo 'td { color: #000000; }';
+    echo '.total-row { background-color: #e8f5e9; font-weight: bold; }';
+    echo '.footer-note { margin-top: 30px; font-size: 10px; color: #000000; text-align: center; }';
+    echo '</style>';
+    echo '</head>';
+    echo '<body>';
+    
+    echo '<div class="header-title">LAPORAN DATA KEPEMILIKAN JENIS USAHA</div>';
+    echo '<div class="subtitle">DINAS KETAHANAN PANGAN DAN PERTANIAN</div>';
+    echo '<div class="subtitle">KOTA SURABAYA</div>';
+    echo '<hr style="border: 1px solid #000; margin: 10px 0;">';
+    echo '<div class="subtitle" style="font-size: 10pt;">Tanggal Cetak: ' . date('d/m/Y H:i:s') . '</div>';
+    echo '<br>';
+    
+    echo '<table>';
+    echo '<thead>';
+    echo '<tr>';
+    echo '<th width="40">No</th>';
+    echo '<th>NIK</th>';
+    echo '<th>Nama Pelaku Usaha</th>';
+    echo '<th>Jenis Usaha</th>';
+    echo '<th>Jumlah</th>';
+    echo '<th>Kecamatan</th>';
+    echo '<th>Alamat</th>';
+    echo '</tr>';
+    echo '</thead>';
+    echo '<tbody>';
+    
+    $no = 1;
+    $totalJumlah = 0;
+    foreach($results as $item) {
+        $jumlah = (int)($item->jumlah ?? 0);
+        $totalJumlah += $jumlah;
+        
+        echo '<tr>';
+        echo '<td align="center">' . $no++ . '</td>';
+        echo '<td align="center">' . (!empty($item->nik) ? $item->nik : '-') . '</td>';
+        echo '<td align="left">' . (!empty($item->nama_peternak) ? $item->nama_peternak : '-') . '</td>';
+        echo '<td align="left">' . (!empty($item->jenis_usaha) ? $item->jenis_usaha : '-') . '</td>';
+        echo '<td align="center">' . number_format($jumlah, 0, ',', '.') . '</td>';
+        echo '<td align="left">' . (!empty($item->kecamatan) ? $item->kecamatan : '-') . '</td>';
+        echo '<td align="left">' . (!empty($item->alamat) ? $item->alamat : '-') . '</td>';
+        echo '</tr>';
+    }
+    
+    // Total row
+    $totalData = count($results);
+    echo '<tr class="total-row">';
+    echo '<td colspan="4" align="center"><strong>TOTAL KESELURUHAN</strong></td>';
+    echo '<td align="center"><strong>' . number_format($totalJumlah, 0, ',', '.') . '</strong></td>';
+    echo '<td colspan="2" align="center"><strong>' . number_format($totalData, 0, ',', '.') . ' Data</strong></td>';
+    echo '</tr>';
+    
+    echo '</tbody>';
+    echo '</table>';
+    
+    echo '<div class="footer-note">';
+    echo 'SIPETGIS - Sistem Informasi Peternakan Kota Surabaya';
+    echo '</div>';
+    
+    echo '</body>';
+    echo '</html>';
+    
+    exit;
+}
 }
 ?>

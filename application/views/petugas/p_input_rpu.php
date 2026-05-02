@@ -274,27 +274,9 @@
                                                     <input type="text" class="form-control" id="telp_pj" name="telp_pj" placeholder="Masukkan nomor telepon" />
                                                 </div>
 
-                                                <div class="col-md-4 mb-3">
+                                                <div class="col-md-6 mb-3">
                                                     <label class="form-label required-field">Nama Petugas</label>
-                                                    <select class="form-control" id="nama_petugas" name="nama_petugas" required>
-                                                        <option value="">Pilih Petugas</option>
-                                                        <option value="Drh. Sunarno Aristono, M.Si">Drh. Sunarno Aristono, M.Si</option>
-                                                        <option value="Drh. Gagat Rahino H S, M.SI">Drh. Gagat Rahino H S, M.SI</option>
-                                                        <option value="Drh. Wafiroh">Drh. Wafiroh</option>
-                                                        <option value="Samsul Arifin">Samsul Arifin</option>
-                                                        <option value="Drh. Arfiandy Noorrahman">Drh. Arfiandy Noorrahman</option>
-                                                        <option value="Drh. Kartika Eka Paksi">Drh. Kartika Eka Paksi</option>
-                                                        <option value="Drh. Romadhony Arif">Drh. Romadhony Arif</option>
-                                                        <option value="Drh. Rinenggo Palupi">Drh. Rinenggo Palupi</option>
-                                                        <option value="Drh. Rieska Nursita">Drh. Rieska Nursita</option>
-                                                        <option value="Drh. Albert Fabio S">Drh. Albert Fabio S</option>
-                                                        <option value="Drh. Rizal Maulana I">Drh. Rizal Maulana I</option>
-                                                        <option value="Drh. Moch Rozali">Drh. Moch Rozali</option>
-                                                        <option value="Drh. Arsanti Arsy">Drh. Arsanti Arsy</option>
-                                                        <option value="Drh. Richa Putri A">Drh. Richa Putri A</option>
-                                                        <option value="Drh. Niken Rahmawati">Drh. Niken Rahmawati</option>
-                                                    </select>
-                                                    <div class="invalid-feedback">Nama petugas harus dipilih</div>
+                                                    <input type="text" class="form-control" id="nama_petugas" name="nama_petugas" placeholder="Masukkan nama petugas" required />          
                                                 </div>
                                             </div>
 
@@ -306,7 +288,7 @@
                                                             <h5 class="card-title mb-0" style="color: #832706;">
                                                                 <i class="fas fa-list me-2"></i>DATA KOMODITAS POTONG
                                                             </h5>
-                                                        </div>
+                                                        </div> 
                                                         <div class="card-body">
                                                             <div class="table-responsive">
                                                                 <table class="table table-bordered komoditas-table" id="komoditasTable">
@@ -456,45 +438,51 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Foto Kegiatan -->
-                                            <div class="row mt-3">
-                                                <div class="col-md-12">
-                                                    <div class="card address-card">
-                                                        <div class="card-header card-header-address" style="border-bottom: 2px solid #832706;">
-                                                            <h5 class="card-title mb-0" style="color: #832706;">
-                                                                <i class="fas fa-camera me-2"></i>FOTO KEGIATAN
-                                                            </h5>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <div class="row">
-                                                                <div class="col-md-12 mb-3">
-                                                                    <div class="d-flex align-items-start">
-                                                                        <div class="me-3">
-                                                                            <div class="photo-placeholder" id="photoPlaceholder" onclick="document.getElementById('foto_kegiatan').click()">
-                                                                                <div class="text-center">
-                                                                                    <i class="fas fa-camera fa-2x mb-2"></i>
-                                                                                    <div>Klik untuk upload foto</div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <img id="photoPreview" class="photo-preview" alt="Preview Foto" />
-                                                                        </div>
-                                                                        <div class="flex-grow-1">
-                                                                            <input type="file" class="form-control d-none" id="foto_kegiatan" name="foto_kegiatan" accept="image/jpeg, image/jpg, image/png" />
-                                                                            <small class="text-muted d-block mb-2">Upload foto kegiatan RPU (maks. 5MB, format: JPG, PNG)</small>
-                                                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="document.getElementById('foto_kegiatan').click()">
-                                                                                <i class="fas fa-upload me-1"></i>Pilih File
-                                                                            </button>
-                                                                            <button type="button" class="btn btn-outline-danger btn-sm ms-2" id="btnRemovePhoto" style="display: none">
-                                                                                <i class="fas fa-trash me-1"></i>Hapus
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <!-- Foto Kegiatan MULTIPLE (SAMA PERSIS DENGAN SEBELUMNYA) -->
+<div class="row mt-3">
+    <div class="col-md-12">
+        <div class="card address-card">
+            <div class="card-header card-header-address" style="border-bottom: 2px solid #832706;">
+                <h5 class="card-title mb-0" style="color: #832706;">
+                    <i class="fas fa-camera me-2"></i>FOTO KEGIATAN (Maksimal 5 Foto)
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <div class="d-flex align-items-start">
+                            <div class="me-3">
+                                <div class="multiple-photo-container" id="multiplePhotoContainer">
+                                    <div class="photo-placeholder" onclick="document.getElementById('foto_kegiatan').click()">
+                                        <div class="text-center">
+                                            <i class="fas fa-camera fa-2x mb-2"></i>
+                                            <div>Klik untuk upload foto</div>
+                                            <small class="text-muted">(Maks. 5 foto)</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="photo-preview-container" id="photoPreviewContainer"></div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <input type="file" class="form-control d-none" id="foto_kegiatan" name="foto_kegiatan[]" accept="image/jpeg, image/jpg, image/png" multiple />
+                                <small class="text-muted d-block mb-2">Upload foto kegiatan RPU (maks. 5MB per file, format: JPG, PNG, maksimal 5 file)</small>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="document.getElementById('foto_kegiatan').click()">
+                                    <i class="fas fa-upload me-1"></i>Pilih File
+                                </button>
+                                <button type="button" class="btn btn-outline-danger btn-sm ms-2" id="btnRemoveAllPhotos" style="display: none">
+                                    <i class="fas fa-trash me-1"></i>Hapus Semua
+                                </button>
+                                <div class="mt-2">
+                                    <small id="photoCountInfo" class="text-muted">0 dari 5 foto dipilih</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
                                             <!-- Keterangan -->
                                             <div class="row mt-3">
@@ -626,15 +614,19 @@
                                                     </td>
                                                     <td><?php echo htmlspecialchars($data['kelurahan'] ?? '-'); ?></td>
                                                     <td class="text-center">
-                                                        <?php if (!empty($data['foto_kegiatan'])): ?>
-                                                            <img src="<?php echo base_url(); ?>uploads/rpu/<?php echo $data['foto_kegiatan']; ?>" 
-                                                                 class="foto-thumbnail" 
-                                                                 onclick="showFoto('<?php echo base_url(); ?>uploads/rpu/<?php echo $data['foto_kegiatan']; ?>')"
-                                                                 style="cursor: pointer;">
-                                                        <?php else: ?>
-                                                            <span class="badge bg-secondary">Tidak Ada</span>
-                                                        <?php endif; ?>
-                                                    </td>
+    <?php if (!empty($data['foto_kegiatan'])): 
+        $foto_list = explode(',', $data['foto_kegiatan']);
+        $total_foto = count($foto_list);
+    ?>
+        <button type="button" class="btn btn-sm btn-photo" onclick="lihatFoto('<?= base_url('uploads/rpu/') ?>', '<?= htmlspecialchars($data['foto_kegiatan']) ?>')">
+            <i class="fas fa-images me-1"></i> <?= $total_foto ?> Foto
+        </button>
+    <?php else: ?>
+        <span class="badge-photo-empty">
+            <i class="fas fa-camera-slash me-1"></i> Tidak Ada
+        </span>
+    <?php endif; ?>
+</td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         <?php endif; ?>

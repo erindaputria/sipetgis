@@ -12,400 +12,304 @@ class Peta_sebaran_model extends CI_Model {
     // Get all kecamatan
     public function get_all_kecamatan()
     {
-        return $this->db->get('kecamatan')->result_array();
-    }
-
-    // CEK TABEL
-    public function table_exists($table_name)
-    {
-        return $this->db->table_exists($table_name);
-    }
-
-    // CEK KOLOM
-    public function column_exists($table_name, $column_name)
-    {
-        if (!$this->db->table_exists($table_name)) {
-            return false;
+        $kecamatan = $this->db->get('kecamatan')->result_array();
+        if (empty($kecamatan)) {
+            $kecamatan = [
+                ['id' => 1, 'nama_kecamatan' => 'Asemrowo'],
+                ['id' => 2, 'nama_kecamatan' => 'Benowo'],
+                ['id' => 3, 'nama_kecamatan' => 'Bubutan'],
+                ['id' => 4, 'nama_kecamatan' => 'Bulak'],
+                ['id' => 5, 'nama_kecamatan' => 'Dukuh Pakis'],
+                ['id' => 6, 'nama_kecamatan' => 'Gayungan'],
+                ['id' => 7, 'nama_kecamatan' => 'Genteng'],
+                ['id' => 8, 'nama_kecamatan' => 'Gubeng'],
+                ['id' => 9, 'nama_kecamatan' => 'Gununganyar'],
+                ['id' => 10, 'nama_kecamatan' => 'Jambangan'],
+                ['id' => 11, 'nama_kecamatan' => 'Karangpilang'],
+                ['id' => 12, 'nama_kecamatan' => 'Kenjeran'],
+                ['id' => 13, 'nama_kecamatan' => 'Krembangan'],
+                ['id' => 14, 'nama_kecamatan' => 'Lakarsantri'],
+                ['id' => 15, 'nama_kecamatan' => 'Mulyorejo'],
+                ['id' => 16, 'nama_kecamatan' => 'Pabean Cantian'],
+                ['id' => 17, 'nama_kecamatan' => 'Pakal'],
+                ['id' => 18, 'nama_kecamatan' => 'Rungkut'],
+                ['id' => 19, 'nama_kecamatan' => 'Sambikerep'],
+                ['id' => 20, 'nama_kecamatan' => 'Sawahan'],
+                ['id' => 21, 'nama_kecamatan' => 'Semampir'],
+                ['id' => 22, 'nama_kecamatan' => 'Simokerto'],
+                ['id' => 23, 'nama_kecamatan' => 'Sukolilo'],
+                ['id' => 24, 'nama_kecamatan' => 'Sukomanunggal'],
+                ['id' => 25, 'nama_kecamatan' => 'Tambaksari'],
+                ['id' => 26, 'nama_kecamatan' => 'Tandes'],
+                ['id' => 27, 'nama_kecamatan' => 'Tegalsari'],
+                ['id' => 28, 'nama_kecamatan' => 'Tenggilis Mejoyo'],
+                ['id' => 29, 'nama_kecamatan' => 'Wiyung'],
+                ['id' => 30, 'nama_kecamatan' => 'Wonocolo'],
+                ['id' => 31, 'nama_kecamatan' => 'Wonokromo']
+            ];
         }
-        $fields = $this->db->field_data($table_name);
-        foreach ($fields as $field) {
-            if ($field->name == $column_name) {
-                return true;
-            }
-        }
-        return false;
+        return $kecamatan;
     }
 
+    // ============================================
     // PENGOBATAN
-    public function get_all_pengobatan()
-    {
-        $this->db->select('pengobatan.*');
-        $this->db->from('pengobatan');
-        
-        // Cek apakah ada kolom id_kecamatan langsung di tabel pengobatan
-        if ($this->column_exists('pengobatan', 'id_kecamatan')) {
-            $this->db->select('pengobatan.id_kecamatan');
-        }
-        
-        // Join dengan kecamatan jika ada
-        if ($this->table_exists('kecamatan')) {
-            // Cek apakah pengobatan punya id_kecamatan
-            if ($this->column_exists('pengobatan', 'id_kecamatan')) {
-                $this->db->select('kecamatan.nama_kecamatan');
-                $this->db->join('kecamatan', 'kecamatan.id = pengobatan.id_kecamatan', 'left');
-            }
-        }
-        
-        return $this->db->get()->result_array();
-    }
-
+    // ============================================
+    
     public function get_filtered_pengobatan($kecamatan = [], $tgl_mulai = null, $tgl_selesai = null)
     {
-        $this->db->select('pengobatan.*');
-        $this->db->from('pengobatan');
+        $this->db->select('*');
+        $this->db->from('input_pengobatan');
         
-        // Filter berdasarkan kecamatan jika ada kolom id_kecamatan
-        if (!empty($kecamatan) && $this->column_exists('pengobatan', 'id_kecamatan')) {
-            $this->db->where_in('pengobatan.id_kecamatan', $kecamatan);
+        if (!empty($kecamatan) && is_array($kecamatan)) {
+            $this->db->group_start();
+            foreach ($kecamatan as $kec) {
+                $this->db->or_like('kecamatan', $kec, 'both');
+            }
+            $this->db->group_end();
         }
         
-        // Join dengan kecamatan
-        if ($this->table_exists('kecamatan') && $this->column_exists('pengobatan', 'id_kecamatan')) {
-            $this->db->select('kecamatan.nama_kecamatan');
-            $this->db->join('kecamatan', 'kecamatan.id = pengobatan.id_kecamatan', 'left');
+        if ($tgl_mulai && $tgl_selesai) {
+            $this->db->where('tanggal_pengobatan >=', $tgl_mulai);
+            $this->db->where('tanggal_pengobatan <=', $tgl_selesai);
         }
         
-        // Filter tanggal
-        if ($tgl_mulai && $tgl_selesai && $this->column_exists('pengobatan', 'tanggal_pengobatan')) {
-            $this->db->where('pengobatan.tanggal_pengobatan >=', $tgl_mulai);
-            $this->db->where('pengobatan.tanggal_pengobatan <=', $tgl_selesai);
-        }
-        
+        $this->db->order_by('tanggal_pengobatan', 'DESC');
         return $this->db->get()->result_array();
     }
 
     public function get_detail_pengobatan($id)
     {
-        $this->db->select('pengobatan.*');
-        $this->db->from('pengobatan');
-        
-        // Join dengan kecamatan
-        if ($this->table_exists('kecamatan') && $this->column_exists('pengobatan', 'id_kecamatan')) {
-            $this->db->select('kecamatan.nama_kecamatan');
-            $this->db->join('kecamatan', 'kecamatan.id = pengobatan.id_kecamatan', 'left');
-        }
-        
-        // Join dengan obat
-        if ($this->table_exists('obat') && $this->column_exists('pengobatan', 'id_obat')) {
-            $this->db->select('obat.nama_obat, obat.dosis');
-            $this->db->join('obat', 'obat.id = pengobatan.id_obat', 'left');
-        }
-        
-        $this->db->where('pengobatan.id', $id);
-        return $this->db->get()->row_array();
+        return $this->db->get_where('input_pengobatan', ['id' => $id])->row_array();
     }
 
+    // ============================================
     // VAKSINASI
-    public function get_all_vaksinasi()
-    {
-        // Cek tabel vaksinasi mana yang ada
-        $vaksin_table = null;
-        if ($this->table_exists('data_vaksinasi')) {
-            $vaksin_table = 'data_vaksinasi';
-        } elseif ($this->table_exists('vaksinasi')) {
-            $vaksin_table = 'vaksinasi';
-        } else {
-            return [];
-        }
-        
-        $this->db->select($vaksin_table . '.*');
-        $this->db->from($vaksin_table);
-        
-        // Cek apakah ada kolom id_kecamatan
-        if ($this->column_exists($vaksin_table, 'id_kecamatan')) {
-            $this->db->select($vaksin_table . '.id_kecamatan');
-        }
-        
-        // Join dengan kecamatan
-        if ($this->table_exists('kecamatan') && $this->column_exists($vaksin_table, 'id_kecamatan')) {
-            $this->db->select('kecamatan.nama_kecamatan');
-            $this->db->join('kecamatan', 'kecamatan.id = ' . $vaksin_table . '.id_kecamatan', 'left');
-        }
-        
-        return $this->db->get()->result_array();
-    }
+    // ============================================
 
     public function get_filtered_vaksinasi($kecamatan = [], $tgl_mulai = null, $tgl_selesai = null)
     {
-        // Cek tabel vaksinasi mana yang ada
-        $vaksin_table = null;
-        if ($this->table_exists('data_vaksinasi')) {
-            $vaksin_table = 'data_vaksinasi';
-        } elseif ($this->table_exists('vaksinasi')) {
-            $vaksin_table = 'vaksinasi';
-        } else {
-            return [];
-        }
+        $this->db->select('*');
+        $this->db->from('input_vaksinasi');
         
-        $this->db->select($vaksin_table . '.*');
-        $this->db->from($vaksin_table);
-        
-        // Filter kecamatan
-        if (!empty($kecamatan) && $this->column_exists($vaksin_table, 'id_kecamatan')) {
-            $this->db->where_in($vaksin_table . '.id_kecamatan', $kecamatan);
-        }
-        
-        // Join dengan kecamatan
-        if ($this->table_exists('kecamatan') && $this->column_exists($vaksin_table, 'id_kecamatan')) {
-            $this->db->select('kecamatan.nama_kecamatan');
-            $this->db->join('kecamatan', 'kecamatan.id = ' . $vaksin_table . '.id_kecamatan', 'left');
-        }
-        
-        // Filter tanggal
-        if ($tgl_mulai && $tgl_selesai) {
-            $field_tanggal = $this->column_exists($vaksin_table, 'tanggal_vaksinasi') ? 'tanggal_vaksinasi' : 'tanggal';
-            if ($this->column_exists($vaksin_table, $field_tanggal)) {
-                $this->db->where($vaksin_table . '.' . $field_tanggal . ' >=', $tgl_mulai);
-                $this->db->where($vaksin_table . '.' . $field_tanggal . ' <=', $tgl_selesai);
+        if (!empty($kecamatan) && is_array($kecamatan)) {
+            $this->db->group_start();
+            foreach ($kecamatan as $kec) {
+                $this->db->or_like('kecamatan', $kec, 'both');
             }
+            $this->db->group_end();
         }
         
+        if ($tgl_mulai && $tgl_selesai) {
+            $this->db->where('tanggal_vaksinasi >=', $tgl_mulai);
+            $this->db->where('tanggal_vaksinasi <=', $tgl_selesai);
+        }
+        
+        $this->db->order_by('tanggal_vaksinasi', 'DESC');
         return $this->db->get()->result_array();
     }
 
     public function get_detail_vaksinasi($id)
     {
-        // Cek tabel vaksinasi mana yang ada
-        $vaksin_table = null;
-        if ($this->table_exists('data_vaksinasi')) {
-            $vaksin_table = 'data_vaksinasi';
-        } elseif ($this->table_exists('vaksinasi')) {
-            $vaksin_table = 'vaksinasi';
-        } else {
-            return null;
-        }
-        
-        $this->db->select($vaksin_table . '.*');
-        $this->db->from($vaksin_table);
-        
-        // Join dengan kecamatan
-        if ($this->table_exists('kecamatan') && $this->column_exists($vaksin_table, 'id_kecamatan')) {
-            $this->db->select('kecamatan.nama_kecamatan');
-            $this->db->join('kecamatan', 'kecamatan.id = ' . $vaksin_table . '.id_kecamatan', 'left');
-        }
-        
-        // Join dengan vaksin
-        if ($this->table_exists('vaksin') && $this->column_exists($vaksin_table, 'id_vaksin')) {
-            $this->db->select('vaksin.nama_vaksin');
-            $this->db->join('vaksin', 'vaksin.id = ' . $vaksin_table . '.id_vaksin', 'left');
-        }
-        
-        $this->db->where($vaksin_table . '.id', $id);
-        return $this->db->get()->row_array();
+        return $this->db->get_where('input_vaksinasi', ['id_vaksinasi' => $id])->row_array();
     }
 
+    // ============================================
     // PELAKU USAHA
-    public function get_all_pelaku_usaha()
-    {
-        $this->db->select('pelaku_usaha.*');
-        $this->db->from('pelaku_usaha');
-        
-        // Join dengan kecamatan
-        if ($this->table_exists('kecamatan') && $this->column_exists('pelaku_usaha', 'id_kecamatan')) {
-            $this->db->select('kecamatan.nama_kecamatan');
-            $this->db->join('kecamatan', 'kecamatan.id = pelaku_usaha.id_kecamatan', 'left');
-        }
-        
-        return $this->db->get()->result_array();
-    }
+    // ============================================
 
     public function get_filtered_pelaku_usaha($kecamatan = [])
     {
-        $this->db->select('pelaku_usaha.*');
+        $this->db->select('*');
         $this->db->from('pelaku_usaha');
         
-        // Filter kecamatan
-        if (!empty($kecamatan) && $this->column_exists('pelaku_usaha', 'id_kecamatan')) {
-            $this->db->where_in('pelaku_usaha.id_kecamatan', $kecamatan);
+        if (!empty($kecamatan) && is_array($kecamatan)) {
+            $this->db->group_start();
+            foreach ($kecamatan as $kec) {
+                $this->db->or_like('kecamatan', $kec, 'both');
+            }
+            $this->db->group_end();
         }
         
-        // Join dengan kecamatan
-        if ($this->table_exists('kecamatan') && $this->column_exists('pelaku_usaha', 'id_kecamatan')) {
-            $this->db->select('kecamatan.nama_kecamatan');
-            $this->db->join('kecamatan', 'kecamatan.id = pelaku_usaha.id_kecamatan', 'left');
-        }
-        
+        $this->db->order_by('tanggal_input', 'DESC');
         return $this->db->get()->result_array();
     }
 
     public function get_detail_pelaku_usaha($id)
     {
-        $this->db->select('pelaku_usaha.*');
-        $this->db->from('pelaku_usaha');
-        
-        // Join dengan kecamatan
-        if ($this->table_exists('kecamatan') && $this->column_exists('pelaku_usaha', 'id_kecamatan')) {
-            $this->db->select('kecamatan.nama_kecamatan');
-            $this->db->join('kecamatan', 'kecamatan.id = pelaku_usaha.id_kecamatan', 'left');
-        }
-        
-        $this->db->where('pelaku_usaha.id', $id);
-        return $this->db->get()->row_array();
+        return $this->db->get_where('pelaku_usaha', ['id' => $id])->row_array();
     }
 
+    // ============================================
     // PENJUAL PAKAN
-    public function get_all_penjual_pakan()
-    {
-        $this->db->select('data_penjual_pakan.*');
-        $this->db->from('data_penjual_pakan');
-        
-        // Join dengan kecamatan
-        if ($this->table_exists('kecamatan') && $this->column_exists('data_penjual_pakan', 'id_kecamatan')) {
-            $this->db->select('kecamatan.nama_kecamatan');
-            $this->db->join('kecamatan', 'kecamatan.id = data_penjual_pakan.id_kecamatan', 'left');
-        }
-        
-        return $this->db->get()->result_array();
-    }
+    // ============================================
 
     public function get_filtered_penjual_pakan($kecamatan = [])
     {
-        $this->db->select('data_penjual_pakan.*');
-        $this->db->from('data_penjual_pakan');
+        $this->db->select('*');
+        $this->db->from('penjual');
+        $this->db->where('dagangan', 'Pakan');
         
-        // Filter kecamatan
-        if (!empty($kecamatan) && $this->column_exists('data_penjual_pakan', 'id_kecamatan')) {
-            $this->db->where_in('data_penjual_pakan.id_kecamatan', $kecamatan);
+        if (!empty($kecamatan) && is_array($kecamatan)) {
+            $this->db->group_start();
+            foreach ($kecamatan as $kec) {
+                $this->db->or_like('kecamatan', $kec, 'both');
+            }
+            $this->db->group_end();
         }
         
-        // Join dengan kecamatan
-        if ($this->table_exists('kecamatan') && $this->column_exists('data_penjual_pakan', 'id_kecamatan')) {
-            $this->db->select('kecamatan.nama_kecamatan');
-            $this->db->join('kecamatan', 'kecamatan.id = data_penjual_pakan.id_kecamatan', 'left');
-        }
-        
+        $this->db->order_by('tanggal_input', 'DESC');
         return $this->db->get()->result_array();
     }
 
     public function get_detail_penjual_pakan($id)
     {
-        $this->db->select('data_penjual_pakan.*');
-        $this->db->from('data_penjual_pakan');
-        
-        // Join dengan kecamatan
-        if ($this->table_exists('kecamatan') && $this->column_exists('data_penjual_pakan', 'id_kecamatan')) {
-            $this->db->select('kecamatan.nama_kecamatan');
-            $this->db->join('kecamatan', 'kecamatan.id = data_penjual_pakan.id_kecamatan', 'left');
-        }
-        
-        $this->db->where('data_penjual_pakan.id', $id);
-        return $this->db->get()->row_array();
+        return $this->db->get_where('penjual', ['id_penjual' => $id, 'dagangan' => 'Pakan'])->row_array();
     }
 
-    // KLINIK HEWAN
-    public function get_all_klinik_hewan()
-    {
-        $this->db->select('data_klinik.*');
-        $this->db->from('data_klinik');
-        
-        // Join dengan kecamatan
-        if ($this->table_exists('kecamatan') && $this->column_exists('data_klinik', 'id_kecamatan')) {
-            $this->db->select('kecamatan.nama_kecamatan');
-            $this->db->join('kecamatan', 'kecamatan.id = data_klinik.id_kecamatan', 'left');
-        }
-        
-        return $this->db->get()->result_array();
-    }
-
-    public function get_filtered_klinik_hewan($kecamatan = [])
-    {
-        $this->db->select('data_klinik.*');
-        $this->db->from('data_klinik');
-        
-        // Filter kecamatan
-        if (!empty($kecamatan) && $this->column_exists('data_klinik', 'id_kecamatan')) {
-            $this->db->where_in('data_klinik.id_kecamatan', $kecamatan);
-        }
-        
-        // Join dengan kecamatan
-        if ($this->table_exists('kecamatan') && $this->column_exists('data_klinik', 'id_kecamatan')) {
-            $this->db->select('kecamatan.nama_kecamatan');
-            $this->db->join('kecamatan', 'kecamatan.id = data_klinik.id_kecamatan', 'left');
-        }
-        
-        return $this->db->get()->result_array();
-    }
-
-    public function get_detail_klinik_hewan($id)
-    {
-        $this->db->select('data_klinik.*');
-        $this->db->from('data_klinik');
-        
-        // Join dengan kecamatan
-        if ($this->table_exists('kecamatan') && $this->column_exists('data_klinik', 'id_kecamatan')) {
-            $this->db->select('kecamatan.nama_kecamatan');
-            $this->db->join('kecamatan', 'kecamatan.id = data_klinik.id_kecamatan', 'left');
-        }
-        
-        $this->db->where('data_klinik.id', $id);
-        return $this->db->get()->row_array();
-    }
-
+    // ============================================
     // PENJUAL OBAT
-    public function get_all_penjual_obat()
-    {
-        $this->db->select('data_penjual_obat.*');
-        $this->db->from('data_penjual_obat');
-        
-        // Join dengan kecamatan
-        if ($this->table_exists('kecamatan') && $this->column_exists('data_penjual_obat', 'id_kecamatan')) {
-            $this->db->select('kecamatan.nama_kecamatan');
-            $this->db->join('kecamatan', 'kecamatan.id = data_penjual_obat.id_kecamatan', 'left');
-        }
-        
-        return $this->db->get()->result_array();
-    }
+    // ============================================
 
     public function get_filtered_penjual_obat($kecamatan = [])
     {
-        $this->db->select('data_penjual_obat.*');
-        $this->db->from('data_penjual_obat');
+        $this->db->select('*');
+        $this->db->from('penjual');
+        $this->db->where('dagangan', 'Obat');
         
-        // Filter kecamatan
-        if (!empty($kecamatan) && $this->column_exists('data_penjual_obat', 'id_kecamatan')) {
-            $this->db->where_in('data_penjual_obat.id_kecamatan', $kecamatan);
+        if (!empty($kecamatan) && is_array($kecamatan)) {
+            $this->db->group_start();
+            foreach ($kecamatan as $kec) {
+                $this->db->or_like('kecamatan', $kec, 'both');
+            }
+            $this->db->group_end();
         }
         
-        // Join dengan kecamatan
-        if ($this->table_exists('kecamatan') && $this->column_exists('data_penjual_obat', 'id_kecamatan')) {
-            $this->db->select('kecamatan.nama_kecamatan');
-            $this->db->join('kecamatan', 'kecamatan.id = data_penjual_obat.id_kecamatan', 'left');
-        }
-        
+        $this->db->order_by('tanggal_input', 'DESC');
         return $this->db->get()->result_array();
     }
 
     public function get_detail_penjual_obat($id)
     {
-        $this->db->select('data_penjual_obat.*');
-        $this->db->from('data_penjual_obat');
+        return $this->db->get_where('penjual', ['id_penjual' => $id, 'dagangan' => 'Obat'])->row_array();
+    }
+
+    // ============================================
+    // KLINIK HEWAN
+    // ============================================
+
+    public function get_filtered_klinik_hewan($kecamatan = [])
+    {
+        $this->db->select('*');
+        $this->db->from('input_klinik_hewan');
         
-        // Join dengan kecamatan
-        if ($this->table_exists('kecamatan') && $this->column_exists('data_penjual_obat', 'id_kecamatan')) {
-            $this->db->select('kecamatan.nama_kecamatan');
-            $this->db->join('kecamatan', 'kecamatan.id = data_penjual_obat.id_kecamatan', 'left');
+        if (!empty($kecamatan) && is_array($kecamatan)) {
+            $this->db->group_start();
+            foreach ($kecamatan as $kec) {
+                $this->db->or_like('kecamatan', $kec, 'both');
+            }
+            $this->db->group_end();
         }
         
-        $this->db->where('data_penjual_obat.id', $id);
+        $this->db->order_by('created_at', 'DESC');
+        return $this->db->get()->result_array();
+    }
+
+    public function get_detail_klinik_hewan($id)
+    {
+        return $this->db->get_where('input_klinik_hewan', ['id' => $id])->row_array();
+    }
+
+    // ============================================
+    // RPU
+    // ============================================
+
+    public function get_filtered_rpu($kecamatan = [], $tgl_mulai = null, $tgl_selesai = null)
+    {
+        $this->db->select('*');
+        $this->db->from('input_rpu');
+        
+        if (!empty($kecamatan) && is_array($kecamatan)) {
+            $this->db->group_start();
+            foreach ($kecamatan as $kec) {
+                $this->db->or_like('kecamatan', $kec, 'both');
+            }
+            $this->db->group_end();
+        }
+        
+        if ($tgl_mulai && $tgl_selesai) {
+            $this->db->where('tanggal_rpu >=', $tgl_mulai);
+            $this->db->where('tanggal_rpu <=', $tgl_selesai);
+        }
+        
+        $this->db->order_by('tanggal_rpu', 'DESC');
+        return $this->db->get()->result_array();
+    }
+
+    public function get_detail_rpu($id)
+    {
+        return $this->db->get_where('input_rpu', ['id' => $id])->row_array();
+    }
+
+    // ============================================
+    // PEMOTONGAN UNGGAS
+    // ============================================
+
+    public function get_filtered_pemotongan_unggas($kecamatan = [], $tgl_mulai = null, $tgl_selesai = null)
+    {
+        $this->db->select('input_pemotongan_unggas.*, input_rpu.kecamatan as kecamatan_rpu, input_rpu.nama_rpu, input_rpu.latitude, input_rpu.longitude');
+        $this->db->from('input_pemotongan_unggas');
+        $this->db->join('input_rpu', 'input_rpu.id = input_pemotongan_unggas.id_rpu', 'left');
+        
+        if (!empty($kecamatan) && is_array($kecamatan)) {
+            $this->db->group_start();
+            foreach ($kecamatan as $kec) {
+                $this->db->or_like('input_rpu.kecamatan', $kec, 'both');
+            }
+            $this->db->group_end();
+        }
+        
+        if ($tgl_mulai && $tgl_selesai) {
+            $this->db->where('input_pemotongan_unggas.tanggal >=', $tgl_mulai);
+            $this->db->where('input_pemotongan_unggas.tanggal <=', $tgl_selesai);
+        }
+        
+        $this->db->order_by('input_pemotongan_unggas.tanggal', 'DESC');
+        return $this->db->get()->result_array();
+    }
+
+    public function get_detail_pemotongan_unggas($id)
+    {
+        $this->db->select('input_pemotongan_unggas.*, input_rpu.kecamatan as kecamatan_rpu, input_rpu.nama_rpu');
+        $this->db->from('input_pemotongan_unggas');
+        $this->db->join('input_rpu', 'input_rpu.id = input_pemotongan_unggas.id_rpu', 'left');
+        $this->db->where('input_pemotongan_unggas.id_pemotongan', $id);
         return $this->db->get()->row_array();
     }
 
-    // Fungsi untuk debug struktur tabel
-    public function get_table_structure($table_name)
+    // ============================================
+    // DEMPLOT
+    // ============================================
+
+    public function get_filtered_demplot($kecamatan = [])
     {
-        if (!$this->db->table_exists($table_name)) {
-            return "Tabel $table_name tidak ditemukan";
+        $this->db->select('*');
+        $this->db->from('input_demplot');
+        
+        if (!empty($kecamatan) && is_array($kecamatan)) {
+            $this->db->group_start();
+            foreach ($kecamatan as $kec) {
+                $this->db->or_like('kecamatan', $kec, 'both');
+            }
+            $this->db->group_end();
         }
-        return $this->db->field_data($table_name);
+        
+        $this->db->order_by('created_at', 'DESC');
+        return $this->db->get()->result_array();
+    }
+
+    public function get_detail_demplot($id)
+    {
+        return $this->db->get_where('input_demplot', ['id_demplot' => $id])->row_array();
     }
 }
+?>

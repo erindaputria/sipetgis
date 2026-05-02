@@ -9,7 +9,7 @@ class P_dashboard_petugas extends CI_Controller {
         $this->load->helper('url');
         $this->load->library('session');
         $this->load->model('P_input_pengobatan_model');
-        $this->load->model('P_input_vaksinasi_model');
+        $this->load->model('P_input_vaksinasi_model'); 
         $this->load->model('P_input_jenis_usaha_model');
         
         // Cek apakah user sudah login

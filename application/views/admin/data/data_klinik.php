@@ -13,7 +13,7 @@
             google: { families: ["Public Sans:300,400,500,600,700"] },
             custom: {
                 families: [
-                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Solid", 
                     "Font Awesome 5 Regular",
                     "Font Awesome 5 Brands", 
                     "simple-line-icons",
@@ -66,7 +66,7 @@
                                 <i class="fas fa-home"></i>
                                 <p>Dashboard</p>
                             </a>
-                        </li>
+                        </li> 
                         <li class="nav-section">
                             <span class="sidebar-mini-icon"><i class="fa fa-ellipsis-h"></i></span>
                             <h4 class="text-section">Menu Utama</h4>

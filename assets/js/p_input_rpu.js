@@ -1,5 +1,132 @@
+/**
+ * Input RPU (Rumah Potong Unggas)
+ * SIPETGIS - Kota Surabaya
+ */
 
+// ========== VARIABEL GLOBAL ==========
+let selectedFiles = [];
+const MAX_FILES = 5;
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
+// ========== FUNGSI GLOBAL (di luar document ready) ==========
+
+// Fungsi lihat foto multiple
+function lihatFoto(basePath, fotoString) {
+    console.log('Base Path:', basePath);
+    console.log('Foto String:', fotoString);
+    
+    if (!fotoString || fotoString === '') {
+        alert('Tidak ada foto');
+        return;
+    }
+    
+    const fotoList = fotoString.split(',');
+    console.log('Jumlah foto:', fotoList.length);
+    
+    let modalHtml = `
+        <div class="modal fade" id="modalLihatFoto" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header" style="background: linear-gradient(135deg, #832706 0%, #6b2005 100%);">
+                        <h5 class="modal-title text-white">
+                            <i class="fas fa-images me-2"></i>Foto Kegiatan RPU (${fotoList.length} foto)
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body" style="text-align: center; background: #f8fafc;">
+                        <div id="fotoSlider" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner" id="sliderInner"></div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#fotoSlider" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#fotoSlider" data-bs-slide="next">
+                                <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    if ($('#modalLihatFoto').length) {
+        $('#modalLihatFoto').remove();
+    }
+    $('body').append(modalHtml);
+    
+    const sliderInner = $('#sliderInner');
+    sliderInner.empty();
+    
+    fotoList.forEach((foto, index) => {
+        const isActive = index === 0 ? 'active' : '';
+        const fotoUrl = basePath + foto;
+        
+        sliderInner.append(`
+            <div class="carousel-item ${isActive}">
+                <img src="${fotoUrl}" class="d-block w-100" alt="Foto ${index + 1}" style="max-height: 500px; object-fit: contain;">
+                <div class="carousel-caption bg-dark bg-opacity-50 rounded">
+                    <p>Foto ${index + 1} dari ${fotoList.length}</p>
+                </div>
+            </div>
+        `);
+    });
+    
+    $('#modalLihatFoto').modal('show');
+    
+    $('#modalLihatFoto').on('hidden.bs.modal', function() {
+        $(this).remove();
+    });
+}
+
+// Fungsi Print/PDF - Menghapus kolom foto
+function printWithCurrentData() {
+    var title = 'DATA RPU (RUMAH POTONG UNGGAS)';
+    var subtitle = 'Kota Surabaya';
+    
+    var printWindow = window.open('', '_blank');
+    printWindow.document.write('<html><head><title>Data RPU</title>');
+    printWindow.document.write('<style>');
+    printWindow.document.write('body { font-family: Arial, sans-serif; margin: 20px; }');
+    printWindow.document.write('.header { text-align: center; margin-bottom: 20px; }');
+    printWindow.document.write('.header h2 { margin: 0; }');
+    printWindow.document.write('.header p { margin: 5px 0; }');
+    printWindow.document.write('table { width: 100%; border-collapse: collapse; margin-top: 20px; }');
+    printWindow.document.write('th, td { border: 1px solid #000; padding: 8px; }');
+    printWindow.document.write('th { background-color: #f2f2f2; }');
+    printWindow.document.write('</style>');
+    printWindow.document.write('</head><body>');
+    
+    var tableContent = document.getElementById('rpuTable').cloneNode(true);
+    $(tableContent).find('.dataTables_empty').remove();
+    $(tableContent).find('.dt-buttons').remove();
+    $(tableContent).find('.dataTables_filter').remove();
+    $(tableContent).find('.dataTables_length').remove();
+    $(tableContent).find('.dataTables_info').remove();
+    $(tableContent).find('.dataTables_paginate').remove();
+    
+    // HAPUS KOLOM FOTO (kolom terakhir)
+    $(tableContent).find('thead tr').each(function() {
+        $(this).find('th:last-child').remove();
+    });
+    
+    $(tableContent).find('tbody tr').each(function() {
+        $(this).find('td:last-child').remove();
+    });
+    
+    printWindow.document.write('<div class="header">');
+    printWindow.document.write('<h2>' + title + '</h2>');
+    printWindow.document.write('<p>' + subtitle + '</p>'); 
+    printWindow.document.write('<p>Tanggal Cetak: ' + new Date().toLocaleDateString('id-ID') + '</p>');
+    printWindow.document.write('</div>');
+    printWindow.document.write(tableContent.outerHTML);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
+}
+
+// ========== DOCUMENT READY ==========
 $(document).ready(function() {
     // Set today's date as default
     const today = new Date().toISOString().split('T')[0];
@@ -10,7 +137,7 @@ $(document).ready(function() {
         $('#rpuTable').DataTable().destroy();
     }
     
-    // Initialize DataTable dengan custom buttons termasuk Print
+    // Initialize DataTable
     let dataTable = $('#rpuTable').DataTable({
         language: {
             search: "Cari:",
@@ -32,17 +159,7 @@ $(document).ready(function() {
         responsive: true,
         dom: 'Bfrtip',
         buttons: [
-            { extend: 'copy', text: '<i class="fas fa-copy"></i> Copy', className: 'btn btn-sm btn-primary' },
-            { extend: 'csv', text: '<i class="fas fa-file-csv"></i> CSV', className: 'btn btn-sm btn-success' },
             { extend: 'excel', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-sm btn-success' },
-            { 
-                extend: 'pdf', 
-                text: '<i class="fas fa-file-pdf"></i> PDF', 
-                className: 'btn btn-sm btn-danger',
-                action: function(e, dt, button, config) {
-                    printWithCurrentData();
-                }
-            },
             { 
                 extend: 'print', 
                 text: '<i class="fas fa-print"></i> Print', 
@@ -56,6 +173,105 @@ $(document).ready(function() {
             { orderable: false, targets: [8] }
         ]
     });
+    
+    // ========== MULTIPLE PHOTO UPLOAD ==========
+
+    // Handle multiple file selection
+    $('#foto_kegiatan').on('change', function(e) {
+        const files = Array.from(e.target.files);
+        
+        if (selectedFiles.length + files.length > MAX_FILES) {
+            showAlert('danger', `Maksimal ${MAX_FILES} foto yang dapat diupload. Anda sudah memilih ${selectedFiles.length} foto.`);
+            $(this).val('');
+            return;
+        }
+        
+        let validFiles = [];
+        let errorMessages = [];
+        
+        for (let file of files) {
+            if (file.size > MAX_FILE_SIZE) {
+                errorMessages.push(`${file.name} > 5MB`);
+                continue;
+            }
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            if (!validTypes.includes(file.type)) {
+                errorMessages.push(`${file.name} (format harus JPG/PNG)`);
+                continue;
+            }
+            validFiles.push(file);
+        }
+        
+        if (errorMessages.length > 0) {
+            showAlert('warning', `File tidak valid: ${errorMessages.join(', ')}`);
+        }
+        
+        if (validFiles.length > 0) {
+            selectedFiles = [...selectedFiles, ...validFiles];
+            updatePhotoPreview();
+            updatePhotoCount();
+        }
+        
+        $(this).val('');
+    });
+
+    // Update photo preview
+    function updatePhotoPreview() {
+        const container = $('#photoPreviewContainer');
+        container.empty();
+        
+        if (selectedFiles.length === 0) {
+            $('#multiplePhotoContainer').show();
+            $('#btnRemoveAllPhotos').hide();
+            return;
+        }
+        
+        $('#multiplePhotoContainer').hide();
+        $('#btnRemoveAllPhotos').show();
+        
+        selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewItem = $(`
+                    <div class="photo-preview-item" data-index="${index}">
+                        <img src="${e.target.result}" alt="Preview ${index + 1}">
+                        <button type="button" class="btn-remove-photo" data-index="${index}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <div class="file-name">${file.name.substring(0, 20)}${file.name.length > 20 ? '...' : ''}</div>
+                    </div>
+                `);
+                container.append(previewItem);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Remove single photo
+    $(document).on('click', '.btn-remove-photo', function() {
+        const index = $(this).data('index');
+        selectedFiles.splice(index, 1);
+        updatePhotoPreview();
+        updatePhotoCount();
+        if (selectedFiles.length === 0) {
+            $('#multiplePhotoContainer').show();
+            $('#btnRemoveAllPhotos').hide();
+        }
+    });
+
+    // Remove all photos
+    $('#btnRemoveAllPhotos').click(function() {
+        selectedFiles = [];
+        updatePhotoPreview();
+        updatePhotoCount();
+        $('#multiplePhotoContainer').show();
+        $(this).hide();
+    });
+
+    // Update photo count display
+    function updatePhotoCount() {
+        $('#photoCountInfo').text(`${selectedFiles.length} dari ${MAX_FILES} foto dipilih`);
+    }
     
     // Toggle Form
     $('#toggleFormBtn').click(function() {
@@ -76,7 +292,7 @@ $(document).ready(function() {
         $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT RPU');
     });
 
-    // Add Komoditas Row
+       // Add Komoditas Row
     function addKomoditasRow() {
         const newRow = `
             <tr class="komoditas-row">
@@ -135,31 +351,31 @@ $(document).ready(function() {
     $(document).on('click', '.btn-add-row', function() { addKomoditasRow(); });
     $(document).on('click', '.btn-remove-row', function() { removeKomoditasRow(this); });
 
-    // Validate Komoditas Rows
+        // Validate Komoditas Rows
     function validateKomoditasRows() {
         let isValid = true;
         $('.komoditas-row').each(function(index) {
-            const komoditas = $(this).find('.komoditas').val();
-            const jumlah = $(this).find('.jumlah_ekor').val();
-            const berat = $(this).find('.berat_kg').val();
-            const asal = $(this).find('.asal_unggas').val();
+            const komoditas = $(this).find('select[name="komoditas[]"]').val();
+            const jumlah = $(this).find('input[name="jumlah_ekor[]"]').val();
+            const berat = $(this).find('input[name="berat_kg[]"]').val();
+            const asal = $(this).find('select[name="asal_unggas[]"]').val();
             
-            $(this).find('.komoditas, .jumlah_ekor, .berat_kg, .asal_unggas').removeClass('is-invalid');
+            $(this).find('select[name="komoditas[]"], input[name="jumlah_ekor[]"], input[name="berat_kg[]"], select[name="asal_unggas[]"]').removeClass('is-invalid');
             
             if (!komoditas) {
-                $(this).find('.komoditas').addClass('is-invalid');
+                $(this).find('select[name="komoditas[]"]').addClass('is-invalid');
                 isValid = false;
             }
             if (!jumlah || parseInt(jumlah) < 1) {
-                $(this).find('.jumlah_ekor').addClass('is-invalid');
+                $(this).find('input[name="jumlah_ekor[]"]').addClass('is-invalid');
                 isValid = false;
             }
             if (!berat || parseFloat(berat) <= 0) {
-                $(this).find('.berat_kg').addClass('is-invalid');
+                $(this).find('input[name="berat_kg[]"]').addClass('is-invalid');
                 isValid = false;
             }
             if (!asal) {
-                $(this).find('.asal_unggas').addClass('is-invalid');
+                $(this).find('select[name="asal_unggas[]"]').addClass('is-invalid');
                 isValid = false;
             }
         });
@@ -183,14 +399,8 @@ $(document).ready(function() {
         $(this).val($(this).val().replace(/[^0-9]/g, '').slice(0, 16));
     });
 
-    // Reset Form
-    function resetForm() {
-        $('#formContainer').removeClass('show');
-        $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT RPU');
-        
-        $('#komoditasBody').empty();
-        const defaultRow = `
-            <tr class="komoditas-row">
+    const defaultRow = `
+            <tr class="komoditas-row"> 
                 <td>
                     <select class="form-control komoditas" name="komoditas[]" required>
                         <option value="">Pilih Komoditas</option>
@@ -221,20 +431,6 @@ $(document).ready(function() {
                  </th>
              </tr>
         `;
-        $('#komoditasBody').html(defaultRow);
-        updateRemoveButtons();
-        
-        $('#formRpu')[0].reset();
-        $('#kecamatan').val(user_kecamatan);
-        $('#tanggal_rpu').val(new Date().toISOString().split('T')[0]);
-        $('#rpuBaruContainer').hide();
-        $('#coordinateInfo').hide();
-        $('#photoPreview').hide();
-        $('#photoPlaceholder').show();
-        $('#btnRemovePhoto').hide();
-        $('#nik_info').html('');
-        $('.is-invalid').removeClass('is-invalid');
-    }
 
     // Get Location
     $('#btnGetLocation').click(function() {
@@ -270,38 +466,6 @@ $(document).ready(function() {
         }
     });
 
-    // Photo Upload
-    $('#foto_kegiatan').change(function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            if (file.size > 5 * 1024 * 1024) {
-                showAlert('danger', 'Ukuran file maksimal 5MB');
-                $(this).val('');
-                return;
-            }
-            const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-            if (validTypes.indexOf(file.type) === -1) {
-                showAlert('danger', 'Format harus JPG/PNG');
-                $(this).val('');
-                return;
-            }
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                $('#photoPreview').attr('src', e.target.result).show();
-                $('#photoPlaceholder').hide();
-                $('#btnRemovePhoto').show();
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    $('#btnRemovePhoto').click(function() {
-        $('#foto_kegiatan').val('');
-        $('#photoPreview').hide();
-        $('#photoPlaceholder').show();
-        $(this).hide();
-    });
-
     // Filter functions
     function filterData() {
         let search = "";
@@ -328,6 +492,7 @@ $(document).ready(function() {
     $('#formRpu').submit(function(e) {
         e.preventDefault();
         let isValid = true;
+        
         const fields = ['tanggal_rpu', 'nama_pj', 'nama_petugas', 'lokasi', 'kelurahan', 'latitude', 'longitude'];
         fields.forEach(f => { $('#' + f).removeClass('is-invalid'); });
         fields.forEach(f => { if (!$('#' + f).val()) { $('#' + f).addClass('is-invalid'); isValid = false; } });
@@ -354,6 +519,14 @@ $(document).ready(function() {
         btn.html('<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...').prop('disabled', true);
         
         var formData = new FormData(this);
+        
+        // Remove existing foto_kegiatan files from FormData
+        formData.delete('foto_kegiatan[]');
+        
+        // Add multiple files
+        for (let i = 0; i < selectedFiles.length; i++) {
+            formData.append('foto_kegiatan[]', selectedFiles[i]);
+        }
         
         // Jika memilih RPU Baru, gunakan nilai dari input baru
         if (pejagal === 'RPU Baru') {
@@ -401,50 +574,4 @@ $(document).ready(function() {
         $('#alert-container').html('<div class="alert alert-' + type + ' alert-dismissible fade show">' + msg + '<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
         setTimeout(function() { $('.alert').alert('close'); }, 5000);
     }
-
-    window.showFoto = function(url) {
-        $('#fotoModalImg').attr('src', url);
-        $('#fotoModal').modal('show');
-    };
 });
-
-// Fungsi Print/PDF - SAMA PERSIS DENGAN LAPORAN_PENGOBATAN
-function printWithCurrentData() {
-    var title = $('#reportTitle').length ? $('#reportTitle').html() : 'DATA RPU (RUMAH POTONG UNGGAS)';
-    var subtitle = $('#reportSubtitle').length ? $('#reportSubtitle').html() : 'Kota Surabaya';
-    
-    var printWindow = window.open('', '_blank');
-    printWindow.document.write('<html><head><title>Data RPU</title>');
-    printWindow.document.write('<style>');
-    printWindow.document.write('body { font-family: Arial, sans-serif; margin: 20px; }');
-    printWindow.document.write('.header { text-align: center; margin-bottom: 20px; }');
-    printWindow.document.write('.header h2 { margin: 0; }');
-    printWindow.document.write('.header p { margin: 5px 0; }');
-    printWindow.document.write('table { width: 100%; border-collapse: collapse; margin-top: 20px; }');
-    printWindow.document.write('th, td { border: 1px solid #000; padding: 8px; }');
-    printWindow.document.write('th { background-color: #f2f2f2; }');
-    printWindow.document.write('.badge-secondary { background-color: #6c757d; color: white; padding: 2px 6px; border-radius: 4px; }');
-    printWindow.document.write('.badge-ekor { background-color: #e3f2fd; color: #1976d2; padding: 2px 6px; border-radius: 4px; }');
-    printWindow.document.write('.foto-thumbnail { max-width: 50px; max-height: 50px; }');
-    printWindow.document.write('@media print { .no-print { display: none; } }');
-    printWindow.document.write('</style>');
-    printWindow.document.write('</head><body>');
-    
-    var tableContent = document.getElementById('rpuTable').cloneNode(true);
-    $(tableContent).find('.dataTables_empty').remove();
-    $(tableContent).find('.dt-buttons').remove();
-    $(tableContent).find('.dataTables_filter').remove();
-    $(tableContent).find('.dataTables_length').remove();
-    $(tableContent).find('.dataTables_info').remove();
-    $(tableContent).find('.dataTables_paginate').remove();
-    
-    printWindow.document.write('<div class="header">');
-    printWindow.document.write('<h2>' + title + '</h2>');
-    printWindow.document.write('<p>' + subtitle + '</p>');
-    printWindow.document.write('<p>Tanggal Cetak: ' + new Date().toLocaleDateString('id-ID') + '</p>');
-    printWindow.document.write('</div>');
-    printWindow.document.write(tableContent.outerHTML);
-    printWindow.document.write('</body></html>');
-    printWindow.document.close();
-    printWindow.print();
-}

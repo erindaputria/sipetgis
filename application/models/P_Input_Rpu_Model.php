@@ -12,7 +12,7 @@ class P_input_rpu_model extends CI_Model {
     }
     
     /**
-     * Save RPU data
+     * Save RPU data 
      */
     public function save_rpu($data) {
         // Kolom yang ada di tabel input_rpu - menggunakan 'lokasi'

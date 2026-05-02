@@ -37,6 +37,24 @@
     
     <!-- Custom CSS Laporan Pengobatan Ternak -->
     <link rel="stylesheet" href="<?php echo base_url('assets/css/laporan_pengobatan_ternak.css'); ?>" />
+    
+    <style>
+        .data-link-rekap {
+            color: #000000 !important;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+        .data-link-rekap:hover {
+            text-decoration: underline;
+            color: #333333 !important;
+        }
+        .kecamatan-cell {
+            font-weight: 600;
+            background-color: #fef3ef;
+        }
+    </style>
 </head>
 
 <body>
@@ -239,7 +257,7 @@
                         </div>
                     </div>
 
-                    <!-- Main Table -->
+                    <!-- Main Table (Detail Transaksi) -->
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card">
@@ -270,7 +288,60 @@
                                 </div>
                             </div>
                         </div>
-                    </div> 
+                    </div>
+
+                    <!-- NEW CARD: REKAP PENGOBATAN PER KECAMATAN -->
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header" style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                                    <div class="card-title fw-bold" style="color: #000000 !important;">
+                                        <i class="fas fa-chart-pie me-2" style="color: #000000 !important;"></i>REKAP PENGOBATAN PER KECAMATAN
+                                    </div>
+                                    <div class="card-subtitle text-muted">
+                                        Klik angka untuk melihat detail pengobatan per jenis hewan
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table id="rekapPengobatanTable" class="table table-bordered table-hover w-100">
+                                            <thead style="background-color: #f8f9fa;">
+                                                <tr>
+                                                    <th width="50" class="text-center">No</th>
+                                                    <th class="text-center">Kecamatan</th>
+                                                    <th class="text-center">Sapi Potong</th>
+                                                    <th class="text-center">Sapi Perah</th>
+                                                    <th class="text-center">Kambing</th>
+                                                    <th class="text-center">Domba</th>
+                                                    <th class="text-center">Ayam</th>
+                                                    <th class="text-center">Itik</th>
+                                                    <th class="text-center">Kelinci</th>
+                                                    <th class="text-center">Kucing</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="rekapTableBody">
+                                                <!-- Akan diisi oleh JavaScript -->
+                                            </tbody>
+                                            <tfoot id="rekapTableFooter" style="background-color: #f8f9fa; font-weight: bold;">
+                                                <tr>
+                                                    <td colspan="2" class="text-center"><strong>TOTAL</strong><table>
+                                                    <td class="text-center"><strong>0</strong></td>
+                                                    <td class="text-center"><strong>0</strong></td>
+                                                    <td class="text-center"><strong>0</strong></table>
+                                                    <td class="text-center"><strong>0</strong></td>
+                                                    <td class="text-center"><strong>0</strong></td>
+                                                    <td class="text-center"><strong>0</strong></td>
+                                                    <td class="text-center"><strong>0</strong></td>
+                                                    <td class="text-center"><strong>0</strong></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -301,7 +372,6 @@
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
     
-    <!-- Definisi variabel global -->
     <script>
         var base_url = "<?= base_url() ?>";
     </script>

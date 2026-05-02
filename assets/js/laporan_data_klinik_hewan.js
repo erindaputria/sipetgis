@@ -8,22 +8,22 @@ $(document).ready(function() {
     klinikTable = $('#klinikTable').DataTable({
         dom: 'Bfrtip',
         buttons: [
-            {
-                extend: 'copy',
-                text: '<i class="fas fa-copy"></i> Copy',
-                className: 'btn btn-sm btn-primary',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend: 'csv',
-                text: '<i class="fas fa-file-csv"></i> CSV',
-                className: 'btn btn-sm btn-success',
-                action: function(e, dt, button, config) {
-                    exportWithParams('csv');
-                }
-            },
+            // {
+            //     extend: 'copy',
+            //     text: '<i class="fas fa-copy"></i> Copy',
+            //     className: 'btn btn-sm btn-primary',
+            //     exportOptions: {
+            //         columns: ':visible'
+            //     }
+            // },
+            // {
+            //     extend: 'csv',
+            //     text: '<i class="fas fa-file-csv"></i> CSV',
+            //     className: 'btn btn-sm btn-success',
+            //     action: function(e, dt, button, config) {
+            //         exportWithParams('csv');
+            //     }
+            // },
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Excel',
@@ -32,14 +32,14 @@ $(document).ready(function() {
                     exportWithParams('excel');
                 }
             },
-            {
-                extend: 'pdf',
-                text: '<i class="fas fa-file-pdf"></i> PDF',
-                className: 'btn btn-sm btn-danger',
-                action: function(e, dt, button, config) {
-                    exportWithParams('pdf');
-                }
-            },
+            // {
+            //     extend: 'pdf',
+            //     text: '<i class="fas fa-file-pdf"></i> PDF',
+            //     className: 'btn btn-sm btn-danger',
+            //     action: function(e, dt, button, config) {
+            //         exportWithParams('pdf');
+            //     }
+            // },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print"></i> Print',
@@ -70,29 +70,50 @@ $(document).ready(function() {
         }
     });
     
-    // Load data awal saat halaman dimuat
-    loadData();
+    // ========== LANGSUNG LOAD SEMUA DATA SAAT HALAMAN DIBUKA ==========
+    loadAllData();
     
     $("#btnFilter").click(function() {
-        loadData();
+        currentData.tahun = $("#filterTahun").val();
+        currentData.kecamatan = $("#filterKecamatan").val();
+        
+        if(currentData.tahun === '') {
+            loadAllData();
+        } else {
+            loadDataWithFilter();
+        }
     });
     
     $("#btnReset").click(function() {
         $("#filterTahun").val('');
         $("#filterKecamatan").val('semua');
-        loadData();
+        
+        currentData = {
+            tahun: '',
+            kecamatan: 'semua'
+        };
+        
+        loadAllData();
     });
     
     $("#refreshBtn").click(function() {
-        loadData();
+        if(currentData.tahun) {
+            loadDataWithFilter();
+        } else {
+            loadAllData();
+        }
     });
 });
 
 var klinikTable = null;
+var currentData = {
+    tahun: '',
+    kecamatan: 'semua'
+};
 
 function exportWithParams(format) {
-    var tahun = $("#filterTahun").val() || '';
-    var kecamatan = $("#filterKecamatan").val() || 'semua';
+    var tahun = currentData.tahun || 'all';
+    var kecamatan = currentData.kecamatan || 'semua';
     
     var url = base_url + 'laporan_data_klinik_hewan/export_' + format;
     url += "?tahun=" + encodeURIComponent(tahun);
@@ -104,7 +125,6 @@ function exportWithParams(format) {
 function printWithCurrentData() {
     var title = $('#reportTitle').html();
     var subtitle = $('#reportSubtitle').html();
-    var tableHtml = $('#klinikTable').clone();
     
     var printWindow = window.open('', '_blank');
     printWindow.document.write('<html><head><title>Laporan Data Klinik Hewan</title>');
@@ -118,6 +138,9 @@ function printWithCurrentData() {
     printWindow.document.write('th { background-color: #f2f2f2; }');
     printWindow.document.write('.badge-sertifikat-ada { background-color: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 12px; }');
     printWindow.document.write('.badge-sertifikat-tidak { background-color: #ffebee; color: #c62828; padding: 2px 8px; border-radius: 12px; }');
+    printWindow.document.write('.positive-value { color: #832706 !important; font-weight: bold; }');
+    printWindow.document.write('.zero-value { color: #000000 !important; }');
+    printWindow.document.write('.total-row { background-color: #e8f5e9; font-weight: bold; }');
     printWindow.document.write('@media print { .no-print { display: none; } }');
     printWindow.document.write('</style>');
     printWindow.document.write('</head><body>');
@@ -135,20 +158,88 @@ function printWithCurrentData() {
     printWindow.document.write('<p>' + subtitle + '</p>');
     printWindow.document.write('</div>');
     printWindow.document.write(tableContent.outerHTML);
+    
+    printWindow.document.write('<div class="header" style="margin-top: 30px;">');
+    printWindow.document.write('<h3>REKAP KLINIK PER KECAMATAN</h3>');
+    printWindow.document.write('</div>');
+    
+    var rekapTable = $('#rekapKecamatanTable').clone();
+    $(rekapTable).find('.dataTables_empty').remove();
+    rekapTable.find('tfoot').show();
+    printWindow.document.write(rekapTable[0].outerHTML);
+    
     printWindow.document.write('</body></html>');
     printWindow.document.close();
     printWindow.print();
 }
 
-function loadData() {
-    var tahun = $("#filterTahun").val();
-    var kecamatan = $("#filterKecamatan").val();
+function loadAllData() {
+    $("#loadingOverlay").fadeIn();
     
-    // Update title
-    var tahunText = (tahun && tahun !== '') ? 'TAHUN ' + tahun : 'SEMUA TAHUN';
-    var kecamatanText = (kecamatan && kecamatan !== 'semua') ? 'Kecamatan ' + kecamatan : 'Seluruh Kecamatan';
-    $("#reportTitle").html('DATA KLINIK HEWAN KOTA SURABAYA');
-    $("#reportSubtitle").html(kecamatanText + ' - ' + tahunText);
+    $.ajax({
+        url: base_url + 'laporan_data_klinik_hewan/get_all_data',
+        type: "POST",
+        dataType: "json",
+        success: function(response) {
+            $("#reportTitle").html('DATA KLINIK HEWAN KOTA SURABAYA');
+            $("#reportSubtitle").html('Seluruh Kecamatan - Semua Tahun');
+            
+            // Update tabel detail
+            klinikTable.clear().draw();
+            
+            if(response.data && response.data.length > 0) {
+                var no = 1;
+                
+                $.each(response.data, function(index, item) {
+                    var sertifikatHtml = (item.sertifikat_standar === 'Ada' || item.sertifikat_standar === 'Ya')
+                        ? '<span class="badge-sertifikat-ada">Ada</span>' 
+                        : '<span class="badge-sertifikat-tidak">Tidak Ada</span>';
+                    
+                    var kelasDokter = (parseInt(item.jumlah_dokter) > 0) ? 'positive-value' : 'zero-value';
+                    
+                    klinikTable.row.add([
+                        no,
+                        '<span class="nama-klinik">' + escapeHtml(item.nama_klinik) + '</span>',
+                        escapeHtml(item.nib) || '-',
+                        sertifikatHtml,
+                        escapeHtml(item.alamat) || '-',
+                        escapeHtml(item.kecamatan) || '-',
+                        escapeHtml(item.kelurahan) || '-',
+                        '<span class="' + kelasDokter + '">' + formatNumber(item.jumlah_dokter || 0) + ' Dokter</span>',
+                        escapeHtml(item.nama_pemilik) || '-',
+                        escapeHtml(item.no_wa) || '-'
+                    ]);
+                    no++;
+                });
+                
+                klinikTable.draw();
+            } else {
+                klinikTable.row.add(['1', 'Tidak ada data', '-', '-', '-', '-', '-', '-', '-', '-']);
+                klinikTable.draw();
+            }
+            
+            // Update tabel rekap
+            if(response.rekap_kecamatan && response.rekap_kecamatan.length > 0) {
+                updateRekapTable(response.rekap_kecamatan, response.total_rekap);
+            }
+            
+            // Set current data untuk export
+            currentData.tahun = '';
+            currentData.kecamatan = 'semua';
+            
+            $("#loadingOverlay").fadeOut();
+        },
+        error: function(xhr, status, error) {
+            console.error("Error loading data:", error);
+            $("#loadingOverlay").fadeOut();
+            alert("Gagal memuat data: " + error);
+        }
+    });
+}
+
+function loadDataWithFilter() {
+    var tahun = currentData.tahun;
+    var kecamatan = currentData.kecamatan;
     
     $("#loadingOverlay").fadeIn();
     
@@ -161,16 +252,23 @@ function loadData() {
         },
         dataType: "json",
         success: function(response) {
+            var tahunText = 'TAHUN ' + tahun;
+            var kecamatanText = (kecamatan && kecamatan !== 'semua') ? 'Kecamatan ' + kecamatan : 'Seluruh Kecamatan';
+            $("#reportTitle").html('DATA KLINIK HEWAN KOTA SURABAYA');
+            $("#reportSubtitle").html(kecamatanText + ' - ' + tahunText);
+            
+            // Update tabel detail
             klinikTable.clear().draw();
             
-            if(response.status === 'success' && response.data && response.data.length > 0) {
+            if(response.data && response.data.length > 0) {
                 var no = 1;
-                var totalDokter = 0;
                 
                 $.each(response.data, function(index, item) {
-                    var sertifikatHtml = item.sertifikat_standar === 'Ada' 
-                        ? '<span class="badge-sertifikat badge-sertifikat-ada">Ada</span>' 
-                        : '<span class="badge-sertifikat badge-sertifikat-tidak">Tidak Ada</span>';
+                    var sertifikatHtml = (item.sertifikat_standar === 'Ada' || item.sertifikat_standar === 'Ya')
+                        ? '<span class="badge-sertifikat-ada">Ada</span>' 
+                        : '<span class="badge-sertifikat-tidak">Tidak Ada</span>';
+                    
+                    var kelasDokter = (parseInt(item.jumlah_dokter) > 0) ? 'positive-value' : 'zero-value';
                     
                     klinikTable.row.add([
                         no,
@@ -180,28 +278,68 @@ function loadData() {
                         escapeHtml(item.alamat) || '-',
                         escapeHtml(item.kecamatan) || '-',
                         escapeHtml(item.kelurahan) || '-',
-                        '<span class="jumlah-dokter">' + formatNumber(item.jumlah_dokter || 0) + ' Dokter</span>',
+                        '<span class="' + kelasDokter + '">' + formatNumber(item.jumlah_dokter || 0) + ' Dokter</span>',
                         escapeHtml(item.nama_pemilik) || '-',
                         escapeHtml(item.no_wa) || '-'
                     ]);
-                    totalDokter += parseInt(item.jumlah_dokter) || 0;
                     no++;
                 });
                 
                 klinikTable.draw();
             } else {
-                klinikTable.row.add([1, 'Tidak ada data', '-', '-', '-', '-', '-', '-', '-', '-']);
+                klinikTable.row.add(['1', 'Tidak ada data', '-', '-', '-', '-', '-', '-', '-', '-']);
                 klinikTable.draw();
+            }
+            
+            // Update tabel rekap
+            if(response.rekap_kecamatan && response.rekap_kecamatan.length > 0) {
+                updateRekapTable(response.rekap_kecamatan, response.total_rekap);
             }
             
             $("#loadingOverlay").fadeOut();
         },
         error: function(xhr, status, error) {
-            console.error("Error:", error);
-            alert("Gagal memuat data. Silakan coba lagi.");
+            console.error("Error loading data:", error);
             $("#loadingOverlay").fadeOut();
+            alert("Gagal memuat data: " + error);
         }
     });
+}
+
+// Fungsi update tabel rekap
+function updateRekapTable(data, totals) {
+    if(!data || data.length === 0) {
+        return;
+    }
+    
+    var tbody = '';
+    var no = 1;
+    var totalKlinik = 0;
+    
+    for(var i = 0; i < data.length; i++) {
+        var item = data[i];
+        var jumlah = item.jumlah_klinik || 0;
+        totalKlinik += jumlah;
+        
+        var kelas = jumlah > 0 ? 'positive-value' : 'zero-value';
+        var baseUrl = base_url + 'laporan_data_klinik_hewan/detail_kecamatan/' + encodeURIComponent(item.kecamatan);
+        var tahunParam = currentData.tahun ? '?tahun=' + currentData.tahun : '';
+        
+        tbody += '<tr>' +
+            '<td class="text-center">' + no++ + '</td>' +
+            '<td class="kecamatan-cell">' + escapeHtml(item.kecamatan) + '</td>' +
+            '<td class="text-center"><a href="' + baseUrl + tahunParam + '" class="data-link-rekap ' + kelas + '" target="_blank">' + formatNumber(jumlah) + '</a></td>' +
+            '</tr>';
+    }
+    
+    $('#rekapTableBody').html(tbody);
+    
+    // Update footer total
+    var footerRow = '<tr>' +
+        '<td colspan="2" class="text-center"><strong>TOTAL</strong></td>' +
+        '<td class="text-center"><strong>' + formatNumber(totalKlinik) + '</strong></td>' +
+        '</tr>';
+    $('#rekapKecamatanFooter').html(footerRow);
 }
 
 function formatNumber(num) {
@@ -211,12 +349,10 @@ function formatNumber(num) {
 
 function escapeHtml(text) {
     if(!text) return '-';
-    var map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-    return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }

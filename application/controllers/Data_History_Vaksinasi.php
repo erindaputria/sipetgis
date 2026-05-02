@@ -13,7 +13,7 @@ class Data_history_vaksinasi extends CI_Controller {
         if (!$this->session->userdata('logged_in')) {
             redirect('login');
         }
-    } 
+    }  
 
     public function index()
     {

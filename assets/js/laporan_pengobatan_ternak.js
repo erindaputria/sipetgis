@@ -8,22 +8,22 @@ $(document).ready(function() {
     dataTable = $('#pengobatanTable').DataTable({
         dom: 'Bfrtip',
         buttons: [
-            {
-                extend: 'copy',
-                text: '<i class="fas fa-copy"></i> Copy',
-                className: 'btn btn-sm btn-primary',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend: 'csv',
-                text: '<i class="fas fa-file-csv"></i> CSV',
-                className: 'btn btn-sm btn-success',
-                action: function(e, dt, button, config) {
-                    exportWithParams('csv');
-                }
-            },
+            // {
+            //     extend: 'copy',
+            //     text: '<i class="fas fa-copy"></i> Copy',
+            //     className: 'btn btn-sm btn-primary',
+            //     exportOptions: {
+            //         columns: ':visible'
+            //     }
+            // },
+            // {
+            //     extend: 'csv',
+            //     text: '<i class="fas fa-file-csv"></i> CSV',
+            //     className: 'btn btn-sm btn-success',
+            //     action: function(e, dt, button, config) {
+            //         exportWithParams('csv');
+            //     }
+            // },
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Excel',
@@ -32,14 +32,14 @@ $(document).ready(function() {
                     exportWithParams('excel');
                 }
             },
-            {
-                extend: 'pdf',
-                text: '<i class="fas fa-file-pdf"></i> PDF',
-                className: 'btn btn-sm btn-danger',
-                action: function(e, dt, button, config) {
-                    exportWithParams('pdf');
-                }
-            },
+            // {
+            //     extend: 'pdf',
+            //     text: '<i class="fas fa-file-pdf"></i> PDF',
+            //     className: 'btn btn-sm btn-danger',
+            //     action: function(e, dt, button, config) {
+            //         exportWithParams('pdf');
+            //     }
+            // },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print"></i> Print',
@@ -134,7 +134,6 @@ function exportWithParams(format) {
 function printWithCurrentData() {
     var title = $('#reportTitle').html();
     var subtitle = $('#reportSubtitle').html();
-    var tableHtml = $('#pengobatanTable').clone();
     
     var printWindow = window.open('', '_blank');
     printWindow.document.write('<html><head><title>Laporan Pengobatan Ternak</title>');
@@ -149,10 +148,15 @@ function printWithCurrentData() {
     printWindow.document.write('.badge-diagnosa { background-color: #fff3e0; color: #e67e22; padding: 2px 6px; border-radius: 12px; }');
     printWindow.document.write('.badge-tindakan { background-color: #e8f5e9; color: #27ae60; padding: 2px 6px; border-radius: 12px; }');
     printWindow.document.write('.total-row { background-color: #e8f5e9; font-weight: bold; }');
+    printWindow.document.write('.kecamatan-cell { font-weight: bold; background-color: #fef3ef; }');
+    printWindow.document.write('.data-link-rekap { text-decoration: none; }');
+    printWindow.document.write('.positive-value { color: #832706 !important; font-weight: bold; }');
+    printWindow.document.write('.zero-value { color: #000000 !important; }');
     printWindow.document.write('@media print { .no-print { display: none; } }');
     printWindow.document.write('</style>');
     printWindow.document.write('</head><body>');
     
+    // Clone main table
     var tableContent = document.getElementById('pengobatanTable').cloneNode(true);
     $(tableContent).find('.dataTables_empty').remove();
     $(tableContent).find('.dt-buttons').remove();
@@ -166,6 +170,17 @@ function printWithCurrentData() {
     printWindow.document.write('<p>' + subtitle + '</p>');
     printWindow.document.write('</div>');
     printWindow.document.write(tableContent.outerHTML);
+     
+    // Clone rekap table
+    printWindow.document.write('<div class="header" style="margin-top: 30px;">');
+    printWindow.document.write('<h3>REKAP PENGOBATAN PER KECAMATAN</h3>');
+    printWindow.document.write('</div>');
+    
+    var rekapTable = $('#rekapPengobatanTable').clone();
+    $(rekapTable).find('.dataTables_empty').remove();
+    rekapTable.find('tfoot').show();
+    printWindow.document.write(rekapTable[0].outerHTML);
+    
     printWindow.document.write('</body></html>');
     printWindow.document.close();
     printWindow.print();
@@ -182,6 +197,7 @@ function loadAllData() {
             $("#reportTitle").html('REKAP DATA PENGOBATAN TERNAK');
             $("#reportSubtitle").html('Kota Surabaya - Seluruh Data');
             
+            // Update tabel detail
             dataTable.clear().draw();
             
             if(response.data && response.data.length > 0) {
@@ -216,19 +232,13 @@ function loadAllData() {
                     '</tr>';
                 $("#tableFooter").html(footerHtml);
                 $("#tableFooter").show();
-                
-                $("#subTableWrapper").show();
-                $("#subTableKecamatanWrapper").show();
-                
-                populateRekapJenis(response.rekap_jenis || [], totalJumlah);
-                populateRekapKecamatan(response.rekap_kecamatan || [], totalJumlah);
-                
             } else {
                 dataTable.clear().draw();
                 $("#tableFooter").hide();
-                $("#subTableWrapper").hide();
-                $("#subTableKecamatanWrapper").hide();
             }
+            
+            // Update tabel rekap dengan data real
+            updateRekapTable(response.rekap_breakdown || [], response.total_breakdown || {}, '');
             
             $("#loadingOverlay").fadeOut();
         },
@@ -302,19 +312,13 @@ function loadDataWithFilter() {
                     '</tr>';
                 $("#tableFooter").html(footerHtml);
                 $("#tableFooter").show();
-                
-                $("#subTableWrapper").show();
-                $("#subTableKecamatanWrapper").show();
-                
-                populateRekapJenis(response.rekap_jenis || [], totalJumlah);
-                populateRekapKecamatan(response.rekap_kecamatan || [], totalJumlah);
-                
             } else {
                 dataTable.clear().draw();
                 $("#tableFooter").hide();
-                $("#subTableWrapper").hide();
-                $("#subTableKecamatanWrapper").hide();
             }
+            
+            // Update tabel rekap dengan data sesuai filter
+            updateRekapTable(response.rekap_breakdown || [], response.total_breakdown || {}, tahun);
             
             $("#loadingOverlay").fadeOut();
         },
@@ -326,48 +330,71 @@ function loadDataWithFilter() {
     });
 }
 
-function populateRekapJenis(data, totalJumlah) {
-    var html = '';
+// ========== FUNGSI UPDATE TABEL REKAP DENGAN ANGKA REAL ==========
+function updateRekapTable(data, totals, tahun) {
+    if(!data || data.length === 0) {
+        $('#rekapTableBody').html('<tr><td colspan="10" class="text-center text-muted">Tidak ada data</td></tr>');
+        return;
+    }
+    
+    var tbody = '';
     var no = 1;
     
-    $.each(data, function(index, item) {
-        var persentase = totalJumlah > 0 ? ((item.total_jumlah / totalJumlah) * 100).toFixed(2) : 0;
-        html += '<tr>' +
+    $.each(data, function(i, item) {
+        var baseUrl = base_url + 'laporan_pengobatan_ternak/detail_kecamatan/' + encodeURIComponent(item.kecamatan) + '/';
+        var tahunParam = tahun ? '?tahun=' + tahun : '';
+        
+        // Ambil nilai
+        var sapiPotong = item.sapi_potong || 0;
+        var sapiPerah = item.sapi_perah || 0;
+        var kambing = item.kambing || 0;
+        var domba = item.domba || 0;
+        var ayam = item.ayam || 0;
+        var itik = item.itik || 0;
+        var kelinci = item.kelinci || 0;
+        var kucing = item.kucing || 0;
+        
+        // Tentukan class berdasarkan nilai (0 atau positif)
+        var classPotong = sapiPotong > 0 ? 'positive-value' : 'zero-value';
+        var classPerah = sapiPerah > 0 ? 'positive-value' : 'zero-value';
+        var classKambing = kambing > 0 ? 'positive-value' : 'zero-value';
+        var classDomba = domba > 0 ? 'positive-value' : 'zero-value';
+        var classAyam = ayam > 0 ? 'positive-value' : 'zero-value';
+        var classItik = itik > 0 ? 'positive-value' : 'zero-value';
+        var classKelinci = kelinci > 0 ? 'positive-value' : 'zero-value';
+        var classKucing = kucing > 0 ? 'positive-value' : 'zero-value';
+        
+        tbody += '<tr>' +
             '<td class="text-center">' + no++ + '</td>' +
-            '<td class="text-start">' + escapeHtml(item.jenis_hewan) + '</td>' +
-            '<td class="text-center">' + formatNumber(item.jumlah_kasus) + '</td>' +
-            '<td class="text-center">' + formatNumber(item.total_jumlah) + '</td>' +
-            '<td class="text-center">' + persentase + '%+' +
+            '<td class="kecamatan-cell">' + escapeHtml(item.kecamatan) + '</td>' +
+            '<td class="text-center"><a href="' + baseUrl + 'Sapi Potong' + tahunParam + '" class="data-link-rekap ' + classPotong + '" target="_blank">' + formatNumber(sapiPotong) + '</a></td>' +
+            '<td class="text-center"><a href="' + baseUrl + 'Sapi Perah' + tahunParam + '" class="data-link-rekap ' + classPerah + '" target="_blank">' + formatNumber(sapiPerah) + '</a></td>' +
+            '<td class="text-center"><a href="' + baseUrl + 'Kambing' + tahunParam + '" class="data-link-rekap ' + classKambing + '" target="_blank">' + formatNumber(kambing) + '</a></td>' +
+            '<td class="text-center"><a href="' + baseUrl + 'Domba' + tahunParam + '" class="data-link-rekap ' + classDomba + '" target="_blank">' + formatNumber(domba) + '</a></td>' +
+            '<td class="text-center"><a href="' + baseUrl + 'Ayam' + tahunParam + '" class="data-link-rekap ' + classAyam + '" target="_blank">' + formatNumber(ayam) + '</a></td>' +
+            '<td class="text-center"><a href="' + baseUrl + 'Itik' + tahunParam + '" class="data-link-rekap ' + classItik + '" target="_blank">' + formatNumber(itik) + '</a></td>' +
+            '<td class="text-center"><a href="' + baseUrl + 'Kelinci' + tahunParam + '" class="data-link-rekap ' + classKelinci + '" target="_blank">' + formatNumber(kelinci) + '</a></td>' +
+            '<td class="text-center"><a href="' + baseUrl + 'Kucing' + tahunParam + '" class="data-link-rekap ' + classKucing + '" target="_blank">' + formatNumber(kucing) + '</a></td>' +
             '</tr>';
     });
     
-    if(data.length === 0) {
-        html = '<tr><td colspan="5" class="text-center text-muted">Tidak ada data</td></tr>';
-    }
+    $('#rekapTableBody').html(tbody);
     
-    $("#rekapJenisBody").html(html);
-}
-
-function populateRekapKecamatan(data, totalJumlah) {
-    var html = '';
-    var no = 1;
-    
-    $.each(data, function(index, item) {
-        var persentase = totalJumlah > 0 ? ((item.total_jumlah / totalJumlah) * 100).toFixed(2) : 0;
-        html += '<tr>' +
-            '<td class="text-center">' + no++ + '</td>' +
-            '<td class="text-start">' + escapeHtml(item.kecamatan) + '</td>' +
-            '<td class="text-center">' + formatNumber(item.jumlah_kasus) + '</td>' +
-            '<td class="text-center">' + formatNumber(item.total_jumlah) + '</td>' +
-            '<td class="text-center">' + persentase + '%+' +
+    // Update footer total
+    if(totals) {
+        var footerRow = '<tr style="background-color: #f8f9fa; font-weight: bold;">' +
+            '<td colspan="2" class="text-center"><strong style="color: #000000;">TOTAL</strong></td>' +
+            '<td class="text-center"><strong style="color: #000000;">' + formatNumber(totals.sapi_potong || 0) + '</strong></td>' +
+            '<td class="text-center"><strong style="color: #000000;">' + formatNumber(totals.sapi_perah || 0) + '</strong></td>' +
+            '<td class="text-center"><strong style="color: #000000;">' + formatNumber(totals.kambing || 0) + '</strong></td>' +
+            '<td class="text-center"><strong style="color: #000000;">' + formatNumber(totals.domba || 0) + '</strong></td>' +
+            '<td class="text-center"><strong style="color: #000000;">' + formatNumber(totals.ayam || 0) + '</strong></td>' +
+            '<td class="text-center"><strong style="color: #000000;">' + formatNumber(totals.itik || 0) + '</strong></td>' +
+            '<td class="text-center"><strong style="color: #000000;">' + formatNumber(totals.kelinci || 0) + '</strong></td>' +
+            '<td class="text-center"><strong style="color: #000000;">' + formatNumber(totals.kucing || 0) + '</strong></td>' +
             '</tr>';
-    });
-    
-    if(data.length === 0) {
-        html = '<tr><td colspan="5" class="text-center text-muted">Tidak ada数据</td></tr>';
+        $('#rekapTableFooter').html(footerRow);
     }
-    
-    $("#rekapKecamatanBody").html(html);
 }
 
 function formatNumber(num) {
@@ -391,7 +418,51 @@ function escapeHtml(text) {
         '<': '&lt;',
         '>': '&gt;',
         '"': '&quot;',
-        "'": '&#039;'
+        "'": '&#39;'
     };
     return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+}
+
+function populateRekapJenis(data, totalJumlah) {
+    var html = '';
+    var no = 1;
+    
+    $.each(data, function(index, item) {
+        var persentase = totalJumlah > 0 ? ((item.total_jumlah / totalJumlah) * 100).toFixed(2) : 0;
+        html += '<tr>' +
+            '<td class="text-center">' + no++ + '</td>' +
+            '<td class="text-start">' + escapeHtml(item.jenis_hewan) + '</td>' +
+            '<td class="text-center">' + formatNumber(item.jumlah_kasus) + '</td>' +
+            '<td class="text-center">' + formatNumber(item.total_jumlah) + '</td>' +
+            '<td class="text-center">' + persentase + '%</td>' +
+            '</tr>';
+    });
+    
+    if(data.length === 0) {
+        html = '<tr><td colspan="5" class="text-center text-muted">Tidak ada数据</td></tr>';
+    }
+    
+    $("#rekapJenisBody").html(html);
+}
+
+function populateRekapKecamatan(data, totalJumlah) {
+    var html = '';
+    var no = 1;
+    
+    $.each(data, function(index, item) {
+        var persentase = totalJumlah > 0 ? ((item.total_jumlah / totalJumlah) * 100).toFixed(2) : 0;
+        html += '<tr>' +
+            '<td class="text-center">' + no++ + '</td>' +
+            '<td class="text-start">' + escapeHtml(item.kecamatan) + '</td>' +
+            '<td class="text-center">' + formatNumber(item.jumlah_kasus) + '</td>' +
+            '<td class="text-center">' + formatNumber(item.total_jumlah) + '</td>' +
+            '<td class="text-center">' + persentase + '%</td>' +
+            '</tr>';
+    });
+    
+    if(data.length === 0) {
+        html = '<tr><td colspan="5" class="text-center text-muted">Tidak ada数据</td></tr>';
+    }
+    
+    $("#rekapKecamatanBody").html(html);
 }
