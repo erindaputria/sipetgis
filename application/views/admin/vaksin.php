@@ -16,7 +16,7 @@
                     "Font Awesome 5 Solid", 
                     "Font Awesome 5 Regular",
                     "Font Awesome 5 Brands",
-                    "simple-line-icons",
+                    "simple-line-icons", 
                 ],
                 urls: ["<?php echo base_url('assets/SIPETGIS/assets/css/fonts.min.css'); ?>"]
             },
@@ -77,7 +77,7 @@
                                 <ul class="list-unstyled ps-4">
                                     <li><a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a></li>
                                     <li><a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a></li>
-                                    <li><a href="<?= site_url('kepemilikan_jenis_usaha') ?>" class="nav-link active">Kepemilikan Jenis Usaha</a></li>
+                                    <li><a href="<?= site_url('kepemilikan_jenis_usaha') ?>" class="nav-link">Kepemilikan Jenis Usaha</a></li>
                                     <li><a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a></li>
                                     <li><a href="<?= site_url('obat') ?>" class="nav-link">Obat</a></li>
                                     <li><a href="<?= site_url('vaksin') ?>" class="nav-link active">Vaksin</a></li>
@@ -370,8 +370,8 @@
                                                             <td><?= $no++; ?></td>
                                                             <td><?= htmlspecialchars($row->jenis_vaksin ?? ''); ?></td>
                                                             <td><?= htmlspecialchars($row->tahun ?? ''); ?></td>
-                                                            <td><?= htmlspecialchars($row->status_perolehan ?? ''); ?> <!-- LANGSUNG TEKS, TANPA BADGE -->
-                                                            <td><?= htmlspecialchars($row->bantuan_prov ?? ''); ?> <!-- LANGSUNG TEKS, TANPA BADGE -->
+                                                            <td><?= htmlspecialchars($row->status_perolehan ?? ''); ?></td>
+                                                            <td><?= htmlspecialchars($row->bantuan_prov ?? ''); ?></td>
                                                             <td>
                                                                 <button class="btn btn-action btn-edit" title="Edit"
                                                                         data-id="<?= $row->id_vaksin ?? ''; ?>"
@@ -390,7 +390,7 @@
                                                         </tr>
                                                     <?php endforeach; ?>
                                                 <?php else: ?>
-                                                    <tr><td colspan="6" class="text-center">Tidak ada data</td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td></tr>
+                                                    <tr><td colspan="6" class="text-center">Tidak ada数据</td><tr>
                                                 <?php endif; ?>
                                             </tbody>
                                         </table>
@@ -422,7 +422,15 @@
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
     
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <!-- Custom JS Vaksin -->
     <script src="<?php echo base_url('assets/js/vaksin.js'); ?>"></script>
+    
+    <script>
+        // Base URL untuk redirect
+        var base_url = "<?= base_url() ?>";
+    </script>
 </body>
 </html>

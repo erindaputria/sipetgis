@@ -15,7 +15,7 @@ class Vaksin extends CI_Controller {
     }
     
     public function index() {
-        $data['vaksin'] = $this->Vaksin_model->get_all();
+        $data['vaksin'] = $this->Vaksin_model->get_all(); 
         $data['title'] = 'Master Data Vaksin';
         
         // Langsung load view vaksin tanpa templates
@@ -153,5 +153,22 @@ class Vaksin extends CI_Controller {
         
         exit;
     }
+
+    public function hapus_ajax() {
+    $id = $this->input->post('id');
+    
+    if (!$id) {
+        echo json_encode(['status' => 'error', 'message' => 'ID tidak ditemukan']);
+        return;
+    }
+    
+    $result = $this->Vaksin_model->delete($id);
+    
+    if ($result) {
+        echo json_encode(['status' => 'success', 'message' => 'Data master vaksin berhasil dihapus']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus data master vaksin']);
+    }
+}
 }
 ?>

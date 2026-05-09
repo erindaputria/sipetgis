@@ -14,7 +14,7 @@ class Data_vaksinasi extends CI_Controller {
             redirect('login');
         }
     }
-
+ 
     public function index()
     {
         $data['vaksinasi'] = $this->Data_vaksinasi_model->get_all_vaksinasi();

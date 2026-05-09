@@ -16,7 +16,7 @@ class Data_vaksinasi_model extends CI_Model {
         $this->db->select('
             jenis_vaksinasi, 
             YEAR(tanggal_vaksinasi) as tahun,
-            SUM(jumlah) as total_jumlah
+            SUM(jumlah) as total_jumlah 
         ');
         $this->db->from($this->table);
         $this->db->group_by(['jenis_vaksinasi', 'YEAR(tanggal_vaksinasi)']);
@@ -77,39 +77,42 @@ class Data_vaksinasi_model extends CI_Model {
     }
     
     public function get_vaksinasi_by_komoditas($komoditas)
-    {
-        $this->db->select('
-            jenis_vaksinasi,
-            YEAR(tanggal_vaksinasi) as tahun,
-            SUM(jumlah) as total_jumlah
-        ');
-        $this->db->from($this->table);
-        
-        if($komoditas != 'all' && !empty($komoditas)) {
-            $this->db->where('komoditas_ternak', $komoditas);
-        }
-        
-        $this->db->group_by(['jenis_vaksinasi', 'YEAR(tanggal_vaksinasi)']);
-        $this->db->order_by('tahun', 'DESC');
-        $this->db->order_by('jenis_vaksinasi', 'ASC');
-        
-        $query = $this->db->get();
-        $results = $query->result();
-        
-        $formatted = [];
-        $no = 1;
-        foreach($results as $row) {
-            $formatted[] = [
-                'no' => $no++,
-                'nama_kegiatan' => $row->jenis_vaksinasi,
-                'tahun' => $row->tahun,
-                'jumlah_ternak' => $row->total_jumlah,
-                'jenis_vaksinasi' => $row->jenis_vaksinasi
-            ];
-        }
-        
-        return $formatted;
+{
+    // Jika komoditas 'all', tampilkan semua data
+    if ($komoditas == 'all' || empty($komoditas)) {
+        return $this->get_all_vaksinasi();
     }
+    
+    // Query: filter langsung berdasarkan komoditas_ternak
+    $this->db->select('
+        jenis_vaksinasi, 
+        YEAR(tanggal_vaksinasi) as tahun,
+        SUM(jumlah) as total_jumlah
+    ');
+    $this->db->from($this->table);
+    $this->db->where('komoditas_ternak', $komoditas);
+    $this->db->group_by(['jenis_vaksinasi', 'YEAR(tanggal_vaksinasi)']);
+    $this->db->order_by('tahun', 'DESC');
+    $this->db->order_by('jenis_vaksinasi', 'ASC');
+    
+    $query = $this->db->get();
+    $results = $query->result();
+    
+    $formatted = [];
+    $no = 1;
+    foreach($results as $row) {
+        $formatted[] = [
+            'no' => $no++,
+            'nama_kegiatan' => $row->jenis_vaksinasi,
+            'tahun' => $row->tahun,
+            'jumlah_ternak' => $row->total_jumlah,
+            'jenis_vaksinasi' => $row->jenis_vaksinasi,
+            'komoditas_filter' => $komoditas
+        ];
+    }
+    
+    return $formatted;
+}
     
     public function get_distinct_komoditas()
     {

@@ -17,7 +17,7 @@ class Data_penjual_pakan extends CI_Controller {
     }
 
     public function get_all_data() 
-    {
+    { 
         header('Content-Type: application/json');
         $data = $this->Data_penjual_pakan_model->get_all_penjual_pakan();
         echo json_encode($data);

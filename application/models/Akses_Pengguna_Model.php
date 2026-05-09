@@ -17,7 +17,7 @@ class Akses_pengguna_model extends CI_Model {
         return $this->db->get($this->table)->result();
     }
     
-    public function get_by_id($id) {
+    public function get_by_id($id) { 
         $this->db->where('id_user', $id);
         return $this->db->get($this->table)->row();
     }

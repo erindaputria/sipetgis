@@ -19,7 +19,7 @@
             },
             active: function () {
                 sessionStorage.fonts = true;
-            },
+            }, 
         });
     </script>
 
@@ -572,7 +572,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" style="background: #6b2005 !important; color: #ffffff !important;" data-bs-dismiss="modal">Tutup</button>
-                                    <button type="button" class="btn btn-primary" style="background: #832706 !important;" onclick="window.print()"><i class="fas fa-print me-2" style="color: #ffffff !important;"></i>Cetak</button>
+                                    <button type="button" class="btn btn-primary" style="background: #832706 !important;" onclick="printPelakuUsahaTable()"><i class="fas fa-print me-2" style="color: #ffffff !important;"></i>Cetak</button>
                                 </div>
                             </div>
                         </div>
@@ -685,9 +685,9 @@
                                     <button type="button" class="btn btn-secondary" style="background: #6b2005 !important; color: #ffffff !important; border: none;" data-bs-dismiss="modal">
                                         <i class="fas fa-times me-2"></i>Tutup
                                     </button>
-                                    <button type="button" class="btn btn-primary" style="background: #832706 !important; border: none;" onclick="window.print()">
-                                        <i class="fas fa-print me-2"></i>Cetak
-                                    </button>
+                                    <button type="button" class="btn btn-primary" style="background: #832706 !important; border: none;" onclick="printSemuaKecamatanTable()">
+    <i class="fas fa-print me-2"></i>Cetak
+</button>
                                 </div>
                             </div>
                         </div>

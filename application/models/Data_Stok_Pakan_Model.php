@@ -12,7 +12,7 @@ class Data_stok_pakan_model extends CI_Model {
     
     /**
      * Get all stok pakan data
-     */
+     */ 
     public function get_all_stok() {
         $this->db->select('*');
         $this->db->from($this->table);
@@ -31,6 +31,14 @@ class Data_stok_pakan_model extends CI_Model {
         $query = $this->db->get();
         
         return $query->row();
+    }
+    
+    /**
+     * Update stok pakan
+     */
+    public function update_stok($id, $data) {
+        $this->db->where('id_stok', $id);
+        return $this->db->update($this->table, $data);
     }
     
     /**
@@ -272,7 +280,7 @@ class Data_stok_pakan_model extends CI_Model {
         }
         
         return $results;
-    }
+    } 
     
     /**
      * Get stok opname summary (per jenis/merk)

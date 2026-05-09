@@ -11,7 +11,7 @@ class P_input_stok_pakan extends CI_Controller {
         $this->load->helper(array('form', 'url'));
         
         // CEK SESSION LOGIN
-        if (!$this->session->userdata('logged_in')) {
+        if (!$this->session->userdata('logged_in')) { 
             redirect('login');
         }
         

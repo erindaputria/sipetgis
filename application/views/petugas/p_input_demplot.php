@@ -239,31 +239,18 @@
                                                         </div>
                                                         <div class="card-body">
                                                             <div class="row">
+                                                                   <!-- Kecamatan - READONLY dari session -->
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label required-field">Kecamatan</label>
-                                                                    <select class="form-control" id="kecamatan" name="kecamatan" required>
-                                                                        <option value="">Pilih Kecamatan</option>
-                                                                        <?php 
-                                                                        $user_kec = $this->session->userdata('kecamatan') ?: 'Benowo';
-                                                                        $all_kec = array_keys($kel_list);
-                                                                        sort($all_kec);
-                                                                        foreach ($all_kec as $kec): ?>
-                                                                            <option value="<?php echo $kec; ?>" <?php echo ($kec == $user_kec) ? 'selected' : ''; ?>><?php echo $kec; ?></option>
-                                                                        <?php endforeach; ?>
-                                                                    </select>
-                                                                    <div class="invalid-feedback">Kecamatan harus dipilih</div>
+                                                                    <input type="text" class="form-control" id="kecamatan" name="kecamatan" value="<?= $this->session->userdata('kecamatan') ?: 'Benowo'; ?>" readonly required />
+                                                                    <div class="invalid-feedback">Kecamatan harus diisi</div>
                                                                 </div>
 
+                                                                <!-- Kelurahan - DROPDOWN yang akan diisi via AJAX -->
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label required-field">Kelurahan</label>
                                                                     <select class="form-control" id="kelurahan" name="kelurahan" required>
                                                                         <option value="">Pilih Kelurahan</option>
-                                                                        <?php 
-                                                                        if (isset($kel_list[$user_kec]) && is_array($kel_list[$user_kec])): 
-                                                                            foreach ($kel_list[$user_kec] as $kel): ?>
-                                                                            <option value="<?php echo $kel; ?>"><?php echo $kel; ?></option>
-                                                                        <?php endforeach; 
-                                                                        endif; ?>
                                                                     </select>
                                                                     <div class="invalid-feedback">Kelurahan harus dipilih</div>
                                                                 </div>

@@ -13,9 +13,9 @@
 
 /* Logo */
 .sipetgis-logo {
-    color: var(--primary) !important;
+    color: var(--primary) !important; 
     font-weight: 800;
-    font-size: 24px;
+    font-size: 24px; 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     letter-spacing: 0.5px;
     line-height: 1;

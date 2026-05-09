@@ -613,7 +613,7 @@ function lihatFoto(basePath, fotoString) {
     });
     
     // Tampilkan modal
-    $('#modalLihatFoto').modal('show');
+    $('#modalLihatFoto').modal('show'); 
     
     // Hapus modal saat ditutup
     $('#modalLihatFoto').on('hidden.bs.modal', function() {

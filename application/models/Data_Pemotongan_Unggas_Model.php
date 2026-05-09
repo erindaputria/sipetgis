@@ -10,26 +10,35 @@ class Data_pemotongan_unggas_model extends CI_Model {
         $this->load->database();
     }
     
-    /**
-     * Get all pemotongan unggas data
-     */
     public function get_all_pemotongan() {
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->order_by('tanggal', 'DESC');
-        $query = $this->db->get();
+    $this->db->select('p.*, r.pejagal as nama_rpu');
+    $this->db->from($this->table . ' p');
+    $this->db->join('rpu r', 'p.id_rpu = r.id', 'left');
+    $this->db->order_by('p.tanggal', 'DESC');
+    $query = $this->db->get();
+    
+    $results = $query->result_array();
+    
+    // Calculate totals for each row
+    foreach ($results as &$row) {
+        $row['total_ekor'] = $this->calculate_total_ekor($row);
+        $row['total_berat'] = $this->calculate_total_berat($row);
+        $row['komoditas_list'] = $this->generate_komoditas_list($row);
         
-        $results = $query->result_array();
-        
-        // Calculate totals for each row
-        foreach ($results as &$row) {
-            $row['total_ekor'] = $this->calculate_total_ekor($row);
-            $row['total_berat'] = $this->calculate_total_berat($row);
-            $row['komoditas_list'] = $this->generate_komoditas_list($row);
+        // FIX: Jika foto berisi multiple file (koma), ambil hanya yang pertama
+        if (!empty($row['foto_kegiatan']) && strpos($row['foto_kegiatan'], ',') !== false) {
+            $photos = explode(',', $row['foto_kegiatan']);
+            $row['foto_kegiatan'] = trim($photos[0]);
         }
         
-        return $results;
+        // Jika nama_rpu masih kosong, gunakan default
+        if (empty($row['nama_rpu']) && !empty($row['id_rpu'])) {
+            $row['nama_rpu'] = 'RPU ' . $row['id_rpu'];
+        }
     }
+    
+    return $results;
+}
     
     /**
      * Get pemotongan by ID
@@ -267,5 +276,13 @@ class Data_pemotongan_unggas_model extends CI_Model {
         
         return $results;
     }
+
+    /**
+ * Update pemotongan unggas
+ */
+public function update_pemotongan($id, $data) {
+    $this->db->where('id_pemotongan', $id);
+    return $this->db->update($this->table, $data);
+}
 }
 ?>

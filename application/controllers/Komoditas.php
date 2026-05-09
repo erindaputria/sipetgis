@@ -9,11 +9,10 @@ class Komoditas extends CI_Controller {
         $this->load->library('session');
         $this->load->helper('security');
         
-        // Cek login
         if(!$this->session->userdata('logged_in')) {
             redirect('login');
         }
-    }
+    } 
     
     public function index() {
         $data['komoditas'] = $this->Komoditas_model->get_all();
@@ -22,7 +21,6 @@ class Komoditas extends CI_Controller {
     }
     
     public function simpan() { 
-        // Validasi input
         $this->load->library('form_validation');
         
         $this->form_validation->set_rules('nama_komoditas', 'Nama Komoditas', 'required|min_length[3]|max_length[100]');
@@ -36,7 +34,6 @@ class Komoditas extends CI_Controller {
             redirect('komoditas');
         }
         
-        // Cek nama komoditas sudah ada atau belum
         $nama_komoditas = $this->input->post('nama_komoditas');
         if ($this->Komoditas_model->check_nama($nama_komoditas)) {
             $this->session->set_flashdata('error', 'Nama komoditas sudah terdaftar');
@@ -64,7 +61,6 @@ class Komoditas extends CI_Controller {
     public function update() {
         $id = $this->input->post('id_komoditas');
         
-        // Validasi input
         $this->load->library('form_validation');
         
         $this->form_validation->set_rules('nama_komoditas', 'Nama Komoditas', 'required|min_length[3]|max_length[100]');
@@ -78,7 +74,6 @@ class Komoditas extends CI_Controller {
             redirect('komoditas');
         }
         
-        // Cek nama komoditas sudah ada untuk data lain
         $nama_komoditas = $this->input->post('nama_komoditas');
         $existing = $this->Komoditas_model->check_nama_except($nama_komoditas, $id);
         if ($existing) {
@@ -104,24 +99,27 @@ class Komoditas extends CI_Controller {
         redirect('komoditas');
     }
     
-    public function hapus($id) {
+    public function hapus_ajax() {
+        $id = $this->input->post('id');
+        
+        if (!$id) {
+            echo json_encode(['status' => 'error', 'message' => 'ID tidak ditemukan']);
+            return;
+        }
+        
         $result = $this->Komoditas_model->delete($id);
         
         if ($result) {
-            $this->session->set_flashdata('success', 'Data komoditas berhasil dihapus');
+            echo json_encode(['status' => 'success', 'message' => 'Data komoditas berhasil dihapus']);
         } else {
-            $this->session->set_flashdata('error', 'Gagal menghapus data komoditas');
+            echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus data komoditas']);
         }
-        
-        redirect('komoditas');
     }
 
-    // ==================== EXPORT EXCEL ====================
     public function export_excel()
     {
         $results = $this->Komoditas_model->get_all();
         
-        // Bersihkan output buffer
         ob_clean();
         
         header('Content-Type: application/vnd.ms-excel');
@@ -169,16 +167,20 @@ class Komoditas extends CI_Controller {
         $totalData = 0;
         foreach($results as $item) {
             $totalData++;
+            $jk_display = $item->jenis_kelamin;
+            if ($jk_display == 'P') $jk_display = 'Perempuan';
+            elseif ($jk_display == 'L') $jk_display = 'Laki-laki';
+            elseif ($jk_display == 'K') $jk_display = 'Keduanya';
+            
             echo '<tr>';
             echo '<td align="center">' . $no++ . '</td>';
             echo '<td align="left">' . (!empty($item->nama_komoditas) ? $item->nama_komoditas : '-') . '</td>';
             echo '<td align="center">' . (!empty($item->jenis_hewan) ? $item->jenis_hewan : '-') . '</td>';
             echo '<td align="center">' . (!empty($item->satuan) ? $item->satuan : '-') . '</td>';
-            echo '<td align="center">' . (!empty($item->jenis_kelamin) ? $item->jenis_kelamin : '-') . '</td>';
+            echo '<td align="center">' . $jk_display . '</td>';
             echo '</tr>';
         }
         
-        // Total row
         echo '<tr class="total-row">';
         echo '<td colspan="4" align="center"><strong>TOTAL KESELURUHAN</strong></td>';
         echo '<td align="center"><strong>' . number_format($totalData, 0, ',', '.') . ' Data Komoditas</strong></td>';

@@ -491,7 +491,6 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Nama Klinik</th>
-                                            <th>Nama Pemilik</th>
                                             <th>Jenis Layanan</th>
                                             <th>Jumlah Dokter</th>
                                             <th>Kelurahan</th>
@@ -499,7 +498,6 @@
                                             <th>Telepon</th>
                                             <th>Surat Ijin</th>
                                             <th>NIB</th>
-                                            <th>Sertifikat Standar</th>
                                             <th>Tanggal Input</th>
                                             <th>Foto</th>
                                         </tr>
@@ -511,7 +509,6 @@
                                                 <tr>
                                                     <td><?php echo $no++; ?></td>
                                                     <td><?php echo htmlspecialchars($data['nama_klinik'] ?? '-'); ?></td>
-                                                    <td><?php echo htmlspecialchars($data['nama_pemilik'] ?? '-'); ?></td>
                                                     <td>
                                                         <?php 
                                                         $jenis_layanan = $data['jenis_layanan'] ?? '-';
@@ -534,7 +531,6 @@
                                                         <?php endif; ?>
                                                     </td>
                                                     <td><?php echo htmlspecialchars($data['nib'] ?? '-'); ?></td>
-                                                    <td><?php echo htmlspecialchars($data['sertifikat_standar'] ?? '-'); ?></td>
                                                     <td>
                                                         <?php 
                                                         if (!empty($data['created_at'])) {
@@ -575,7 +571,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> 
                 </div>
             </div>
         </div>

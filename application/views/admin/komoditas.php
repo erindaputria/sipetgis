@@ -2,11 +2,13 @@
 <html lang="id">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="<?= $this->security->get_csrf_hash(); ?>">
+    <meta name="csrf-name" content="<?= $this->security->get_csrf_token_name(); ?>">
     <title>Master Data Komoditas - SIPETGIS</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="<?php echo base_url('assets/SIPETGIS/assets/img/kaiadmin/favicon.ico'); ?>" type="image/x-icon" />
 
-    <!-- Fonts and icons -->
     <script src="<?php echo base_url('assets/SIPETGIS/assets/js/plugin/webfont/webfont.min.js'); ?>"></script>
     <script>
         WebFont.load({
@@ -26,22 +28,18 @@
         });
     </script>
 
-    <!-- CSS Files -->
     <link rel="stylesheet" href="<?php echo base_url('assets/SIPETGIS/assets/css/bootstrap.min.css'); ?>" />
     <link rel="stylesheet" href="<?php echo base_url('assets/SIPETGIS/assets/css/plugins.min.css'); ?>" />
     <link rel="stylesheet" href="<?php echo base_url('assets/SIPETGIS/assets/css/kaiadmin.min.css'); ?>" />
     
-    <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css" />
     
-    <!-- Custom CSS Komoditas -->
     <link rel="stylesheet" href="<?php echo base_url('assets/css/komoditas.css'); ?>" />
 </head>
 
 <body>
     <div class="wrapper">
-        <!-- Sidebar -->
         <div class="sidebar" data-background-color="white">
             <div class="sidebar-logo">
                 <div class="logo-header" data-background-color="white">
@@ -77,7 +75,7 @@
                                 <ul class="list-unstyled ps-4">
                                     <li><a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a></li>
                                     <li><a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a></li>
-                                     <li><a href="<?= site_url('kepemilikan_jenis_usaha') ?>" class="nav-link active">Kepemilikan Jenis Usaha</a></li>
+                                    <li><a href="<?= site_url('kepemilikan_jenis_usaha') ?>" class="nav-link">Kepemilikan Jenis Usaha</a></li>
                                     <li><a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a></li>
                                     <li><a href="<?= site_url('obat') ?>" class="nav-link">Obat</a></li>
                                     <li><a href="<?= site_url('vaksin') ?>" class="nav-link">Vaksin</a></li>
@@ -143,7 +141,6 @@
                 </div>
             </div>
         </div>
-        <!-- End Sidebar -->
 
         <div class="main-panel">
             <div class="main-header">
@@ -186,7 +183,6 @@
 
             <div class="container">
                 <div class="page-inner">
-                    <!-- Flash Messages -->
                     <?php if($this->session->flashdata('success')): ?>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <i class="fas fa-check-circle me-2"></i>
@@ -203,7 +199,6 @@
                         </div>
                     <?php endif; ?>
 
-                    <!-- Page Header -->
                     <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                         <div>
                             <h3 class="fw-bold mb-1" style="color: #832706; font-weight: 900;">Master Komoditas</h3>
@@ -216,7 +211,6 @@
                         </div>
                     </div>
 
-                    <!-- Modal Tambah Data -->
                     <div class="modal fade" id="tambahDataModal" tabindex="-1">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content modal-form">
@@ -270,9 +264,9 @@
                                                     <label>Jenis Kelamin <span class="text-danger">*</span></label>
                                                     <select name="jenis_kelamin" class="form-control" required>
                                                         <option value="">Pilih Jenis Kelamin</option>
-                                                        <option value="P">Perempuan (P)</option>
-                                                        <option value="L">Laki-laki (L)</option>
-                                                        <option value="Keduanya">Keduanya</option>
+                                                        <option value="P">Perempuan</option>
+                                                        <option value="L">Laki-laki</option>
+                                                        <option value="K">Keduanya</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -287,7 +281,6 @@
                         </div>
                     </div>
 
-                    <!-- Modal Edit Data -->
                     <div class="modal fade" id="editDataModal" tabindex="-1">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content modal-form">
@@ -342,9 +335,9 @@
                                                     <label>Jenis Kelamin <span class="text-danger">*</span></label>
                                                     <select id="edit_jk" name="jenis_kelamin" class="form-control" required>
                                                         <option value="">Pilih Jenis Kelamin</option>
-                                                        <option value="P">Perempuan (P)</option>
-                                                        <option value="L">Laki-laki (L)</option>
-                                                        <option value="Keduanya">Keduanya</option>
+                                                        <option value="P">Perempuan</option>
+                                                        <option value="L">Laki-laki</option>
+                                                        <option value="K">Keduanya</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -359,7 +352,6 @@
                         </div>
                     </div>
 
-                    <!-- Content Table -->
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card">
@@ -383,8 +375,8 @@
                                                         <tr>
                                                             <td><?= $no++; ?></td>
                                                             <td><?= htmlspecialchars($row->nama_komoditas ?? ''); ?></td>
-                                                            <td><?= htmlspecialchars($row->jenis_hewan ?? ''); ?> <!-- LANGSUNG TEKS, TANPA BADGE -->
-                                                            <td><?= htmlspecialchars($row->satuan ?? ''); ?> <!-- LANGSUNG TEKS, TANPA BADGE -->
+                                                            <td><?= htmlspecialchars($row->jenis_hewan ?? ''); ?></td>
+                                                            <td><?= htmlspecialchars($row->satuan ?? ''); ?></td>
                                                             <td>
                                                                 <?php 
                                                                     if(($row->jenis_kelamin ?? '') == 'P') echo 'Perempuan';
@@ -424,25 +416,26 @@
         </div>
     </div>
 
-    <!-- Core JS Files -->
     <script src="<?php echo base_url('assets/SIPETGIS/assets/js/core/jquery-3.7.1.min.js'); ?>"></script>
     <script src="<?php echo base_url('assets/SIPETGIS/assets/js/core/popper.min.js'); ?>"></script>
     <script src="<?php echo base_url('assets/SIPETGIS/assets/js/core/bootstrap.min.js'); ?>"></script>
     <script src="<?php echo base_url('assets/SIPETGIS/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js'); ?>"></script>
     <script src="<?php echo base_url('assets/SIPETGIS/assets/js/kaiadmin.min.js'); ?>"></script>
     
-    <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
     
-    <!-- Custom JS Komoditas -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <script src="<?php echo base_url('assets/js/komoditas.js'); ?>"></script>
+    
+    <script>
+        var base_url = "<?= base_url() ?>";
+    </script>
 </body>
 </html>

@@ -11,14 +11,14 @@ class Komoditas_model extends CI_Model {
     }
     
     public function get_all() {
-        $this->db->order_by('nama_komoditas', 'ASC');
+        $this->db->order_by('id_komoditas', 'ASC');
         return $this->db->get($this->table)->result();
     }
     
     public function get_by_id($id) {
         $this->db->where('id_komoditas', $id);
         return $this->db->get($this->table)->row();
-    }
+    } 
     
     public function insert($data) {
         return $this->db->insert($this->table, $data);
@@ -36,7 +36,7 @@ class Komoditas_model extends CI_Model {
     
     public function check_nama($nama_komoditas) {
         $this->db->where('nama_komoditas', $nama_komoditas);
-        return $this->db->get($this->table)->row();
+        return $this->db->get($this->table)->row(); 
     }
     
     public function check_nama_except($nama_komoditas, $id) {
@@ -51,3 +51,4 @@ class Komoditas_model extends CI_Model {
         return $this->db->get($this->table)->result();
     }
 }
+?>

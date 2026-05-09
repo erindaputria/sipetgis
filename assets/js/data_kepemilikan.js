@@ -7,22 +7,10 @@
 var base_url = "<?= base_url() ?>";
 
 $(document).ready(function() {
-    // Initialize DataTable with custom buttons (SAMA PERSIS PELAKU USAHA)
+    // Initialize DataTable
     dataTernakTable = $('#dataTernakTable').DataTable({
         dom: 'Bfrtip',
-        buttons: [
-            // {
-            //     extend: 'copy',
-            //     text: '<i class="fas fa-copy"></i> Copy',
-            //     className: 'btn btn-sm btn-primary',
-            //     exportOptions: { columns: [0,1,2,3] }
-            // },
-            // {
-            //     extend: 'csv',
-            //     text: '<i class="fas fa-file-csv"></i> CSV',
-            //     className: 'btn btn-sm btn-success',
-            //     exportOptions: { columns: [0,1,2,3] }
-            // },
+        buttons: [ 
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Excel',
@@ -32,12 +20,6 @@ $(document).ready(function() {
                     window.location.href = base_url + "data_kepemilikan/export_excel";
                 }
             },
-            // {
-            //     extend: 'pdf',
-            //     text: '<i class="fas fa-file-pdf"></i> PDF',
-            //     className: 'btn btn-sm btn-danger',
-            //     exportOptions: { columns: [0,1,2,3] }
-            // },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print"></i> Print',
@@ -74,6 +56,8 @@ $(document).ready(function() {
     $('#filterBtn').on('click', function() {
         var jenisUsaha = $('#filterKomoditas').val();
         
+        console.log('Filter value:', jenisUsaha); // Debug
+        
         // Tampilkan loading
         $('#dataTernakTable tbody').html('<tr><td colspan="5" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Memuat data...</p></td></tr>');
         
@@ -82,7 +66,10 @@ $(document).ready(function() {
             type: 'POST',
             data: { jenis_usaha: jenisUsaha },
             dataType: 'json',
+            timeout: 30000,
             success: function(response) {
+                console.log('Response:', response); // Debug
+                
                 if (response.html) {
                     // Destroy existing DataTable
                     if ($.fn.DataTable.isDataTable('#dataTernakTable')) {
@@ -92,22 +79,10 @@ $(document).ready(function() {
                     // Update table body
                     $('#dataTernakTable tbody').html(response.html);
                     
-                    // Re-initialize DataTable dengan config yang sama
+                    // Re-initialize DataTable
                     $('#dataTernakTable').DataTable({
                         dom: 'Bfrtip',
                         buttons: [
-                            // {
-                            //     extend: 'copy',
-                            //     text: '<i class="fas fa-copy"></i> Copy',
-                            //     className: 'btn btn-sm btn-primary',
-                            //     exportOptions: { columns: [0,1,2,3] }
-                            // },
-                            // {
-                            //     extend: 'csv',
-                            //     text: '<i class="fas fa-file-csv"></i> CSV',
-                            //     className: 'btn btn-sm btn-success',
-                            //     exportOptions: { columns: [0,1,2,3] }
-                            // },
                             {
                                 extend: 'excel',
                                 text: '<i class="fas fa-file-excel"></i> Excel',
@@ -117,12 +92,6 @@ $(document).ready(function() {
                                     window.location.href = base_url + "data_kepemilikan/export_excel";
                                 }
                             },
-                            // {
-                            //     extend: 'pdf',
-                            //     text: '<i class="fas fa-file-pdf"></i> PDF',
-                            //     className: 'btn btn-sm btn-danger',
-                            //     exportOptions: { columns: [0,1,2,3] }
-                            // },
                             {
                                 extend: 'print',
                                 text: '<i class="fas fa-print"></i> Print',
@@ -154,11 +123,23 @@ $(document).ready(function() {
                         },
                         scrollX: true
                     });
+                    
+                    // Re-attach event listeners untuk tombol detail yang baru
+                    $('#dataTernakTable tbody .btn-detail, #dataTernakTable tbody .btn-info').each(function() {
+                        var onclickAttr = $(this).attr('onclick');
+                        if (onclickAttr) {
+                            eval(onclickAttr);
+                        }
+                    });
+                } else {
+                    alert('Gagal memuat data: Response tidak valid');
                 }
             },
             error: function(xhr, status, error) {
                 console.error('Error:', error);
-                alert('Terjadi kesalahan saat memfilter data');
+                console.error('Status:', status);
+                console.error('Response:', xhr.responseText);
+                alert('Terjadi kesalahan saat memfilter data: ' + error);
                 location.reload();
             }
         });
@@ -179,18 +160,16 @@ $(document).ready(function() {
 
 var dataTernakTable = null;
 
-// ========== FUNCTION PRINT (SAMA PERSIS PELAKU USAHA) ==========
+// ========== FUNCTION PRINT ==========
 function printWithCurrentData() {
     var printWindow = window.open('', '_blank');
     
     // Ambil data dari tabel yang tampil di layar
-    var tableData = [];
-    var totalPeternak = 0;
-    var totalTernak = 0;
-    
-    // Ambil semua baris dari DataTable yang sedang ditampilkan
     var table = $('#dataTernakTable').DataTable();
     var rows = table.rows({ search: 'applied' }).data();
+    
+    var totalPeternak = 0;
+    var totalTernak = 0;
     
     // Current date
     var currentDate = new Date();
@@ -209,7 +188,7 @@ function printWithCurrentData() {
     printWindow.document.write('.header p { margin: 5px 0; color: #000000; }');
     printWindow.document.write('table { width: 100%; border-collapse: collapse; margin-top: 20px; }');
     printWindow.document.write('th, td { border: 1px solid #000; padding: 8px; }');
-    printWindow.document.write('th { background-color: #832706; color: #000000; text-align: center; }');
+    printWindow.document.write('th { background-color: #832706; color: white; text-align: center; }');
     printWindow.document.write('td { color: #000000; }');
     printWindow.document.write('.total-row { background-color: #e8f5e9; font-weight: bold; }');
     printWindow.document.write('.footer-note { margin-top: 30px; font-size: 10px; color: #000000; text-align: center; }');
@@ -227,7 +206,7 @@ function printWithCurrentData() {
     printWindow.document.write('</div>');
     
     // Tabel Data
-    printWindow.document.write('<table border="1" cellpadding="8" cellspacing="0" width="100%">');
+    printWindow.document.write('<table>');
     printWindow.document.write('<thead>');
     printWindow.document.write('<tr>');
     printWindow.document.write('<th width="40">No</th>');
@@ -309,7 +288,10 @@ function showDetail(jenisUsaha) {
         type: 'POST',
         data: { jenis_usaha: jenisUsaha },
         dataType: 'json',
+        timeout: 30000,
         success: function(response) {
+            console.log('Detail response:', response); // Debug
+            
             if (response.error) {
                 $('#detailTableBody').html('<tr><td colspan="7" class="text-center text-danger"><i class="fas fa-exclamation-triangle me-2"></i>' + response.error + '</td></tr>');
                 $('#detailInfo').html('<i class="fas fa-exclamation-triangle text-danger me-2"></i> Gagal memuat data');
@@ -318,16 +300,22 @@ function showDetail(jenisUsaha) {
             
             if (response.html && response.total_data > 0) {
                 $('#detailTableBody').html(response.html);
-                $('#detailInfo').html('<i class="fas fa-check-circle text-success me-2"></i> Menampilkan <strong>' + response.total_data + '</strong> data peternak untuk jenis usaha: <strong class="text-primary">' + response.jenis_usaha + '</strong>');
+                $('#detailInfo').html('<i class="fas fa-check-circle text-success me-2"></i> Menampilkan <strong>' + response.total_data + '</strong> data peternak untuk: <strong>' + response.jenis_usaha + '</strong>');
             } else {
-                $('#detailTableBody').html('<tr><td colspan="7" class="text-center text-warning"><i class="fas fa-database me-2"></i> Tidak ada data ditemukan untuk jenis usaha ini</td></tr>');
-                $('#detailInfo').html('<i class="fas fa-info-circle text-warning me-2"></i> Tidak ada data peternak untuk jenis usaha: <strong>' + decodeURIComponent(jenisUsaha) + '</strong>');
+                $('#detailTableBody').html('<tr><td colspan="7" class="text-center">Tidak ada data ditemukan untuk jenis usaha ini</td></tr>');
+                $('#detailInfo').html('<i class="fas fa-info-circle me-2"></i> Tidak ada data peternak untuk jenis usaha: <strong>' + decodeURIComponent(jenisUsaha) + '</strong>');
             }
         },
-        error: function(xhr, status, error) {
+        error: function(xhr, status, error) { 
             console.error('Error:', error);
+            console.error('Response:', xhr.responseText);
             $('#detailTableBody').html('<tr><td colspan="7" class="text-center text-danger"><i class="fas fa-times-circle me-2"></i> Terjadi kesalahan saat memuat data. Silakan coba lagi.<br><small class="text-muted">Error: ' + error + '</small></td></tr>');
             $('#detailInfo').html('<i class="fas fa-exclamation-circle text-danger me-2"></i> Error: Gagal terhubung ke server');
         }
     });
+}
+
+// Refresh function untuk memuat ulang data
+function refreshData() {
+    location.reload();
 }

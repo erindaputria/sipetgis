@@ -153,7 +153,7 @@ $(document).ready(function() {
         $('#pemotonganTable').DataTable().destroy();
     }
     
-    // Initialize DataTable
+    // Initialize DataTable - URUTAN ASC (1,2,3) bukan DESC
     let dataTable = $('#pemotonganTable').DataTable({
         language: {
             search: "Cari:",
@@ -187,8 +187,8 @@ $(document).ready(function() {
         ],
         columnDefs: [
             { orderable: false, targets: [9] }
-        ],
-        order: [[1, 'desc']]
+        ]
+        // HAPUS order: [[1, 'desc']] - biar urutannya normal 1,2,3
     });
     
     // ========== MULTIPLE PHOTO UPLOAD ==========
@@ -427,7 +427,7 @@ $(document).ready(function() {
                     showAlert('danger', res.message);
                 }
             },
-            error: function(xhr, status, error) {
+            error: function(xhr, status, error) { 
                 console.error('Error:', xhr.responseText); 
                 if (xhr.status === 403) {
                     showAlert('danger', 'Token keamanan tidak valid. Silakan refresh halaman dan coba lagi.');

@@ -1,13 +1,9 @@
-/**
- * Master RPU
- * SIPETGIS - Kota Surabaya
- */
+var csrf_token = $('meta[name="csrf-token"]').attr('content');
+var csrf_name = $('meta[name="csrf-name"]').attr('content');
 
-// Variabel untuk menyimpan instance map
 let map, editMap, viewMap;
 let marker, editMarker, viewMarker;
 
-// Fungsi untuk inisialisasi map
 function initMap(containerId, lat, lng, mapRef) {
     if (mapRef) {
         mapRef.remove();
@@ -21,8 +17,8 @@ function initMap(containerId, lat, lng, mapRef) {
     
     const newMap = L.map(containerId).setView([mapLat, mapLng], 13);
      
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+        attribution: '&copy; OpenStreetMap contributors'
     }).addTo(newMap);
     
     if (lat && lng && !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lng))) {
@@ -33,7 +29,6 @@ function initMap(containerId, lat, lng, mapRef) {
     return { map: newMap, marker: null };
 }
 
-// Fungsi untuk update marker
 function updateMarker(mapInstance, markerRef, lat, lng) {
     if (!mapInstance) return null;
     
@@ -53,24 +48,11 @@ function updateMarker(mapInstance, markerRef, lat, lng) {
 }
 
 $(document).ready(function() {
-    // Initialize DataTable with custom buttons (SAMA PERSIS PELAKU USAHA)
-    rpuTable = $('#rpuTable').DataTable({
-        dom: 'Bfrtip',
+    $("#rpuTable").DataTable({
+        dom: "Bfrtip",
         buttons: [
-            // {
-            //     extend: 'copy',
-            //     text: '<i class="fas fa-copy"></i> Copy',
-            //     className: 'btn btn-sm btn-primary',
-            //     exportOptions: { columns: [0,1,2,3] }
-            // },
-            // {
-            //     extend: 'csv',
-            //     text: '<i class="fas fa-file-csv"></i> CSV',
-            //     className: 'btn btn-sm btn-success',
-            //     exportOptions: { columns: [0,1,2,3] }
-            // },
             {
-                extend: 'excel',
+                extend: "excel",
                 text: '<i class="fas fa-file-excel"></i> Excel',
                 className: 'btn btn-sm btn-success',
                 exportOptions: { columns: [0,1,2,3] },
@@ -78,14 +60,8 @@ $(document).ready(function() {
                     window.location.href = base_url + "rpu/export_excel";
                 }
             },
-            // {
-            //     extend: 'pdf',
-            //     text: '<i class="fas fa-file-pdf"></i> PDF',
-            //     className: 'btn btn-sm btn-danger',
-            //     exportOptions: { columns: [0,1,2,3] }
-            // },
             {
-                extend: 'print',
+                extend: "print",
                 text: '<i class="fas fa-print"></i> Print',
                 className: 'btn btn-sm btn-info',
                 exportOptions: { columns: [0,1,2,3] },
@@ -94,18 +70,13 @@ $(document).ready(function() {
                 }
             }
         ],
-        ordering: false,
-        searching: true,
-        paging: true,
-        pageLength: 15,
-        lengthMenu: [10, 15, 25, 50, 100],
-        info: true,
         language: {
             search: "Cari:",
             lengthMenu: "Tampilkan _MENU_ data",
             info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
             infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
-            zeroRecords: "Tidak ada data ditemukan",
+            infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
+            zeroRecords: "Tidak ada data yang ditemukan",
             paginate: {
                 first: "Pertama",
                 last: "Terakhir",
@@ -113,32 +84,59 @@ $(document).ready(function() {
                 previous: "Sebelumnya"
             }
         },
-        scrollX: true
+        pageLength: 15,
+        lengthChange: false,
+        responsive: true,
+        order: [[0, 'asc']],
+        columnDefs: [
+            { width: "5%", targets: 0 },
+            { width: "40%", targets: 1 },
+            { width: "20%", targets: 2 },
+            { width: "20%", targets: 3 },
+            { width: "15%", targets: 4 }
+        ]
     });
 
-    // Event untuk tombol lihat koordinat
     $(document).on("click", ".btn-view", function() {
         var pejagal = $(this).data('pejagal');
         var latitude = $(this).data('latitude');
         var longitude = $(this).data('longitude');
         
         $('#view_pejagal').val(pejagal);
-        $('#view_latitude').val(latitude || '-');
-        $('#view_longitude').val(longitude || '-');
+        $('#view_latitude').val(latitude && latitude !== '' ? latitude : '-');
+        $('#view_longitude').val(longitude && longitude !== '' ? longitude : '-');
         
         $('#viewKoordinatModal').modal('show');
-        
-        setTimeout(function() {
-            if (viewMap) {
-                viewMap.remove();
-            }
-            const result = initMap('viewMapPreview', latitude, longitude, viewMap);
-            viewMap = result.map;
-            viewMarker = result.marker;
-        }, 500);
     });
 
-    // Event untuk tombol edit
+    // Inisialisasi peta saat modal view benar-benar tampil
+    $('#viewKoordinatModal').on('shown.bs.modal', function() {
+        var latitude = $('#view_latitude').val();
+        var longitude = $('#view_longitude').val();
+        
+        // Bersihkan map lama jika ada
+        if (viewMap) {
+            viewMap.remove();
+            viewMap = null;
+            viewMarker = null;
+        }
+        
+        setTimeout(function() {
+            const result = initMap('viewMapPreview', latitude, longitude, null);
+            viewMap = result.map;
+            viewMarker = result.marker;
+        }, 300);
+    });
+
+    // Bersihkan map saat modal view ditutup
+    $('#viewKoordinatModal').on('hidden.bs.modal', function() {
+        if (viewMap) {
+            viewMap.remove();
+            viewMap = null;
+            viewMarker = null;
+        }
+    });
+
     $(document).on("click", ".btn-edit", function() {
         var pejagal = $(this).data('pejagal');
         var latitude = $(this).data('latitude');
@@ -146,31 +144,89 @@ $(document).ready(function() {
         
         $('#edit_pejagal_lama').val(pejagal);
         $('#edit_pejagal').val(pejagal);
-        $('#edit_latitude').val(latitude);
-        $('#edit_longitude').val(longitude);
+        $('#edit_latitude').val(latitude || '');
+        $('#edit_longitude').val(longitude || '');
         
         $('#editDataModal').modal('show');
-        
-        setTimeout(function() {
-            if (editMap) {
-                editMap.remove();
-            }
-            const result = initMap('editMapPreview', latitude, longitude, editMap);
-            editMap = result.map;
-            editMarker = result.marker;
-        }, 500);
     });
 
-    // Event untuk tombol hapus
-    $(document).on("click", ".btn-delete", function() {
-        var pejagal = $(this).data('pejagal');
+    // Inisialisasi peta saat modal edit benar-benar tampil
+    $('#editDataModal').on('shown.bs.modal', function() {
+        var latitude = $('#edit_latitude').val();
+        var longitude = $('#edit_longitude').val();
         
-        if (confirm("Apakah Anda yakin ingin menghapus data RPU: " + pejagal + "?")) {
-            window.location.href = base_url + "rpu/hapus/" + encodeURIComponent(pejagal);
+        if (editMap) {
+            editMap.remove();
+            editMap = null;
+            editMarker = null;
+        }
+        
+        setTimeout(function() {
+            const result = initMap('editMapPreview', latitude, longitude, null);
+            editMap = result.map;
+            editMarker = result.marker;
+        }, 300);
+    });
+
+    // Bersihkan map saat modal edit ditutup
+    $('#editDataModal').on('hidden.bs.modal', function() {
+        if (editMap) {
+            editMap.remove();
+            editMap = null;
+            editMarker = null;
         }
     });
 
-    // Event ketika modal tambah ditampilkan
+    $(document).on("click", ".btn-delete", function(e) {
+        e.preventDefault();
+        
+        var pejagal = $(this).data('pejagal');
+        
+        if (confirm("Apakah Anda yakin ingin menghapus data RPU: " + pejagal + "?")) {
+            
+            var postData = {
+                pejagal: pejagal,
+                action: 'delete'
+            };
+            
+            if (csrf_name && csrf_token) {
+                postData[csrf_name] = csrf_token;
+            } else {
+                postData[$('meta[name="csrf-name"]').attr('content')] = $('meta[name="csrf-token"]').attr('content');
+            }
+            
+            $.ajax({
+                url: base_url + "rpu/hapus_ajax",
+                type: 'POST',
+                data: postData,
+                dataType: 'json',
+                beforeSend: function() {
+                    $('.btn-delete').prop('disabled', true);
+                },
+                success: function(res) {
+                    if (res.status === 'success') {
+                        alert(res.message);
+                        location.reload();
+                    } else {
+                        alert(res.message || 'Gagal menghapus data');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 403) {
+                        alert('Token keamanan tidak valid. Silakan refresh halaman dan coba lagi.');
+                    } else if (xhr.status === 500) {
+                        alert('Error server. Silakan coba lagi.');
+                    } else {
+                        alert('Gagal menghapus data. Error: ' + error);
+                    }
+                },
+                complete: function() {
+                    $('.btn-delete').prop('disabled', false);
+                }
+            });
+        }
+    });
+
     $('#tambahDataModal').on('shown.bs.modal', function() {
         setTimeout(function() {
             if (map) {
@@ -184,7 +240,6 @@ $(document).ready(function() {
         }, 500);
     });
 
-    // Update map preview saat latitude/longitude berubah di modal tambah
     $('#latitude, #longitude').on('input', function() {
         if (map) {
             const lat = $('#latitude').val();
@@ -193,7 +248,6 @@ $(document).ready(function() {
         }
     });
 
-    // Update map preview saat latitude/longitude berubah di modal edit
     $('#edit_latitude, #edit_longitude').on('input', function() {
         if (editMap) {
             const lat = $('#edit_latitude').val();
@@ -202,7 +256,6 @@ $(document).ready(function() {
         }
     });
 
-    // Validasi input koordinat (hanya angka, titik, dan minus)
     $('input[name="latitude"], input[name="longitude"], #edit_latitude, #edit_longitude').on('input', function() {
         let value = $(this).val();
         value = value.replace(/[^0-9.-]/g, '');
@@ -219,25 +272,25 @@ $(document).ready(function() {
         $(this).val(value);
     });
 
-    // Auto close alerts
     setTimeout(function() {
         $('.alert').alert('close');
     }, 5000);
 });
 
-var rpuTable = null;
-
-// ========== FUNCTION PRINT (DIPERBAIKI - SAMA PERSIS PELAKU USAHA) ==========
 function printWithCurrentData() {
     var printWindow = window.open('', '_blank');
     
-    // Ambil semua baris dari tabel yang tampil di layar (termasuk yang terfilter)
+    var tableData = [];
+    var totalData = 0;
+    
     var table = $('#rpuTable').DataTable();
-    var rows = table.rows({ search: 'applied' }).data();
+    table.rows({ search: 'applied' }).every(function(rowIdx, tableLoop, rowLoop) {
+        var rowData = this.data();
+        tableData.push(rowData);
+    });
     
-    var totalData = rows.length;
+    totalData = tableData.length;
     
-    // Current date
     var currentDate = new Date();
     var formattedDateTime = currentDate.toLocaleDateString('id-ID', {
         day: 'numeric',
@@ -254,16 +307,13 @@ function printWithCurrentData() {
     printWindow.document.write('.header p { margin: 5px 0; color: #000000; }');
     printWindow.document.write('table { width: 100%; border-collapse: collapse; margin-top: 20px; }');
     printWindow.document.write('th, td { border: 1px solid #000; padding: 8px; }');
-    printWindow.document.write('th { background-color: #832706; color: #000000; text-align: center; }');
+    printWindow.document.write('th { background-color: #832706; color: #ffffff; text-align: center; }');
     printWindow.document.write('td { color: #000000; }');
     printWindow.document.write('.total-row { background-color: #e8f5e9; font-weight: bold; }');
-    printWindow.document.write('.total-row td { color: #000000; }');
     printWindow.document.write('.footer-note { margin-top: 30px; font-size: 10px; color: #000000; text-align: center; }');
-    printWindow.document.write('@media print { .no-print { display: none; } }');
     printWindow.document.write('</style>');
     printWindow.document.write('</head><body>');
     
-    // Header Laporan
     printWindow.document.write('<div class="header">');
     printWindow.document.write('<h2>LAPORAN DATA RPU</h2>');
     printWindow.document.write('<h3>DINAS KETAHANAN PANGAN DAN PERTANIAN</h3>');
@@ -272,22 +322,20 @@ function printWithCurrentData() {
     printWindow.document.write('<p>Tanggal Cetak: ' + formattedDateTime + '</p>');
     printWindow.document.write('</div>');
     
-    // Tabel Data
-    printWindow.document.write('<table>');
+    printWindow.document.write('<table border="1" cellpadding="8" cellspacing="0" width="100%">');
     printWindow.document.write('<thead>');
-    printWindow.document.write('<tr>');
+    printWindow.document.write('<tr>'); 
     printWindow.document.write('<th width="40">No</th>');
-    printWindow.document.write('<th>Nama RPU/Pejagal</th>');
+    printWindow.document.write('<th>Nama RPU</th>');
     printWindow.document.write('<th>Latitude</th>');
     printWindow.document.write('<th>Longitude</th>');
     printWindow.document.write('</tr>');
     printWindow.document.write('</thead>');
     printWindow.document.write('<tbody>');
     
-    // Loop data dari tabel
-    for (var i = 0; i < rows.length; i++) {
-        var row = rows[i];
-        printWindow.document.write('</tr>');
+    for (var i = 0; i < tableData.length; i++) {
+        var row = tableData[i];
+        printWindow.document.write('<tr>');
         printWindow.document.write('<td align="center">' + (i + 1) + '</td>');
         printWindow.document.write('<td align="left">' + stripHtml(row[1] || '-') + '</td>');
         printWindow.document.write('<td align="center">' + stripHtml(row[2] || '-') + '</td>');
@@ -295,7 +343,6 @@ function printWithCurrentData() {
         printWindow.document.write('</tr>');
     }
     
-    // Total row
     printWindow.document.write('<tr class="total-row">');
     printWindow.document.write('<td colspan="3" align="center"><strong>TOTAL KESELURUHAN</strong></td>');
     printWindow.document.write('<td align="center"><strong>' + formatNumber(totalData) + ' Data RPU</strong></td>');
@@ -304,7 +351,6 @@ function printWithCurrentData() {
     printWindow.document.write('</tbody>');
     printWindow.document.write('</table>');
     
-    // Footer Note
     printWindow.document.write('<div class="footer-note">');
     printWindow.document.write('SIPETGIS - Sistem Informasi Peternakan Kota Surabaya');
     printWindow.document.write('</div>');
@@ -325,6 +371,3 @@ function stripHtml(html) {
     tmp.innerHTML = html;
     return tmp.textContent || tmp.innerText || '-';
 }
-
-// Base URL untuk redirect
-var base_url = "<?= base_url() ?>"; 

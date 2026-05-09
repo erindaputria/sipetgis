@@ -11,7 +11,7 @@ class Pelaku_usaha extends CI_Controller {
         $this->load->helper('url');
         $this->load->helper('security');
          
-        // Cek login (sesuaikan dengan sistem autentikasi Anda)
+        // Cek login
         if(!$this->session->userdata('logged_in')) {
             redirect('login');
         }
@@ -119,28 +119,56 @@ class Pelaku_usaha extends CI_Controller {
         redirect('pelaku_usaha');
     }
     
-    public function hapus($id) {
-        if (!is_numeric($id)) {
-            $this->session->set_flashdata('error', 'ID tidak valid');
-            redirect('pelaku_usaha');
+    // METHOD HAPUS YANG SUPPORT REDIRECT MAUPUN AJAX
+    public function hapus($id = null) {
+        // Cek apakah request via AJAX atau tidak
+        $is_ajax = $this->input->is_ajax_request();
+        
+        // Jika via AJAX, ambil id dari POST
+        if ($is_ajax) {
+            $id = $this->input->post('id');
+        }
+        
+        if (empty($id) || !is_numeric($id)) {
+            if ($is_ajax) {
+                echo json_encode(['status' => 'error', 'message' => 'ID tidak valid']);
+                return;
+            } else {
+                $this->session->set_flashdata('error', 'ID tidak valid');
+                redirect('pelaku_usaha');
+            }
         }
         
         // Cek apakah data dengan ID tersebut ada
         $existing_data = $this->Pelaku_usaha_model->get_by_id($id);
         if (!$existing_data) {
-            $this->session->set_flashdata('error', 'Data tidak ditemukan');
-            redirect('pelaku_usaha');
+            if ($is_ajax) {
+                echo json_encode(['status' => 'error', 'message' => 'Data tidak ditemukan']);
+                return;
+            } else {
+                $this->session->set_flashdata('error', 'Data tidak ditemukan');
+                redirect('pelaku_usaha');
+            }
         }
         
         $result = $this->Pelaku_usaha_model->delete($id);
         
-        if ($result) {
-            $this->session->set_flashdata('success', 'Data pelaku usaha berhasil dihapus');
+        if ($is_ajax) {
+            // Response untuk AJAX
+            if ($result) {
+                echo json_encode(['status' => 'success', 'message' => 'Data pelaku usaha berhasil dihapus']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus data pelaku usaha']);
+            }
         } else {
-            $this->session->set_flashdata('error', 'Gagal menghapus data pelaku usaha');
+            // Redirect biasa
+            if ($result) {
+                $this->session->set_flashdata('success', 'Data pelaku usaha berhasil dihapus');
+            } else {
+                $this->session->set_flashdata('error', 'Gagal menghapus data pelaku usaha');
+            }
+            redirect('pelaku_usaha');
         }
-        
-        redirect('pelaku_usaha');
     }
     
     public function detail($id) {
@@ -162,7 +190,7 @@ class Pelaku_usaha extends CI_Controller {
         $this->load->view('admin/pelaku_usaha_detail', $data);
     }
 
-    // ==================== EXPORT EXCEL (TANPA LIBRARY) ====================
+    // ==================== EXPORT EXCEL ====================
     public function export_excel()
     {
         $results = $this->Pelaku_usaha_model->get_all();
@@ -182,7 +210,7 @@ class Pelaku_usaha extends CI_Controller {
         echo '.subtitle { font-size: 12pt; color: #000000; text-align: center; margin-bottom: 3px; }';
         echo 'table { border-collapse: collapse; width: 100%; margin-top: 20px; }';
         echo 'th, td { border: 1px solid #000000; padding: 8px; }';
-        echo 'th { background-color: #832706; color: #000000; text-align: center; font-weight: bold; }';
+        echo 'th { background-color: #832706; color: #ffffff; text-align: center; font-weight: bold; }';
         echo 'td { color: #000000; }';
         echo '.total-row { background-color: #e8f5e9; font-weight: bold; }';
         echo '.footer-note { margin-top: 30px; font-size: 10px; color: #000000; text-align: center; }';
@@ -199,15 +227,15 @@ class Pelaku_usaha extends CI_Controller {
         echo '<br>';
         
         // Tabel Data
-        echo '<table>';
+        echo '<tr>';
         echo '<thead>';
         echo '<tr>';
         echo '<th width="40">No</th>';
-        echo '<th>NIK</th>';
         echo '<th>Nama Pelaku Usaha</th>';
+        echo '<th>NIK</th>';
         echo '<th>Telepon</th>';
-        echo '<th>Kecamatan</th>';
         echo '<th>Alamat</th>';
+        echo '<th>Kecamatan</th>';
         echo '<th>Tanggal Terdaftar</th>';
         echo '</tr>';
         echo '</thead>';
@@ -222,11 +250,11 @@ class Pelaku_usaha extends CI_Controller {
             
             echo '<tr>';
             echo '<td align="center">' . $no++ . '</td>';
-            echo '<td align="center">' . (!empty($item->nik) ? $item->nik : '-') . '</td>';
             echo '<td align="left">' . (!empty($item->nama) ? $item->nama : '-') . '</td>';
+            echo '<td align="center">' . (!empty($item->nik) ? $item->nik : '-') . '</td>';
             echo '<td align="center">' . (!empty($item->telepon) ? $item->telepon : '-') . '</td>';
-            echo '<td align="left">' . (!empty($item->kecamatan) ? $item->kecamatan : '-') . '</td>';
             echo '<td align="left">' . (!empty($item->alamat) ? $item->alamat : '-') . '</td>';
+            echo '<td align="left">' . (!empty($item->kecamatan) ? $item->kecamatan : '-') . '</td>';
             echo '<td align="center">' . $tanggal_daftar . '</td>';
             echo '</tr>';
         }

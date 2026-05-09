@@ -9,7 +9,7 @@
     <script>
     var base_url = "<?= base_url() ?>";
     </script>
-
+ 
     <!-- Fonts and icons -->
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/plugin/webfont/webfont.min.js"></script>
     <script>

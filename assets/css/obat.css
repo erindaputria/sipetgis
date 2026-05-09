@@ -20,7 +20,7 @@
     letter-spacing: 0.5px;
     line-height: 1;
 }
-
+ 
 /* Sidebar Active Menu */
 .nav-item.active > a {
     background: var(--primary-soft);

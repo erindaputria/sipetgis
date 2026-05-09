@@ -15,7 +15,7 @@ class Data_stok_pakan extends CI_Controller {
             redirect('login');
         }
     }
-
+ 
     public function index()
     {
         $data['stok_data'] = $this->Data_stok_pakan_model->get_all_stok();
@@ -34,7 +34,7 @@ class Data_stok_pakan extends CI_Controller {
     }
 
     // Fungsi untuk mendapatkan detail stok by ID
-    public function detail($id)
+    public function get_detail($id)
     {
         $data = $this->Data_stok_pakan_model->get_stok_by_id($id);
         if ($data) {
@@ -50,9 +50,18 @@ class Data_stok_pakan extends CI_Controller {
         }
     }
 
-    // Fungsi untuk filter berdasarkan periode
+    // Fungsi untuk detail (alias get_detail)
+    public function detail($id)
+    {
+        return $this->get_detail($id);
+    }
+
+    // Fungsi untuk filter berdasarkan periode (DIPERBAIKI)
     public function filter_by_periode()
     {
+        // Set header JSON
+        $this->output->set_content_type('application/json');
+        
         $start_date = $this->input->post('start_date');
         $end_date = $this->input->post('end_date');
         
@@ -74,6 +83,7 @@ class Data_stok_pakan extends CI_Controller {
     // Fungsi untuk filter berdasarkan jenis pakan
     public function filter_by_jenis_pakan($jenis_pakan)
     {
+        $this->output->set_content_type('application/json');
         $data = $this->Data_stok_pakan_model->get_by_jenis_pakan(urldecode($jenis_pakan));
         
         echo json_encode([
@@ -85,6 +95,7 @@ class Data_stok_pakan extends CI_Controller {
     // Fungsi untuk filter berdasarkan merk pakan
     public function filter_by_merk_pakan($merk_pakan)
     {
+        $this->output->set_content_type('application/json');
         $data = $this->Data_stok_pakan_model->get_by_merk_pakan(urldecode($merk_pakan));
         
         echo json_encode([
@@ -96,6 +107,7 @@ class Data_stok_pakan extends CI_Controller {
     // Fungsi untuk filter berdasarkan demplot
     public function filter_by_demplot($id_demplot)
     {
+        $this->output->set_content_type('application/json');
         $data = $this->Data_stok_pakan_model->get_by_demplot($id_demplot);
         
         echo json_encode([
@@ -118,9 +130,45 @@ class Data_stok_pakan extends CI_Controller {
         redirect('data_stok_pakan');
     }
 
+    // Fungsi untuk update data (TAMBAHKAN method ini)
+    public function update()
+    {
+        $this->output->set_content_type('application/json');
+        
+        $id = $this->input->post('id_stok');
+        $data = [
+            'tanggal' => $this->input->post('tanggal'),
+            'id_demplot' => $this->input->post('id_demplot'),
+            'jenis_pakan' => $this->input->post('jenis_pakan'),
+            'merk_pakan' => $this->input->post('merk_pakan'),
+            'stok_awal' => $this->input->post('stok_awal'),
+            'stok_masuk' => $this->input->post('stok_masuk'),
+            'stok_keluar' => $this->input->post('stok_keluar'),
+            'keterangan' => $this->input->post('keterangan')
+        ];
+        
+        // Hitung stok_akhir = stok_awal + stok_masuk - stok_keluar
+        $data['stok_akhir'] = ($data['stok_awal'] + $data['stok_masuk']) - $data['stok_keluar'];
+        
+        if (!$id) {
+            echo json_encode(['status' => 'error', 'message' => 'ID tidak ditemukan']);
+            return;
+        }
+        
+        $result = $this->Data_stok_pakan_model->update_stok($id, $data);
+        
+        if ($result) {
+            echo json_encode(['status' => 'success', 'message' => 'Data berhasil diupdate']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Gagal update data']);
+        }
+    }
+
     // Fungsi untuk mendapatkan statistik
     public function get_statistik()
     {
+        $this->output->set_content_type('application/json');
+        
         $statistik = [
             'total_transaksi' => $this->Data_stok_pakan_model->count_all(),
             'total_stok_awal' => $this->Data_stok_pakan_model->sum_stok_awal(),
@@ -176,6 +224,27 @@ class Data_stok_pakan extends CI_Controller {
     {
         $data = $this->Data_stok_pakan_model->get_stok_opname_summary();
         echo json_encode($data);
+    }
+
+    // Fungsi untuk menghapus data via AJAX
+    public function hapus_ajax()
+    {
+        $this->output->set_content_type('application/json');
+        
+        $id = $this->input->post('id');
+         
+        if (!$id) {
+            echo json_encode(['status' => 'error', 'message' => 'ID tidak ditemukan']);
+            return;
+        }
+        
+        $result = $this->Data_stok_pakan_model->delete_stok($id);
+        
+        if ($result) {
+            echo json_encode(['status' => 'success', 'message' => 'Data stok pakan berhasil dihapus']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus data stok pakan']);
+        }
     }
 }
 ?>

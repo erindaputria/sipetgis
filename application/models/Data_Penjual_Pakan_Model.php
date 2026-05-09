@@ -12,7 +12,7 @@ class Data_penjual_pakan_model extends CI_Model {
     public function get_all_penjual_pakan()
     {
         $this->db->select('
-            id_penjual as id,
+            id_penjual as id, 
             nama_toko,
             nama_pemilik as pemilik,
             nik,

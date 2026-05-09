@@ -1,6 +1,10 @@
 <!doctype html>
 <html lang="id">
 <head>
+    <!-- CSRF Token -->
+    <meta name="csrf-name" content="<?php echo $this->security->get_csrf_token_name(); ?>">
+    <meta name="csrf-token" content="<?php echo $this->security->get_csrf_hash(); ?>">
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Master Data Obat - SIPETGIS</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
@@ -16,7 +20,7 @@
                     "Font Awesome 5 Solid", 
                     "Font Awesome 5 Regular",
                     "Font Awesome 5 Brands",
-                    "simple-line-icons",
+                    "simple-line-icons", 
                 ],
                 urls: ["<?php echo base_url('assets/SIPETGIS/assets/css/fonts.min.css'); ?>"]
             },
@@ -77,7 +81,7 @@
                                 <ul class="list-unstyled ps-4">
                                     <li><a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a></li>
                                     <li><a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a></li>
-                                    <li><a href="<?= site_url('kepemilikan_jenis_usaha') ?>" class="nav-link active">Kepemilikan Jenis Usaha</a></li>
+                                    <li><a href="<?= site_url('kepemilikan_jenis_usaha') ?>" class="nav-link">Kepemilikan Jenis Usaha</a></li>
                                     <li><a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a></li>
                                     <li><a href="<?= site_url('obat') ?>" class="nav-link active">Obat</a></li>
                                     <li><a href="<?= site_url('vaksin') ?>" class="nav-link">Vaksin</a></li>
@@ -272,7 +276,7 @@
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content modal-form">
                                 <form action="<?= base_url('obat/update'); ?>" method="post" id="formEdit">
-                                    <input type="hidden" id="edit_id" name="id_obat">
+                                    <input type="hidden" name="id_obat" id="edit_id_obat">
                                     <div class="modal-header">
                                         <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Edit Data Obat</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -348,24 +352,27 @@
                                                                 </span>
                                                             </td>
                                                             <td><?= htmlspecialchars($row->dosis ?? ''); ?></td>
-                                                            <td>
-                                                                <button class="btn btn-action btn-edit" title="Edit"
-                                                                        data-id="<?= $row->id_obat ?? ''; ?>"
-                                                                        data-obat="<?= htmlspecialchars($row->obat ?? ''); ?>"
-                                                                        data-jenis="<?= htmlspecialchars($row->jenis_pengobatan ?? ''); ?>"
-                                                                        data-dosis="<?= htmlspecialchars($row->dosis ?? ''); ?>">
+                                                            <td class="text-nowrap">
+                                                                <button type="button" class="btn btn-action btn-edit" 
+                                                                        data-id="<?= $row->id_obat; ?>"
+                                                                        data-obat="<?= htmlspecialchars($row->obat); ?>"
+                                                                        data-jenis="<?= htmlspecialchars($row->jenis_pengobatan); ?>"
+                                                                        data-dosis="<?= htmlspecialchars($row->dosis); ?>">
                                                                     <i class="fas fa-edit"></i>
                                                                 </button>
+                                                                <!-- TOMBOL DELETE PAKAI BUTTON, BUKAN A (SAMA KAYA VAKSIN) -->
                                                                 <button class="btn btn-action btn-delete" title="Hapus"
-                                                                        data-id="<?= $row->id_obat ?? ''; ?>"
-                                                                        data-obat="<?= htmlspecialchars($row->obat ?? ''); ?>">
+                                                                        data-id="<?= $row->id_obat; ?>"
+                                                                        data-obat="<?= htmlspecialchars($row->obat); ?>">
                                                                     <i class="fas fa-trash"></i>
                                                                 </button>
-                                                            </td>
-                                                        </tr>
+                                                             </td>
+                                                         </tr>
                                                     <?php endforeach; ?>
                                                 <?php else: ?>
-                                                    <tr><td colspan="5" class="text-center">Tidak ada data</td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td></tr>
+                                                    <tr>
+                                                        <td colspan="5" class="text-center">Tidak ada data</td>
+                                                    </tr>
                                                 <?php endif; ?>
                                             </tbody>
                                         </table>
@@ -392,12 +399,18 @@
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
     
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <!-- Custom JS Obat -->
     <script src="<?php echo base_url('assets/js/obat.js'); ?>"></script>
+    
+    <!-- Base URL -->
+    <script>
+        var base_url = "<?= base_url() ?>";
+    </script>
 </body>
 </html>

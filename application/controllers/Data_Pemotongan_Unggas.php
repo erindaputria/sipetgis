@@ -13,17 +13,21 @@ class Data_pemotongan_unggas extends CI_Controller {
         // Cek session login
         if (!$this->session->userdata('logged_in')) {
             redirect('login');
-        }
+        } 
     }
 
     public function index()
-    {
-        $data['pemotongan_data'] = $this->Data_pemotongan_unggas_model->get_all_pemotongan();
-        $data['petugas_list'] = $this->Data_pemotongan_unggas_model->get_distinct_petugas();
-        $data['rpu_list'] = $this->Data_pemotongan_unggas_model->get_distinct_rpu();
-        
-        $this->load->view('admin/data/data_pemotongan_unggas', $data);
-    }
+{
+    // Load model RPU untuk mengambil data master RPU
+    $this->load->model('Rpu_model');
+    $data['rpu_master_list'] = $this->Rpu_model->get_all();
+    
+    $data['pemotongan_data'] = $this->Data_pemotongan_unggas_model->get_all_pemotongan();
+    $data['petugas_list'] = $this->Data_pemotongan_unggas_model->get_distinct_petugas();
+    $data['rpu_list'] = $this->Data_pemotongan_unggas_model->get_distinct_rpu();
+    
+    $this->load->view('admin/data/data_pemotongan_unggas', $data);
+}
 
     // Fungsi untuk mendapatkan data JSON (untuk AJAX)
     public function get_data()
@@ -67,22 +71,6 @@ class Data_pemotongan_unggas extends CI_Controller {
             'data' => $data,
             'start_date' => $start_date,
             'end_date' => $end_date
-        ]);
-    }
-
-    // Fungsi untuk filter berdasarkan RPU
-    public function filter_by_rpu($id_rpu)
-    {
-        // You might need to implement this method in the model
-        // For now, we'll get all and filter
-        $data = $this->Data_pemotongan_unggas_model->get_all_pemotongan();
-        $filtered = array_filter($data, function($item) use ($id_rpu) {
-            return $item['id_rpu'] == $id_rpu;
-        });
-        
-        echo json_encode([
-            'status' => 'success',
-            'data' => array_values($filtered)
         ]);
     }
 
@@ -130,5 +118,42 @@ class Data_pemotongan_unggas extends CI_Controller {
         $data = $this->Data_pemotongan_unggas_model->get_statistik_per_rpu();
         echo json_encode($data);
     }
+
+   public function update($id)
+{
+    // Ambil nama_rpu dari form (kirim dari JS)
+    $nama_rpu = $this->input->post('id_rpu');
+    
+    // Cari id_rpu dari master RPU (jika perlu)
+    $id_rpu = null;
+    if (!empty($nama_rpu)) {
+        $this->load->model('Rpu_model');
+        $rpu_data = $this->Rpu_model->get_by_pejagal($nama_rpu);
+        $id_rpu = $rpu_data ? $rpu_data->id : null;
+    }
+    
+    $update_data = [
+        'tanggal' => $this->input->post('tanggal'),
+        'id_rpu' => $id_rpu,
+        'nama_rpu' => $nama_rpu, // Simpan juga nama_rpu
+        'ayam' => $this->input->post('ayam'),
+        'itik' => $this->input->post('itik'),
+        'dst' => $this->input->post('dst'),
+        'daerah_asal' => $this->input->post('daerah_asal'),
+        'nama_petugas' => $this->input->post('nama_petugas'),
+        'keterangan' => $this->input->post('keterangan')
+    ];
+    
+    $result = $this->Data_pemotongan_unggas_model->update_pemotongan($id, $update_data);
+    
+    // Ambil data terbaru untuk dikirim ke client (opsional)
+    $updated_data = $result ? $this->Data_pemotongan_unggas_model->get_pemotongan_by_id($id) : null;
+    
+    echo json_encode([
+        'status' => $result ? 'success' : 'error',
+        'message' => $result ? 'Data berhasil diperbarui' : 'Gagal memperbarui data',
+        'data' => $updated_data
+    ]);
+}
 }
 ?>

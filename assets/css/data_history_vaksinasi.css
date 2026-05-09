@@ -14,7 +14,7 @@
 /* Logo */
 .sipetgis-logo {
     color: var(--primary) !important;
-    font-weight: 800;
+    font-weight: 800; 
     font-size: 24px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     letter-spacing: 0.5px;
@@ -379,4 +379,37 @@
     .map-container {
         height: 300px;
     }
+}
+
+/* Tombol Aksi - SEPERTI LAYANAN KLINIK */
+.btn-action {
+    width: 35px;
+    height: 35px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 3px;
+    transition: all 0.2s;
+    border: none;
+}
+
+.btn-edit {
+    background-color: rgba(131, 39, 6, 0.1);
+    color: #832706;
+}
+
+.btn-edit:hover {
+    background-color: #832706;
+    color: white;
+}
+
+.btn-delete {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.btn-delete:hover {
+    background-color: #dc3545;
+    color: white;
 }

@@ -366,7 +366,7 @@
 /* Responsive */
 @media (max-width: 768px) {
     #detailTable {
-        font-size: 11px;
+        font-size: 11px; 
     }
     
     #detailTable thead th,

@@ -21,7 +21,7 @@
     line-height: 1;
 }
 
-/* Sidebar Active Menu */
+/* Sidebar Active Menu */ 
 .nav-item.active > a {
     background: var(--primary-soft);
     color: var(--primary);

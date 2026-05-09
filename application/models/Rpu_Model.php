@@ -14,7 +14,8 @@ class Rpu_model extends CI_Model {
     public function get_all() {
         $this->db->select('pejagal, latitude, longitude');
         $this->db->order_by('pejagal', 'ASC');
-        return $this->db->get($this->table)->result();
+        $query = $this->db->get($this->table);
+        return $query->result();
     }
     
     public function get_by_id($pejagal) {
@@ -36,9 +37,9 @@ class Rpu_model extends CI_Model {
         return $this->db->delete($this->table);
     }
     
-    public function check_pejagal($pejagal) {
+    public function check_pejagal($pejagal) { 
         $this->db->where('pejagal', $pejagal);
-        return $this->db->get($this->table)->row();
+        return $this->db->get($this->table)->row(); 
     }
     
     public function get_with_coordinates() {
@@ -48,5 +49,12 @@ class Rpu_model extends CI_Model {
         $this->db->where('longitude !=', '');
         return $this->db->get($this->table)->result();
     }
+
+    public function get_by_pejagal($pejagal)
+{
+    $this->db->where('pejagal', $pejagal);
+    $query = $this->db->get($this->table);
+    return $query->row();
+}
 }
 ?>

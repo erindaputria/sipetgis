@@ -56,7 +56,7 @@ $(document).ready(function() {
                     printWithCurrentData();
                 }
             }
-        ],
+        ], 
         language: {
             search: "Cari:",
             lengthMenu: "Tampilkan _MENU_ data",

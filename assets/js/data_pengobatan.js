@@ -12,28 +12,6 @@ let dataTable = null;
 let deleteId = null;
 let allData = [];
 
-// ================ FUNGSI AMBIL DATA DARI SERVER ================
-function loadDataFromServer() {
-    $.ajax({
-        url: base_url + 'data_pengobatan/get_all_data',
-        type: 'GET',
-        dataType: 'json',
-        success: function(response) {
-            if (response && response.length > 0) { 
-                allData = response;
-            } else {
-                allData = [];
-            } 
-            renderTable(allData);
-        },
-        error: function(xhr, status, error) {
-            console.error('Error loading data:', error);
-            allData = [];
-            renderTable(allData);
-        }
-    });
-}
-
 // Data kelurahan per kecamatan
 const kelurahanData = {
     'Asemrowo': ['Asemrowo', 'Genting Kalianak', 'Tambak Sarioso'],
@@ -79,12 +57,93 @@ function updateKelurahanOptions(selectedKec, targetId) {
     $(targetId).html(options);
 }
 
-// ================ RENDER TABLE (HANYA TOMBOL EXCEL & PRINT AKTIF) ================
+// ================ FUNGSI AMBIL DATA DARI SERVER ================
+function loadDataFromServer() { 
+    // Tampilkan loading
+    $('#dataTableBody').html('<tr><td colspan="17" class="text-center"><div class="spinner-border text-primary"></div><br>Memuat data...<\/td><\/tr>');
+    
+    $.ajax({
+        url: base_url + 'data_pengobatan/get_all_data',
+        type: 'GET',
+        dataType: 'json',
+        timeout: 30000,
+        success: function(response) {
+            if (response && response.length > 0) { 
+                allData = response;
+                console.log('Total data dimuat:', allData.length);
+            } else {
+                allData = [];
+                console.log('No data found');
+            } 
+            renderTable(allData);
+            updateFilterOptions();
+        },
+        error: function(xhr, status, error) {
+            console.error('Error loading data:', error);
+            allData = [];
+            renderTable(allData);
+            alert('Gagal memuat data. Silakan refresh halaman.');
+        }
+    });
+}
+
+// ================ UPDATE FILTER OPTIONS (SEPERTI LAYANAN KLINIK) ================
+function updateFilterOptions() {
+    var komoditasSet = new Set();
+    var kecamatanSet = new Set();
+    var tahunSet = new Set();
+    
+    allData.forEach(function(item) {
+        if (item.komoditas_ternak && item.komoditas_ternak !== '') {
+            komoditasSet.add(item.komoditas_ternak);
+        }
+        if (item.kecamatan && item.kecamatan !== '') {
+            kecamatanSet.add(item.kecamatan);
+        }
+        if (item.tanggal_pengobatan) {
+            var year = new Date(item.tanggal_pengobatan).getFullYear();
+            if (!isNaN(year)) {
+                tahunSet.add(year);
+            }
+        }
+    });
+    
+    // Update filter komoditas
+    var komoditasOptions = '<option selected value="all">Semua Komoditas</option>';
+    var sortedKomoditas = Array.from(komoditasSet).sort();
+    sortedKomoditas.forEach(function(komoditas) {
+        komoditasOptions += '<option value="' + komoditas + '">' + komoditas + '</option>';
+    });
+    $("#filterKomoditas").html(komoditasOptions);
+    
+    // Update filter kecamatan
+    var kecamatanOptions = '<option selected value="all">Semua Kecamatan</option>';
+    var sortedKecamatan = Array.from(kecamatanSet).sort();
+    sortedKecamatan.forEach(function(kecamatan) {
+        kecamatanOptions += '<option value="' + kecamatan + '">' + kecamatan + '</option>';
+    });
+    $("#filterKecamatan").html(kecamatanOptions);
+    
+    // Update filter periode
+    var tahunOptions = '<option selected value="all">Semua Periode</option>';
+    var sortedTahun = Array.from(tahunSet).sort().reverse();
+    sortedTahun.forEach(function(tahun) {
+        tahunOptions += '<option value="' + tahun + '">Tahun ' + tahun + '</option>';
+    });
+    $("#filterPeriode").html(tahunOptions);
+    
+    console.log('Filter options updated - Komoditas:', sortedKomoditas, 'Kecamatan:', sortedKecamatan, 'Tahun:', sortedTahun);
+}
+
+// ================ RENDER TABLE ================
 function renderTable(data) {
+    console.log('Rendering table with', data.length, 'rows');
+    
     var html = "";
     if (data && data.length > 0) {
-        $.each(data, function(index, item) {
-            var no = index + 1;
+        for (var idx = 0; idx < data.length; idx++) {
+            var item = data[idx];
+            var no = idx + 1;
             var tanggal = formatDate(item.tanggal_pengobatan);
             
             var telp = item.telp ? 
@@ -108,7 +167,7 @@ function renderTable(data) {
             var fotoPath = item.foto_pengobatan;
             var fotoLink = (fotoPath && fotoPath != '') ? 
                 '<a href="javascript:void(0)" class="foto-link" onclick="showFoto(\'' + base_url + 'uploads/pengobatan/' + fotoPath + '\')" title="Lihat Foto">' +
-                '<i class="fas fa-image fa-lg"></i>' +
+                '<i class="fas fa-image fa-lg" style="color: #832706;"></i>' +
                 '</a>' : 
                 '<span class="badge-foto">No Foto</span>';
             
@@ -149,9 +208,9 @@ function renderTable(data) {
                 '</td>' +
                 '<td class="text-center">' + fotoLink + '</td>' +
                 '</tr>';
-        });
+        }
     } else {
-        html = '<tr><td colspan="17" class="text-center">Tidak ada data pengobatan</td></tr>';
+        html = '<tr><td colspan="17" class="text-center">Tidak ada data pengobatan<\/td><\/tr>';
     }
     
     $("#dataTableBody").html(html);
@@ -163,76 +222,12 @@ function renderTable(data) {
     dataTable = $("#historyDataTable").DataTable({
         dom: "Bfrtip",
         buttons: [
-            // {
-            //     extend: 'copy',
-            //     text: '<i class="fas fa-copy"></i> Copy',
-            //     className: 'btn btn-sm btn-primary',
-            //     exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] }
-            // },
-            // {
-            //     extend: 'csv',
-            //     text: '<i class="fas fa-file-csv"></i> CSV',
-            //     className: 'btn btn-sm btn-success',
-            //     exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] }
-            // },
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Excel',
                 className: 'btn btn-sm btn-success',
                 exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] }
             },
-            // {
-            //     extend: 'pdf',
-            //     text: '<i class="fas fa-file-pdf"></i> PDF',
-            //     className: 'btn btn-sm btn-danger',
-            //     exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] },
-            //     customize: function(doc) {
-            //         doc.content.splice(0, 1);
-            //         var currentDate = new Date();
-            //         var formattedDate = currentDate.toLocaleDateString('id-ID');
-            //         doc.content.unshift({
-            //             text: 'LAPORAN DATA PENGOBATAN TERNAK',
-            //             style: 'title',
-            //             alignment: 'center',
-            //             margin: [0, 0, 0, 5]
-            //         });
-            //         doc.content.unshift({
-            //             text: 'DINAS PETERNAKAN KOTA SURABAYA',
-            //             style: 'subtitle',
-            //             alignment: 'center',
-            //             margin: [0, 0, 0, 3]
-            //         });
-            //         doc.content.unshift({
-            //             text: 'PEMERINTAH KOTA SURABAYA',
-            //             style: 'header',
-            //             alignment: 'center',
-            //             margin: [0, 0, 0, 15]
-            //         });
-            //         doc.content.push({
-            //             text: 'Tanggal Cetak: ' + formattedDate,
-            //             style: 'date',
-            //             alignment: 'center',
-            //             margin: [0, 15, 0, 0]
-            //         });
-            //         doc.pageMargins = [20, 60, 20, 40];
-            //         doc.header = {
-            //             text: 'SIPETGIS - Sistem Informasi Peternakan Kota Surabaya',
-            //             alignment: 'center',
-            //             fontSize: 8,
-            //             color: '#666666',
-            //             margin: [20, 15, 20, 0]
-            //         };
-            //         doc.footer = function(currentPage, pageCount) {
-            //             return {
-            //                 text: 'Halaman ' + currentPage + ' dari ' + pageCount,
-            //                 alignment: 'center',
-            //                 fontSize: 8,
-            //                 color: '#666666',
-            //                 margin: [20, 0, 20, 15]
-            //             };
-            //         };
-            //     }
-            // },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print"></i> Print',
@@ -267,18 +262,106 @@ function renderTable(data) {
     });
 }
 
-// ================ FUNCTION PRINT CUSTOM (RAPI SAMA PERSIS PELAKU USAHA) ================
+// ================ FUNCTION FILTER (DIPERBAIKI) ================
+function filterData() {
+    console.log('=== FILTER DATA DITEKAN ===');
+    var komoditas = $("#filterKomoditas").val();
+    var kecamatan = $("#filterKecamatan").val();
+    var kelurahan = $("#filterKelurahan").val();
+    var periode = $("#filterPeriode").val();
+    
+    console.log('Filter values - Komoditas:', komoditas, 'Kecamatan:', kecamatan, 'Kelurahan:', kelurahan, 'Periode:', periode);
+    
+    // Tampilkan loading
+    $('#dataTableBody').html('<tr><td colspan="17" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Memuat data...</p></td></tr>');
+    
+    if (dataTable) {
+        dataTable.destroy();
+        dataTable = null;
+    }
+    
+    var filteredData = [];
+    
+    for (var i = 0; i < allData.length; i++) {
+        var item = allData[i];
+        var matchKomoditas = true;
+        var matchKecamatan = true;
+        var matchKelurahan = true;
+        var matchPeriode = true;
+        
+        // Filter komoditas
+        if (komoditas !== "all") {
+            matchKomoditas = (item.komoditas_ternak && item.komoditas_ternak === komoditas);
+        }
+        
+        // Filter kecamatan
+        if (kecamatan !== "all") {
+            matchKecamatan = (item.kecamatan && item.kecamatan === kecamatan);
+        }
+        
+        // Filter kelurahan
+        if (kelurahan !== "all" && kelurahan !== "" && kelurahan !== "all") {
+            matchKelurahan = (item.kelurahan && item.kelurahan === kelurahan);
+        }
+        
+        // Filter periode/tahun
+        if (periode !== "all") {
+            if (item.tanggal_pengobatan) {
+                var itemTahun = new Date(item.tanggal_pengobatan).getFullYear();
+                matchPeriode = (itemTahun.toString() === periode);
+            } else {
+                matchPeriode = false;
+            }
+        }
+        
+        if (matchKomoditas && matchKecamatan && matchKelurahan && matchPeriode) {
+            filteredData.push(item);
+        }
+    }
+    
+    console.log('Data setelah filter:', filteredData.length, 'dari', allData.length);
+    renderTable(filteredData);
+    
+    // Tampilkan pesan jika tidak ada data
+    if (filteredData.length === 0 && komoditas !== "all") {
+        console.log('No data found for filter');
+    }
+}
+
+// ================ FUNCTION RESET FILTER (RESET DATA DAN FILTER) ================
+function resetFilter() {
+    console.log('=== RESET FILTER DITEKAN ===');
+    
+    // Reset semua dropdown filter ke default
+    $("#filterKomoditas").val("all");
+    $("#filterKecamatan").val("all");
+    $("#filterKelurahan").html('<option selected value="all">Semua Kelurahan</option>');
+    $("#filterPeriode").val("all");
+    
+    // Tampilkan loading
+    $('#dataTableBody').html('<tr><td colspan="17" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Memuat semua data...</p></td></tr>');
+    
+    // Hancurkan DataTable lama
+    if (dataTable) {
+        dataTable.destroy();
+        dataTable = null;
+    }
+    
+    // Render SEMUA data (allData)
+    renderTable(allData);
+    
+    console.log('Reset selesai, menampilkan semua', allData.length, 'data');
+}
+// ================ FUNCTION PRINT CUSTOM ================
 function printWithCurrentData() {
     var printWindow = window.open('', '_blank');
     
-    // Ambil data dari tabel yang tampil di layar
     var table = $('#historyDataTable').DataTable();
     var rows = table.rows({ search: 'applied' }).data();
     
     var totalData = rows.length;
     var totalTernak = 0;
     
-    // Hitung total ternak
     for (var i = 0; i < rows.length; i++) {
         var row = rows[i];
         var ternakText = stripHtml(row[9] || '0');
@@ -287,7 +370,6 @@ function printWithCurrentData() {
         totalTernak += ternak;
     }
     
-    // Current date
     var currentDate = new Date();
     var formattedDateTime = currentDate.toLocaleDateString('id-ID', {
         day: 'numeric',
@@ -307,13 +389,10 @@ function printWithCurrentData() {
     printWindow.document.write('th { background-color: #832706; color: #000000; text-align: center; }');
     printWindow.document.write('td { color: #000000; }');
     printWindow.document.write('.total-row { background-color: #e8f5e9; font-weight: bold; }');
-    printWindow.document.write('.total-row td { color: #000000; }');
     printWindow.document.write('.footer-note { margin-top: 30px; font-size: 10px; color: #000000; text-align: center; }');
-    printWindow.document.write('@media print { .no-print { display: none; } }');
     printWindow.document.write('</style>');
     printWindow.document.write('</head><body>');
     
-    // Header Laporan
     printWindow.document.write('<div class="header">');
     printWindow.document.write('<h2>LAPORAN DATA PENGOBATAN TERNAK</h2>');
     printWindow.document.write('<h3>DINAS KETAHANAN PANGAN DAN PERTANIAN</h3>');
@@ -322,7 +401,6 @@ function printWithCurrentData() {
     printWindow.document.write('<p>Tanggal Cetak: ' + formattedDateTime + '</p>');
     printWindow.document.write('</div>');
     
-    // Tabel Data (ringkas untuk print)
     printWindow.document.write('<table>');
     printWindow.document.write('<thead>');
     printWindow.document.write('<tr>');
@@ -336,7 +414,6 @@ function printWithCurrentData() {
     printWindow.document.write('</thead>');
     printWindow.document.write('<tbody>');
     
-    // Loop data dari tabel
     for (var i = 0; i < rows.length; i++) {
         var row = rows[i];
         printWindow.document.write('<tr>');
@@ -350,7 +427,6 @@ function printWithCurrentData() {
         printWindow.document.write('</tr>');
     }
     
-    // Total row
     printWindow.document.write('<tr class="total-row">');
     printWindow.document.write('<td colspan="5" align="center"><strong>TOTAL KESELURUHAN</strong></td>');
     printWindow.document.write('<td align="center"><strong>' + formatNumber(totalTernak) + ' Ekor</strong></td>');
@@ -360,7 +436,6 @@ function printWithCurrentData() {
     printWindow.document.write('</tbody>');
     printWindow.document.write('</table>');
     
-    // Footer Note
     printWindow.document.write('<div class="footer-note">');
     printWindow.document.write('SIPETGIS - Sistem Informasi Peternakan Kota Surabaya');
     printWindow.document.write('</div>');
@@ -396,6 +471,16 @@ function escapeHtml(str) {
         if (m === '>') return '&gt;';
         return m;
     });
+}
+
+function formatDate(dateString) {
+    if (!dateString) return "-";
+    var d = new Date(dateString);
+    if (isNaN(d.getTime())) return dateString;
+    var day = String(d.getDate()).padStart(2, '0');
+    var month = String(d.getMonth() + 1).padStart(2, '0');
+    var year = d.getFullYear();
+    return day + '-' + month + '-' + year;
 }
 
 // ================ EDIT DATA ================
@@ -440,63 +525,6 @@ function editData(id) {
             alert('Gagal mengambil data');
         }
     });
-}
-
-// ================ FILTER ================
-function filterData() {
-    var komoditas = $("#filterKomoditas").val();
-    var kecamatan = $("#filterKecamatan").val();
-    var kelurahan = $("#filterKelurahan").val();
-    var periode = $("#filterPeriode").val();
-    
-    var filteredData = allData.slice();
-    
-    if (komoditas !== "all") {
-        filteredData = filteredData.filter(function(item) {
-            return item.komoditas_ternak === komoditas;
-        });
-    }
-    
-    if (kecamatan !== "all") {
-        filteredData = filteredData.filter(function(item) {
-            return item.kecamatan === kecamatan;
-        });
-    }
-    
-    if (kelurahan !== "all" && kelurahan !== "") {
-        filteredData = filteredData.filter(function(item) {
-            return item.kelurahan === kelurahan;
-        });
-    }
-    
-    if (periode !== "all") {
-        filteredData = filteredData.filter(function(item) {
-            if (!item.tanggal_pengobatan) return false;
-            var year = new Date(item.tanggal_pengobatan).getFullYear();
-            return year.toString() === periode;
-        });
-    }
-    
-    renderTable(filteredData);
-}
-
-function resetFilter() {
-    $("#filterKomoditas").val("all");
-    $("#filterKecamatan").val("all");
-    $("#filterKelurahan").html('<option selected value="all">Semua Kelurahan</option>');
-    $("#filterPeriode").val("all");
-    renderTable(allData);
-}
-
-// ================ UTILITIES ================
-function formatDate(dateString) {
-    if (!dateString) return "-";
-    var d = new Date(dateString);
-    if (isNaN(d.getTime())) return dateString;
-    var day = String(d.getDate()).padStart(2, '0');
-    var month = String(d.getMonth() + 1).padStart(2, '0');
-    var year = d.getFullYear();
-    return day + '-' + month + '-' + year;
 }
 
 // ================ CRUD ================
@@ -656,10 +684,13 @@ function closeMap() {
 
 // ================ DOCUMENT READY ================
 $(document).ready(function() {
+    console.log('Document ready, loading data...');
     loadDataFromServer();
     
-    $("#filterKecamatan").change(function() {
+    // Event filter kecamatan change untuk update kelurahan
+    $("#filterKecamatan").off('change').on('change', function() {
         var selectedKec = $(this).val();
+        console.log('Kecamatan changed to:', selectedKec);
         if (selectedKec === 'all') {
             $("#filterKelurahan").html('<option selected value="all">Semua Kelurahan</option>');
         } else {
@@ -669,43 +700,60 @@ $(document).ready(function() {
         }
     });
     
-    $("#edit_kecamatan").change(function() {
+    // Event filter kecamatan untuk edit modal
+    $("#edit_kecamatan").off('change').on('change', function() {
         var selectedKec = $(this).val();
         updateKelurahanOptions(selectedKec, '#edit_kelurahan');
     });
     
-    $("#filterBtn").click(filterData);
-    $("#resetBtn").click(resetFilter);
-    $("#closeMapBtn").click(closeMap);
+    // Event filter button
+    $("#filterBtn").off('click').on('click', function(e) {
+        e.preventDefault();
+        console.log('Filter button clicked');
+        filterData();
+    });
     
-    $("#btnMapView").click(function() {
+    // Event reset button
+    $("#resetBtn").off('click').on('click', function(e) {
+        e.preventDefault();
+        console.log('Reset button clicked');
+        resetFilter();
+    });
+    
+    // Event close map button
+    $("#closeMapBtn").off('click').on('click', closeMap);
+    
+    // Event map view buttons
+    $("#btnMapView").off('click').on('click', function() {
         currentView = "map";
         updateMapView();
         $(this).addClass("active");
         $("#btnSatelliteView").removeClass("active");
     });
     
-    $("#btnSatelliteView").click(function() {
+    $("#btnSatelliteView").off('click').on('click', function() {
         currentView = "satellite";
         updateMapView();
         $(this).addClass("active");
         $("#btnMapView").removeClass("active");
     });
     
-    $("#btnResetView").click(function() {
+    $("#btnResetView").off('click').on('click', function() {
         if (map && currentFarmMarker) {
             var latlng = currentFarmMarker.getLatLng();
             map.setView([latlng.lat, latlng.lng], 15);
         }
     });
     
-    $("#confirmDelete").click(function() {
+    // Event confirm delete
+    $("#confirmDelete").off('click').on('click', function() {
         if (deleteId) {
             deleteData(deleteId);
         }
     });
     
-    $("#formEdit").submit(function(e) {
+    // Event form edit submit
+    $("#formEdit").off('submit').on('submit', function(e) {
         e.preventDefault();
         var id = $("#edit_id").val();
         

@@ -651,7 +651,7 @@ table.dataTable tbody tr:hover {
 }
 
 .badge-photo-empty {
-    background: #e2e8f0;
+    background: #e2e8f0; 
     color: #64748b;
     padding: 5px 12px;
     border-radius: 20px;

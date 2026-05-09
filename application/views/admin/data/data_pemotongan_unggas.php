@@ -2,6 +2,8 @@
 <html lang="id">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="csrf-token" content="<?= $this->security->get_csrf_hash() ?>">
+<meta name="csrf-name" content="<?= $this->security->get_csrf_token_name() ?>">
     <title>SIPETGIS - Data Pemotongan Unggas</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/kaiadmin/favicon.ico" type="image/x-icon" />
@@ -13,7 +15,7 @@
             google: { families: ["Public Sans:300,400,500,600,700"] },
             custom: {
                 families: [
-                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Solid", 
                     "Font Awesome 5 Regular",
                     "Font Awesome 5 Brands",
                     "simple-line-icons",
@@ -195,35 +197,20 @@
                     <div class="filter-section">
                         <div class="row align-items-center">
                             <div class="col-md-2">
-                                <div class="form-group mb-0">
-                                    <label for="filterRPU" class="form-label fw-bold">Filter RPU:</label>
-                                    <select class="form-select form-select-sm" id="filterRPU">
-                                        <option selected value="all">Semua RPU</option>
-                                        <?php if (!empty($rpu_list)): ?>
-                                            <?php foreach ($rpu_list as $r): ?>
-                                                <option value="<?php echo htmlspecialchars($r['id_rpu']); ?>">
-                                                    <?php echo htmlspecialchars($r['nama_rpu'] ?? 'RPU ' . $r['id_rpu']); ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group mb-0">
-                                    <label for="filterPetugas" class="form-label fw-bold">Filter Petugas:</label>
-                                    <select class="form-select form-select-sm" id="filterPetugas">
-                                        <option selected value="all">Semua Petugas</option>
-                                        <?php if (!empty($petugas_list)): ?>
-                                            <?php foreach ($petugas_list as $p): ?>
-                                                <option value="<?php echo htmlspecialchars($p['nama_petugas']); ?>">
-                                                    <?php echo htmlspecialchars($p['nama_petugas']); ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
-                                    </select>
-                                </div>
-                            </div>
+    <div class="form-group mb-0">
+        <label for="filterRPU" class="form-label fw-bold">Filter RPU:</label>
+        <select class="form-select form-select-sm" id="filterRPU">
+            <option selected value="all">Semua RPU</option>
+            <?php if (!empty($rpu_master_list)): ?>
+                <?php foreach ($rpu_master_list as $r): ?>
+                    <option value="<?php echo htmlspecialchars($r->pejagal); ?>">
+                        <?php echo htmlspecialchars($r->pejagal); ?>
+                    </option>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </select>
+    </div>
+</div>
                             <div class="col-md-2">
                                 <div class="form-group mb-0">
                                     <label for="filterKomoditas" class="form-label fw-bold">Filter Komoditas:</label>
@@ -245,7 +232,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3 text-end">
+                            <div class="col-md-5 text-end">
                                 <button id="filterBtn" class="btn btn-primary-custom btn-sm"><i class="fas fa-filter me-1"></i>Filter</button>
                                 <button id="resetBtn" class="btn btn-outline-secondary-custom btn-sm"><i class="fas fa-redo me-1"></i>Reset</button>
                             </div>
@@ -383,10 +370,10 @@
                                                 <label class="form-label">RPU <span class="text-danger">*</span></label>
                                                 <select class="form-control" id="edit_rpu" name="id_rpu" required>
                                                     <option value="">Pilih RPU</option>
-                                                    <?php if (!empty($rpu_list)): ?>
-                                                        <?php foreach ($rpu_list as $r): ?>
-                                                            <option value="<?php echo $r['id_rpu']; ?>">
-                                                                <?php echo htmlspecialchars($r['nama_rpu'] ?? 'RPU ' . $r['id_rpu']); ?>
+                                                    <?php if (!empty($rpu_master_list)): ?>
+                                                        <?php foreach ($rpu_master_list as $r): ?>
+                                                            <option value="<?php echo $r->pejagal; ?>">
+                                                                <?php echo htmlspecialchars($r->pejagal); ?>
                                                             </option>
                                                         <?php endforeach; ?>
                                                     <?php endif; ?>
@@ -457,7 +444,7 @@
         </div>
     </div>
 
-    <!-- Core JS Files -->
+       <!-- Core JS Files -->
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/popper.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/bootstrap.min.js"></script>
@@ -474,6 +461,11 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+
+    <!-- BASE URL - HARUS DITEMPATKAN DISINI SEBELUM CUSTOM JS -->
+    <script>
+        var base_url = "<?= base_url() ?>";
+    </script>
 
     <!-- Custom JS Data Pemotongan Unggas -->
     <script src="<?php echo base_url('assets/js/data_pemotongan_unggas.js'); ?>"></script>

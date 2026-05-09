@@ -7,6 +7,7 @@
 let selectedFiles = [];
 const MAX_FILES = 5;
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+let masterRpuList = [];
 
 // ========== FUNGSI GLOBAL (di luar document ready) ==========
 
@@ -126,11 +127,180 @@ function printWithCurrentData() {
     printWindow.print();
 }
 
+// Fungsi untuk mengambil data master RPU
+function loadMasterRpu() {
+    $.ajax({
+        url: base_url + 'p_input_rpu/get_master_rpu',
+        type: 'GET',
+        dataType: 'json',
+        success: function(res) {
+            if (res.status === 'success' && res.data) {
+                masterRpuList = res.data;
+                updatePejagalSelect();
+            } else {
+                console.log('Tidak ada data master RPU');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Gagal mengambil data master RPU:', error);
+        }
+    });
+}
+
+// Fungsi untuk update select pejagal
+function updatePejagalSelect() {
+    var select = $('#pejagal');
+    var selectedValue = select.val();
+    
+    select.find('option:not(:first)').remove();
+    
+    if (masterRpuList.length > 0) {
+        $.each(masterRpuList, function(index, item) {
+            select.append($('<option></option>').val(item.pejagal).text(item.pejagal));
+        });
+    }
+    
+    select.append('<option value="RPU Baru">[Input RPU Baru]</option>');
+    
+    if (selectedValue && selectedValue !== '') {
+        select.val(selectedValue);
+    }
+}
+
+// Fungsi untuk menyimpan RPU baru ke master
+function saveToMasterRpu(pejagalBaru) {
+    return $.ajax({
+        url: base_url + 'p_input_rpu/save_master_rpu',
+        type: 'POST',
+        data: {
+            pejagal: pejagalBaru,
+            kecamatan: user_kecamatan,
+            latitude: $('#latitude').val(),
+            longitude: $('#longitude').val(),
+            csrf_token_name: $('input[name="' + csrf_token_name + '"]').val()
+        },
+        dataType: 'json'
+    });
+}
+
+// ========== FUNGSI KOMODITAS ==========
+
+// Add Komoditas Row
+function addKomoditasRow() {
+    var $newRow = $('<tr class="komoditas-row">');
+    
+    // Kolom Komoditas (select)
+    var $komoditasTd = $('<td>');
+    var $komoditasSelect = $('<select class="form-control komoditas" name="komoditas[]" required>');
+    komoditasOptions = [
+        {value: '', text: 'Pilih Komoditas'},
+        {value: 'Ayam Kampung', text: 'Ayam Kampung'},
+        {value: 'Ayam Broiler', text: 'Ayam Broiler'},
+        {value: 'Layer Afkir', text: 'Layer Afkir'},
+        {value: 'Layer Jantan', text: 'Layer Jantan'},
+        {value: 'Itik', text: 'Itik'},
+        {value: 'Entok', text: 'Entok'}
+    ];
+    $.each(komoditasOptions, function(i, opt) {
+        $komoditasSelect.append($('<option>').val(opt.value).text(opt.text));
+    });
+    $komoditasTd.append($komoditasSelect);
+    $newRow.append($komoditasTd);
+    
+    // Kolom Jumlah (input number)
+    var $jumlahTd = $('<td>');
+    var $jumlahInput = $('<input type="number" class="form-control jumlah_ekor" name="jumlah_ekor[]" min="1" placeholder="Ekor" required>');
+    $jumlahTd.append($jumlahInput);
+    $newRow.append($jumlahTd);
+    
+    // Kolom Berat (input number)
+    var $beratTd = $('<td>');
+    var $beratInput = $('<input type="number" step="0.1" class="form-control berat_kg" name="berat_kg[]" min="0.1" placeholder="Kg" required>');
+    $beratTd.append($beratInput);
+    $newRow.append($beratTd);
+    
+    // Kolom Asal (select)
+    var $asalTd = $('<td>');
+    var $asalSelect = $('<select class="form-control asal_unggas" name="asal_unggas[]" required>');
+    asalOptions = [
+        {value: '', text: 'Pilih Asal'},
+        {value: 'Surabaya', text: 'Surabaya'},
+        {value: 'Luar Surabaya', text: 'Luar Surabaya'}
+    ];
+    $.each(asalOptions, function(i, opt) {
+        $asalSelect.append($('<option>').val(opt.value).text(opt.text));
+    });
+    $asalTd.append($asalSelect);
+    $newRow.append($asalTd);
+    
+    // Kolom Aksi (button)
+    var $aksiTd = $('<td class="text-center">');
+    var $btnAdd = $('<button type="button" class="btn btn-sm btn-add-row me-1" title="Tambah baris"><i class="fas fa-plus"></i></button>');
+    var $btnRemove = $('<button type="button" class="btn btn-sm btn-remove-row" title="Hapus baris"><i class="fas fa-trash"></i></button>');
+    $aksiTd.append($btnAdd, $btnRemove);
+    $newRow.append($aksiTd);
+    
+    $('#komoditasBody').append($newRow);
+    updateRemoveButtons();
+}
+
+// Remove Komoditas Row
+function removeKomoditasRow(btn) {
+    if ($('.komoditas-row').length > 1) {
+        $(btn).closest('tr').remove();
+        updateRemoveButtons();
+    }
+}
+
+// Update Remove Buttons
+function updateRemoveButtons() {
+    if ($('.komoditas-row').length > 1) {
+        $('.btn-remove-row').show();
+    } else {
+        $('.btn-remove-row').hide();
+    }
+}
+
+// Validate Komoditas Rows
+function validateKomoditasRows() {
+    let isValid = true;
+    $('.komoditas-row').each(function(index) {
+        const komoditas = $(this).find('.komoditas').val();
+        const jumlah = $(this).find('.jumlah_ekor').val();
+        const berat = $(this).find('.berat_kg').val();
+        const asal = $(this).find('.asal_unggas').val();
+        
+        $(this).find('.komoditas, .jumlah_ekor, .berat_kg, .asal_unggas').removeClass('is-invalid');
+        
+        if (!komoditas) {
+            $(this).find('.komoditas').addClass('is-invalid');
+            isValid = false;
+        }
+        if (!jumlah || parseInt(jumlah) < 1) {
+            $(this).find('.jumlah_ekor').addClass('is-invalid');
+            isValid = false;
+        }
+        if (!berat || parseFloat(berat) <= 0) {
+            $(this).find('.berat_kg').addClass('is-invalid');
+            isValid = false;
+        }
+        if (!asal) {
+            $(this).find('.asal_unggas').addClass('is-invalid');
+            isValid = false;
+        }
+    });
+    if (!isValid) showAlert('danger', 'Harap lengkapi data komoditas');
+    return isValid;
+}
+
 // ========== DOCUMENT READY ==========
 $(document).ready(function() {
     // Set today's date as default
     const today = new Date().toISOString().split('T')[0];
     $('#tanggal_rpu').val(today);
+    
+    // Load master RPU
+    loadMasterRpu();
     
     // Hancurkan DataTable jika sudah ada
     if ($.fn.DataTable.isDataTable('#rpuTable')) {
@@ -292,96 +462,91 @@ $(document).ready(function() {
         $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT RPU');
     });
 
-       // Add Komoditas Row
-    function addKomoditasRow() {
-        const newRow = `
-            <tr class="komoditas-row">
-                <td>
-                    <select class="form-control komoditas" name="komoditas[]" required>
-                        <option value="">Pilih Komoditas</option>
-                        <option value="Ayam Kampung">Ayam Kampung</option>
-                        <option value="Ayam Broiler">Ayam Broiler</option>
-                        <option value="Layer Afkir">Layer Afkir</option>
-                        <option value="Layer Jantan">Layer Jantan</option>
-                        <option value="Itik">Itik</option>
-                        <option value="Entok">Entok</option>
-                    </select>
-                 </th>
-                <td>
-                    <input type="number" class="form-control jumlah_ekor" name="jumlah_ekor[]" min="1" placeholder="Ekor" required />
-                 </th>
-                <td>
-                    <input type="number" step="0.1" class="form-control berat_kg" name="berat_kg[]" min="0.1" placeholder="Kg" required />
-                 </th>
-                <td>
-                    <select class="form-control asal_unggas" name="asal_unggas[]" required>
-                        <option value="">Pilih Asal</option>
-                        <option value="Surabaya">Surabaya</option>
-                        <option value="Luar Surabaya">Luar Surabaya</option>
-                    </select>
-                 </th>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-add-row"><i class="fas fa-plus"></i></button>
-                    <button type="button" class="btn btn-sm btn-remove-row"><i class="fas fa-trash"></i></button>
-                 </th>
-             </tr>
-        `;
-        $('#komoditasBody').append(newRow);
+    // Reset Form
+    function resetForm() {
+        $('#formContainer').removeClass('show');
+        $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT RPU');
+        
+        $('#formRpu')[0].reset();
+        $('#kecamatan').val(user_kecamatan);
+        $('#coordinateInfo').hide();
+        $('#photoPreviewContainer').empty();
+        $('#multiplePhotoContainer').show();
+        $('#btnRemoveAllPhotos').hide();
+        $('#rpuBaruContainer').hide();
+        $('#pejagal_baru').val('');
+        selectedFiles = [];
+        updatePhotoCount();
+        $('.is-invalid').removeClass('is-invalid');
+        
+        // Reset komoditas rows ke default (1 row)
+        $('#komoditasBody').empty();
+        
+        var $defaultRow = $('<tr class="komoditas-row">');
+        
+        // Kolom Komoditas
+        var $komoditasTd = $('<td>');
+        var $komoditasSelect = $('<select class="form-control komoditas" name="komoditas[]" required>');
+        var komoditasOptions = [
+            {value: '', text: 'Pilih Komoditas'},
+            {value: 'Ayam Kampung', text: 'Ayam Kampung'},
+            {value: 'Ayam Broiler', text: 'Ayam Broiler'},
+            {value: 'Layer Afkir', text: 'Layer Afkir'},
+            {value: 'Layer Jantan', text: 'Layer Jantan'},
+            {value: 'Itik', text: 'Itik'},
+            {value: 'Entok', text: 'Entok'}
+        ];
+        $.each(komoditasOptions, function(i, opt) {
+            $komoditasSelect.append($('<option>').val(opt.value).text(opt.text));
+        });
+        $komoditasTd.append($komoditasSelect);
+        $defaultRow.append($komoditasTd);
+        
+        // Kolom Jumlah
+        var $jumlahTd = $('<td>');
+        var $jumlahInput = $('<input type="number" class="form-control jumlah_ekor" name="jumlah_ekor[]" min="1" placeholder="Ekor" required>');
+        $jumlahTd.append($jumlahInput);
+        $defaultRow.append($jumlahTd);
+        
+        // Kolom Berat
+        var $beratTd = $('<td>');
+        var $beratInput = $('<input type="number" step="0.1" class="form-control berat_kg" name="berat_kg[]" min="0.1" placeholder="Kg" required>');
+        $beratTd.append($beratInput);
+        $defaultRow.append($beratTd);
+        
+        // Kolom Asal
+        var $asalTd = $('<td>');
+        var $asalSelect = $('<select class="form-control asal_unggas" name="asal_unggas[]" required>');
+        var asalOptions = [
+            {value: '', text: 'Pilih Asal'},
+            {value: 'Surabaya', text: 'Surabaya'},
+            {value: 'Luar Surabaya', text: 'Luar Surabaya'}
+        ];
+        $.each(asalOptions, function(i, opt) {
+            $asalSelect.append($('<option>').val(opt.value).text(opt.text));
+        });
+        $asalTd.append($asalSelect);
+        $defaultRow.append($asalTd);
+        
+        // Kolom Aksi
+        var $aksiTd = $('<td class="text-center">');
+        var $btnAdd = $('<button type="button" class="btn btn-sm btn-add-row" title="Tambah baris"><i class="fas fa-plus"></i></button>');
+        var $btnRemove = $('<button type="button" class="btn btn-sm btn-remove-row" title="Hapus baris" style="display: none;"><i class="fas fa-trash"></i></button>');
+        $aksiTd.append($btnAdd, $btnRemove);
+        $defaultRow.append($aksiTd);
+        
+        $('#komoditasBody').append($defaultRow);
         updateRemoveButtons();
     }
 
-    // Remove Komoditas Row
-    function removeKomoditasRow(btn) {
-        if ($('.komoditas-row').length > 1) {
-            $(btn).closest('tr').remove();
-            updateRemoveButtons();
-        }
-    }
-
-    // Update Remove Buttons
-    function updateRemoveButtons() {
-        if ($('.komoditas-row').length > 1) {
-            $('.btn-remove-row').show();
-        } else {
-            $('.btn-remove-row').hide();
-        }
-    }
-
-    // Event handlers
-    $(document).on('click', '.btn-add-row', function() { addKomoditasRow(); });
-    $(document).on('click', '.btn-remove-row', function() { removeKomoditasRow(this); });
-
-        // Validate Komoditas Rows
-    function validateKomoditasRows() {
-        let isValid = true;
-        $('.komoditas-row').each(function(index) {
-            const komoditas = $(this).find('select[name="komoditas[]"]').val();
-            const jumlah = $(this).find('input[name="jumlah_ekor[]"]').val();
-            const berat = $(this).find('input[name="berat_kg[]"]').val();
-            const asal = $(this).find('select[name="asal_unggas[]"]').val();
-            
-            $(this).find('select[name="komoditas[]"], input[name="jumlah_ekor[]"], input[name="berat_kg[]"], select[name="asal_unggas[]"]').removeClass('is-invalid');
-            
-            if (!komoditas) {
-                $(this).find('select[name="komoditas[]"]').addClass('is-invalid');
-                isValid = false;
-            }
-            if (!jumlah || parseInt(jumlah) < 1) {
-                $(this).find('input[name="jumlah_ekor[]"]').addClass('is-invalid');
-                isValid = false;
-            }
-            if (!berat || parseFloat(berat) <= 0) {
-                $(this).find('input[name="berat_kg[]"]').addClass('is-invalid');
-                isValid = false;
-            }
-            if (!asal) {
-                $(this).find('select[name="asal_unggas[]"]').addClass('is-invalid');
-                isValid = false;
-            }
-        });
-        if (!isValid) showAlert('danger', 'Harap lengkapi data komoditas');
-        return isValid;
-    }
+    // Event handlers untuk komoditas (delegated event)
+    $(document).on('click', '.btn-add-row', function() { 
+        addKomoditasRow(); 
+    });
+    
+    $(document).on('click', '.btn-remove-row', function() { 
+        removeKomoditasRow(this); 
+    });
 
     // Handle RPU Baru option
     $('#pejagal').on('change', function() {
@@ -391,6 +556,7 @@ $(document).ready(function() {
         } else {
             $('#rpuBaruContainer').hide();
             $('#pejagal_baru').prop('required', false);
+            $('#pejagal_baru').val('');
         }
     });
 
@@ -398,39 +564,6 @@ $(document).ready(function() {
     $('#nik_pj').on('input', function() {
         $(this).val($(this).val().replace(/[^0-9]/g, '').slice(0, 16));
     });
-
-    const defaultRow = `
-            <tr class="komoditas-row"> 
-                <td>
-                    <select class="form-control komoditas" name="komoditas[]" required>
-                        <option value="">Pilih Komoditas</option>
-                        <option value="Ayam Kampung">Ayam Kampung</option>
-                        <option value="Ayam Broiler">Ayam Broiler</option>
-                        <option value="Layer Afkir">Layer Afkir</option>
-                        <option value="Layer Jantan">Layer Jantan</option>
-                        <option value="Itik">Itik</option>
-                        <option value="Entok">Entok</option>
-                    </select>
-                 </th>
-                <td>
-                    <input type="number" class="form-control jumlah_ekor" name="jumlah_ekor[]" min="1" placeholder="Ekor" required />
-                 </th>
-                <td>
-                    <input type="number" step="0.1" class="form-control berat_kg" name="berat_kg[]" min="0.1" placeholder="Kg" required />
-                 </th>
-                <td>
-                    <select class="form-control asal_unggas" name="asal_unggas[]" required>
-                        <option value="">Pilih Asal</option>
-                        <option value="Surabaya">Surabaya</option>
-                        <option value="Luar Surabaya">Luar Surabaya</option>
-                    </select>
-                 </th>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-add-row"><i class="fas fa-plus"></i></button>
-                    <button type="button" class="btn btn-sm btn-remove-row" style="display: none;"><i class="fas fa-trash"></i></button>
-                 </th>
-             </tr>
-        `;
 
     // Get Location
     $('#btnGetLocation').click(function() {
@@ -503,11 +636,14 @@ $(document).ready(function() {
             isValid = false;
         }
         
+        let pejagalValue = pejagal;
         if (pejagal === 'RPU Baru') {
             const pejagalBaru = $('#pejagal_baru').val();
             if (!pejagalBaru) {
                 $('#pejagal_baru').addClass('is-invalid');
                 isValid = false;
+            } else {
+                pejagalValue = pejagalBaru;
             }
         }
         
@@ -518,56 +654,71 @@ $(document).ready(function() {
         const original = btn.html();
         btn.html('<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...').prop('disabled', true);
         
-        var formData = new FormData(this);
-        
-        // Remove existing foto_kegiatan files from FormData
-        formData.delete('foto_kegiatan[]');
-        
-        // Add multiple files
-        for (let i = 0; i < selectedFiles.length; i++) {
-            formData.append('foto_kegiatan[]', selectedFiles[i]);
+        function doSubmit() {
+            var formData = new FormData($('#formRpu')[0]);
+            formData.delete('foto_kegiatan[]');
+            
+            for (let i = 0; i < selectedFiles.length; i++) {
+                formData.append('foto_kegiatan[]', selectedFiles[i]);
+            }
+            
+            formData.set('pejagal', pejagalValue);
+            
+            var csrfHash = $('input[name="' + csrf_token_name + '"]').val();
+            if (csrfHash) {
+                formData.append(csrf_token_name, csrfHash);
+            }
+            
+            var saveUrl = base_url + 'p_input_rpu/save';
+            
+            $.ajax({
+                url: saveUrl,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(res) {
+                    if (res.status === 'success') {
+                        showAlert('success', res.message);
+                        resetForm();
+                        $('#formContainer').removeClass('show');
+                        $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT RPU');
+                        setTimeout(function() { location.reload(); }, 1500);
+                    } else {
+                        showAlert('danger', res.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', xhr.responseText); 
+                    if (xhr.status === 403) {
+                        showAlert('danger', 'Token keamanan tidak valid. Silakan refresh halaman dan coba lagi.');
+                    } else {
+                        showAlert('danger', 'Gagal menyimpan data. Silakan coba lagi.');
+                    }
+                },
+                complete: function() { btn.html(original).prop('disabled', false); }
+            });
         }
         
-        // Jika memilih RPU Baru, gunakan nilai dari input baru
         if (pejagal === 'RPU Baru') {
-            formData.set('pejagal', $('#pejagal_baru').val());
-        }
-        
-        var csrfHash = $('input[name="' + csrf_token_name + '"]').val();
-        if (csrfHash) {
-            formData.append(csrf_token_name, csrfHash);
-        }
-        
-        var saveUrl = base_url + 'p_input_rpu/save';
-        
-        $.ajax({
-            url: saveUrl,
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            dataType: 'json',
-            success: function(res) {
+            const pejagalBaru = $('#pejagal_baru').val();
+            saveToMasterRpu(pejagalBaru).done(function(res) {
                 if (res.status === 'success') {
-                    showAlert('success', res.message);
-                    resetForm();
-                    $('#formContainer').removeClass('show');
-                    $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT RPU');
-                    setTimeout(function() { location.reload(); }, 1500);
+                    console.log('Master RPU berhasil disimpan:', res.message);
+                    loadMasterRpu();
+                    doSubmit();
                 } else {
                     showAlert('danger', res.message);
+                    btn.html(original).prop('disabled', false);
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', xhr.responseText);
-                if (xhr.status === 403) {
-                    showAlert('danger', 'Token keamanan tidak valid. Silakan refresh halaman dan coba lagi.');
-                } else {
-                    showAlert('danger', 'Gagal menyimpan data. Silakan coba lagi.');
-                }
-            },
-            complete: function() { btn.html(original).prop('disabled', false); }
-        });
+            }).fail(function() {
+                showAlert('danger', 'Gagal menyimpan data RPU baru ke master. Silakan coba lagi.');
+                btn.html(original).prop('disabled', false);
+            });
+        } else {
+            doSubmit(); 
+        }
     });
 
     function showAlert(type, msg) {

@@ -4,21 +4,22 @@ let mapMarkers = [];
 let currentView = "map";
 let currentShopMarker = null;
 let dataTable = null;
-let deleteId = null;
 let allData = [];
 
 // ================ FUNGSI AMBIL DATA DARI SERVER ================
 function loadDataFromServer() {
-    $("#dataTableBody").html('<tr><td colspan="9" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><br>Memuat data...</td></tr>');
-    
+    $("#dataTableBody").html('<tr><td colspan="11" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><br>Memuat data...<br>pakah');
+
     $.ajax({
         url: base_url + 'index.php/data_klinik/get_all_data',
         type: 'GET',
         dataType: 'json',
+        timeout: 30000,
         success: function(response) {
             if (response && !response.error) {
                 if (Array.isArray(response) && response.length > 0) {
                     allData = response;
+                    console.log('Total data dimuat:', allData.length);
                 } else {
                     allData = [];
                 }
@@ -26,6 +27,7 @@ function loadDataFromServer() {
                 allData = [];
             }
             renderTable(allData);
+            updateFilterOptions();
         },
         error: function(xhr, status, error) {
             console.error('Error:', xhr.status, error);
@@ -40,23 +42,80 @@ function loadDataFromServer() {
                         allData = [];
                     }
                     renderTable(allData);
+                    updateFilterOptions();
                 },
                 error: function() {
                     allData = [];
                     renderTable(allData);
-                    alert('Gagal memuat data. Silahkan refresh halaman.');
+                    alert('Gagal memuat数据. Silahkan refresh halaman.');
                 }
             });
         }
     });
 }
 
-// ================ RENDER TABLE (HANYA EXCEL & PRINT AKTIF) ================
+// ================ UPDATE FILTER OPTIONS (SEPERTI LAYANAN KLINIK) ================
+function updateFilterOptions() {
+    var kecamatanSet = new Set();
+    var statusSet = new Set();
+    var layananSet = new Set();
+
+    allData.forEach(function(item) {
+        if (item.kecamatan && item.kecamatan !== '') {
+            kecamatanSet.add(item.kecamatan);
+        }
+        if (item.surat_ijin && item.surat_ijin !== '') {
+            statusSet.add(item.surat_ijin);
+        }
+        if (item.jenis_layanan && item.jenis_layanan !== '') {
+            var layananList = item.jenis_layanan.split(',');
+            for (var i = 0; i < layananList.length; i++) {
+                var layananTrim = layananList[i].trim();
+                if (layananTrim !== '') {
+                    layananSet.add(layananTrim);
+                }
+            }
+        }
+    });
+
+    // Update filter kecamatan
+    var kecamatanOptions = '<option selected value="all">Semua Kecamatan</option>';
+    var sortedKecamatan = Array.from(kecamatanSet).sort();
+    sortedKecamatan.forEach(function(kecamatan) {
+        kecamatanOptions += '<option value="' + kecamatan + '">' + kecamatan + '</option>';
+    });
+    $("#filterKecamatan").html(kecamatanOptions);
+
+    // Update filter status ijin - menjaga nilai asli Y/N
+    var statusOptions = '<option selected value="all">Semua Status</option>';
+    if (statusSet.has('Y')) {
+        statusOptions += '<option value="Y">Memiliki Ijin</option>';
+    }
+    if (statusSet.has('N')) {
+        statusOptions += '<option value="N">Belum Ijin</option>';
+    }
+    $("#filterIjin").html(statusOptions);
+
+    // Update filter jenis layanan
+    var layananOptions = '<option selected value="all">Semua Layanan</option>';
+    var sortedLayanan = Array.from(layananSet).sort();
+    sortedLayanan.forEach(function(layanan) {
+        layananOptions += '<option value="' + layanan + '">' + layanan + '</option>';
+    });
+    $("#filterLayanan").html(layananOptions);
+
+    console.log('Filter options updated - Kecamatan:', sortedKecamatan, 'Status:', Array.from(statusSet), 'Layanan:', sortedLayanan);
+}
+
+// ================ RENDER TABLE ================
 function renderTable(data) {
+    console.log('Rendering table with', data.length, 'rows');
+    
     var html = "";
     if (data && data.length > 0) {
-        $.each(data, function(index, item) {
-            var no = index + 1;
+        for (var idx = 0; idx < data.length; idx++) {
+            var item = data[idx];
+            var no = idx + 1;
             
             var statusIjin = (item.surat_ijin === 'Y') ? 
                 '<span class="badge-status badge-active"><i class="fas fa-check-circle me-1"></i>Memiliki Ijin</span>' : 
@@ -88,9 +147,9 @@ function renderTable(data) {
                 '</div>' +
                 '</td>' +
                 '</tr>';
-        });
+        }
     } else {
-        html = '<tr><td colspan="11" class="text-center py-5"><i class="fas fa-clinic-medical fa-3x text-muted mb-3 d-block"></i>Tidak ada data klinik他wan</td></tr>';
+        html = '<tr><td colspan="11" class="text-center py-5"><i class="fas fa-clinic-medical fa-3x text-muted mb-3 d-block"></i>Tidak ada data klinik他wan<\/td><\/tr>';
     }
     
     $("#dataTableBody").html(html);
@@ -104,30 +163,12 @@ function renderTable(data) {
              '<"row"<"col-sm-12"tr>>' +
              '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
         buttons: [
-            // {
-            //     extend: 'copy',
-            //     text: '<i class="fas fa-copy"></i> Copy',
-            //     className: 'btn btn-sm btn-primary',
-            //     exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9] }
-            // },
-            // {
-            //     extend: 'csv',
-            //     text: '<i class="fas fa-file-csv"></i> CSV',
-            //     className: 'btn btn-sm btn-success',
-            //     exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9] }
-            // },
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Excel',
                 className: 'btn btn-sm btn-success',
                 exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9] }
             },
-            // {
-            //     extend: 'pdf',
-            //     text: '<i class="fas fa-file-pdf"></i> PDF',
-            //     className: 'btn btn-sm btn-danger',
-            //     exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9] }
-            // },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print"></i> Print',
@@ -165,18 +206,16 @@ function renderTable(data) {
     });
 }
 
-// ================ FUNCTION PRINT RAPI (SAMA PERSIS PELAKU USAHA) ================
+// ================ FUNCTION PRINT ================
 function printWithCurrentData() {
     var printWindow = window.open('', '_blank');
     
-    // Ambil data dari tabel yang tampil di layar
     var table = $('#klinikTable').DataTable();
     var rows = table.rows({ search: 'applied' }).data();
     
     var totalData = rows.length;
     var totalDokter = 0;
     
-    // Hitung total dokter
     for (var i = 0; i < rows.length; i++) {
         var row = rows[i];
         var dokterText = stripHtml(row[6] || '0');
@@ -184,7 +223,6 @@ function printWithCurrentData() {
         totalDokter += dokter;
     }
     
-    // Current date
     var currentDate = new Date();
     var formattedDateTime = currentDate.toLocaleDateString('id-ID', {
         day: 'numeric',
@@ -204,13 +242,10 @@ function printWithCurrentData() {
     printWindow.document.write('th { background-color: #832706; color: #000000; text-align: center; }');
     printWindow.document.write('td { color: #000000; }');
     printWindow.document.write('.total-row { background-color: #e8f5e9; font-weight: bold; }');
-    printWindow.document.write('.total-row td { color: #000000; }');
     printWindow.document.write('.footer-note { margin-top: 30px; font-size: 10px; color: #000000; text-align: center; }');
-    printWindow.document.write('@media print { .no-print { display: none; } }');
     printWindow.document.write('</style>');
     printWindow.document.write('</head><body>');
     
-    // Header Laporan
     printWindow.document.write('<div class="header">');
     printWindow.document.write('<h2>LAPORAN DATA KLINIK HEWAN</h2>');
     printWindow.document.write('<h3>DINAS KETAHANAN PANGAN DAN PERTANIAN</h3>');
@@ -219,8 +254,7 @@ function printWithCurrentData() {
     printWindow.document.write('<p>Tanggal Cetak: ' + formattedDateTime + '</p>');
     printWindow.document.write('</div>');
     
-    // Tabel Data untuk Print
-    printWindow.document.write('<table>');
+    printWindow.document.write('</table>');
     printWindow.document.write('<thead>');
     printWindow.document.write('<tr>');
     printWindow.document.write('<th width="40">No</th>');
@@ -235,7 +269,6 @@ function printWithCurrentData() {
     printWindow.document.write('</thead>');
     printWindow.document.write('<tbody>');
     
-    // Loop data dari tabel
     for (var i = 0; i < rows.length; i++) {
         var row = rows[i];
         printWindow.document.write('<tr>');
@@ -251,7 +284,6 @@ function printWithCurrentData() {
         printWindow.document.write('</tr>');
     }
     
-    // Total row
     printWindow.document.write('<tr class="total-row">');
     printWindow.document.write('<td colspan="6" align="center"><strong>TOTAL KESELURUHAN</strong></td>');
     printWindow.document.write('<td align="center"><strong>' + formatNumber(totalDokter) + ' Dokter</strong></td>');
@@ -261,7 +293,6 @@ function printWithCurrentData() {
     printWindow.document.write('</tbody>');
     printWindow.document.write('</table>');
     
-    // Footer Note
     printWindow.document.write('<div class="footer-note">');
     printWindow.document.write('SIPETGIS - Sistem Informasi Peternakan Kota Surabaya');
     printWindow.document.write('</div>');
@@ -297,6 +328,82 @@ function escapeHtml(str) {
         if (m === '>') return '&gt;';
         return m;
     });
+}
+
+// ================ FUNCTION FILTER (DIPERBAIKI) ================
+function filterData() {
+    console.log('=== FILTER DATA DITEKAN ===');
+    var kecamatan = $("#filterKecamatan").val();
+    var statusIjin = $("#filterIjin").val();
+    var layanan = $("#filterLayanan").val();
+
+    console.log('Filter values - Kecamatan:', kecamatan, 'Status:', statusIjin, 'Layanan:', layanan);
+
+    $('#dataTableBody').html('<tr><td colspan="11" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Memuat data...</p></td></tr>');
+
+    if (dataTable) {
+        dataTable.destroy();
+        dataTable = null;
+    }
+
+    var filteredData = [];
+
+    for (var i = 0; i < allData.length; i++) {
+        var item = allData[i];
+        var matchKecamatan = true;
+        var matchStatus = true;
+        var matchLayanan = true;
+
+        // Filter kecamatan
+        if (kecamatan !== "all") {
+            matchKecamatan = (item.kecamatan && item.kecamatan === kecamatan);
+        }
+
+        // Filter status ijin (menggunakan nilai asli Y/N)
+        if (statusIjin !== "all") {
+            matchStatus = (item.surat_ijin === statusIjin);
+        }
+
+        // Filter jenis layanan
+        if (layanan !== "all") {
+            if (item.jenis_layanan) {
+                matchLayanan = item.jenis_layanan.toLowerCase().includes(layanan.toLowerCase());
+            } else {
+                matchLayanan = false;
+            }
+        }
+
+        if (matchKecamatan && matchStatus && matchLayanan) {
+            filteredData.push(item);
+        }
+    }
+
+    console.log('Data setelah filter:', filteredData.length, 'dari', allData.length);
+    renderTable(filteredData);
+}
+
+// ================ FUNCTION RESET FILTER - RESET KE SEMUA DATA AWAL ================
+function resetFilter() {
+    console.log('=== RESET FILTER DITEKAN ===');
+    
+    // Reset semua dropdown ke default
+    $("#filterKecamatan").val("all");
+    $("#filterIjin").val("all");
+    $("#filterLayanan").val("all");
+    
+    // Tampilkan loading
+    $('#dataTableBody').html('<tr><td colspan="11" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Memuat semua data...</p></td></tr>');
+    
+    // Hancurkan DataTable lama
+    if (dataTable) {
+        dataTable.destroy();
+        dataTable = null;
+    }
+    
+    // Render SEMUA data (allData)
+    renderTable(allData);
+    
+    console.log('Reset selesai, menampilkan semua', allData.length, 'data');
 }
 
 // ================ EDIT DATA ================
@@ -335,66 +442,24 @@ function editData(id) {
 
 // ================ DELETE DATA ================
 function confirmDelete(id, nama) {
-    deleteId = id;
-    $("#deleteInfo").html('<i class="fas fa-clinic-medical me-2"></i>' + escapeHtml(nama));
-    $("#deleteModal").modal("show");
-}
-
-function deleteData(id) {
-    $.ajax({
-        url: base_url + 'index.php/data_klinik/delete/' + id,
-        type: 'POST',
-        dataType: 'json',
-        success: function(response) {
-            if (response.status === 'success') {
-                allData = allData.filter(function(item) { return item.id !== id; });
-                renderTable(allData);
-                $("#deleteModal").modal("hide");
-                alert(response.message);
-            } else {
-                alert(response.message);
+    if (confirm("Apakah Anda yakin ingin menghapus data klinik: " + nama + "?")) {
+        $.ajax({
+            url: base_url + 'index.php/data_klinik/delete/' + id,
+            type: 'POST',
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    alert('Data berhasil dihapus');
+                    loadDataFromServer();
+                } else {
+                    alert(response.message || 'Gagal menghapus data');
+                }
+            },
+            error: function() {
+                alert('Gagal menghapus data');
             }
-        },
-        error: function() {
-            alert('Gagal menghapus data');
-        }
-    });
-}
-
-// ================ FILTER ================
-function filterData() {
-    var kecamatan = $("#filterKecamatan").val();
-    var statusIjin = $("#filterIjin").val();
-    var layanan = $("#filterLayanan").val();
-    
-    var filteredData = allData.slice();
-    
-    if (kecamatan !== "all") {
-        filteredData = filteredData.filter(function(item) {
-            return item.kecamatan === kecamatan;
         });
     }
-    
-    if (statusIjin !== "all") {
-        filteredData = filteredData.filter(function(item) {
-            return item.surat_ijin === statusIjin;
-        });
-    }
-    
-    if (layanan !== "all") {
-        filteredData = filteredData.filter(function(item) {
-            return item.jenis_layanan && item.jenis_layanan.includes(layanan);
-        });
-    }
-    
-    renderTable(filteredData);
-}
-
-function resetFilter() {
-    $("#filterKecamatan").val("all");
-    $("#filterIjin").val("all");
-    $("#filterLayanan").val("all");
-    renderTable(allData);
 }
 
 // ================ MAP FUNCTION ================
@@ -552,40 +617,45 @@ function closeMap() {
 
 // ================ DOCUMENT READY ================
 $(document).ready(function() {
+    console.log('Document ready, loading data...');
     loadDataFromServer();
     
-    $("#filterBtn").click(filterData);
-    $("#resetBtn").click(resetFilter);
-    $("#closeMapBtn").click(closeMap);
+    $("#filterBtn").off('click').on('click', function(e) {
+        e.preventDefault();
+        console.log('Filter button clicked');
+        filterData();
+    });
     
-    $("#btnMapView").click(function() {
+    $("#resetBtn").off('click').on('click', function(e) {
+        e.preventDefault();
+        console.log('Reset button clicked');
+        resetFilter();
+    });
+    
+    $("#closeMapBtn").off('click').on('click', closeMap);
+    
+    $("#btnMapView").off('click').on('click', function() {
         currentView = "map";
         updateMapView();
         $(this).addClass("active");
         $("#btnSatelliteView").removeClass("active");
     });
     
-    $("#btnSatelliteView").click(function() {
+    $("#btnSatelliteView").off('click').on('click', function() {
         currentView = "satellite";
         updateMapView();
         $(this).addClass("active");
         $("#btnMapView").removeClass("active");
     });
     
-    $("#btnResetView").click(function() {
+    $("#btnResetView").off('click').on('click', function() {
         if (map && currentShopMarker) {
             var latlng = currentShopMarker.getLatLng();
             map.setView([latlng.lat, latlng.lng], 16);
         }
     });
     
-    $("#confirmDelete").click(function() {
-        if (deleteId) {
-            deleteData(deleteId);
-        }
-    });
-    
-    $("#formEdit").submit(function(e) {
+    $("#formEdit").off('submit').on('submit', function(e) {
         e.preventDefault();
         var id = $("#edit_id").val();
         

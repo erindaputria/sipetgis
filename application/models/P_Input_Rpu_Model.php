@@ -12,12 +12,12 @@ class P_input_rpu_model extends CI_Model {
     }
     
     /**
-     * Save RPU data 
+     * Save RPU data  
      */
     public function save_rpu($data) {
         // Kolom yang ada di tabel input_rpu - menggunakan 'lokasi'
         $allowed_fields = array(
-            'tanggal_rpu', 'pejagal', 'perizinan', 'tersedia_juleha', 
+            'tanggal_rpu', 'nama_rpu', 'pejagal', 'perizinan', 'tersedia_juleha', 
             'lokasi', 'kecamatan', 'kelurahan', 'rt', 'rw', 
             'latitude', 'longitude', 'nama_pj', 'nik_pj', 
             'telp_pj', 'nama_petugas', 'foto_kegiatan', 'keterangan'

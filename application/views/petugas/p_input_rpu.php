@@ -615,8 +615,8 @@
                                                     <td><?php echo htmlspecialchars($data['kelurahan'] ?? '-'); ?></td>
                                                     <td class="text-center">
     <?php if (!empty($data['foto_kegiatan'])): 
-        $foto_list = explode(',', $data['foto_kegiatan']);
-        $total_foto = count($foto_list);
+        $foto_list = explode(',', $data['foto_kegiatan']); 
+        $total_foto = count($foto_list); 
     ?>
         <button type="button" class="btn btn-sm btn-photo" onclick="lihatFoto('<?= base_url('uploads/rpu/') ?>', '<?= htmlspecialchars($data['foto_kegiatan']) ?>')">
             <i class="fas fa-images me-1"></i> <?= $total_foto ?> Foto

@@ -11,16 +11,8 @@ class Layanan_klinik_model extends CI_Model {
     }
     
     public function get_all() {
-        // Ambil semua data dari tabel
-        $query = $this->db->get($this->table);
-        $result = $query->result();
-        
-        // Jika tidak ada data, kembalikan array kosong
-        if (empty($result)) {
-            return [];
-        }
-        
-        return $result;
+        $this->db->order_by('id_layanan', 'ASC');
+        return $this->db->get($this->table)->result();
     }
     
     public function get_by_id($id) {
@@ -28,17 +20,13 @@ class Layanan_klinik_model extends CI_Model {
     }
     
     public function insert($data) {
-        // Tambahkan created_at dan updated_at
         $data['created_at'] = date('Y-m-d H:i:s');
         $data['updated_at'] = date('Y-m-d H:i:s');
-        
         return $this->db->insert($this->table, $data);
     }
     
     public function update($id, $data) {
-        // Update updated_at
         $data['updated_at'] = date('Y-m-d H:i:s');
-        
         $this->db->where('id_layanan', $id);
         return $this->db->update($this->table, $data);
     }
@@ -57,3 +45,4 @@ class Layanan_klinik_model extends CI_Model {
         return $this->db->get($this->table)->num_rows() > 0;
     }
 }
+?>

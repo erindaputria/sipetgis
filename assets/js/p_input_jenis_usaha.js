@@ -7,6 +7,7 @@
 let selectedFiles = [];
 const MAX_FILES = 5;
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+let isNIKValid = false;
 
 // ========== FUNGSI GLOBAL (di luar document ready) ==========
 
@@ -137,7 +138,7 @@ $(document).ready(function() {
         $('#jenisUsahaTable').DataTable().destroy();
     }
      
-    // Initialize DataTable
+    // Initialize DataTable - TANPA ORDER (biar server yang ngatur DESC)
     let dataTable = $('#jenisUsahaTable').DataTable({
         language: {
             search: "Cari:",
@@ -174,10 +175,46 @@ $(document).ready(function() {
         ]
     });
     
+    // ========== DISABLE SEMUA FIELD AWAL (kecuali NIK) ==========
+    function disableAllFields() {
+        $('#nama_peternak, #telepon, #alamat, #kelurahan, #rt, #rw, #latitude, #longitude, #nama_petugas, #tanggal_input').prop('readonly', true);
+        $('#nama_peternak, #telepon, #alamat, #kelurahan, #rt, #rw, #latitude, #longitude, #nama_petugas, #tanggal_input').css('background-color', '#e9ecef');
+        $('#btnGetLocation').prop('disabled', true);
+        $('#foto_usaha').prop('disabled', true);
+        $('#btnRemoveAllPhotos').prop('disabled', true);
+        $('#jenisUsahaBody').find('select, input, button').prop('disabled', true);
+        $('#btnAddJenisUsaha').prop('disabled', true);
+        $('button[type="submit"]').prop('disabled', true);
+    }
+    
+    function enableAllFields() {
+        $('#nama_peternak, #telepon, #alamat, #kelurahan, #rt, #rw, #latitude, #longitude, #nama_petugas, #tanggal_input').prop('readonly', false);
+        $('#nama_peternak, #telepon, #alamat, #kelurahan, #rt, #rw, #latitude, #longitude, #nama_petugas, #tanggal_input').css('background-color', '');
+        $('#btnGetLocation').prop('disabled', false);
+        $('#foto_usaha').prop('disabled', false);
+        $('#btnRemoveAllPhotos').prop('disabled', false);
+        $('#jenisUsahaBody').find('select, input, button').prop('disabled', false);
+        $('#btnAddJenisUsaha').prop('disabled', false);
+        $('button[type="submit"]').prop('disabled', false);
+        
+        // Nama dan Telepon tetap readonly karena dari data pelaku usaha
+        $('#nama_peternak, #telepon').prop('readonly', true);
+        $('#nama_peternak, #telepon').css('background-color', '#e9ecef');
+    }
+    
+    // Panggil disable semua field di awal
+    disableAllFields();
+    
     // ========== MULTIPLE PHOTO UPLOAD ==========
 
     // Handle multiple file selection
     $('#foto_usaha').on('change', function(e) {
+        if (!isNIKValid) {
+            showAlert('danger', 'NIK harus terdaftar terlebih dahulu!');
+            $(this).val('');
+            return;
+        }
+        
         const files = Array.from(e.target.files);
         
         if (selectedFiles.length + files.length > MAX_FILES) {
@@ -293,32 +330,32 @@ $(document).ready(function() {
     });
 
     // ========== AUTO FILL DATA PELAKU USAHA BERDASARKAN NIK ==========
-    // Event NIK - hanya angka, maksimal 16 digit, dan auto-fill saat 16 digit
     $('#nik').on('input', function() {
         let nik = $(this).val().replace(/\D/g, '').slice(0, 16);
         $(this).val(nik);
         
         if (nik.length === 16) {
-            // Panggil fungsi untuk mengambil data pelaku usaha
             getDataPelakuUsahaByNIK(nik);
         } else if (nik.length === 0) {
-            // Reset field jika NIK kosong
             resetAutoFillFields();
             $('#nik-status').html('');
+            isNIKValid = false;
+            disableAllFields();
+        } else {
+            isNIKValid = false;
+            disableAllFields();
         }
     });
 
-    // Fungsi untuk reset field auto-fill
     function resetAutoFillFields() {
         $('#nama_peternak').val('');
         $('#telepon').val('');
-        $('#alamat').val('');
         $('#kelurahan').val('');
         $('#rt').val('');
         $('#rw').val('');
+        $('#alamat').val('');
     }
 
-    // Fungsi untuk mengambil data pelaku usaha berdasarkan NIK via AJAX
     function getDataPelakuUsahaByNIK(nik) {
         $.ajax({
             url: base_url + 'P_input_jenis_usaha/get_pelaku_usaha_by_nik',
@@ -333,40 +370,51 @@ $(document).ready(function() {
             },
             success: function(res) {
                 if (res.status === 'success' && res.data) {
-                    // Isi field dengan data yang didapat - FIELD TETAP BISA DIEDIT
+                    isNIKValid = true;
+                    
                     $('#nama_peternak').val(res.data.nama || '');
                     $('#telepon').val(res.data.telepon || '');
-                    $('#alamat').val(res.data.alamat || '');
                     
-                    // Set kelurahan jika ada
-                    if (res.data.kelurahan) {
-                        $('#kelurahan').val(res.data.kelurahan);
-                    }
+                    if (res.data.kelurahan) $('#kelurahan').val(res.data.kelurahan);
+                    if (res.data.rt) $('#rt').val(res.data.rt);
+                    if (res.data.rw) $('#rw').val(res.data.rw);
                     
-                    $('#rt').val(res.data.rt || '');
-                    $('#rw').val(res.data.rw || '');
+                    // ENABLE semua field
+                    enableAllFields();
                     
-                    $('#nik-status').html('<span class="text-success"><i class="fas fa-check-circle me-1"></i>Data ditemukan, field terisi otomatis. Anda masih bisa mengedit.</span>');
-                    showAlert('success', 'Data pelaku usaha ditemukan, field terisi otomatis. Anda masih bisa mengedit jika perlu.');
+                    $('#nik-status').html('<span class="text-success"><i class="fas fa-check-circle me-1"></i>✓ NIK TERDAFTAR! Silakan isi data Jenis Usaha.</span>');
+                    showAlert('success', 'NIK terdaftar! Silakan isi data Jenis Usaha.');
+                    $('#alamat').focus();
                 } else {
-                    // Kosongkan field jika NIK tidak ditemukan
+                    isNIKValid = false;
                     resetAutoFillFields();
-                    $('#nik-status').html('<span class="text-danger"><i class="fas fa-exclamation-circle me-1"></i>NIK belum terdaftar. Silakan isi manual.</span>');
-                    showAlert('warning', 'NIK belum terdaftar di data Pelaku Usaha. Silakan isi manual.');
+                    disableAllFields();
+                    
+                    $('#nik-status').html('<span class="text-danger"><i class="fas fa-exclamation-circle me-1"></i>✗ NIK BELUM TERDAFTAR! Silakan isi data Pelaku Usaha terlebih dahulu di menu Master Data Pelaku Usaha.</span>');
+                    showAlert('danger', 'NIK belum terdaftar! Silakan isi data Pelaku Usaha terlebih dahulu di menu Master Data Pelaku Usaha.');
                 }
             },
             error: function(xhr, status, error) {
-                console.error('Error getting data:', error);
+                console.error('Error:', error);
+                isNIKValid = false;
                 resetAutoFillFields();
-                $('#nik-status').html('<span class="text-danger"><i class="fas fa-exclamation-circle me-1"></i>Gagal mengambil data. Silakan isi manual.</span>');
+                disableAllFields();
+                $('#nik-status').html('<span class="text-danger"><i class="fas fa-exclamation-circle me-1"></i>Gagal memverifikasi NIK. Silakan coba lagi.</span>');
             }
         });
     }
 
-    // Validasi NIK dan field lainnya
+    // Validasi submit
     $('#formJenisUsaha').on('submit', function(e) {
+        if (!isNIKValid) {
+            e.preventDefault();
+            $('#nik').addClass('is-invalid');
+            showAlert('danger', 'NIK harus terdaftar terlebih dahulu! Silakan isi data Pelaku Usaha terlebih dahulu.');
+            return false;
+        }
+        
         const nik = $('#nik').val();
-        if (nik && nik.length > 0 && nik.length !== 16) {
+        if (nik && nik.length !== 16) {
             e.preventDefault();
             $('#nik').addClass('is-invalid');
             showAlert('danger', 'NIK harus 16 digit angka');
@@ -375,13 +423,19 @@ $(document).ready(function() {
         return true;
     });
 
-    // Add Jenis Usaha Row - VERSI MANUAL MENGGUNAKAN JQUERY
+    // ==================== KOMODITAS TERNAK - ADD/REMOVE ROW ====================
+    
+    // Add Jenis Usaha Row
     function addJenisUsahaRow() {
-        // Buat elemen baru dengan jQuery
-        var $newRow = $('<tr>').addClass('jenis-usaha-row');
+        if (!isNIKValid) {
+            showAlert('danger', 'NIK harus terdaftar terlebih dahulu!');
+            return;
+        }
+        
+        var $newRow = $('<tr class="jenis-usaha-row">');
         
         // Kolom Jenis Usaha (select)
-        var $jenisUsahaTd = $('<tr>');
+        var $jenisUsahaTd = $('<td>');
         var $jenisUsahaSelect = $('<select>').addClass('form-control jenis_usaha').attr('name', 'jenis_usaha[]').attr('required', true);
         var jenisUsahaOptions = [
             {value: '', text: 'Pilih Jenis Usaha'},
@@ -401,7 +455,7 @@ $(document).ready(function() {
         $newRow.append($jenisUsahaTd);
         
         // Kolom Komoditas (select)
-        var $komoditasTd = $('</table>');
+        var $komoditasTd = $('<td>');
         var $komoditasSelect = $('<select>').addClass('form-control komoditas_ternak').attr('name', 'komoditas_ternak[]').attr('required', true);
         var komoditasOptions = [
             {value: '', text: 'Pilih Komoditas Ternak'},
@@ -428,7 +482,7 @@ $(document).ready(function() {
         $newRow.append($komoditasTd);
         
         // Kolom Jumlah (input number)
-        var $jumlahTd = $('<tr>');
+        var $jumlahTd = $('<td>');
         var $jumlahInput = $('<input>').addClass('form-control jumlah').attr({
             type: 'number',
             name: 'jumlah[]',
@@ -440,16 +494,20 @@ $(document).ready(function() {
         $jumlahTd.append($jumlahInput);
         $newRow.append($jumlahTd);
         
-        // Kolom Aksi (button)
-        var $aksiTd = $('<tr>').addClass('text-center');
-        var $btnAdd = $('<button>').addClass('btn btn-sm btn-add-row').attr('type', 'button').html('<i class="fas fa-plus"></i>');
+        // Kolom Aksi (button) - TOMBOL + dan -
+        var $aksiTd = $('<td class="text-center">');
+        var $btnAdd = $('<button>').addClass('btn btn-sm btn-add-row me-1').attr('type', 'button').html('<i class="fas fa-plus"></i>');
         var $btnRemove = $('<button>').addClass('btn btn-sm btn-remove-row').attr('type', 'button').html('<i class="fas fa-trash"></i>');
         $aksiTd.append($btnAdd, $btnRemove);
         $newRow.append($aksiTd);
         
-        // Append ke body tabel
         $('#jenisUsahaBody').append($newRow);
         updateRemoveButtons();
+        
+        // Scroll ke baris baru
+        $('html, body').animate({
+            scrollTop: $('#jenisUsahaBody').offset().top - 100
+        }, 500);
     }
 
     // Remove Jenis Usaha Row
@@ -457,10 +515,12 @@ $(document).ready(function() {
         if ($('.jenis-usaha-row').length > 1) {
             $(btn).closest('tr').remove();
             updateRemoveButtons();
+        } else {
+            showAlert('warning', 'Minimal harus ada 1 baris data komoditas');
         }
     }
 
-    // Update Remove Buttons
+    // Update Remove Buttons (sembunyikan tombol hapus jika hanya 1 baris)
     function updateRemoveButtons() {
         if ($('.jenis-usaha-row').length > 1) {
             $('.btn-remove-row').show();
@@ -469,27 +529,29 @@ $(document).ready(function() {
         }
     }
 
-    // Event handlers
-    $(document).on('click', '.btn-add-row', function() { addJenisUsahaRow(); });
-    $(document).on('click', '.btn-remove-row', function() { removeJenisUsahaRow(this); });
+    // Event handlers (menggunakan event delegation untuk tombol yang ditambahkan dinamis)
+    $(document).on('click', '.btn-add-row', function() { 
+        addJenisUsahaRow(); 
+    });
+
+    $(document).on('click', '.btn-remove-row', function() { 
+        removeJenisUsahaRow(this); 
+    });
 
     // Input validation for Telepon
     $('#telepon').on('input', function() {
         $(this).val($(this).val().replace(/[^0-9]/g, ''));
     });
 
-    // Reset Form
     function resetForm() {
         $('#formContainer').removeClass('show');
         $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT JENIS USAHA');
         
         $('#jenisUsahaBody').empty();
         
-        // Buat default row menggunakan jQuery
-        var $defaultRow = $('<tr>').addClass('jenis-usaha-row');
+        var $defaultRow = $('<tr class="jenis-usaha-row">');
         
-        // Kolom Jenis Usaha
-        var $jenisUsahaTd = $('<tr>');
+        var $jenisUsahaTd = $('<td>');
         var $jenisUsahaSelect = $('<select>').addClass('form-control jenis_usaha').attr('name', 'jenis_usaha[]').attr('required', true);
         var jenisUsahaOptions = [
             {value: '', text: 'Pilih Jenis Usaha'},
@@ -508,8 +570,7 @@ $(document).ready(function() {
         $jenisUsahaTd.append($jenisUsahaSelect);
         $defaultRow.append($jenisUsahaTd);
         
-        // Kolom Komoditas
-        var $komoditasTd = $('<tr>');
+        var $komoditasTd = $('<td>');
         var $komoditasSelect = $('<select>').addClass('form-control komoditas_ternak').attr('name', 'komoditas_ternak[]').attr('required', true);
         var komoditasOptions = [
             {value: '', text: 'Pilih Komoditas Ternak'},
@@ -535,8 +596,7 @@ $(document).ready(function() {
         $komoditasTd.append($komoditasSelect);
         $defaultRow.append($komoditasTd);
         
-        // Kolom Jumlah
-        var $jumlahTd = $('<tr>');
+        var $jumlahTd = $('<td>');
         var $jumlahInput = $('<input>').addClass('form-control jumlah').attr({
             type: 'number',
             name: 'jumlah[]',
@@ -548,8 +608,7 @@ $(document).ready(function() {
         $jumlahTd.append($jumlahInput);
         $defaultRow.append($jumlahTd);
         
-        // Kolom Aksi
-        var $aksiTd = $('<tr>').addClass('text-center');
+        var $aksiTd = $('<td class="text-center">');
         var $btnAdd = $('<button>').addClass('btn btn-sm btn-add-row').attr('type', 'button').html('<i class="fas fa-plus"></i>');
         var $btnRemove = $('<button>').addClass('btn btn-sm btn-remove-row').attr('type', 'button').css('display', 'none').html('<i class="fas fa-trash"></i>');
         $aksiTd.append($btnAdd, $btnRemove);
@@ -558,14 +617,12 @@ $(document).ready(function() {
         $('#jenisUsahaBody').append($defaultRow);
         updateRemoveButtons();
         
-        // Reset form lainnya
         $('#formJenisUsaha')[0].reset();
         $('#kecamatan').val(user_kecamatan);
         $('#tanggal_input').val(new Date().toISOString().split('T')[0]);
         $('#coordinateInfo').hide();
         $('#nik-status').html('');
         
-        // Reset multiple photos
         selectedFiles = [];
         updatePhotoPreview();
         updatePhotoCount();
@@ -574,10 +631,12 @@ $(document).ready(function() {
         $('#btnRemoveAllPhotos').hide();
         $('#foto_usaha').val('');
         
+        isNIKValid = false;
+        disableAllFields();
+        
         $('.is-invalid').removeClass('is-invalid');
     }
 
-    // Validate Jenis Usaha Rows
     function validateJenisUsahaRows() {
         let isValid = true;
         $('.jenis-usaha-row').each(function(index) {
@@ -604,7 +663,6 @@ $(document).ready(function() {
         return isValid;
     }
 
-    // Get Location
     $('#btnGetLocation').click(function() {
         if (navigator.geolocation) {
             const btn = $(this);
@@ -638,7 +696,6 @@ $(document).ready(function() {
         }
     });
 
-    // Filter functions
     function filterData() {
         let search = "";
         const jenisUsaha = $("#filterJenisUsaha").val();
@@ -660,18 +717,22 @@ $(document).ready(function() {
     $("#filterBtn").click(filterData);
     $("#resetBtn").click(resetFilter);
 
-    // Form Submit
     $('#formJenisUsaha').submit(function(e) {
         e.preventDefault();
+        
+        if (!isNIKValid) {
+            showAlert('danger', 'NIK harus terdaftar terlebih dahulu!');
+            $('#nik').addClass('is-invalid');
+            return;
+        }
         
         let isValid = true;
         const fields = ['nama_peternak', 'nama_petugas', 'tanggal_input', 'alamat', 'kelurahan', 'latitude', 'longitude', 'nik'];
         fields.forEach(f => { $('#' + f).removeClass('is-invalid'); });
         fields.forEach(f => { if (!$('#' + f).val()) { $('#' + f).addClass('is-invalid'); isValid = false; } });
         
-        // Validasi NIK harus 16 digit jika diisi
         const nikValue = $('#nik').val();
-        if (nikValue && nikValue.length > 0 && nikValue.length !== 16) {
+        if (nikValue && nikValue.length !== 16) {
             $('#nik').addClass('is-invalid');
             isValid = false;
             showAlert('danger', 'NIK harus 16 digit angka');
@@ -685,11 +746,8 @@ $(document).ready(function() {
         btn.html('<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...').prop('disabled', true);
         
         var formData = new FormData(this);
-        
-        // Remove existing foto_usaha files from FormData
         formData.delete('foto_usaha[]');
         
-        // Add multiple files
         for (let i = 0; i < selectedFiles.length; i++) {
             formData.append('foto_usaha[]', selectedFiles[i]);
         }
@@ -726,8 +784,8 @@ $(document).ready(function() {
                 } else {
                     showAlert('danger', 'Gagal menyimpan data. Silakan coba lagi.');
                 }
-            },
-            complete: function() { btn.html(original).prop('disabled', false); } 
+            }, 
+            complete: function() { btn.html(original).prop('disabled', false); }  
         });
     });
 

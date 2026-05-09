@@ -11,7 +11,7 @@ class Data_history_vaksinasi_model extends CI_Model {
 
     public function get_all_vaksinasi()
     {
-        $this->db->select('
+        $this->db->select(' 
             id_vaksinasi as id,
             nama_peternak,
             nik,

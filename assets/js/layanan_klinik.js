@@ -1,25 +1,10 @@
-/**
- * Master Layanan Klinik
- * SIPETGIS - Kota Surabaya
- */
+var csrf_token = $('meta[name="csrf-token"]').attr('content');
+var csrf_name = $('meta[name="csrf-name"]').attr('content');
 
 $(document).ready(function() {
-    // Initialize DataTable (Hanya Excel & Print)
     $("#layananKlinikTable").DataTable({
         dom: "Bfrtip",
         buttons: [
-            // {
-            //     extend: "copy",
-            //     text: '<i class="fas fa-copy"></i> Copy',
-            //     className: 'btn btn-sm btn-primary',
-            //     exportOptions: { columns: [0,1] }
-            // },
-            // {
-            //     extend: "csv",
-            //     text: '<i class="fas fa-file-csv"></i> CSV',
-            //     className: 'btn btn-sm btn-success', 
-            //     exportOptions: { columns: [0,1] }
-            // },
             {
                 extend: "excel",
                 text: '<i class="fas fa-file-excel"></i> Excel',
@@ -29,12 +14,6 @@ $(document).ready(function() {
                     window.location.href = base_url + "layanan_klinik/export_excel";
                 }
             },
-            // {
-            //     extend: "pdf",
-            //     text: '<i class="fas fa-file-pdf"></i> PDF',
-            //     className: 'btn btn-sm btn-danger',
-            //     exportOptions: { columns: [0,1] }
-            // },
             {
                 extend: "print",
                 text: '<i class="fas fa-print"></i> Print',
@@ -70,38 +49,74 @@ $(document).ready(function() {
         ]
     });
 
-    // Event untuk tombol edit
     $(document).on("click", ".btn-edit", function() {
         $('#edit_id').val($(this).data('id'));
         $('#edit_nama').val($(this).data('nama'));
         $('#editDataModal').modal('show');
     });
 
-    // Event untuk tombol hapus
-    $(document).on("click", ".btn-delete", function() {
+    $(document).on("click", ".btn-delete", function(e) {
+        e.preventDefault();
+        
         var id = $(this).data('id');
         var nama = $(this).data('nama');
         
         if (confirm("Apakah Anda yakin ingin menghapus data layanan: " + nama + "?")) {
-            window.location.href = base_url + "layanan_klinik/hapus/" + id;
+            
+            var postData = {
+                id: id,
+                action: 'delete'
+            };
+            
+            if (csrf_name && csrf_token) {
+                postData[csrf_name] = csrf_token;
+            } else {
+                postData[$('meta[name="csrf-name"]').attr('content')] = $('meta[name="csrf-token"]').attr('content');
+            }
+            
+            $.ajax({
+                url: base_url + "layanan_klinik/hapus_ajax",
+                type: 'POST',
+                data: postData,
+                dataType: 'json',
+                beforeSend: function() {
+                    $('.btn-delete').prop('disabled', true);
+                },
+                success: function(res) {
+                    if (res.status === 'success') {
+                        alert(res.message);
+                        location.reload();
+                    } else {
+                        alert(res.message || 'Gagal menghapus data');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 403) {
+                        alert('Token keamanan tidak valid. Silakan refresh halaman dan coba lagi.');
+                    } else if (xhr.status === 500) {
+                        alert('Error server. Silakan coba lagi.');
+                    } else {
+                        alert('Gagal menghapus data. Error: ' + error);
+                    }
+                },
+                complete: function() {
+                    $('.btn-delete').prop('disabled', false);
+                }
+            });
         }
     });
 
-    // Auto close alerts after 5 seconds
     setTimeout(function() {
         $('.alert').alert('close');
     }, 5000);
 });
 
-// ========== FUNCTION PRINT ==========
 function printWithCurrentData() {
     var printWindow = window.open('', '_blank');
     
-    // Ambil data dari tabel yang tampil di layar
     var tableData = [];
     var totalData = 0;
     
-    // Ambil semua baris dari DataTable yang sedang ditampilkan
     var table = $('#layananKlinikTable').DataTable();
     table.rows({ search: 'applied' }).every(function(rowIdx, tableLoop, rowLoop) {
         var rowData = this.data();
@@ -110,7 +125,6 @@ function printWithCurrentData() {
     
     totalData = tableData.length;
     
-    // Current date
     var currentDate = new Date();
     var formattedDateTime = currentDate.toLocaleDateString('id-ID', {
         day: 'numeric',
@@ -127,16 +141,13 @@ function printWithCurrentData() {
     printWindow.document.write('.header p { margin: 5px 0; color: #000000; }');
     printWindow.document.write('table { width: 100%; border-collapse: collapse; margin-top: 20px; }');
     printWindow.document.write('th, td { border: 1px solid #000; padding: 8px; }');
-    printWindow.document.write('th { background-color: #832706; color: #000000; text-align: center; }');
+    printWindow.document.write('th { background-color: #832706; color: #ffffff; text-align: center; }');
     printWindow.document.write('td { color: #000000; }');
     printWindow.document.write('.total-row { background-color: #e8f5e9; font-weight: bold; }');
-    printWindow.document.write('.total-row td { color: #000000; }');
     printWindow.document.write('.footer-note { margin-top: 30px; font-size: 10px; color: #000000; text-align: center; }');
-    printWindow.document.write('@media print { .no-print { display: none; } }');
     printWindow.document.write('</style>');
     printWindow.document.write('</head><body>');
     
-    // Header Laporan
     printWindow.document.write('<div class="header">');
     printWindow.document.write('<h2>LAPORAN DATA LAYANAN KLINIK</h2>');
     printWindow.document.write('<h3>DINAS KETAHANAN PANGAN DAN PERTANIAN</h3>');
@@ -145,7 +156,6 @@ function printWithCurrentData() {
     printWindow.document.write('<p>Tanggal Cetak: ' + formattedDateTime + '</p>');
     printWindow.document.write('</div>');
     
-    // Tabel Data
     printWindow.document.write('<table border="1" cellpadding="8" cellspacing="0" width="100%">');
     printWindow.document.write('<thead>');
     printWindow.document.write('<tr>');
@@ -155,16 +165,14 @@ function printWithCurrentData() {
     printWindow.document.write('</thead>');
     printWindow.document.write('<tbody>');
     
-    // Loop data dari tabel
     for (var i = 0; i < tableData.length; i++) {
         var row = tableData[i];
         printWindow.document.write('<tr>');
         printWindow.document.write('<td align="center">' + (i + 1) + '</td>');
-        printWindow.document.write('<td align="left">' + stripHtml(row[1] || '-') + '</td>');
+        printWindow.document.write('<td align="left">' + stripHtml(row[1] || '-') + '</tr>');
         printWindow.document.write('</tr>');
     }
     
-    // Total row
     printWindow.document.write('<tr class="total-row">');
     printWindow.document.write('<td colspan="1" align="center"><strong>TOTAL KESELURUHAN</strong></td>');
     printWindow.document.write('<td align="center"><strong>' + formatNumber(totalData) + ' Data Layanan</strong></td>');
@@ -173,7 +181,6 @@ function printWithCurrentData() {
     printWindow.document.write('</tbody>');
     printWindow.document.write('</table>');
     
-    // Footer Note
     printWindow.document.write('<div class="footer-note">');
     printWindow.document.write('SIPETGIS - Sistem Informasi Peternakan Kota Surabaya');
     printWindow.document.write('</div>');
@@ -194,6 +201,3 @@ function stripHtml(html) {
     tmp.innerHTML = html;
     return tmp.textContent || tmp.innerText || '-';
 }
-
-// Base URL untuk redirect
-var base_url = "<?= base_url() ?>";

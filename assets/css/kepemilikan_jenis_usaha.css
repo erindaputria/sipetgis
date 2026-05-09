@@ -164,3 +164,41 @@ table.dataTable tbody tr:hover {
     .btn-primary-custom { padding: 6px 12px; font-size: 12px; }
     .dt-buttons .btn { padding: 4px 10px !important; font-size: 12px !important; }
 }
+
+/* ==============================================
+   NOTIFICATION TOAST
+   ============================================== */
+.alert {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-size: 14px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border-left: 4px solid #17a2b8;
+}
+
+.position-fixed {
+    position: fixed !important;
+}
+
+.top-0 {
+    top: 20px !important;
+}
+
+.end-0 {
+    right: 20px !important;
+}
+
+.m-3 {
+    margin: 1rem !important;
+}

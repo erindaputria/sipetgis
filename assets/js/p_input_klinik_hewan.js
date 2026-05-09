@@ -6,6 +6,7 @@ $(document).ready(function() {
     
     // Initialize DataTable dengan custom buttons termasuk Print
     let dataTable = $('#klinikTable').DataTable({
+        // HAPUS order: [[0, 'desc']] - biar server yang ngatur urutan
         language: {
             search: "Cari:",
             lengthMenu: "Tampilkan _MENU_ data",
@@ -37,7 +38,7 @@ $(document).ready(function() {
             }
         ],
         columnDefs: [
-            { orderable: false, targets: [12] }
+            { orderable: false, targets: [10] } // Kolom foto (kolom ke-11/indeks 10) tidak bisa diurut
         ]
     });
     

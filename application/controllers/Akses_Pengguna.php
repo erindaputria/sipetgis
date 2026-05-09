@@ -82,17 +82,33 @@ class Akses_pengguna extends CI_Controller {
         redirect('akses_pengguna');
     }
     
-    public function hapus($id) {
+    // ========== METHOD HAPUS YANG DIPERBAIKI ==========
+    public function hapus() {
+        $this->output->set_content_type('application/json');
+        
+        $id = $this->input->post('id');
+        
+        if (empty($id)) {
+            echo json_encode(['status' => 'error', 'message' => 'ID tidak valid']);
+            return;
+        }
+        
+        // Cek apakah data dengan ID tersebut ada
+        $existing = $this->Akses_pengguna_model->get_by_id($id);
+        if (!$existing) {
+            echo json_encode(['status' => 'error', 'message' => 'Data tidak ditemukan']);
+            return;
+        }
+        
         $result = $this->Akses_pengguna_model->delete($id);
         
         if ($result) {
-            $this->session->set_flashdata('success', 'Data pengguna berhasil dihapus');
+            echo json_encode(['status' => 'success', 'message' => 'Data pengguna berhasil dihapus']);
         } else {
-            $this->session->set_flashdata('error', 'Gagal menghapus data pengguna');
+            echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus data pengguna']);
         }
-        
-        redirect('akses_pengguna');
     }
+    // ========== END METHOD HAPUS ==========
 
     // ==================== EXPORT EXCEL ====================
     public function export_excel()
@@ -131,7 +147,7 @@ class Akses_pengguna extends CI_Controller {
         echo '<div class="subtitle" style="font-size: 10pt;">Tanggal Cetak: ' . date('d/m/Y H:i:s') . '</div>';
         echo '<br>';
         
-        echo '<td>';
+        echo '<table>';
         echo '<thead>';
         echo '<tr>';
         echo '<th width="40">No</th>';

@@ -38,7 +38,7 @@
     <!-- Leaflet CSS for Maps -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-    <!-- Custom CSS History Data Ternak -->
+    <!-- Custom CSS Data History Ternak -->
     <link rel="stylesheet" href="<?php echo base_url('assets/css/data_history_ternak.css'); ?>" />
 </head>
 
@@ -214,19 +214,6 @@
                                     <label for="filterKomoditas" class="form-label fw-bold">Filter Komoditas:</label>
                                     <select class="form-select" id="filterKomoditas">
                                         <option selected value="all">Semua Komoditas</option>
-                                        <option value="sapi_potong">Sapi Potong</option>
-                                        <option value="sapi_perah">Sapi Perah</option>
-                                        <option value="kambing">Kambing</option>
-                                        <option value="domba">Domba</option>
-                                        <option value="ayam_buras">Ayam Buras</option>
-                                        <option value="ayam_broiler">Ayam Broiler</option>
-                                        <option value="ayam_layer">Ayam Layer</option>
-                                        <option value="itik">Itik</option>
-                                        <option value="angsa">Angsa</option>
-                                        <option value="kalkun">Kalkun</option>
-                                        <option value="burung">Burung</option>
-                                        <option value="kerbau">Kerbau</option>
-                                        <option value="kuda">Kuda</option>
                                     </select>
                                 </div>
                             </div>
@@ -235,9 +222,6 @@
                                     <label for="filterPeriode" class="form-label fw-bold">Filter Periode:</label>
                                     <select class="form-select" id="filterPeriode">
                                         <option selected value="all">Semua Periode</option>
-                                        <option value="2023">Tahun 2023</option>
-                                        <option value="2022">Tahun 2022</option>
-                                        <option value="2021">Tahun 2021</option>
                                     </select>
                                 </div>
                             </div>
@@ -253,54 +237,26 @@
                     </div>
 
                     <!-- Data Table -->
-<div class="card stat-card">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table id="historyDataTable" class="table table-hover w-100">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Peternak</th>
-                        <th>Komoditas</th>
-                        <th>Jumlah Ternak</th>
-                        <th>Koordinat Lokasi</th>
-                        <th>Tanggal Update</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Data akan diisi via AJAX dari database -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-                    <!-- Detail Section (Initially Hidden) -->
-                    <div id="detailSection" class="detail-section" style="display: none;">
-                        <div class="detail-header">
-                            <h5 class="fw-bold mb-0" id="detailTitle">Detail History Data Ternak</h5>
-                            <div id="detailInfo" class="text-muted mt-2"></div>
-                        </div>
-                        <div class="table-responsive">
-                            <table id="detailTable" class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Jenis Perubahan</th>
-                                        <th>Jumlah</th>
-                                        <th>Alasan</th>
-                                        <th>Petugas</th>
-                                        <th>Tanggal</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="detailTableBody"></tbody>
-                            </table>
-                        </div>
-                        <div class="text-end mt-3">
-                            <button id="closeDetailBtn" class="btn btn-outline-primary-custom">
-                                <i class="fas fa-times me-2"></i>Tutup Detail
-                            </button>
+                    <div class="card stat-card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="historyDataTable" class="table table-hover w-100">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Peternak</th>
+                                            <th>Komoditas</th>
+                                            <th>Jumlah Ternak</th>
+                                            <th>Koordinat Lokasi</th>
+                                            <th>Tanggal Update</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td colspan="7" class="text-center">Memuat data...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
@@ -355,6 +311,116 @@
         </div>
     </div>
 
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #832706; color: white;">
+                    <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Edit Data Ternak</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="formEdit">
+                    <div class="modal-body">
+                        <input type="hidden" id="edit_id" name="id">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nama Peternak</label>
+                                <input type="text" class="form-control" id="edit_nama_peternak" name="nama_peternak" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Komoditas</label>
+                                <input type="text" class="form-control" id="edit_komoditas" name="komoditas" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Jumlah Ternak</label>
+                                <input type="number" class="form-control" id="edit_jumlah" name="jumlah" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Tanggal Input</label>
+                                <input type="date" class="form-control" id="edit_tanggal_input" name="tanggal_input">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Kecamatan</label>
+                                <select class="form-select" id="edit_kecamatan" name="kecamatan">
+                                    <option value="">Pilih Kecamatan</option>
+                                    <option value="Asemrowo">Asemrowo</option>
+                                    <option value="Benowo">Benowo</option>
+                                    <option value="Bubutan">Bubutan</option>
+                                    <option value="Bulak">Bulak</option>
+                                    <option value="Dukuh Pakis">Dukuh Pakis</option>
+                                    <option value="Gayungan">Gayungan</option>
+                                    <option value="Genteng">Genteng</option>
+                                    <option value="Gubeng">Gubeng</option>
+                                    <option value="Gunung Anyar">Gunung Anyar</option>
+                                    <option value="Jambangan">Jambangan</option>
+                                    <option value="Karang Pilang">Karang Pilang</option>
+                                    <option value="Kenjeran">Kenjeran</option>
+                                    <option value="Krembangan">Krembangan</option>
+                                    <option value="Lakarsantri">Lakarsantri</option>
+                                    <option value="Mulyorejo">Mulyorejo</option>
+                                    <option value="Pabean Cantian">Pabean Cantian</option>
+                                    <option value="Pakal">Pakal</option>
+                                    <option value="Rungkut">Rungkut</option>
+                                    <option value="Sambikerep">Sambikerep</option>
+                                    <option value="Sawahan">Sawahan</option>
+                                    <option value="Semampir">Semampir</option>
+                                    <option value="Simokerto">Simokerto</option>
+                                    <option value="Sukolilo">Sukolilo</option>
+                                    <option value="Sukomanunggal">Sukomanunggal</option>
+                                    <option value="Tambaksari">Tambaksari</option>
+                                    <option value="Tandes">Tandes</option>
+                                    <option value="Tegalsari">Tegalsari</option>
+                                    <option value="Tenggilis Mejoyo">Tenggilis Mejoyo</option>
+                                    <option value="Wiyung">Wiyung</option>
+                                    <option value="Wonocolo">Wonocolo</option>
+                                    <option value="Wonokromo">Wonokromo</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Kelurahan</label>
+                                <select class="form-select" id="edit_kelurahan" name="kelurahan">
+                                    <option value="">Pilih Kelurahan</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Alamat</label>
+                                <textarea class="form-control" id="edit_alamat" name="alamat" rows="2"></textarea>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">RT</label>
+                                <input type="text" class="form-control" id="edit_rt" name="rt">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">RW</label>
+                                <input type="text" class="form-control" id="edit_rw" name="rw">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Telepon</label>
+                                <input type="text" class="form-control" id="edit_telepon" name="telepon">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Latitude</label>
+                                <input type="text" class="form-control" id="edit_latitude" name="latitude" placeholder="-7.123456">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Longitude</label>
+                                <input type="text" class="form-control" id="edit_longitude" name="longitude" placeholder="112.123456">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Nama Petugas</label>
+                                <input type="text" class="form-control" id="edit_nama_petugas" name="nama_petugas">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary-custom btn-save-edit">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Core JS Files -->
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/popper.min.js"></script>
@@ -372,20 +438,20 @@
     <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
-
+ 
     <!-- Leaflet JS for Maps -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<!-- DECLARE BASE_URL - WAJIB! -->
-<script>
-    var base_url = '<?php echo base_url(); ?>';
-    console.log('base_url =', base_url);
-</script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Base URL -->
+    <script>
+        var base_url = '<?php echo base_url(); ?>';
+        console.log('base_url =', base_url);
+    </script>
 
-<!-- Custom JS History Data Ternak -->
-<script src="<?php echo base_url('assets/js/data_history_ternak.js'); ?>"></script>
+    <!-- Custom JS -->
+    <script src="<?php echo base_url('assets/js/data_history_ternak.js'); ?>"></script>
 </body>
 </html>

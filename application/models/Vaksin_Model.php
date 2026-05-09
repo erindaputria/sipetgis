@@ -18,7 +18,7 @@ class Vaksin_model extends CI_Model {
     public function get_by_id($id) {
         $this->db->where('id_vaksin', $id);
         return $this->db->get($this->table)->row(); 
-    }
+    } 
     
     public function insert($data) {
         return $this->db->insert($this->table, $data);

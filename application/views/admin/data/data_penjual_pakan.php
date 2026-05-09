@@ -12,7 +12,7 @@
         WebFont.load({
             google: { families: ["Public Sans:300,400,500,600,700"] },
             custom: {
-                families: [ 
+                families: [  
                     "Font Awesome 5 Solid",
                     "Font Awesome 5 Regular",
                     "Font Awesome 5 Brands", 
@@ -194,10 +194,10 @@
                         </div>
                     </div>
 
-                    <!-- Filter Section -->
+                                        <!-- Filter Section -->
                     <div class="filter-section">
                         <div class="row align-items-center">
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <div class="form-group mb-0">
                                     <label for="filterKecamatan" class="form-label fw-bold">Filter Kecamatan:</label>
                                     <select class="form-select form-select-sm" id="filterKecamatan">
@@ -236,31 +236,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="form-group mb-0">
-                                    <label for="filterStatus" class="form-label fw-bold">Filter Status Ijin:</label>
-                                    <select class="form-select form-select-sm" id="filterStatus">
-                                        <option selected value="all">Semua Status</option>
-                                        <option value="Aktif">Memiliki Ijin</option>
-                                        <option value="Tidak Aktif">Belum Memiliki Ijin</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group mb-0">
-                                    <label for="filterJenisPakan" class="form-label fw-bold">Filter Jenis Pakan:</label>
-                                    <select class="form-select form-select-sm" id="filterJenisPakan">
-                                        <option selected value="all">Semua Jenis</option>
-                                        <option value="Konsentrat">Konsentrat</option>
-                                        <option value="Hijauan">Hijauan</option>
-                                        <option value="Fermentasi">Fermentasi</option>
-                                        <option value="Pakan Ayam">Pakan Ayam</option>
-                                        <option value="Pakan Sapi">Pakan Sapi</option>
-                                        <option value="Pakan Kambing">Pakan Kambing</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3 text-end">
+                            <div class="col-md-6 text-end">
                                 <button id="filterBtn" class="btn btn-primary-custom btn-sm"><i class="fas fa-filter me-1"></i>Filter</button>
                                 <button id="resetBtn" class="btn btn-outline-secondary-custom btn-sm"><i class="fas fa-redo me-1"></i>Reset</button>
                             </div>
@@ -324,12 +300,6 @@
                                             <div class="card-body p-3" id="coordInfo"></div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="card mt-3">
-                                    <div class="card-header bg-primary-custom text-white py-2">
-                                        <h6 class="mb-0"><i class="fas fa-tag me-1"></i> Produk Pakan Tersedia</h6>
-                                    </div>
-                                    <div class="card-body p-3" id="productInfo"></div>
                                 </div>
                             </div>
                         </div>

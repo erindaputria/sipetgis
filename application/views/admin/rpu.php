@@ -2,6 +2,9 @@
 <html lang="id">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="<?= $this->security->get_csrf_hash(); ?>">
+    <meta name="csrf-name" content="<?= $this->security->get_csrf_token_name(); ?>">
     <title>Master Data RPU - SIPETGIS</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="<?php echo base_url('assets/SIPETGIS/assets/img/kaiadmin/favicon.ico'); ?>" type="image/x-icon" />
@@ -14,7 +17,7 @@
             custom: {
                 families: [
                     "Font Awesome 5 Solid", 
-                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Regular", 
                     "Font Awesome 5 Brands",
                     "simple-line-icons",
                 ],
@@ -80,7 +83,7 @@
                                 <ul class="list-unstyled ps-4">
                                     <li><a href="<?= site_url('pelaku_usaha') ?>" class="nav-link">Pelaku Usaha</a></li>
                                     <li><a href="<?= site_url('jenis_usaha') ?>" class="nav-link">Jenis Usaha</a></li>
-                                    <li><a href="<?= site_url('kepemilikan_jenis_usaha') ?>" class="nav-link active">Kepemilikan Jenis Usaha</a></li>
+                                    <li><a href="<?= site_url('kepemilikan_jenis_usaha') ?>" class="nav-link">Kepemilikan Jenis Usaha</a></li>
                                     <li><a href="<?= site_url('akses_pengguna') ?>" class="nav-link">Akses Pengguna</a></li>
                                     <li><a href="<?= site_url('obat') ?>" class="nav-link">Obat</a></li>
                                     <li><a href="<?= site_url('vaksin') ?>" class="nav-link">Vaksin</a></li>
@@ -421,7 +424,7 @@
                                                     <?php endforeach; ?>
                                                 <?php else: ?>
                                                     <tr>
-                                                        <td colspan="5" class="text-center">Tidak ada data</td>
+                                                        <td colspan="5" class="text-center">Tidak ada数据</td>
                                                     </tr>
                                                 <?php endif; ?>
                                             </tbody>
@@ -456,8 +459,15 @@
     
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+     
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <!-- Custom JS RPU -->
     <script src="<?php echo base_url('assets/js/rpu.js'); ?>"></script>
+    
+    <script>
+        var base_url = "<?= base_url() ?>";
+    </script>
 </body>
 </html>

@@ -1,5 +1,19 @@
 <!doctype html>
 <html lang="id">
+
+<style>
+    /* FORCE SELECT2 TEKS PUTIH SAAT HOVER */
+    .select2-results__option--selectable:hover,
+    .select2-results__option--selectable:hover *,
+    .select2-results__option--highlighted,
+    .select2-results__option--highlighted *,
+    .select2-results__option[aria-selected="true"],
+    .select2-results__option[aria-selected="true"] * {
+        background-color: #832706 !important;
+        color: #ffffff !important;
+    }
+</style>
+
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Master Data Kepemilikan Jenis Usaha - SIPETGIS</title>
@@ -14,7 +28,7 @@
     </script>
 
     <script src="<?php echo base_url('assets/SIPETGIS/assets/js/plugin/webfont/webfont.min.js'); ?>"></script>
-    <script>
+    <script> 
         WebFont.load({
             google: { families: ["Public Sans:300,400,500,600,700"] },
             custom: {
@@ -202,15 +216,16 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label>Cari NIK / Nama Pelaku Usaha <span class="text-danger">*</span></label>
-                                                <select name="nik" id="nik_select" class="form-control select2-nik" style="width: 100%;" required>
-                                                    <option value="">-- Ketik NIK atau Nama Pelaku Usaha (minimal 2 karakter) --</option>
-                                                </select>
-                                                <small class="text-muted">Hanya pelaku usaha yang sudah terdaftar di database yang dapat dipilih</small>
-                                            </div>
-                                        </div>
+                                        <!-- Modal Tambah Data - Bagian Select2 -->
+<div class="col-md-12">
+    <div class="form-group">
+        <label class="fw-bold" style="color: #832706;">Cari NIK / Nama Pelaku Usaha <span class="text-danger">*</span></label>
+        <select name="nik" id="nik_select" class="form-control select2-nik" style="width: 100%;" required>
+            <option value="">-- Ketik NIK atau Nama Pelaku Usaha (minimal 2 karakter) --</option>
+        </select>
+        <small class="text-muted">Hanya pelaku usaha yang sudah terdaftar di database yang dapat dipilih</small>
+    </div>
+</div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
@@ -317,125 +332,149 @@
                 </div>
 
                 <!-- Modal Edit Data -->
-                <div class="modal fade" id="editDataModal" tabindex="-1">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content modal-form">
-                            <form action="<?= base_url('kepemilikan_jenis_usaha/update'); ?>" method="post" id="formEdit">
-                                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>" />
-                                <input type="hidden" id="edit_id" name="id">
-                                <div class="modal-header">
-                                    <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Edit Data Kepemilikan Jenis Usaha</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>NIK</label>
-                                                <input type="text" id="edit_nik" name="nik" class="form-control" readonly disabled>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Nama Pelaku Usaha <span class="text-danger">*</span></label>
-                                                <input type="text" id="edit_nama_peternak" name="nama_peternak" class="form-control" required readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Jenis Usaha <span class="text-danger">*</span></label>
-                                                <select id="edit_jenis_usaha" name="jenis_usaha" class="form-control" required>
-                                                    <option value="">Pilih Jenis Usaha</option>
-                                                    <option value="Peternak Sapi Perah">Peternak Sapi Perah</option>
-                                                    <option value="Peternak Sapi Potong">Peternak Sapi Potong</option>
-                                                    <option value="Peternak Kambing">Peternak Kambing</option>
-                                                    <option value="Peternak Domba">Peternak Domba</option>
-                                                    <option value="Peternak Ayam Broiler">Peternak Ayam Broiler</option>
-                                                    <option value="Peternak Ayam Petelur">Peternak Ayam Petelur</option>
-                                                    <option value="Peternak Itik">Peternak Itik</option>
-                                                    <option value="Peternak Kelinci">Peternak Kelinci</option>
-                                                    <option value="Peternak Babi">Peternak Babi</option>
-                                                    <option value="Peternak Kuda">Peternak Kuda</option>
-                                                    <option value="Penjual Pakan Ternak">Penjual Pakan Ternak</option>
-                                                    <option value="Penjual Obat Hewan">Penjual Obat Hewan</option>
-                                                    <option value="Klinik Hewan">Klinik Hewan</option>
-                                                    <option value="TPU/RPU">TPU/RPU</option>
-                                                    <option value="Pemotongan Unggas">Pemotongan Unggas</option>
-                                                    <option value="Demplot">Demplot</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Jumlah Ternak / Unit Usaha <span class="text-danger">*</span></label>
-                                                <input type="number" id="edit_jumlah" name="jumlah" class="form-control" required min="0">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Kecamatan <span class="text-danger">*</span></label>
-                                                <select id="edit_kecamatan" name="kecamatan" class="form-control" required>
-                                                    <option value="">Pilih Kecamatan</option>
-                                                    <?php foreach($kecamatan as $kec): ?>
-                                                        <option value="<?= $kec ?>"><?= $kec ?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Kelurahan</label>
-                                                <input type="text" id="edit_kelurahan" name="kelurahan" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>RW</label>
-                                                <input type="text" id="edit_rw" name="rw" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>RT</label>
-                                                <input type="text" id="edit_rt" name="rt" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Alamat Lengkap <span class="text-danger">*</span></label>
-                                                <textarea id="edit_alamat" name="alamat" class="form-control" rows="3" required></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>GIS Latitude</label>
-                                                <input type="text" id="edit_gis_lat" name="gis_lat" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>GIS Longitude</label>
-                                                <input type="text" id="edit_gis_long" name="gis_long" class="form-control">
-                                            </div>
-                                        </div>
+<div class="modal fade" id="editDataModal" tabindex="-1" aria-labelledby="editDataModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content modal-form">
+            <form action="<?= base_url('kepemilikan_jenis_usaha/update'); ?>" method="post" id="formEdit">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>" />
+                <input type="hidden" id="edit_id" name="id">
+                <input type="hidden" id="edit_nik" name="nik">
+                
+                <div class="modal-header" style="border-bottom: 2px solid #832706;">
+                    <h5 class="modal-title" style="color: #832706;">
+                        <i class="fas fa-edit me-2"></i>Edit Data Kepemilikan Jenis Usaha
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body">
+                    <!-- Informasi Pelaku Usaha -->
+                    <div class="card mb-3" style="background-color: #fef3ef; border: 1px solid #ffe0d5;">
+                        <div class="card-body py-3">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="fw-bold" style="color: #832706;">NIK</label>
+                                        <input type="text" id="edit_nik_display" class="form-control" readonly style="background-color: #e9ecef;">
+                                        <small class="text-muted">NIK tidak dapat diubah</small>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn" data-bs-dismiss="modal" style="background: #e6d2c8; border: none; color: #832706; border-radius: 6px; padding: 8px 20px; font-weight: 500;">Batal</button>
-                                    <button type="submit" class="btn btn-primary">Update Data</button>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="fw-bold" style="color: #832706;">Nama Pelaku Usaha <span class="text-danger">*</span></label>
+                                        <input type="text" id="edit_nama_peternak" name="nama_peternak" class="form-control" required>
+                                    </div>
                                 </div>
-                            </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Jenis Usaha dan Jumlah -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="fw-bold" style="color: #832706;">Jenis Usaha <span class="text-danger">*</span></label>
+                                <select id="edit_jenis_usaha" name="jenis_usaha" class="form-control" required>
+                                    <option value="">Pilih Jenis Usaha</option>
+                                    <option value="Peternak Sapi Perah">Peternak Sapi Perah</option>
+                                    <option value="Peternak Sapi Potong">Peternak Sapi Potong</option>
+                                    <option value="Peternak Kambing">Peternak Kambing</option>
+                                    <option value="Peternak Domba">Peternak Domba</option>
+                                    <option value="Peternak Ayam Broiler">Peternak Ayam Broiler</option>
+                                    <option value="Peternak Ayam Petelur">Peternak Ayam Petelur</option>
+                                    <option value="Peternak Itik">Peternak Itik</option>
+                                    <option value="Peternak Kelinci">Peternak Kelinci</option>
+                                    <option value="Peternak Babi">Peternak Babi</option>
+                                    <option value="Peternak Kuda">Peternak Kuda</option>
+                                    <option value="Penjual Pakan Ternak">Penjual Pakan Ternak</option>
+                                    <option value="Penjual Obat Hewan">Penjual Obat Hewan</option>
+                                    <option value="Klinik Hewan">Klinik Hewan</option>
+                                    <option value="TPU/RPU">TPU/RPU</option>
+                                    <option value="Pemotongan Unggas">Pemotongan Unggas</option>
+                                    <option value="Demplot">Demplot</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="fw-bold" style="color: #832706;">Jumlah Ternak / Unit Usaha <span class="text-danger">*</span></label>
+                                <input type="number" id="edit_jumlah" name="jumlah" class="form-control" required min="0" step="1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lokasi -->
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="fw-bold" style="color: #832706;">Kecamatan <span class="text-danger">*</span></label>
+                                <select id="edit_kecamatan" name="kecamatan" class="form-control" required>
+                                    <option value="">Pilih Kecamatan</option>
+                                    <?php $kecamatan = ['ASEMROWO','BENOWO','BUBUTAN','BULAK','DUKUH PAKIS','GAYUNGAN','GENTENG','GUBENG','GUNUNG ANYAR','JAMBANGAN','KARANG PILANG','KENJERAN','KREMBANGAN','LAKARSANTRI','MULYOREJO','PABEAN CANTIAN','PAKAL','RUNGKUT','SAMBIKEREP','SAWAHAN','SEMAMPIR','SIMOKERTO','SUKOLILO','SUKOMANUNGGAL','TAMBAKSARI','TANDES','TEGALSARI','TENGGILIS MEJOYO','WIYUNG','WONOCOLO','WONOKROMO']; ?>
+                                    <?php foreach($kecamatan as $kec): ?>
+                                        <option value="<?= $kec ?>"><?= $kec ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="fw-bold" style="color: #832706;">Kelurahan</label>
+                                <input type="text" id="edit_kelurahan" name="kelurahan" class="form-control" placeholder="Masukkan Kelurahan">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="fw-bold" style="color: #832706;">RW</label>
+                                <input type="text" id="edit_rw" name="rw" class="form-control" placeholder="Contoh: 01">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="fw-bold" style="color: #832706;">RT</label>
+                                <input type="text" id="edit_rt" name="rt" class="form-control" placeholder="Contoh: 02">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="fw-bold" style="color: #832706;">Alamat Lengkap <span class="text-danger">*</span></label>
+                                <textarea id="edit_alamat" name="alamat" class="form-control" rows="3" required placeholder="Masukkan Alamat Lengkap"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GIS Koordinat -->
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="fw-bold" style="color: #832706;">GIS Latitude (Optional)</label>
+                                <input type="text" id="edit_gis_lat" name="gis_lat" class="form-control" placeholder="-7.258665">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="fw-bold" style="color: #832706;">GIS Longitude (Optional)</label>
+                                <input type="text" id="edit_gis_long" name="gis_long" class="form-control" placeholder="112.713936">
+                            </div>
                         </div>
                     </div>
                 </div>
+                
+                <div class="modal-footer" style="border-top: 1px solid #dee2e6;">
+                    <button type="button" class="btn" data-bs-dismiss="modal" style="background: #e6d2c8; border: none; color: #832706; border-radius: 6px; padding: 8px 20px; font-weight: 500;">
+                        <i class="fas fa-times me-1"></i>Batal
+                    </button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #832706 !important; border-color: #832706 !important; border-radius: 6px; padding: 8px 20px; font-weight: 500;">
+                        <i class="fas fa-save me-1"></i>Update Data
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
                 <!-- Content Table -->
                 <div class="row">

@@ -11,7 +11,7 @@
     --text-muted: #475569;
 }
 
-/* Logo */
+/* Logo */ 
 .sipetgis-logo {
     color: var(--primary) !important;
     font-weight: 800;

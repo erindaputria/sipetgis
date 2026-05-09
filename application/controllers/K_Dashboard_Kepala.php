@@ -12,7 +12,7 @@ class K_dashboard_kepala extends CI_Controller {
         // Cek login (sesuaikan dengan sistem Anda)
         if(!$this->session->userdata('logged_in')) {
             redirect('login');
-        }
+        } 
     } 
 
     public function index()

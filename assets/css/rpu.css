@@ -1,6 +1,3 @@
-/* ==============================================
-   WARNA DASAR: #832706 - SAMA PERSIS DENGAN PELAKU USAHA
-   ============================================== */
 :root {
     --primary: #832706;
     --primary-dark: #6b1f04;
@@ -11,7 +8,6 @@
     --text-muted: #475569;
 }
 
-/* Logo */
 .sipetgis-logo {
     color: var(--primary) !important;
     font-weight: 800;
@@ -21,7 +17,6 @@
     line-height: 1;
 }
 
-/* Sidebar Active Menu */
 .nav-item.active > a {
     background: var(--primary-soft);
     color: var(--primary);
@@ -31,7 +26,6 @@
     color: var(--primary);
 }
 
-/* Sidebar Icon */
 .sidebar .nav-secondary .nav-item > a i,
 .sidebar .nav-secondary .nav-link i,
 .nav-secondary i,
@@ -53,7 +47,6 @@
     color: var(--primary) !important;
 }
 
-/* DataTables */
 .dataTables_wrapper {
     padding: 20px;
 }
@@ -108,7 +101,6 @@ table.dataTable tbody tr:hover {
     transform: translateY(-2px);
 }
 
-/* Tombol Aksi */
 .btn-action {
     width: 35px;
     height: 35px;
@@ -150,23 +142,17 @@ table.dataTable tbody tr:hover {
     color: white;
 }
 
-/* Tombol Export - WARNA BERBEDA SEPERTI PELAKU USAHA */
-.dt-buttons .btn-primary {
-    background-color: #832706 !important;
-    border-color: #832706 !important;
-    color: white !important;
-}
-
 .dt-buttons .btn-success {
     background-color: #198754 !important;
     border-color: #198754 !important;
     color: white !important;
 }
 
-.dt-buttons .btn-danger {
-    background-color: #dc3545 !important;
-    border-color: #dc3545 !important;
+.dt-buttons .btn-success:hover {
+    background-color: #198754 !important;
+    border-color: #198754 !important;
     color: white !important;
+    opacity: 0.85;
 }
 
 .dt-buttons .btn-info {
@@ -175,7 +161,13 @@ table.dataTable tbody tr:hover {
     color: white !important;
 }
 
-/* Pagination */
+.dt-buttons .btn-info:hover {
+    background-color: #0dcaf0 !important;
+    border-color: #0dcaf0 !important;
+    color: white !important;
+    opacity: 0.85;
+}
+
 .pagination .page-link {
     border: none;
     color: #495057;
@@ -192,7 +184,6 @@ table.dataTable tbody tr:hover {
     background-color: #f8f9fa;
 }
 
-/* Tombol Tambah Data */
 .btn-primary-custom {
     background: linear-gradient(135deg, #832706 0%, #6b1f04 100%);
     border: none;
@@ -210,7 +201,6 @@ table.dataTable tbody tr:hover {
     color: white;
 }
 
-/* Tombol Modal */
 .btn-primary {
     background-color: #832706 !important;
     border-color: #832706 !important;
@@ -220,6 +210,7 @@ table.dataTable tbody tr:hover {
 .btn-primary:hover {
     background-color: #6b1f04 !important;
     border-color: #6b1f04 !important;
+    color: white !important;
 }
 
 .btn-secondary {
@@ -233,7 +224,6 @@ table.dataTable tbody tr:hover {
     color: #6b1f04 !important;
 }
 
-/* Alert */
 .alert {
     border-radius: 8px;
     border: none;
@@ -241,13 +231,11 @@ table.dataTable tbody tr:hover {
     margin-bottom: 20px;
 }
 
-/* Card */
 .card {
     border-radius: 16px;
     border: 1px solid #eef2f6;
 }
 
-/* Modal Header */
 .modal-header {
     border-bottom: 2px solid #832706 !important;
 }
@@ -256,7 +244,6 @@ table.dataTable tbody tr:hover {
     color: #832706 !important;
 }
 
-/* Map Preview */
 .map-preview {
     height: 200px;
     border-radius: 8px;
@@ -274,7 +261,6 @@ table.dataTable tbody tr:hover {
     z-index: 1070;
 }
 
-/* Coordinate Badge */
 .coordinate-badge {
     background-color: #fef3ef;
     color: #832706;
@@ -285,7 +271,6 @@ table.dataTable tbody tr:hover {
     display: inline-block;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .dataTables_wrapper {
         padding: 10px;
@@ -304,4 +289,4 @@ table.dataTable tbody tr:hover {
     .map-preview {
         height: 150px;
     }
-}
+} 

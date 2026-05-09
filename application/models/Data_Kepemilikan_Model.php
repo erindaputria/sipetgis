@@ -7,7 +7,7 @@ class Data_kepemilikan_model extends CI_Model {
         parent::__construct();
         $this->load->database();
     }
-
+ 
     public function get_all_jenis_usaha() {
         $this->db->distinct();
         $this->db->select('jenis_usaha');
@@ -42,22 +42,28 @@ class Data_kepemilikan_model extends CI_Model {
         return $data;
     }
 
+    /**
+     * Mengambil detail peternak berdasarkan jenis usaha (PERSIS, bukan LIKE)
+     * Setiap NIK hanya muncul sekali dengan menjumlahkan total ternaknya
+     */
     public function get_detail_by_jenis_usaha($jenis_usaha) {
         $this->db->select('
             nik,
-            nama_peternak,
-            telepon,
-            komoditas_ternak,
-            jenis_usaha,
-            jumlah,
-            kecamatan,
-            kelurahan,
-            alamat,
-            rt,
-            rw
+            MAX(nama_peternak) as nama_peternak,
+            MAX(telepon) as telepon,
+            MAX(komoditas_ternak) as komoditas_ternak,
+            MAX(jenis_usaha) as jenis_usaha,
+            SUM(CAST(jumlah AS UNSIGNED)) as jumlah,
+            MAX(kecamatan) as kecamatan,
+            MAX(kelurahan) as kelurahan,
+            MAX(alamat) as alamat,
+            MAX(rt) as rt,
+            MAX(rw) as rw
         ');
         $this->db->from('input_jenis_usaha');
-        $this->db->where('jenis_usaha', $jenis_usaha);
+        // Pencarian PERSIS (bukan LIKE) - ini kunci utama perbaikan
+        $this->db->where("LOWER(TRIM(jenis_usaha)) =", strtolower(trim($jenis_usaha)));
+        $this->db->group_by('nik');
         $this->db->order_by('nama_peternak', 'asc');
         
         return $this->db->get()->result();
@@ -72,12 +78,13 @@ class Data_kepemilikan_model extends CI_Model {
         $this->db->from('input_jenis_usaha');
         
         if ($jenis_usaha && $jenis_usaha != 'all') {
-            $this->db->where('jenis_usaha', $jenis_usaha);
+            // Filter juga menggunakan pencarian persis untuk konsistensi
+            $this->db->where("LOWER(TRIM(jenis_usaha)) =", strtolower(trim($jenis_usaha)));
         }
         
         $this->db->group_by('jenis_usaha');
         $this->db->order_by('jenis_usaha', 'asc');
-        
+         
         return $this->db->get()->result();
     }
 
@@ -95,5 +102,15 @@ class Data_kepemilikan_model extends CI_Model {
         
         return $this->db->get()->result();
     }
+
+    /**
+     * Menghitung jumlah peternak UNIK untuk suatu jenis usaha (pencarian PERSIS)
+     */
+    public function get_count_peternak_by_jenis($jenis_usaha) {
+        $this->db->select('COUNT(DISTINCT nik) as total_peternak');
+        $this->db->from('input_jenis_usaha');
+        $this->db->where("LOWER(TRIM(jenis_usaha)) =", strtolower(trim($jenis_usaha)));
+        $query = $this->db->get();
+        return $query->row()->total_peternak ?? 0;
+    }
 }
-?>

@@ -4,7 +4,7 @@ $(document).ready(function() {
         $('#demplotTable').DataTable().destroy();
     }
     
-    // Initialize DataTable dengan custom buttons termasuk Print
+    // Initialize DataTable dengan custom buttons termasuk Print - URUTAN ASC (1,2,3)
     let dataTable = $('#demplotTable').DataTable({
         language: {
             search: "Cari:",
@@ -39,6 +39,7 @@ $(document).ready(function() {
         columnDefs: [
             { orderable: false, targets: [8] }
         ]
+        // HAPUS order: biar urutannya normal 1,2,3
     });
     
     // Toggle Form
@@ -60,12 +61,11 @@ $(document).ready(function() {
         $('#toggleFormBtn').html('<i class="fas fa-plus-circle me-2"></i> INPUT DEMPLOT');
     });
 
-    // Update kelurahan based on kecamatan selection
-    $('#kecamatan').change(function() {
-        const kecamatan = $(this).val();
-        const kelSelect = $('#kelurahan');
+    // Fungsi untuk load kelurahan berdasarkan kecamatan
+    function loadKelurahan(kecamatan, targetSelect) {
+        const kelSelect = $(targetSelect);
         
-        kelSelect.html('<option value="">Loading...</option>');
+        kelSelect.html('<option value="all">Loading...</option>');
         
         $.ajax({
             url: base_url + 'P_input_demplot/get_kelurahan_by_kecamatan',
@@ -73,7 +73,7 @@ $(document).ready(function() {
             data: { kecamatan: kecamatan },
             dataType: 'json',
             success: function(data) {
-                let options = '<option value="">Pilih Kelurahan</option>';
+                let options = '<option value="all">Semua Kelurahan</option>';
                 if (data && data.length > 0) {
                     data.forEach(function(kel) {
                         options += '<option value="' + kel + '">' + kel + '</option>';
@@ -82,9 +82,21 @@ $(document).ready(function() {
                 kelSelect.html(options);
             },
             error: function() {
-                kelSelect.html('<option value="">Pilih Kelurahan</option>');
+                kelSelect.html('<option value="all">Semua Kelurahan</option>');
+                showAlert('danger', 'Gagal memuat data kelurahan');
             }
         });
+    }
+
+    // Event change pada kecamatan (kecamatan readonly, tapi tetap bisa dipanggil manual)
+    $('#kecamatan').on('change', function() {
+        const kecamatan = $(this).val();
+        if (kecamatan) {
+            // Load kelurahan untuk form
+            loadKelurahan(kecamatan, '#kelurahan');
+            // Load kelurahan untuk filter
+            loadKelurahan(kecamatan, '#filterKelurahan');
+        }
     });
 
     // Reset Form
@@ -99,10 +111,14 @@ $(document).ready(function() {
         $('#btnRemovePhoto').hide();
         $('.is-invalid').removeClass('is-invalid');
         
-        // Reset kelurahan based on selected kecamatan
+        // Kecamatan tetap menggunakan nilai dari session (readonly)
+        $('#kecamatan').val(user_kecamatan);
+        
+        // Load kelurahan berdasarkan kecamatan yang sudah di-set
         const kecamatan = $('#kecamatan').val();
         if (kecamatan) {
-            $('#kecamatan').trigger('change');
+            loadKelurahan(kecamatan, '#kelurahan');
+            loadKelurahan(kecamatan, '#filterKelurahan');
         }
     }
 
@@ -180,14 +196,16 @@ $(document).ready(function() {
         const periode = $("#filterPeriode").val();
         
         if (jenisHewan !== "all") search += jenisHewan + " ";
-        if (kelurahan !== "all") search += kelurahan + " ";
+        if (kelurahan !== "all" && kelurahan !== "all") search += kelurahan + " ";
         if (periode !== "all") search += periode;
         
         dataTable.search(search.trim()).draw();
     }
     
     function resetFilter() {
-        $("#filterJenisHewan, #filterKelurahan, #filterPeriode").val("all");
+        $("#filterJenisHewan, #filterPeriode").val("all");
+        // Reset filter kelurahan ke "all" dan load ulang
+        $("#filterKelurahan").val("all");
         dataTable.search("").draw();
     }
     
@@ -271,6 +289,12 @@ $(document).ready(function() {
         $('#fotoModalImg').attr('src', url);
         $('#fotoModal').modal('show');
     };
+
+    // ========== INITIAL LOAD: Trigger change kecamatan untuk load kelurahan ==========
+    // Set nilai kecamatan dari session terlebih dahulu
+    $('#kecamatan').val(user_kecamatan);
+    // Trigger change untuk load kelurahan (form dan filter)
+    $('#kecamatan').trigger('change');
 });
 
 // Fungsi Print/PDF - Menghapus kolom foto

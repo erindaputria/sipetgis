@@ -3,6 +3,10 @@
  * SIPETGIS - Kota Surabaya
  */
 
+// CSRF Token untuk AJAX
+var csrf_token = $('meta[name="csrf-token"]').attr('content');
+var csrf_name = $('meta[name="csrf-name"]').attr('content');
+
 $(document).ready(function() {
     // Initialize DataTable (Hanya Excel & Print)
     $("#obatTable").DataTable({
@@ -14,9 +18,7 @@ $(document).ready(function() {
                 className: 'btn btn-sm btn-success',
                 exportOptions: { columns: [0,1,2,3] },
                 action: function(e, dt, button, config) {
-                    // Gunakan link download biasa
-                    var downloadUrl = base_url + "index.php/obat/export_excel";
-                    window.open(downloadUrl, '_blank');
+                    window.location.href = base_url + "obat/export_excel";
                 }
             },
             {
@@ -59,18 +61,78 @@ $(document).ready(function() {
     $(document).on("click", ".btn-edit", function() {
         $('#edit_id_obat').val($(this).data('id'));
         $('#edit_obat').val($(this).data('obat'));
-        $('#edit_jenis_pengobatan').val($(this).data('jenis'));
+        $('#edit_jenis').val($(this).data('jenis'));
         $('#edit_dosis').val($(this).data('dosis'));
         $('#editDataModal').modal('show');
     });
 
-    // Event untuk tombol hapus
-    $(document).on("click", ".btn-delete", function() {
-        var id = $(this).data('id');
-        var namaObat = $(this).data('obat');
+    // ========== EVENT UNTUK TOMBOL HAPUS - SAMA SEPERTI VAKSIN ==========
+    $(document).on("click", ".btn-delete", function(e) {
+        e.preventDefault();
         
-        if (confirm("Apakah Anda yakin ingin menghapus data obat: " + namaObat + "?")) {
-            window.location.href = base_url + "obat/hapus/" + id;
+        var id = $(this).data('id');
+        var obat = $(this).data('obat');
+        
+        // Konfirmasi dengan confirm biasa
+        if (confirm("Apakah Anda yakin ingin menghapus data obat: " + obat + "?")) {
+            
+            // Siapkan data yang akan dikirim termasuk CSRF token
+            var postData = {
+                id: id,
+                action: 'delete'
+            };
+            
+            // Tambahkan CSRF token ke data yang dikirim
+            if (csrf_name && csrf_token) {
+                postData[csrf_name] = csrf_token;
+            } else {
+                // Alternatif: ambil dari meta tag
+                postData[$('meta[name="csrf-name"]').attr('content')] = $('meta[name="csrf-token"]').attr('content');
+            }
+            
+            console.log('Mengirim data:', postData);
+            
+            $.ajax({
+                url: base_url + "obat/hapus_ajax",
+                type: 'POST',
+                data: postData,
+                dataType: 'json',
+                beforeSend: function() {
+                    // Tampilkan loading state jika perlu
+                    $('.btn-delete').prop('disabled', true);
+                },
+                success: function(res) {
+                    console.log('Response:', res);
+                    
+                    if (res.status === 'success') {
+                        alert(res.message);
+                        // Refresh halaman setelah sukses
+                        location.reload();
+                    } else {
+                        alert(res.message || 'Gagal menghapus data');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error detail:', {
+                        status: xhr.status,
+                        statusText: xhr.statusText,
+                        responseText: xhr.responseText,
+                        error: error
+                    });
+                    
+                    // Tampilkan pesan error yang lebih informatif
+                    if (xhr.status === 403) {
+                        alert('Error 403: Token keamanan tidak valid. Silakan refresh halaman dan coba lagi.');
+                    } else if (xhr.status === 500) {
+                        alert('Error server (500). Silakan coba lagi atau hubungi administrator.');
+                    } else {
+                        alert('Gagal menghapus data. Error: ' + error + '\nStatus: ' + xhr.status);
+                    }
+                },
+                complete: function() {
+                    $('.btn-delete').prop('disabled', false);
+                }
+            });
         }
     });
 
@@ -114,7 +176,7 @@ function printWithCurrentData() {
     printWindow.document.write('.header p { margin: 5px 0; color: #000000; }');
     printWindow.document.write('table { width: 100%; border-collapse: collapse; margin-top: 20px; }');
     printWindow.document.write('th, td { border: 1px solid #000; padding: 8px; }');
-    printWindow.document.write('th { background-color: #832706; color: #000000; text-align: center; }');
+    printWindow.document.write('th { background-color: #832706; color: #ffffff; text-align: center; }');
     printWindow.document.write('td { color: #000000; }');
     printWindow.document.write('.total-row { background-color: #e8f5e9; font-weight: bold; }');
     printWindow.document.write('.total-row td { color: #000000; }');
@@ -178,7 +240,7 @@ function formatNumber(num) {
     if (num === null || num === undefined || num === 0) return '0';
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
-
+ 
 function stripHtml(html) {
     if (!html) return '-';
     var tmp = document.createElement('DIV');

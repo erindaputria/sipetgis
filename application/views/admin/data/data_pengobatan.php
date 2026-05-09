@@ -16,7 +16,7 @@
                     "Font Awesome 5 Solid",
                     "Font Awesome 5 Regular",
                     "Font Awesome 5 Brands",
-                    "simple-line-icons",
+                    "simple-line-icons", 
                 ],
                 urls: ["<?php echo base_url(); ?>assets/SIPETGIS/assets/css/fonts.min.css"],
             },

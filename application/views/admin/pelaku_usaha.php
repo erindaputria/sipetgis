@@ -14,7 +14,7 @@
                 families: [
                     "Font Awesome 5 Solid", 
                     "Font Awesome 5 Regular",
-                    "Font Awesome 5 Brands",
+                    "Font Awesome 5 Brands", 
                     "simple-line-icons",
                 ],
                 urls: ["<?php echo base_url('assets/SIPETGIS/assets/css/fonts.min.css'); ?>"]
@@ -426,5 +426,12 @@
     
     <!-- Custom JS Pelaku Usaha -->
     <script src="<?php echo base_url('assets/js/pelaku_usaha.js'); ?>"></script>
+    
+    <!-- Variabel Global -->
+<script>
+    var base_url = "<?= base_url() ?>";
+    var csrf_token_name = "<?php echo $this->security->get_csrf_token_name(); ?>";
+    var csrf_hash = "<?php echo $this->security->get_csrf_hash(); ?>";
+</script>
 </body>
 </html>

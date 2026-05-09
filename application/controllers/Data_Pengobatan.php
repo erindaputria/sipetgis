@@ -15,7 +15,7 @@ class Data_pengobatan extends CI_Controller {
             redirect('login');
         }
     } 
- 
+  
     public function index()
     {
         $user_kecamatan = $this->session->userdata('kecamatan');

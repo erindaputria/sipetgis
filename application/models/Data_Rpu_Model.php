@@ -10,8 +10,8 @@ class Data_rpu_model extends CI_Model {
         parent::__construct();
         $this->load->database();
     }
-    
-    /**
+     
+    /** 
      * Get all RPU data with komoditas list
      */
     public function get_all_rpu() {
@@ -222,5 +222,14 @@ class Data_rpu_model extends CI_Model {
         $query = $this->db->get();
         return $query->result_array();
     }
+
+    /**
+ * Update RPU data
+ */
+public function update_rpu($id, $data)
+{
+    $this->db->where('id', $id);
+    return $this->db->update($this->table, $data);
+}
 }
 ?>

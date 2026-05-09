@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Data_demplot extends CI_Controller {
 
     public function __construct()
-    {
+    { 
         parent::__construct();
         $this->load->model('Data_demplot_model');
         $this->load->library('session');
@@ -33,7 +33,70 @@ class Data_demplot extends CI_Controller {
         echo json_encode($data);
     }
 
-    // Fungsi untuk mendapatkan detail Demplot by ID
+    // Fungsi untuk mendapatkan detail Demplot by ID (untuk AJAX Edit)
+    public function get_detail($id)
+    {
+        $data = $this->Data_demplot_model->get_demplot_by_id($id);
+        if ($data) {
+            echo json_encode([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Data tidak ditemukan'
+            ]);
+        }
+    }
+
+    // Fungsi untuk update data
+    public function update()
+    {
+        // Set header untuk JSON response
+        $this->output->set_content_type('application/json');
+        
+        // Ambil data dari POST
+        $id = $this->input->post('id_demplot');
+        $data = [
+            'nama_demplot' => $this->input->post('nama_demplot'),
+            'alamat' => $this->input->post('alamat'),
+            'kecamatan' => $this->input->post('kecamatan'),
+            'kelurahan' => $this->input->post('kelurahan'),
+            'luas_m2' => $this->input->post('luas_m2'),
+            'jenis_hewan' => $this->input->post('jenis_hewan'),
+            'jumlah_hewan' => $this->input->post('jumlah_hewan'),
+            'stok_pakan' => $this->input->post('stok_pakan'),
+            'nama_petugas' => $this->input->post('nama_petugas'),
+            'latitude' => $this->input->post('latitude'),
+            'longitude' => $this->input->post('longitude'),
+            'keterangan' => $this->input->post('keterangan')
+        ];
+        
+        // Hapus data yang null
+        foreach ($data as $key => $value) {
+            if ($value === null) {
+                unset($data[$key]);
+            }
+        }
+        
+        // Cek apakah ID ada
+        if (!$id) {
+            echo json_encode(['status' => 'error', 'message' => 'ID tidak ditemukan']);
+            return;
+        }
+        
+        // Update data
+        $result = $this->Data_demplot_model->update_demplot($id, $data);
+        
+        if ($result) {
+            echo json_encode(['status' => 'success', 'message' => 'Data berhasil diupdate']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Gagal update data']);
+        }
+    }
+
+    // Fungsi untuk detail (bisa juga untuk view detail)
     public function detail($id)
     {
         $data = $this->Data_demplot_model->get_demplot_by_id($id);

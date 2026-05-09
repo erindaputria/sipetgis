@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Data_demplot_model extends CI_Model {
     
     protected $table = 'input_demplot';
-    
+     
     public function __construct() {
         parent::__construct();
         $this->load->database();
@@ -32,6 +32,14 @@ class Data_demplot_model extends CI_Model {
         $query = $this->db->get();
         
         return $query->row();
+    }
+    
+    /**
+     * Update Demplot data
+     */
+    public function update_demplot($id, $data) {
+        $this->db->where('id_demplot', $id);
+        return $this->db->update($this->table, $data);
     }
     
     /**
@@ -66,10 +74,10 @@ class Data_demplot_model extends CI_Model {
     public function get_by_luas_range($min_luas, $max_luas) {
         $this->db->select('*');
         $this->db->from($this->table);
-        if ($min_luas !== null) {
+        if ($min_luas !== null && $min_luas !== '') {
             $this->db->where('luas_m2 >=', $min_luas);
         }
-        if ($max_luas !== null) {
+        if ($max_luas !== null && $max_luas !== '') {
             $this->db->where('luas_m2 <=', $max_luas);
         }
         $this->db->order_by('id_demplot', 'DESC');

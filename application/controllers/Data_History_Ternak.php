@@ -29,60 +29,25 @@ class Data_history_ternak extends CI_Controller {
         
         if (!empty($data)) {
             foreach ($data as $row) {
-                // PASTIKAN ID DIAMBIL DENGAN BENAR
-                $id = isset($row->id) ? intval($row->id) : 0;
-                
-                // Jika ID masih 0, coba cek field lain
-                if ($id == 0 && isset($row->id_vaksinasi)) {
-                    $id = intval($row->id_vaksinasi);
-                }
-                if ($id == 0 && isset($row->id_peternak)) {
-                    $id = intval($row->id_peternak);
-                }
-                
-                $latitude = floatval($row->latitude ?? 0);
-                $longitude = floatval($row->longitude ?? 0);
-                $coordinates = ($latitude != 0 && $longitude != 0) ? "{$latitude}, {$longitude}" : "";
-                
-                $coordDisplay = "";
-                $mapButton = "";
-                
-                if (!empty($coordinates)) {
-                    $coordDisplay = '<div class="mb-1 small">' . htmlspecialchars($coordinates) . '</div>';
-                    $mapButton = '<button class="btn btn-sm btn-outline-primary-custom" onclick="showMap(\'' . addslashes($row->komoditas_ternak ?? '') . '\', \'' . addslashes($row->nama_peternak ?? '') . '\', \'' . $coordinates . '\')">
-                                    <i class="fas fa-map-marker-alt me-1"></i>Lihat Peta
-                                  </button>';
-                } else {
-                    $coordDisplay = '<div class="mb-1 text-muted">-</div>';
-                    $mapButton = '<button class="btn btn-sm btn-secondary" disabled><i class="fas fa-map-marker-alt me-1"></i>No Koordinat</button>';
-                }
-                
                 $result[] = [
-                    'id' => $id,  // PASTIKAN ID TERISI
+                    'id' => $row->id,
                     'no' => $no++,
                     'nama_peternak' => htmlspecialchars($row->nama_peternak ?? '-'),
                     'komoditas' => htmlspecialchars($row->komoditas_ternak ?? '-'),
                     'jumlah_ternak' => number_format($row->jumlah ?? 0, 0, ',', '.') . ' Ekor',
                     'jumlah_ternak_value' => intval($row->jumlah ?? 0),
-                    'koordinat' => $coordDisplay,
-                    'map_button' => $mapButton,
                     'tanggal_update' => $row->tanggal_input ? date('d-m-Y', strtotime($row->tanggal_input)) : '-',
-                    'raw_latitude' => $latitude,
-                    'raw_longitude' => $longitude,
-                    'alamat' => htmlspecialchars($row->alamat ?? ''),
+                    'raw_latitude' => floatval($row->latitude ?? 0),
+                    'raw_longitude' => floatval($row->longitude ?? 0),
                     'kecamatan' => htmlspecialchars($row->kecamatan ?? ''),
                     'kelurahan' => htmlspecialchars($row->kelurahan ?? ''),
+                    'alamat' => htmlspecialchars($row->alamat ?? ''),
                     'telepon' => htmlspecialchars($row->telepon ?? ''),
-                    'nama_petugas' => htmlspecialchars($row->nama_petugas ?? ''),
                     'rt' => htmlspecialchars($row->rt ?? ''),
                     'rw' => htmlspecialchars($row->rw ?? ''),
+                    'nama_petugas' => htmlspecialchars($row->nama_petugas ?? ''),
                 ];
             }
-        }
-        
-        // Debug: log ID pertama
-        if (!empty($result)) {
-            log_message('debug', 'First result ID: ' . $result[0]['id']);
         }
         
         $this->output
@@ -95,7 +60,7 @@ class Data_history_ternak extends CI_Controller {
         if (!$id || $id == 0) {
             $this->output
                 ->set_content_type('application/json')
-                ->set_output(json_encode(['success' => false, 'message' => 'ID tidak valid', 'data' => []]));
+                ->set_output(json_encode(['success' => false, 'message' => 'ID tidak valid']));
             return;
         }
         
@@ -122,7 +87,7 @@ class Data_history_ternak extends CI_Controller {
                 ]]
             ];
         } else {
-            $result = ['success' => false, 'message' => 'Data tidak ditemukan', 'data' => []];
+            $result = ['success' => false, 'message' => 'Data tidak ditemukan'];
         }
         
         $this->output
@@ -152,7 +117,7 @@ class Data_history_ternak extends CI_Controller {
         
         $this->output
             ->set_content_type('application/json')
-            ->set_output(json_encode([
+            ->set_output(json_encode([ 
                 'success' => $result,
                 'message' => $result ? 'Data berhasil diupdate' : 'Gagal mengupdate data'
             ]));
@@ -167,4 +132,4 @@ class Data_history_ternak extends CI_Controller {
             ->set_output(json_encode(['success' => $result]));
     }
 }
-?>
+?> 

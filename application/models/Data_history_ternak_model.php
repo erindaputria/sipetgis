@@ -10,27 +10,16 @@ class Data_history_ternak_model extends CI_Model {
 
     public function get_all_data()
     {
-        // Pastikan mengambil id sebagai primary key
         $this->db->select('*');
         $this->db->from('input_jenis_usaha');
         $this->db->order_by('tanggal_input', 'DESC');
-        $query = $this->db->get();
-        
-        $result = $query->result();
-        
-        // Debug: cek apakah id ada
-        if (!empty($result)) {
-            log_message('debug', 'First row ID: ' . ($result[0]->id ?? 'TIDAK ADA'));
-        }
-        
-        return $result;
+        return $this->db->get()->result();
     }
     
     public function get_detail_by_id($id)
     {
         $this->db->where('id', $id);
-        $query = $this->db->get('input_jenis_usaha');
-        return $query->row();
+        return $this->db->get('input_jenis_usaha')->row();
     }
     
     public function update_data($id, $data)
@@ -45,4 +34,4 @@ class Data_history_ternak_model extends CI_Model {
         return $this->db->delete('input_jenis_usaha');
     }
 }
-?>
+?>  

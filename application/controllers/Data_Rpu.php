@@ -14,9 +14,9 @@ class Data_rpu extends CI_Controller {
         if (!$this->session->userdata('logged_in')) {
             redirect('login');
         }
-    }
+    } 
 
-    public function index()
+    public function index() 
     {
         $data['rpu_data'] = $this->Data_rpu_model->get_all_rpu();
         $data['pejagal_list'] = $this->Data_rpu_model->get_distinct_pejagal();
@@ -71,19 +71,43 @@ class Data_rpu extends CI_Controller {
         ]);
     }
 
-    // Fungsi untuk menghapus data
+    // Fungsi untuk menghapus data (via AJAX)
     public function hapus($id)
     {
         $result = $this->Data_rpu_model->delete_rpu($id);
         
-        if ($result) {
-            $this->session->set_flashdata('success', 'Data RPU berhasil dihapus');
-        } else {
-            $this->session->set_flashdata('error', 'Gagal menghapus data RPU');
-        }
-        
-        redirect('data_rpu');
+        echo json_encode([
+            'status' => $result ? 'success' : 'error',
+            'message' => $result ? 'Data RPU berhasil dihapus' : 'Gagal menghapus data RPU'
+        ]);
     }
+// Fungsi untuk update data (via AJAX)
+public function update($id)
+{
+    $update_data = [
+        'pejagal' => $this->input->post('pejagal'),
+        'tanggal_rpu' => $this->input->post('tanggal_rpu'),
+        'nama_pj' => $this->input->post('nama_pj'),
+        'nik_pj' => $this->input->post('nik_pj'),
+        'telp_pj' => $this->input->post('telp_pj'),
+        'nama_petugas' => $this->input->post('nama_petugas'),
+        'kecamatan' => $this->input->post('kecamatan'),
+        'kelurahan' => $this->input->post('kelurahan'),
+        'rt' => $this->input->post('rt'),
+        'rw' => $this->input->post('rw'),
+        'lokasi' => $this->input->post('lokasi'),
+        'latitude' => $this->input->post('latitude'),
+        'longitude' => $this->input->post('longitude'),
+        'keterangan' => $this->input->post('keterangan')
+    ];
+    
+    $result = $this->Data_rpu_model->update_rpu($id, $update_data);
+    
+    echo json_encode([
+        'status' => $result ? 'success' : 'error',
+        'message' => $result ? 'Data berhasil diperbarui' : 'Gagal memperbarui data'
+    ]);
+}
 
     // Fungsi untuk mendapatkan statistik
     public function get_statistik()
@@ -97,5 +121,7 @@ class Data_rpu extends CI_Controller {
         
         echo json_encode($statistik);
     }
+
+    
 }
 ?>

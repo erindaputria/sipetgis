@@ -10,7 +10,7 @@ class K_dashboard_kepala_model extends CI_Model {
         parent::__construct();
         $this->load->database();
     }
-    
+     
     /**
      * Count total pelaku usaha (unique berdasarkan NIK)
      */ 

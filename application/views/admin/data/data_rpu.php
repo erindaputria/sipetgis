@@ -15,7 +15,7 @@
                 families: [
                     "Font Awesome 5 Solid",
                     "Font Awesome 5 Regular",
-                    "Font Awesome 5 Brands",
+                    "Font Awesome 5 Brands", 
                     "simple-line-icons",
                 ],
                 urls: ["<?php echo base_url(); ?>assets/SIPETGIS/assets/css/fonts.min.css"],
@@ -432,14 +432,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card mt-3">
-                                    <div class="card-header bg-primary-custom text-white py-2">
-                                        <h6 class="mb-0"><i class="fas fa-drumstick-bite me-1"></i> Komoditas Potong</h6>
-                                    </div>
-                                    <div class="card-body p-3" id="komoditasMapInfo"></div>
-                                </div>
                             </div>
-                        </div>
+                        </div> 
                         <div class="text-end mt-3">
                             <button id="closeMapBtn" class="btn btn-outline-primary-custom btn-sm"><i class="fas fa-times me-1"></i>Tutup Peta</button>
                         </div>
