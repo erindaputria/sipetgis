@@ -11,10 +11,10 @@ class Laporan_history_data_ternak extends CI_Controller {
         $this->load->model('Laporan_history_data_ternak_model');
         
         if(!$this->session->userdata('logged_in')) {
-            redirect('login');
+            redirect('login'); 
         }
     }
-
+ 
     public function index() 
     {
         $data['title'] = 'Laporan History Data Ternak';

@@ -191,6 +191,11 @@
                             <h3 class="fw-bold mb-1" style="color: #832706; font-weight: 900;">Laporan Kepemilikan Ternak</h3>
                             <h6 class="op-7 mb-0">Data Peternak dan Populasi Ternak Kota Surabaya</h6>
                         </div>
+                        <div class="ms-md-auto py-2 py-md-0">
+                            <button class="btn btn-primary-custom text-white" id="refreshBtn">
+                                <i class="fas fa-sync-alt me-2"></i>Refresh Data
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Filter Section --> 
@@ -241,12 +246,15 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row mt-3">
+                        <div class="row mt-4">
                             <div class="col-md-12">
                                 <button class="btn btn-primary-custom" id="btnFilter">
                                     <i class="fas fa-search me-2"></i>Tampilkan Data
                                 </button>
-                            </div>
+                                <button class="btn btn-secondary-custom ms-2" id="btnReset">
+                                    <i class="fas fa-undo-alt me-2"></i>Reset
+                                </button>
+                            </div> 
                         </div>
                     </div>
 

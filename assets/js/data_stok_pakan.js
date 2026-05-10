@@ -24,6 +24,7 @@ function loadDataFromServer() {
             if (response && response.length > 0) {
                 allData = response;
                 console.log('Total data dimuat:', allData.length);
+                updateFilterOptions();
                 renderTable(allData);
             } else {
                 allData = [];
@@ -36,30 +37,43 @@ function loadDataFromServer() {
             console.error('Error loading data:', error);
             allData = [];
             renderTable([]);
-            alert('Gagal memuat data. Error: ' + error);
         }
     });
 }
 
-// ================ RENDER TABLE (DIPERBAIKI - HILANGKAN DUPLIKASI) ================
-function renderTable(data) {
-    console.log('Rendering table with', data.length, 'rows');
-    
-    // Hancurkan DataTable lama jika ada
-    if (dataTable) {
+// ================ DESTROY DATATABLE DENGAN AMAN ================
+function safeDestroyDataTable() {
+    if (dataTable !== null) {
         try {
-            dataTable.destroy();
-            dataTable = null;
+            if ($.fn.DataTable.isDataTable("#stokTable")) {
+                dataTable.destroy();
+                dataTable = null;
+            }
         } catch(e) {
             console.log('Error destroying table:', e);
+            dataTable = null;
         }
     }
     
+    // Bersihkan tbody
+    $("#stokTable tbody").empty();
+}
+
+// ================ RENDER TABLE (DIPERBAIKI TOTAL) ================
+function renderTable(data) {
+    console.log('Rendering table with', data.length, 'rows');
+    
+    // Destroy DataTable dengan aman
+    safeDestroyDataTable();
+    
+    // Kosongkan tbody
     $("#stokTable tbody").empty();
     
+    // Jika data kosong, tampilkan pesan dan inisialisasi DataTable kosong
     if (!data || data.length === 0) {
-        $("#stokTable tbody").html('<tr><td colspan="11" class="text-center py-5"><i class="fas fa-box-open fa-3x text-muted mb-3 d-block"></i>Tidak ada data stok pakan<\/td><\/tr>');
+        $("#stokTable tbody").html('<tr><td colspan="11" class="text-center py-5"><i class="fas fa-box-open fa-3x text-muted mb-3 d-block"></i>Tidak ada data stok pakan</td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td><td style="display:none"></td></tr>');
         
+        // Inisialisasi DataTable untuk data kosong
         dataTable = $("#stokTable").DataTable({
             dom: "Bfrtip",
             buttons: [
@@ -101,6 +115,7 @@ function renderTable(data) {
         return;
     }
     
+    // Build HTML untuk data yang ada
     var html = "";
     for (var idx = 0; idx < data.length; idx++) {
         var item = data[idx];
@@ -113,16 +128,16 @@ function renderTable(data) {
         }
         
         html += '<tr>' +
-            '<td class="text-center" style="width: 40px;">' + no + '</td>' +
-            '<td style="min-width: 100px;">' + formatDate(item.tanggal) + '</td>' +
-            '<td style="min-width: 100px;"><span class="demplot-info">Demplot ' + escapeHtml(String(item.id_demplot || '-')) + '</span></td>' +
-            '<td style="min-width: 120px;"><span class="badge-jenis">' + escapeHtml(String(item.jenis_pakan || '-')) + '</span></td>' +
-            '<td style="min-width: 120px;"><span class="badge-merk">' + escapeHtml(String(item.merk_pakan || '-')) + '</span></td>' +
+            '<td class="text-center">' + no + '</td>' +
+            '<td>' + formatDate(item.tanggal) + '</td>' +
+            '<td><span class="demplot-info">Demplot ' + escapeHtml(String(item.id_demplot || '-')) + '</span></td>' +
+            '<td><span class="badge-jenis">' + escapeHtml(String(item.jenis_pakan || '-')) + '</span></td>' +
+            '<td><span class="badge-merk">' + escapeHtml(String(item.merk_pakan || '-')) + '</span></td>' +
             '<td class="text-center"><span class="badge-stok">' + formatNumber(item.stok_awal || 0) + '</span></td>' +
             '<td class="text-center"><span class="badge-masuk">+' + formatNumber(item.stok_masuk || 0) + '</span></td>' +
             '<td class="text-center"><span class="badge-keluar">-' + formatNumber(item.stok_keluar || 0) + '</span></td>' +
             '<td class="text-center">' + stokAkhirHtml + '</td>' +
-            '<td style="min-width: 150px;"><small>' + escapeHtml(String(item.keterangan || '-').substring(0, 30)) + '</small></td>' +
+            '<td><small>' + escapeHtml(String(item.keterangan || '-').substring(0, 30)) + '</small></td>' +
             '<td class="text-center">' +
             '<div class="btn-action-group">' +
             '<button class="btn btn-action btn-edit" data-id="' + item.id_stok + '" data-tanggal="' + item.tanggal + '" data-demplot="' + item.id_demplot + '" data-jenis="' + escapeForAttribute(String(item.jenis_pakan || '')) + '" data-merk="' + escapeForAttribute(String(item.merk_pakan || '')) + '" data-stok_awal="' + (item.stok_awal || 0) + '" data-stok_masuk="' + (item.stok_masuk || 0) + '" data-stok_keluar="' + (item.stok_keluar || 0) + '" data-keterangan="' + escapeForAttribute(String(item.keterangan || '')) + '" title="Edit"><i class="fas fa-edit"></i></button>' +
@@ -218,7 +233,6 @@ $(document).on('submit', '#formEdit', function(e) {
     });
     postData.action = 'update';
     
-    // Tambahkan CSRF token
     if (csrf_name && csrf_token) {
         postData[csrf_name] = csrf_token;
     }
@@ -268,7 +282,6 @@ $(document).on("click", ".btn-delete", function(e) {
             action: 'delete'
         };
         
-        // Tambahkan CSRF token
         if (csrf_name && csrf_token) {
             postData[csrf_name] = csrf_token;
         }
@@ -290,13 +303,7 @@ $(document).on("click", ".btn-delete", function(e) {
                 }
             },
             error: function(xhr, status, error) {
-                if (xhr.status === 403) {
-                    alert('Token keamanan tidak valid. Silakan refresh halaman dan coba lagi.');
-                } else if (xhr.status === 500) {
-                    alert('Error server. Silakan coba lagi.');
-                } else {
-                    alert('Gagal menghapus data. Error: ' + error);
-                }
+                alert('Gagal menghapus data. Error: ' + error);
             },
             complete: function() {
                 $('.btn-delete').prop('disabled', false);
@@ -313,7 +320,7 @@ $(document).on("click", ".btn-edit", function() {
     }
 });
 
-// ================ FUNGSI FILTER (DIPERBAIKI) ================
+// ================ FUNGSI FILTER ================
 function filterData() {
     console.log('=== FILTER DATA DITEKAN ===');
     
@@ -326,16 +333,6 @@ function filterData() {
     console.log('Filter values - Jenis:', jenisPakan, 'Merk:', merkPakan, 'Demplot:', demplot, 'Tanggal:', startDate, '-', endDate);
     console.log('Total data sebelum filter:', allData.length);
     
-    // Hancurkan DataTable dengan benar
-    if (dataTable) {
-        try {
-            dataTable.destroy();
-            dataTable = null;
-        } catch(e) {
-            console.log('Error destroying table:', e);
-        }
-    }
-    
     var filteredData = [];
     
     for (var i = 0; i < allData.length; i++) {
@@ -346,17 +343,17 @@ function filterData() {
         var matchTanggal = true;
         
         // Filter Jenis Pakan
-        if (jenisPakan !== "all") {
+        if (jenisPakan !== "all" && jenisPakan !== "") {
             matchJenis = (item.jenis_pakan && item.jenis_pakan === jenisPakan);
         }
         
         // Filter Merk Pakan
-        if (merkPakan !== "all") {
+        if (merkPakan !== "all" && merkPakan !== "") {
             matchMerk = (item.merk_pakan && item.merk_pakan === merkPakan);
         }
         
         // Filter Demplot
-        if (demplot !== "all") {
+        if (demplot !== "all" && demplot !== "") {
             matchDemplot = (item.id_demplot && item.id_demplot == demplot);
         }
         
@@ -375,16 +372,10 @@ function filterData() {
     }
     
     console.log('Data setelah filter:', filteredData.length, 'dari', allData.length);
-    
-    // Render data yang sudah difilter
     renderTable(filteredData);
-    
-    if (filteredData.length === 0 && allData.length > 0) {
-        alert('Tidak ada data stok pakan yang sesuai dengan filter yang dipilih');
-    }
 }
 
-// ================ FUNGSI RESET FILTER (DIPERBAIKI) ================
+// ================ RESET FILTER ================
 function resetFilter() {
     console.log('=== RESET FILTER DITEKAN ===');
     
@@ -394,30 +385,56 @@ function resetFilter() {
     $("#startDate").val(getFirstDayOfMonth());
     $("#endDate").val(getLastDayOfMonth());
     
-    // Hancurkan DataTable
-    if (dataTable) {
-        try {
-            dataTable.destroy();
-            dataTable = null;
-        } catch(e) {}
-    }
-    
-    // Render semua data
     renderTable(allData);
     
     console.log('Reset selesai, menampilkan semua', allData.length, 'data');
 }
 
-function resetFilter() {
-    console.log('=== RESET FILTER DITEKAN ===');
+// ================ UPDATE FILTER OPTIONS ================
+function updateFilterOptions() {
+    console.log('Updating filter options from data...');
     
-    $("#filterJenisPakan").val("all");
-    $("#filterMerkPakan").val("all");
-    $("#filterDemplot").val("all");
-    $("#startDate").val(getFirstDayOfMonth());
-    $("#endDate").val(getLastDayOfMonth());
-    
-    renderTable(allData);
+    var jenisPakanSet = new Set();
+    var merkPakanSet = new Set();
+    var demplotSet = new Set();
+
+    allData.forEach(function(item) {
+        if (item.jenis_pakan && item.jenis_pakan.trim() !== '') {
+            jenisPakanSet.add(item.jenis_pakan.trim());
+        }
+        if (item.merk_pakan && item.merk_pakan.trim() !== '') {
+            merkPakanSet.add(item.merk_pakan.trim());
+        }
+        if (item.id_demplot && item.id_demplot !== '' && item.id_demplot !== null) {
+            demplotSet.add(item.id_demplot);
+        }
+    });
+
+    // Update filter Jenis Pakan
+    var jenisOptions = '<option selected value="all">Semua Jenis</option>';
+    var sortedJenis = Array.from(jenisPakanSet).sort();
+    for (var i = 0; i < sortedJenis.length; i++) {
+        jenisOptions += '<option value="' + escapeHtml(sortedJenis[i]) + '">' + escapeHtml(sortedJenis[i]) + '</option>';
+    }
+    $("#filterJenisPakan").html(jenisOptions);
+
+    // Update filter Merk Pakan
+    var merkOptions = '<option selected value="all">Semua Merk</option>';
+    var sortedMerk = Array.from(merkPakanSet).sort();
+    for (var i = 0; i < sortedMerk.length; i++) {
+        merkOptions += '<option value="' + escapeHtml(sortedMerk[i]) + '">' + escapeHtml(sortedMerk[i]) + '</option>';
+    }
+    $("#filterMerkPakan").html(merkOptions);
+
+    // Update filter Demplot 
+    var demplotOptions = '<option selected value="all">Semua Demplot</option>';
+    var sortedDemplot = Array.from(demplotSet).sort();
+    for (var i = 0; i < sortedDemplot.length; i++) {
+        demplotOptions += '<option value="' + sortedDemplot[i] + '">Demplot ' + sortedDemplot[i] + '</option>';
+    }
+    $("#filterDemplot").html(demplotOptions);
+
+    console.log('Filter options updated');
 }
 
 // ================ LOAD STATISTIK ================
@@ -427,10 +444,11 @@ function loadStatistik() {
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            $('#totalTransaksi').text(formatNumber(data.total_transaksi || 0));
-            $('#totalStokMasuk').text(formatNumber(data.total_stok_masuk || 0));
-            $('#totalStokKeluar').text(formatNumber(data.total_stok_keluar || 0));
-            $('#totalStokAkhir').text(formatNumber(data.total_stok_akhir || 0));
+            // Statistik elements (if exist)
+            if ($('#totalTransaksi').length) $('#totalTransaksi').text(formatNumber(data.total_transaksi || 0));
+            if ($('#totalStokMasuk').length) $('#totalStokMasuk').text(formatNumber(data.total_stok_masuk || 0));
+            if ($('#totalStokKeluar').length) $('#totalStokKeluar').text(formatNumber(data.total_stok_keluar || 0));
+            if ($('#totalStokAkhir').length) $('#totalStokAkhir').text(formatNumber(data.total_stok_akhir || 0));
         },
         error: function() {
             console.log('Gagal load statistik');
@@ -495,6 +513,10 @@ function getLastDayOfMonth() {
 // ================ FUNCTION PRINT ================
 function printWithCurrentData() {
     var printWindow = window.open('', '_blank');
+    if (!printWindow) {
+        alert("Mohon izinkan pop-up window untuk mencetak!");
+        return;
+    }
     
     var table = $('#stokTable').DataTable();
     var rows = table.rows({ search: 'applied' }).data();
@@ -552,7 +574,7 @@ function printWithCurrentData() {
     printWindow.document.write('<table>');
     printWindow.document.write('<thead>');
     printWindow.document.write('<tr>');
-    printWindow.document.write('<th width="40">No</th>');
+    printWindow.document.write('<th>No</th>');
     printWindow.document.write('<th>Tanggal</th>');
     printWindow.document.write('<th>Demplot</th>');
     printWindow.document.write('<th>Jenis Pakan</th>');
@@ -570,36 +592,41 @@ function printWithCurrentData() {
         printWindow.document.write('<tr>');
         printWindow.document.write('<td align="center">' + (i + 1) + '</td>');
         printWindow.document.write('<td align="center">' + stripHtml(row[1] || '-') + '</td>');
-        printWindow.document.write('<td align="left">' + stripHtml(row[2] || '-') + '</td>');
-        printWindow.document.write('<td align="left">' + stripHtml(row[3] || '-') + '</td>');
-        printWindow.document.write('<td align="left">' + stripHtml(row[4] || '-') + '</td>');
-        printWindow.document.write('<td align="center">' + stripHtml(row[5] || '0') + ' kg' + '</td>');
-        printWindow.document.write('<td align="center">' + stripHtml(row[6] || '0') + ' kg' + '</td>');
-        printWindow.document.write('<td align="center">' + stripHtml(row[7] || '0') + ' kg' + '</td>');
-        printWindow.document.write('<td align="center">' + stripHtml(row[8] || '0') + ' kg' + '</td>');
-        printWindow.document.write('<td align="left">' + stripHtml(row[9] || '-') + '</td>');
+        printWindow.document.write('<td>' + stripHtml(row[2] || '-') + '</td>');
+        printWindow.document.write('<td>' + stripHtml(row[3] || '-') + '</td>');
+        printWindow.document.write('<td>' + stripHtml(row[4] || '-') + '</td>');
+        printWindow.document.write('<td align="right">' + stripHtml(row[5] || '0') + ' kg' + '</td>');
+        printWindow.document.write('<td align="right">' + stripHtml(row[6] || '0') + ' kg' + '</td>');
+        printWindow.document.write('<td align="right">' + stripHtml(row[7] || '0') + ' kg' + '</td>');
+        printWindow.document.write('<td align="right">' + stripHtml(row[8] || '0') + ' kg' + '</td>');
+        printWindow.document.write('<td>' + stripHtml(row[9] || '-') + '</td>');
         printWindow.document.write('</tr>');
     }
     
     printWindow.document.write('<tr class="total-row">');
-    printWindow.document.write('<td colspan="5" align="center"><strong>TOTAL KESELURUHAN</strong></td>');
-    printWindow.document.write('<td align="center"><strong>' + formatNumber(totalStokAwal) + ' kg</strong></td>');
-    printWindow.document.write('<td align="center"><strong>' + formatNumber(totalStokMasuk) + ' kg</strong></td>');
-    printWindow.document.write('<td align="center"><strong>' + formatNumber(totalStokKeluar) + ' kg</strong></td>');
-    printWindow.document.write('<td align="center"><strong>' + formatNumber(totalStokAkhir) + ' kg</strong></td>');
-    printWindow.document.write('<td align="center"><strong>' + formatNumber(totalData) + ' Transaksi</strong></td>');
+    printWindow.document.write('<td colspan="5" align="center"><strong>TOTAL</strong></td>');
+    printWindow.document.write('<td align="right"><strong>' + formatNumber(totalStokAwal) + ' kg</strong></td>');
+    printWindow.document.write('<td align="right"><strong>' + formatNumber(totalStokMasuk) + ' kg</strong></td>');
+    printWindow.document.write('<td align="right"><strong>' + formatNumber(totalStokKeluar) + ' kg</strong></td>');
+    printWindow.document.write('<td align="right"><strong>' + formatNumber(totalStokAkhir) + ' kg</strong></td>');
+    printWindow.document.write('<td align="center"><strong>' + totalData + ' Transaksi</strong></td>');
     printWindow.document.write('</tr>');
     
     printWindow.document.write('</tbody>');
     printWindow.document.write('</table>');
     
     printWindow.document.write('<div class="footer-note">');
-    printWindow.document.write('SIPETGIS - Sistem Informasi Peternakan Kota Surabaya');
+    printWindow.document.write('Dokumen ini dicetak secara elektronik dari sistem SIPETGIS<br>');
+    printWindow.document.write('Surabaya, ' + formattedDateTime);
     printWindow.document.write('</div>');
     
     printWindow.document.write('</body></html>');
     printWindow.document.close();
-    printWindow.print();
+    
+    setTimeout(function() {
+        printWindow.print();
+        printWindow.close();
+    }, 500);
 }
 
 // ================ SHOW DETAIL ================
@@ -610,22 +637,22 @@ function showDetail(id) {
         dataType: 'json',
         success: function(response) {
             if (response.status === 'success') {
-                const data = response.data;
+                var data = response.data;
                 
                 $("#detailTitle").text('Detail Stok Pakan: ' + (data.jenis_pakan || '-') + ' - ' + (data.merk_pakan || '-'));
                 $("#detailInfo").html('Tanggal: ' + formatDate(data.tanggal) + ' | Demplot: ' + (data.id_demplot || '-'));
 
                 $("#detailStokInfo").html(
                     '<table class="table table-sm table-borderless">' +
-                    '<tr><td width="35%"><strong>Demplot</strong>NonNull<td width="5%">:NonNull<td><span class="demplot-info">Demplot ' + escapeHtml(String(data.id_demplot || '-')) + '</span>NonNull<' +
+                    '<tr><td width="35%"><strong>Demplot</strong>NonNull<td>:</td><td><span class="demplot-info">Demplot ' + escapeHtml(String(data.id_demplot || '-')) + '</span></td>' +
                     '</tr>' +
-                    '<tr><td><strong>Jenis Pakan</strong>NonNull<td>:NonNull<td><span class="badge-jenis">' + escapeHtml(String(data.jenis_pakan || '-')) + '</span>NonNull<' +
+                    '<tr><td><strong>Jenis Pakan</strong>NonNull<td>:</td><td><span class="badge-jenis">' + escapeHtml(String(data.jenis_pakan || '-')) + '</span></td>' +
                     '</tr>' +
-                    '<tr><td><strong>Merk Pakan</strong>NonNull<td>:NonNull<td><span class="badge-merk">' + escapeHtml(String(data.merk_pakan || '-')) + '</span>NonNull<' +
+                    '<tr><td><strong>Merk Pakan</strong>NonNull<td>:</td><td><span class="badge-merk">' + escapeHtml(String(data.merk_pakan || '-')) + '</span></td>' +
                     '</tr>' +
-                    '<tr><td><strong>Tanggal</strong>NonNull<td>:NonNull<td>' + formatDate(data.tanggal) + 'NonNull<' +
+                    '<tr><td><strong>Tanggal</strong>NonNull<td>:</td><td>' + formatDate(data.tanggal) + '</td>' +
                     '</tr>' +
-                    '<tr><td><strong>Keterangan</strong>NonNull<td>:NonNull<td>' + escapeHtml(String(data.keterangan || '-')) + 'NonNull<' +
+                    '<tr><td><strong>Keterangan</strong>NonNull<td>:</td><td>' + escapeHtml(String(data.keterangan || '-')) + '</td>' +
                     '</tr>' +
                     '</table>'
                 );
@@ -638,18 +665,17 @@ function showDetail(id) {
 
                 $("#detailPerubahanInfo").html(
                     '<div class="row">' +
-                    '<div class="col-md-3"><div class="card bg-light"><div class="card-body text-center"><span class="stat-label">Stok Awal</span><div class="stat-value" style="font-size: 1.5rem;">' + formatNumber(stokAwal) + ' kg</div></div></div></div>' +
-                    '<div class="col-md-3"><div class="card bg-success text-white"><div class="card-body text-center"><span class="text-white">Stok Masuk</span><div class="fw-bold" style="font-size: 1.5rem;">+' + formatNumber(stokMasuk) + ' kg</div></div></div></div>' +
-                    '<div class="col-md-3"><div class="card bg-danger text-white"><div class="card-body text-center"><span class="text-white">Stok Keluar</span><div class="fw-bold" style="font-size: 1.5rem;">-' + formatNumber(stokKeluar) + ' kg</div></div></div></div>' +
-                    '<div class="col-md-3"><div class="card bg-warning"><div class="card-body text-center"><span>Stok Akhir</span><div class="fw-bold" style="font-size: 1.5rem;">' + formatNumber(stokAkhir) + ' kg</div></div></div></div>' +
+                    '<div class="col-md-3"><div class="card bg-light"><div class="card-body text-center"><span>Stok Awal</span><div style="font-size: 1.5rem; font-weight: bold;">' + formatNumber(stokAwal) + ' kg</div></div></div></div>' +
+                    '<div class="col-md-3"><div class="card bg-success text-white"><div class="card-body text-center"><span class="text-white">Stok Masuk</span><div style="font-size: 1.5rem; font-weight: bold;">+' + formatNumber(stokMasuk) + ' kg</div></div></div></div>' +
+                    '<div class="col-md-3"><div class="card bg-danger text-white"><div class="card-body text-center"><span class="text-white">Stok Keluar</span><div style="font-size: 1.5rem; font-weight: bold;">-' + formatNumber(stokKeluar) + ' kg</div></div></div></div>' +
+                    '<div class="col-md-3"><div class="card bg-warning"><div class="card-body text-center"><span>Stok Akhir</span><div style="font-size: 1.5rem; font-weight: bold;">' + formatNumber(stokAkhir) + ' kg</div></div></div></div>' +
                     '</div>' +
-                    (stokAwal > 0 ? '<div class="mt-3"><strong>Persentase Sisa Stok:</strong><div class="stok-progress" style="height: 20px;"><div class="stok-progress-bar" style="width: ' + Math.min(persenSisa, 100) + '%; height: 20px;"></div></div><small class="text-muted">' + persenSisa.toFixed(1) + '% dari stok awal</small></div>' : '')
+                    (stokAwal > 0 ? '<div class="mt-3"><strong>Persentase Sisa Stok:</strong><div class="progress mt-1" style="height: 20px;"><div class="progress-bar bg-primary" style="width: ' + Math.min(persenSisa, 100) + '%;">' + persenSisa.toFixed(1) + '%</div></div></div>' : '')
                 );
 
                 $("#detailKeteranganInfo").html('<p class="mb-0">' + escapeHtml(String(data.keterangan || '-')) + '</p>');
 
                 $("#detailSection").show();
-
                 $("html, body").animate({ scrollTop: $("#detailSection").offset().top - 20 }, 500);
             } else {
                 alert('Data tidak ditemukan');
@@ -666,78 +692,28 @@ function closeDetail() {
     $("#detailSection").hide();
 }
 
-// ================ DOCUMENT READY (PERBAIKI EVENT HANDLER) ================
+// ================ DOCUMENT READY ================
 $(document).ready(function() {
     console.log('Document ready, loading data...');
     loadDataFromServer();
 
-    // Filter button event - PERBAIKAN
     $("#filterBtn").off('click').on('click', function(e) {
         e.preventDefault();
         console.log('Filter button clicked');
         filterData();
     }); 
 
-    // Reset button event - PERBAIKAN
     $("#resetBtn").off('click').on('click', function(e) {
         e.preventDefault();
         console.log('Reset button clicked');
         resetFilter();
     });
 
-    // Close detail button
     $("#closeDetailBtn").off('click').on('click', function() {
         closeDetail();
     });
 
-    // Auto close alert after 5 seconds
     setTimeout(function() {
         $('.alert').alert('close');
     }, 5000);
 });
-
-// ================ UPDATE FILTER OPTIONS (DINAMIS DARI DATA) ================
-function updateFilterOptions() {
-    var jenisPakanSet = new Set();
-    var merkPakanSet = new Set();
-    var demplotSet = new Set();
-
-    allData.forEach(function(item) {
-        if (item.jenis_pakan && item.jenis_pakan !== '') {
-            jenisPakanSet.add(item.jenis_pakan);
-        }
-        if (item.merk_pakan && item.merk_pakan !== '') {
-            merkPakanSet.add(item.merk_pakan);
-        }
-        if (item.id_demplot && item.id_demplot !== '') {
-            demplotSet.add(item.id_demplot);
-        }
-    });
-
-    // Update filter Jenis Pakan
-    var jenisOptions = '<option selected value="all">Semua Jenis</option>';
-    Array.from(jenisPakanSet).sort().forEach(function(jenis) {
-        jenisOptions += '<option value="' + escapeHtml(jenis) + '">' + escapeHtml(jenis) + '</option>';
-    });
-    $("#filterJenisPakan").html(jenisOptions);
-
-    // Update filter Merk Pakan
-    var merkOptions = '<option selected value="all">Semua Merk</option>';
-    Array.from(merkPakanSet).sort().forEach(function(merk) {
-        merkOptions += '<option value="' + escapeHtml(merk) + '">' + escapeHtml(merk) + '</option>';
-    });
-    $("#filterMerkPakan").html(merkOptions);
-
-    // Update filter Demplot
-    var demplotOptions = '<option selected value="all">Semua Demplot</option>';
-    Array.from(demplotSet).sort().forEach(function(demplot) {
-        demplotOptions += '<option value="' + demplot + '">Demplot ' + demplot + '</option>';
-    });
-    $("#filterDemplot").html(demplotOptions);
-
-    console.log('Filter options updated - Jenis:', Array.from(jenisPakanSet), 'Merk:', Array.from(merkPakanSet), 'Demplot:', Array.from(demplotSet));
-}
-
-// Panggil updateFilterOptions di dalam loadDataFromServer setelah data diterima
-// Tambahkan baris ini di dalam success callback loadDataFromServer:
-// updateFilterOptions();

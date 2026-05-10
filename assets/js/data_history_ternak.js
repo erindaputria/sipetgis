@@ -608,7 +608,7 @@ $(document).ready(function() {
                 $('.btn-save-edit').prop('disabled', false).html('<i class="fas fa-save"></i> Simpan');
                 if (response.success) {
                     $('#editModal').modal('hide');
-                    alert('Data berhasil diupdate');
+                    alert('Data berhasil diupdate'); 
                     loadData();
                 } else {
                     alert(response.message || 'Gagal update data');

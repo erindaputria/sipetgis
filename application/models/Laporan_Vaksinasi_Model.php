@@ -18,7 +18,7 @@ class Laporan_vaksinasi_model extends CI_Model {
     ]; 
 
     public function get_kecamatan()
-    {
+    { 
         $sql = "SELECT DISTINCT kecamatan FROM input_vaksinasi WHERE kecamatan IS NOT NULL AND kecamatan != '' AND kecamatan != 'Surabaya' ORDER BY kecamatan ASC";
         $query = $this->db->query($sql);
         

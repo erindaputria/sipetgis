@@ -13,7 +13,6 @@ class Laporan_history_data_vaksinasi_model extends CI_Model {
 
     public function get_kecamatan()
     {
-        // Ambil kecamatan unik dari database
         $this->db->distinct();
         $this->db->select('kecamatan');
         $this->db->from($this->table);
@@ -24,7 +23,6 @@ class Laporan_history_data_vaksinasi_model extends CI_Model {
         
         $result = $query->result();
         
-        // Jika tidak ada data, gunakan data default
         if(empty($result)) {
             $kecamatan_list = [
                 'Asemrowo', 'Benowo', 'Bubutan', 'Bulak', 'Dukuh Pakis',
@@ -45,7 +43,6 @@ class Laporan_history_data_vaksinasi_model extends CI_Model {
 
     public function get_tahun()
     {
-        // Ambil tahun unik dari tanggal_vaksinasi
         $this->db->distinct();
         $this->db->select("YEAR(tanggal_vaksinasi) as tahun");
         $this->db->from($this->table);
@@ -55,7 +52,6 @@ class Laporan_history_data_vaksinasi_model extends CI_Model {
         
         $result = $query->result();
         
-        // Jika tidak ada data, gunakan tahun default
         if(empty($result)) {
             $currentYear = date('Y');
             $result = [];
@@ -69,7 +65,6 @@ class Laporan_history_data_vaksinasi_model extends CI_Model {
 
     public function get_jenis_vaksin()
     {
-        // Ambil jenis vaksin unik
         $this->db->distinct();
         $this->db->select('jenis_vaksinasi');
         $this->db->from($this->table);
@@ -91,6 +86,19 @@ class Laporan_history_data_vaksinasi_model extends CI_Model {
         return $result;
     }
 
+    public function get_jenis_hewan()
+    {
+        $this->db->distinct();
+        $this->db->select('komoditas_ternak as jenis_hewan');
+        $this->db->from($this->table);
+        $this->db->where('komoditas_ternak IS NOT NULL');
+        $this->db->where('komoditas_ternak !=', '');
+        $this->db->order_by('komoditas_ternak', 'ASC');
+        $query = $this->db->get();
+        
+        return $query->result();
+    }
+
     public function get_history_data($tahun, $kecamatan_filter = null, $jenis_vaksin_filter = null, $jenis_hewan_filter = null)
     {
         $this->db->select('
@@ -105,22 +113,18 @@ class Laporan_history_data_vaksinasi_model extends CI_Model {
             komoditas_ternak as jenis_hewan,
             jenis_vaksinasi,
             dosis,
-            jumlah,
-            foto_vaksinasi
+            jumlah
         ');
         $this->db->from($this->table);
         
-        // Filter tahun
         if($tahun && $tahun != '') {
             $this->db->where("YEAR(tanggal_vaksinasi)", $tahun);
         }
         
-        // Filter kecamatan
         if($kecamatan_filter && $kecamatan_filter != 'semua') {
             $this->db->where('kecamatan', $kecamatan_filter);
         }
         
-        // Filter jenis vaksin
         if($jenis_vaksin_filter && $jenis_vaksin_filter != 'semua') {
             if($jenis_vaksin_filter == 'PMK') {
                 $this->db->like('jenis_vaksinasi', 'PMK', 'both');
@@ -131,7 +135,6 @@ class Laporan_history_data_vaksinasi_model extends CI_Model {
             }
         }
         
-        // Filter jenis hewan
         if($jenis_hewan_filter && $jenis_hewan_filter != 'semua') {
             $this->db->where('komoditas_ternak', $jenis_hewan_filter);
         }
@@ -141,10 +144,8 @@ class Laporan_history_data_vaksinasi_model extends CI_Model {
         
         $results = $query->result();
         
-        // Format data untuk ditampilkan
         $formatted_data = [];
         foreach($results as $item) {
-            // Format tanggal
             $tanggal = '-';
             if($item->tanggal_vaksinasi && $item->tanggal_vaksinasi != '0000-00-00') {
                 $tanggal = date('d/m/Y', strtotime($item->tanggal_vaksinasi));
@@ -173,17 +174,14 @@ class Laporan_history_data_vaksinasi_model extends CI_Model {
         $this->db->select('SUM(jumlah) as total_dosis');
         $this->db->from($this->table);
         
-        // Filter tahun
         if($tahun && $tahun != '') {
             $this->db->where("YEAR(tanggal_vaksinasi)", $tahun);
         }
         
-        // Filter kecamatan
         if($kecamatan_filter && $kecamatan_filter != 'semua') {
             $this->db->where('kecamatan', $kecamatan_filter);
         }
         
-        // Filter jenis vaksin
         if($jenis_vaksin_filter && $jenis_vaksin_filter != 'semua') {
             if($jenis_vaksin_filter == 'PMK') {
                 $this->db->like('jenis_vaksinasi', 'PMK', 'both');
@@ -194,7 +192,6 @@ class Laporan_history_data_vaksinasi_model extends CI_Model {
             }
         }
         
-        // Filter jenis hewan
         if($jenis_hewan_filter && $jenis_hewan_filter != 'semua') {
             $this->db->where('komoditas_ternak', $jenis_hewan_filter);
         }
@@ -205,10 +202,8 @@ class Laporan_history_data_vaksinasi_model extends CI_Model {
         return $result->total_dosis ? (int)$result->total_dosis : 0;
     }
 
-    // ==================== METHOD UNTUK SEMUA DATA (TANPA FILTER) ====================
     public function get_all_history_data()
     {
-        // Gunakan tabel yang sama: input_vaksinasi
         $this->db->select('
             id_vaksinasi,
             tanggal_vaksinasi,
@@ -229,10 +224,8 @@ class Laporan_history_data_vaksinasi_model extends CI_Model {
         
         $results = $query->result();
         
-        // Format data untuk ditampilkan
         $formatted_data = [];
         foreach($results as $item) {
-            // Format tanggal
             $tanggal = '-';
             if($item->tanggal_vaksinasi && $item->tanggal_vaksinasi != '0000-00-00') {
                 $tanggal = date('d/m/Y', strtotime($item->tanggal_vaksinasi));

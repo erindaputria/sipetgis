@@ -254,7 +254,7 @@
                                 <button class="btn btn-secondary-custom ms-2" id="btnReset">
                                     <i class="fas fa-undo-alt me-2"></i>Reset
                                 </button>
-                            </div>
+                            </div> 
                         </div>
                     </div>
 

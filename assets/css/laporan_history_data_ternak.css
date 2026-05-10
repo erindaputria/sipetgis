@@ -11,7 +11,7 @@
     --text-main: #0f172a;
     --text-muted: #475569;
 }
-
+ 
 /* Logo */
 .sipetgis-logo {
     color: var(--primary) !important;
@@ -351,4 +351,10 @@ table.dataTable tbody tr:hover {
         font-size: 11px;
         padding: 8px 5px;
     }
+}
+
+/* Sembunyikan bintang merah di semua label */
+.filter-section .form-label .text-danger,
+label .text-danger {
+    display: none !important; 
 }

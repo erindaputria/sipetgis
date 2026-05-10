@@ -285,7 +285,7 @@ class Data_stok_pakan_model extends CI_Model {
     /**
      * Get stok opname summary (per jenis/merk)
      */
-    public function get_stok_opname_summary() {
+    public function get_stok_opname_summary() { 
         $this->db->select('jenis_pakan, merk_pakan, id_demplot, 
             SUM(stok_masuk) as total_masuk,
             SUM(stok_keluar) as total_keluar,

@@ -15,7 +15,7 @@ class Laporan_vaksinasi extends CI_Controller {
         }
     }
 
-    public function index()
+    public function index() 
     {
         $data['title'] = 'Laporan Vaksinasi Ternak';
         $data['kecamatan'] = $this->Laporan_vaksinasi_model->get_kecamatan();

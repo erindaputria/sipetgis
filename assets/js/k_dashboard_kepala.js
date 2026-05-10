@@ -1,5 +1,4 @@
 // ================ FUNGSI PRINT UNTUK DASHBOARD KEPALA DINAS ================
-// File ini berisi fungsi-fungsi print untuk mencetak tabel dengan rapi tanpa elemen yang tidak perlu
 
 // Fungsi print untuk modal Pelaku Usaha (tabel sederhana)
 function printPelakuUsahaTable() {
@@ -14,7 +13,7 @@ function printPelakuUsahaTable() {
         var pelakuUsaha = row.find('td:eq(2)').text().trim();
         tableRows.push({ no: no, kecamatan: kecamatan, pelakuUsaha: pelakuUsaha });
     });
-    
+     
     // Ambil total dari footer
     var totalPelaku = $('#modalDetailPelakuUsaha tfoot td:eq(1)').text().trim();
     
@@ -100,7 +99,7 @@ function printPelakuUsahaTable() {
     printWindow.print();
 }
 
-// Fungsi print untuk modal Semua Kecamatan (tabel lengkap 31 kecamatan)
+// Fungsi print untuk modal Semua Kecamatan (tabel lengkap 31 kecamatan) - HANYA SATU KALI
 function printSemuaKecamatanTable() {
     var printWindow = window.open('', '_blank');
     
@@ -326,39 +325,30 @@ function printDashboardMain() {
     printWindow.print();
 }
 
-// Event listener untuk memastikan semua tombol print yang menggunakan class atau id tertentu berfungsi
+// Event listener untuk memastikan semua tombol print berfungsi
 $(document).ready(function() {
-    // Override tombol cetak di modal detail pelaku usaha
+    // Hapus event onclick inline dan gunakan event listener jQuery
     $('#modalDetailPelakuUsaha .btn-primary').off('click').on('click', function(e) {
         e.preventDefault();
+        e.stopPropagation();
         printPelakuUsahaTable();
+        return false;
     });
     
-    // Override tombol cetak di modal semua kecamatan
     $('#modalSemuaKecamatan .btn-primary').off('click').on('click', function(e) {
         e.preventDefault();
+        e.stopPropagation();
         printSemuaKecamatanTable();
-    });
-    
-    // Untuk tombol print lain yang mungkin ada di modal lain
-    $('.modal .btn-primary').each(function() {
-        var modalId = $(this).closest('.modal').attr('id');
-        if (modalId && !$(this).hasClass('print-handled')) {
-            $(this).addClass('print-handled');
-            if (modalId === 'modalDetailPelakuUsaha') {
-                $(this).off('click').on('click', function(e) {
-                    e.preventDefault();
-                    printPelakuUsahaTable();
-                });
-            } else if (modalId === 'modalSemuaKecamatan') {
-                $(this).off('click').on('click', function(e) {
-                    e.preventDefault();
-                    printSemuaKecamatanTable();
-                });
-            }
-        }
+        return false;
     });
 });
+
+// Hapus error Google Maps API callback
+if (typeof initSurabayaMap === 'undefined') {
+    window.initSurabayaMap = function() {
+        console.log('Google Maps ready');
+    };
+}
 
 // Fungsi tambahan untuk format number (jika belum ada)
 function formatNumberPrint(num) {

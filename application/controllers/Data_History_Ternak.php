@@ -132,4 +132,4 @@ class Data_history_ternak extends CI_Controller {
             ->set_output(json_encode(['success' => $result]));
     }
 }
-?> 
+?>  

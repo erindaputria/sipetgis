@@ -34,4 +34,4 @@ class Data_history_ternak_model extends CI_Model {
         return $this->db->delete('input_jenis_usaha');
     }
 }
-?>  
+?>   

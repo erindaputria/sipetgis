@@ -8,38 +8,14 @@ $(document).ready(function() {
     dataTable = $('#historyVaksinasiTable').DataTable({
         dom: 'Bfrtip',
         buttons: [
-            // {
-            //     extend: 'copy',
-            //     text: '<i class="fas fa-copy"></i> Copy',
-            //     className: 'btn btn-sm btn-primary',
-            //     exportOptions: {
-            //         columns: ':visible'
-            //     }
-            // },
-            // {
-            //     extend: 'csv',
-            //     text: '<i class="fas fa-file-csv"></i> CSV', 
-            //     className: 'btn btn-sm btn-success',
-            //     action: function(e, dt, button, config) {
-            //         exportWithParams('csv');
-            //     }
-            // },
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Excel',
                 className: 'btn btn-sm btn-success',
                 action: function(e, dt, button, config) {
-                    exportWithParams('excel');
+                    exportToExcel();
                 }
             },
-            // {
-            //     extend: 'pdf',
-            //     text: '<i class="fas fa-file-pdf"></i> PDF',
-            //     className: 'btn btn-sm btn-danger',
-            //     action: function(e, dt, button, config) {
-            //         exportWithParams('pdf');
-            //     }
-            // },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print"></i> Print',
@@ -79,7 +55,6 @@ $(document).ready(function() {
         currentData.jenis_vaksin = $("#filterJenisVaksin").val();
         currentData.jenis_hewan = $("#filterJenisHewan").val();
         
-        // Jika tahun kosong, tetap bisa filter (tapi tahun wajib)
         if(!currentData.tahun) {
             alert("Silakan pilih tahun terlebih dahulu!");
             return;
@@ -101,7 +76,6 @@ $(document).ready(function() {
             jenis_hewan: 'semua'
         };
         
-        // Reset ke semua data
         loadAllData();
     });
     
@@ -122,34 +96,37 @@ var currentData = {
     jenis_hewan: 'semua'
 };
 
-function exportWithParams(format) {
-    // Jika tidak ada tahun, export semua data
-    if(!currentData.tahun) {
-        var url = base_url + 'laporan_history_data_vaksinasi/export_' + format;
-        url += "?tahun=all";
-        url += "&kecamatan=" + currentData.kecamatan;
-        url += "&jenis_vaksin=" + currentData.jenis_vaksin;
-        url += "&jenis_hewan=" + currentData.jenis_hewan;
-        window.location.href = url;
-        return;
-    }
+// ========== FUNGSI EXPORT EXCEL YANG DIPERBAIKI ==========
+function exportToExcel() {
+    var tahun = currentData.tahun;
+    var kecamatan = currentData.kecamatan;
+    var jenisVaksin = currentData.jenis_vaksin;
+    var jenisHewan = currentData.jenis_hewan;
     
-    var url = base_url + 'laporan_history_data_vaksinasi/export_' + format;
-    url += "?tahun=" + currentData.tahun;
-    url += "&kecamatan=" + currentData.kecamatan;
-    url += "&jenis_vaksin=" + currentData.jenis_vaksin;
-    url += "&jenis_hewan=" + currentData.jenis_hewan;
+    // Buat URL untuk export
+    var url = base_url + 'laporan_history_data_vaksinasi/export_excel';
+    url += "?tahun=" + (tahun || '');
+    url += "&kecamatan=" + (kecamatan || 'semua');
+    url += "&jenis_vaksin=" + encodeURIComponent(jenisVaksin || 'semua');
+    url += "&jenis_hewan=" + encodeURIComponent(jenisHewan || 'semua');
     
+    console.log('Export URL:', url);
     window.location.href = url;
+}
+
+// Fungsi export lama (untuk kompatibilitas)
+function exportWithParams(format) {
+    exportToExcel();
 }
 
 function printWithCurrentData() {
     var printWindow = window.open('', '_blank');
     printWindow.document.write('<html><head><title>Laporan History Data Vaksinasi</title>');
+    printWindow.document.write('<meta charset="UTF-8">');
     printWindow.document.write('<style>');
     printWindow.document.write('body { font-family: Arial, sans-serif; margin: 20px; }');
     printWindow.document.write('.header { text-align: center; margin-bottom: 20px; }');
-    printWindow.document.write('.header h2 { margin: 0; }');
+    printWindow.document.write('.header h2 { margin: 0; color: #832706; }');
     printWindow.document.write('.header p { margin: 5px 0; }');
     printWindow.document.write('table { width: 100%; border-collapse: collapse; margin-top: 20px; }');
     printWindow.document.write('th, td { border: 1px solid #000; padding: 8px; text-align: center; }');
@@ -191,7 +168,6 @@ function loadAllData() {
             $("#reportTitle").html('REKAPITULASI VAKSINASI SEMUA DATA');
             $("#reportSubtitle").html('Kota Surabaya - Seluruh Data');
             
-            // Clear table
             dataTable.clear().draw();
             
             var totalDosis = 0;
@@ -200,7 +176,6 @@ function loadAllData() {
             if(response.data && response.data.length > 0) {
                 for(var i = 0; i < response.data.length; i++) {
                     var item = response.data[i];
-                    
                     var kelasDosis = (parseInt(item.jumlah) > 0) ? 'positive-value' : 'zero-value';
                     
                     var rowData = [
@@ -225,16 +200,14 @@ function loadAllData() {
             
             dataTable.draw();
             
-            // Add footer total
             var totalClass = totalDosis > 0 ? 'positive-value' : 'zero-value';
             var footerHtml = '<tr class="total-row" style="background-color: #e8f5e9; font-weight: bold;">' +
                 '<td colspan="9" align="center"><strong>TOTAL KESELURUHAN</strong></td>' +
-                '<td><strong class="' + totalClass + '">' + formatNumber(totalDosis) + '</strong></td>' +
+                '<td align="center"><strong class="' + totalClass + '">' + formatNumber(totalDosis) + '</strong></td>' +
                 '</tr>';
             $("#tableFooter").html(footerHtml);
             $("#tableFooter").show();
             
-            // Set current data untuk export
             currentData.tahun = '';
             currentData.kecamatan = 'semua';
             currentData.jenis_vaksin = 'semua';
@@ -282,7 +255,6 @@ function loadDataWithFilter() {
             $("#reportTitle").html('REKAP DATA VAKSIN ' + jenisVaksinText + ' TAHUN ' + tahun);
             $("#reportSubtitle").html('Kota Surabaya - ' + kecamatanText + jenisHewanText);
             
-            // Clear table
             dataTable.clear().draw();
             
             var totalDosis = 0;
@@ -291,7 +263,6 @@ function loadDataWithFilter() {
             if(response.data && response.data.length > 0) {
                 for(var i = 0; i < response.data.length; i++) {
                     var item = response.data[i];
-                    
                     var kelasDosis = (parseInt(item.jumlah) > 0) ? 'positive-value' : 'zero-value';
                     
                     var rowData = [
@@ -316,11 +287,10 @@ function loadDataWithFilter() {
             
             dataTable.draw();
             
-            // Add footer total
             var totalClass = totalDosis > 0 ? 'positive-value' : 'zero-value';
             var footerHtml = '<tr class="total-row" style="background-color: #e8f5e9; font-weight: bold;">' +
                 '<td colspan="9" align="center"><strong>TOTAL KESELURUHAN</strong></td>' +
-                '<td><strong class="' + totalClass + '">' + formatNumber(totalDosis) + '</strong></td>' +
+                '<td align="center"><strong class="' + totalClass + '">' + formatNumber(totalDosis) + '</strong></td>' +
                 '</tr>';
             $("#tableFooter").html(footerHtml);
             $("#tableFooter").show();

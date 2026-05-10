@@ -8,22 +8,6 @@ $(document).ready(function() {
     dataTable = $('#historyTable').DataTable({
         dom: 'Bfrtip',
         buttons: [
-            // {
-            //     extend: 'copy',
-            //     text: '<i class="fas fa-copy"></i> Copy',
-            //     className: 'btn btn-sm btn-primary',
-            //     exportOptions: {
-            //         columns: ':visible'
-            //     }
-            // },
-            // {
-            //     extend: 'csv',
-            //     text: '<i class="fas fa-file-csv"></i> CSV',
-            //     className: 'btn btn-sm btn-success',
-            //     action: function(e, dt, button, config) {
-            //         exportWithParams('csv');
-            //     }
-            // },
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Excel', 
@@ -32,14 +16,6 @@ $(document).ready(function() {
                     exportWithParams('excel');
                 }
             },
-            // {
-            //     extend: 'pdf',
-            //     text: '<i class="fas fa-file-pdf"></i> PDF',
-            //     className: 'btn btn-sm btn-danger',
-            //     action: function(e, dt, button, config) {
-            //         exportWithParams('pdf');
-            //     }
-            // },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print"></i> Print',
@@ -70,46 +46,41 @@ $(document).ready(function() {
         }
     });
     
+    // Load semua data saat halaman pertama kali dibuka
+    loadAllData();
+    
+    // Tombol Filter - TIDAK WAJIB ADA TAHUN DAN BULAN
     $("#btnFilter").click(function() {
         currentData.tahun = $("#filterTahun").val();
         currentData.bulan = $("#filterBulan").val();
         currentData.kecamatan = $("#filterKecamatan").val();
         
-        if(!currentData.tahun) {
-            alert("Silakan pilih tahun terlebih dahulu!");
-            return;
-        }
-        
-        if(!currentData.bulan) {
-            alert("Silakan pilih bulan terlebih dahulu!");
-            return;
-        }
-        
-        loadData();
+        loadDataWithFilter();
     });
     
+    // Tombol Reset
     $("#btnReset").click(function() {
         $("#filterTahun").val('');
         $("#filterBulan").val('');
         $("#filterKecamatan").val('semua');
+        
         currentData = {
             tahun: '',
             bulan: '',
             kecamatan: 'semua'
         };
+        
         loadAllData();
     });
     
+    // Tombol Refresh
     $("#refreshBtn").click(function() {
-        if(currentData.tahun && currentData.bulan) {
-            loadData();
+        if(currentData.tahun || currentData.bulan || (currentData.kecamatan && currentData.kecamatan !== 'semua')) {
+            loadDataWithFilter();
         } else {
             loadAllData();
         }
     });
-    
-    // Load all data on page load
-    loadAllData();
 });
 
 var dataTable = null;
@@ -119,42 +90,43 @@ var currentData = {
     kecamatan: 'semua'
 };
 
+var bulanNama = {
+    '01': 'Januari', '02': 'Februari', '03': 'Maret', '04': 'April',
+    '05': 'Mei', '06': 'Juni', '07': 'Juli', '08': 'Agustus',
+    '09': 'September', '10': 'Oktober', '11': 'November', '12': 'Desember'
+};
+
+// ================ FUNGSI EXPORT EXCEL ================
 function exportWithParams(format) {
-    if(!currentData.tahun) {
-        alert("Silakan pilih tahun terlebih dahulu!");
-        return;
-    }
+    var tahun = $("#filterTahun").val();
+    var bulan = $("#filterBulan").val();
+    var kecamatan = $("#filterKecamatan").val();
     
-    if(!currentData.bulan) {
-        alert("Silakan pilih bulan terlebih dahulu!");
-        return;
-    }
-    
-    var url = base_url + 'laporan_history_data_ternak/export_' + format;
-    url += "?tahun=" + currentData.tahun;
-    url += "&bulan=" + (currentData.bulan || '');
-    url += "&kecamatan=" + currentData.kecamatan;
+    var url = base_url + 'laporan_history_data_ternak/export_excel';
+    url += "?tahun=" + (tahun || '');
+    url += "&bulan=" + (bulan || '');
+    url += "&kecamatan=" + (kecamatan || 'semua');
     
     window.location.href = url;
 }
 
+// ================ FUNGSI PRINT ================
 function printWithCurrentData() {
-    if(!currentData.tahun) {
-        alert("Silakan pilih tahun terlebih dahulu!");
-        return;
-    }
-    
-    if(!currentData.bulan) {
-        alert("Silakan pilih bulan terlebih dahulu!");
-        return;
-    }
+    var tahun = $("#filterTahun").val();
+    var bulan = $("#filterBulan").val();
+    var kecamatan = $("#filterKecamatan").val();
+    var bulanText = (bulan && bulan !== '') ? bulanNama[bulan] : 'Semua Bulan';
+    var tahunText = (tahun && tahun !== '') ? tahun : 'Semua Tahun';
+    var kecamatanText = (kecamatan && kecamatan !== 'semua') ? 'Kecamatan ' + kecamatan : 'Seluruh Kecamatan';
+    var periodeText = (tahun && tahun !== '') ? bulanText + ' ' + tahun : 'Semua Periode';
     
     var printWindow = window.open('', '_blank');
     printWindow.document.write('<html><head><title>Laporan History Data Ternak</title>');
+    printWindow.document.write('<meta charset="UTF-8">');
     printWindow.document.write('<style>');
     printWindow.document.write('body { font-family: Arial, sans-serif; margin: 20px; }');
     printWindow.document.write('.header { text-align: center; margin-bottom: 20px; }');
-    printWindow.document.write('.header h2 { margin: 0; }');
+    printWindow.document.write('.header h2 { margin: 0; color: #832706; }');
     printWindow.document.write('.header p { margin: 5px 0; }');
     printWindow.document.write('table { width: 100%; border-collapse: collapse; margin-top: 20px; }');
     printWindow.document.write('th, td { border: 1px solid #000; padding: 8px; text-align: center; }');
@@ -173,8 +145,9 @@ function printWithCurrentData() {
     $(tableContent).find('.dataTables_paginate').remove();
     
     printWindow.document.write('<div class="header">');
-    printWindow.document.write('<h2>' + document.getElementById('reportTitle').innerHTML + '</h2>');
-    printWindow.document.write('<p>' + document.getElementById('reportSubtitle').innerHTML.replace('<br>', ' - ') + '</p>');
+    printWindow.document.write('<h2>LAPORAN HISTORY DATA TERNAK</h2>');
+    printWindow.document.write('<p>Kota Surabaya - ' + kecamatanText + '</p>');
+    printWindow.document.write('<p>' + periodeText + '</p>');
     printWindow.document.write('</div>');
     printWindow.document.write(tableContent.outerHTML);
     printWindow.document.write('</body></html>');
@@ -182,6 +155,7 @@ function printWithCurrentData() {
     printWindow.print();
 }
 
+// ================ LOAD SEMUA DATA (TANPA FILTER) ================
 function loadAllData() {
     $("#loadingOverlay").fadeIn();
     
@@ -191,7 +165,7 @@ function loadAllData() {
         data: {},
         dataType: "json",
         success: function(response) {
-            displayData(response, 'Semua Periode', 'Semua Kecamatan');
+            displayData(response, 'Semua Periode', 'Seluruh Kecamatan');
             $("#loadingOverlay").fadeOut();
         },
         error: function(xhr, status, error) {
@@ -202,7 +176,8 @@ function loadAllData() {
     });
 }
 
-function loadData() {
+// ================ LOAD DATA DENGAN FILTER ================
+function loadDataWithFilter() {
     var tahun = currentData.tahun;
     var bulan = currentData.bulan;
     var kecamatan = currentData.kecamatan;
@@ -213,15 +188,16 @@ function loadData() {
         url: base_url + 'laporan_history_data_ternak/get_data',
         type: "POST",
         data: {
-            tahun: tahun,
-            bulan: bulan,
-            kecamatan: kecamatan
+            tahun: tahun || '',
+            bulan: bulan || '',
+            kecamatan: kecamatan || 'semua'
         },
         dataType: "json",
         success: function(response) {
-            var bulanText = bulanNama[bulan] || bulan;
+            var bulanText = (bulan && bulan !== '') ? bulanNama[bulan] : 'Semua Bulan';
+            var tahunText = (tahun && tahun !== '') ? tahun : 'Semua Tahun';
             var kecamatanText = (kecamatan && kecamatan !== 'semua') ? 'Kecamatan ' + kecamatan : 'Seluruh Kecamatan';
-            var periodeText = 'Periode: ' + bulanText + ' ' + tahun;
+            var periodeText = (tahun && tahun !== '') ? bulanText + ' ' + tahun : 'Semua Periode';
             
             displayData(response, periodeText, kecamatanText);
             $("#loadingOverlay").fadeOut();
@@ -234,12 +210,11 @@ function loadData() {
     });
 }
 
+// ================ DISPLAY DATA KE TABEL ================
 function displayData(response, periodeText, kecamatanText) {
-    // Clear table
     dataTable.clear().draw();
     
-    // Update title
-    $('#reportTitle').html('Data Peternak dan Populasi Ternak');
+    $('#reportTitle').html('LAPORAN HISTORY DATA TERNAK');
     $('#reportSubtitle').html('Kota Surabaya - ' + kecamatanText + '<br>' + periodeText);
     
     if(response.data && response.data.length > 0) {
@@ -253,13 +228,13 @@ function displayData(response, periodeText, kecamatanText) {
                 { nama: 'Domba', jantan: peternak.domba_jantan, betina: peternak.domba_betina },
                 { nama: 'Kerbau', jantan: peternak.kerbau_jantan, betina: peternak.kerbau_betina },
                 { nama: 'Kuda', jantan: peternak.kuda_jantan, betina: peternak.kuda_betina },
-                { nama: 'Ayam Buras', jantan: 0, betina: 0, total: peternak.ayam_buras },
-                { nama: 'Ayam Broiler', jantan: 0, betina: 0, total: peternak.ayam_broiler },
-                { nama: 'Ayam Layer', jantan: 0, betina: 0, total: peternak.ayam_layer },
-                { nama: 'Itik', jantan: 0, betina: 0, total: peternak.itik },
-                { nama: 'Angsa', jantan: 0, betina: 0, total: peternak.angsa },
-                { nama: 'Kalkun', jantan: 0, betina: 0, total: peternak.kalkun },
-                { nama: 'Burung', jantan: 0, betina: 0, total: peternak.burung }
+                { nama: 'Ayam Buras', jantan: 0, betina: 0, total: peternak.ayam_buras || 0 },
+                { nama: 'Ayam Broiler', jantan: 0, betina: 0, total: peternak.ayam_broiler || 0 },
+                { nama: 'Ayam Layer', jantan: 0, betina: 0, total: peternak.ayam_layer || 0 },
+                { nama: 'Itik', jantan: 0, betina: 0, total: peternak.itik || 0 },
+                { nama: 'Angsa', jantan: 0, betina: 0, total: peternak.angsa || 0 },
+                { nama: 'Kalkun', jantan: 0, betina: 0, total: peternak.kalkun || 0 },
+                { nama: 'Burung', jantan: 0, betina: 0, total: peternak.burung || 0 }
             ];
             
             var activeHewan = hewanList.filter(function(hewan) {
@@ -288,8 +263,8 @@ function displayData(response, periodeText, kecamatanText) {
                     kecamatan: peternak.kecamatan || '-',
                     kelurahan: peternak.kelurahan || '-',
                     jenis_hewan: hewan.nama,
-                    jantan: hewan.hasOwnProperty('total') ? 0 : hewan.jantan,
-                    betina: hewan.hasOwnProperty('total') ? 0 : hewan.betina,
+                    jantan: hewan.hasOwnProperty('total') ? 0 : (hewan.jantan || 0),
+                    betina: hewan.hasOwnProperty('total') ? 0 : (hewan.betina || 0),
                     total: totalHewan
                 });
             });
@@ -312,7 +287,7 @@ function displayData(response, periodeText, kecamatanText) {
         });
     } else {
         dataTable.row.add([
-            '1', '-', '-', '-', '-', '-', '-', '-', '0', '0', '0'
+            '1', '-', '-', 'Tidak ada data', '-', '-', '-', '-', '0', '0', '0'
         ]).draw(false);
     }
 }

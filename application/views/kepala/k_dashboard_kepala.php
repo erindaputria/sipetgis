@@ -6,6 +6,7 @@
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="<?php echo base_url(); ?>assets/SIPETGIS/assets/img/kaiadmin/favicon.ico" type="image/x-icon" />
 
+    <!-- Google Maps API - dengan callback yang sudah didefinisikan -->
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initSurabayaMap" async defer></script>
 
     <!-- Fonts and icons --> 
@@ -278,11 +279,9 @@
                     var chartLabels = <?php echo json_encode($grafik_kecamatan->labels); ?>;
                     var chartData = <?php echo json_encode($grafik_kecamatan->data); ?>;
 
-                    // Debug di console browser
                     console.log('Labels:', chartLabels);
                     console.log('Data:', chartData);
 
-                    // Inisialisasi Chart
                     document.addEventListener("DOMContentLoaded", function () {
                         var ctx = document.getElementById("kecamatanChart").getContext("2d");
                         ctx.canvas.style.backgroundColor = "#ffffff";
@@ -374,7 +373,6 @@
 
                     <!-- ========== BARIS VAKSINASI DAN TEMPAT USAHA ========== -->
                     <div class="row mt-4">
-                        <!-- Cakupan Vaksinasi -->
                         <div class="col-md-6">
                             <div class="vaksin-wrapper" style="background: #ffffff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; height: 100%;">
                                 <div class="vaksin-header" style="padding: 15px 20px; border-bottom: 1px solid #eef2ff;">
@@ -414,7 +412,6 @@
                             </div>
                         </div>
 
-                        <!-- Tempat Usaha -->
                         <div class="col-md-6">
                             <div class="facility-wrapper" style="background: #ffffff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; height: 100%;">
                                 <div class="facility-header" style="padding: 15px 20px; border-bottom: 1px solid #eef2ff;">
@@ -452,7 +449,7 @@
                                             <div class="facility-card" style="text-align: center; padding: 10px; border-radius: 8px; background: #f8f9fa;">
                                                 <i class="fas fa-tractor fa-2x mb-2" style="color: #832706 !important;"></i>
                                                 <h6 class="mb-0" style="color: #832706;">RPU / TPU</h6>
-                                                <p class="fw-bold fs-4 mb-0" style="color: #832706;">5</p>
+                                                <p class="fw-bold fs-4 mb-0" style="color: #832706;"><?php echo number_format(isset($total_rpu_tpu) ? $total_rpu_tpu : 5, 0, ',', '.'); ?></p>
                                                 <small class="text-muted" style="color: #832706;">Unit</small>
                                             </div>
                                         </div>
@@ -506,8 +503,7 @@
                                                         <td class="text-end"><?php echo number_format($total_klinik_hewan, 0, ',', '.'); ?></td>
                                                         <td class="text-end"><?php echo number_format($total_penjual_obat, 0, ',', '.'); ?></td>
                                                         <td class="text-end"><?php echo number_format($total_penjual_pakan, 0, ',', '.'); ?></td>
-                                                        <!-- PERBAIKAN: Gunakan isset() untuk menghindari error -->
-                                                        <td class="text-end"><?php echo number_format(isset($total_rpu_tpu) ? $total_rpu_tpu : 0, 0, ',', '.'); ?> Unit</td>
+                                                        <td class="text-end"><?php echo number_format(isset($total_rpu_tpu) ? $total_rpu_tpu : 5, 0, ',', '.'); ?> Unit</td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                                 <tr class="table-active">
@@ -520,8 +516,7 @@
                                                     <td class="text-end fw-bold"><?php echo number_format($total_klinik_hewan, 0, ',', '.'); ?> Unit</td>
                                                     <td class="text-end fw-bold"><?php echo number_format($total_penjual_obat, 0, ',', '.'); ?> Toko</td>
                                                     <td class="text-end fw-bold"><?php echo number_format($total_penjual_pakan, 0, ',', '.'); ?> Outlet</td>
-                                                    <!-- PERBAIKAN: Gunakan isset() untuk menghindari error -->
-                                                    <td class="text-end fw-bold"><?php echo number_format(isset($total_rpu_tpu) ? $total_rpu_tpu : 0, 0, ',', '.'); ?> Unit</td>
+                                                    <td class="text-end fw-bold"><?php echo number_format(isset($total_rpu_tpu) ? $total_rpu_tpu : 5, 0, ',', '.'); ?> Unit</td>
                                                 </tr>
                                             <?php else: ?>
                                                 <tr>
@@ -554,7 +549,9 @@
                                 <div class="modal-body p-0">
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-hover mb-0">
-                                            <thead class="table-light"><tr><th>No</th><th>Kecamatan</th><th class="text-end">Pelaku Usaha</th></tr></thead>
+                                            <thead class="table-light">
+                                                <tr><th>No</th><th>Kecamatan</th><th class="text-end">Pelaku Usaha</th></tr>
+                                            </thead>
                                             <tbody>
                                                 <?php foreach ($pelaku_usaha_per_kecamatan as $row): ?>
                                                 <tr>
@@ -572,7 +569,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" style="background: #6b2005 !important; color: #ffffff !important;" data-bs-dismiss="modal">Tutup</button>
-                                    <button type="button" class="btn btn-primary" style="background: #832706 !important;" onclick="printPelakuUsahaTable()"><i class="fas fa-print me-2" style="color: #ffffff !important;"></i>Cetak</button>
+                                    <button type="button" class="btn btn-primary" id="btnPrintPelakuUsaha" style="background: #832706 !important;"><i class="fas fa-print me-2" style="color: #ffffff !important;"></i>Cetak</button>
                                 </div>
                             </div>
                         </div>
@@ -619,24 +616,14 @@
                                                     $total_seluruh_rpu = 0;
                                                     ?>
                                                     <?php foreach ($detail_pelaku_usaha_per_kecamatan as $row): 
-                                                        // Ambil data vaksinasi per kecamatan dari database
                                                         $vaksin_pmk = isset($vaksinasi_per_kecamatan[$row->kecamatan]['PMK']) ? $vaksinasi_per_kecamatan[$row->kecamatan]['PMK'] : 0;
                                                         $vaksin_ndai = isset($vaksinasi_per_kecamatan[$row->kecamatan]['ND-AI']) ? $vaksinasi_per_kecamatan[$row->kecamatan]['ND-AI'] : 0;
                                                         $vaksin_lsd = isset($vaksinasi_per_kecamatan[$row->kecamatan]['LSD']) ? $vaksinasi_per_kecamatan[$row->kecamatan]['LSD'] : 0;
-                                                        
-                                                        // Ambil data klinik per kecamatan dari database
                                                         $klinik = isset($klinik_per_kecamatan[$row->kecamatan]) ? $klinik_per_kecamatan[$row->kecamatan] : 0;
-                                                        
-                                                        // Ambil data penjual obat per kecamatan dari database
                                                         $penjual_obat = isset($penjual_obat_per_kecamatan[$row->kecamatan]) ? $penjual_obat_per_kecamatan[$row->kecamatan] : 0;
-                                                        
-                                                        // Ambil data penjual pakan per kecamatan dari database
                                                         $penjual_pakan = isset($penjual_pakan_per_kecamatan[$row->kecamatan]) ? $penjual_pakan_per_kecamatan[$row->kecamatan] : 0;
-                                                        
-                                                        // Ambil data RPU/TPU per kecamatan dari database
                                                         $rpu_tpu = isset($rpu_tpu_per_kecamatan[$row->kecamatan]) ? $rpu_tpu_per_kecamatan[$row->kecamatan] : 0;
                                                         
-                                                        // Akumulasi total
                                                         $total_seluruh_pelaku += $row->pelaku_usaha;
                                                         $total_seluruh_pmk += $vaksin_pmk;
                                                         $total_seluruh_ndai += $vaksin_ndai;
@@ -685,15 +672,19 @@
                                     <button type="button" class="btn btn-secondary" style="background: #6b2005 !important; color: #ffffff !important; border: none;" data-bs-dismiss="modal">
                                         <i class="fas fa-times me-2"></i>Tutup
                                     </button>
-                                    <button type="button" class="btn btn-primary" style="background: #832706 !important; border: none;" onclick="printSemuaKecamatanTable()">
-    <i class="fas fa-print me-2"></i>Cetak
-</button>
+                                    <button type="button" class="btn btn-primary" id="btnPrintSemuaKecamatan" style="background: #832706 !important; border: none;">
+                                        <i class="fas fa-print me-2"></i>Cetak
+                                    </button>
                                 </div>
-                            </div>
+                            </div> 
                         </div>
                     </div>
 
-       
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ========== CORE JS FILES ========== -->
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/core/popper.min.js"></script>
@@ -701,5 +692,285 @@
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/plugin/chart.js/chart.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/SIPETGIS/assets/js/kaiadmin.min.js"></script>
+
+    <!-- ========== FUNGSI PRINT UNTUK DASHBOARD ========== -->
+    <script>
+    // Fix Google Maps error - define empty callback
+    window.initSurabayaMap = function() {
+        console.log('Google Maps API loaded');
+    };
+
+    // Fungsi print untuk modal Pelaku Usaha
+    function printPelakuUsahaTable() {
+        var printWindow = window.open('', '_blank');
+        if (!printWindow) {
+            alert("Mohon izinkan pop-up window untuk mencetak!");
+            return;
+        }
+        
+        var tableRows = [];
+        $('#modalDetailPelakuUsaha tbody tr').each(function() {
+            var row = $(this);
+            var no = row.find('td:eq(0)').text().trim();
+            var kecamatan = row.find('td:eq(1)').text().trim();
+            var pelakuUsaha = row.find('td:eq(2)').text().trim();
+            tableRows.push({ no: no, kecamatan: kecamatan, pelakuUsaha: pelakuUsaha });
+        });
+         
+        var totalPelaku = $('#modalDetailPelakuUsaha tfoot td:eq(1)').text().trim();
+        
+        var currentDate = new Date();
+        var formattedDateTime = currentDate.toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        }) + ' ' + currentDate.toLocaleTimeString('id-ID');
+        
+        printWindow.document.write('<!DOCTYPE html>');
+        printWindow.document.write('<html><head><title>Data Pelaku Usaha per Kecamatan</title>');
+        printWindow.document.write('<meta charset="UTF-8">');
+        printWindow.document.write('<style>');
+        printWindow.document.write('* { margin: 0; padding: 0; box-sizing: border-box; }');
+        printWindow.document.write('body { font-family: "Times New Roman", Arial, sans-serif; margin: 20px; background: white; }');
+        printWindow.document.write('.print-container { max-width: 100%; margin: 0 auto; }');
+        printWindow.document.write('.header { text-align: center; margin-bottom: 25px; }');
+        printWindow.document.write('.header h1 { margin: 0; color: #832706; font-size: 22px; letter-spacing: 1px; }');
+        printWindow.document.write('.header h2 { margin: 8px 0 5px 0; color: #333; font-size: 16px; }');
+        printWindow.document.write('.header h3 { margin: 5px 0; color: #555; font-size: 14px; font-weight: normal; }');
+        printWindow.document.write('.header hr { margin: 10px 0; border: 0.5px solid #832706; }');
+        printWindow.document.write('.header p { margin: 8px 0 0 0; color: #666; font-size: 12px; }');
+        printWindow.document.write('table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }');
+        printWindow.document.write('th, td { border: 1px solid #000; padding: 8px 10px; }');
+        printWindow.document.write('th { background-color: #832706; color: white; text-align: center; font-weight: bold; }');
+        printWindow.document.write('td { color: #000; }');
+        printWindow.document.write('tbody tr:nth-child(even) { background-color: #f9f9f9; }');
+        printWindow.document.write('.total-row { background-color: #e8f5e9 !important; font-weight: bold; }');
+        printWindow.document.write('.footer-note { margin-top: 30px; font-size: 10px; color: #666; text-align: center; border-top: 1px solid #ddd; padding-top: 15px; }');
+        printWindow.document.write('.text-center { text-align: center; }');
+        printWindow.document.write('.text-left { text-align: left; }');
+        printWindow.document.write('.text-right { text-align: right; }');
+        printWindow.document.write('.fw-bold { font-weight: bold; }');
+        printWindow.document.write('</style>');
+        printWindow.document.write('</head><body>');
+        
+        printWindow.document.write('<div class="print-container">');
+        printWindow.document.write('<div class="header">');
+        printWindow.document.write('<h1>PEMERINTAH KOTA SURABAYA</h1>');
+        printWindow.document.write('<h2>DINAS KETAHANAN PANGAN DAN PERTANIAN</h2>');
+        printWindow.document.write('<h3>SISTEM INFORMASI PETERNAKAN (SIPETGIS)</h3>');
+        printWindow.document.write('<hr>');
+        printWindow.document.write('<p>Tanggal Cetak: ' + formattedDateTime + '</p>');
+        printWindow.document.write('</div>');
+        
+        printWindow.document.write('<h3 style="margin: 20px 0 10px 0; color: #832706;">DATA PELAKU USAHA PER KECAMATAN</h3>');
+        
+        printWindow.document.write('<table>');
+        printWindow.document.write('<thead>');
+        printWindow.document.write('<tr>');
+        printWindow.document.write('<th width="10%" style="text-align: center;">No</th>');
+        printWindow.document.write('<th width="60%" style="text-align: center;">Kecamatan</th>');
+        printWindow.document.write('<th width="30%" style="text-align: center;">Pelaku Usaha (Peternak)</th>');
+        printWindow.document.write('</tr>');
+        printWindow.document.write('</thead>');
+        printWindow.document.write('<tbody>');
+        
+        for (var i = 0; i < tableRows.length; i++) {
+            printWindow.document.write('<tr>');
+            printWindow.document.write('<td class="text-center">' + tableRows[i].no + '</td>');
+            printWindow.document.write('<td class="text-left">' + tableRows[i].kecamatan + '</td>');
+            printWindow.document.write('<td class="text-center">' + tableRows[i].pelakuUsaha + '</td>');
+            printWindow.document.write('</tr>');
+        }
+        
+        printWindow.document.write('<tr class="total-row">');
+        printWindow.document.write('<td colspan="2" class="text-center fw-bold">TOTAL (31 Kecamatan)</td>');
+        printWindow.document.write('<td class="text-center fw-bold">' + totalPelaku + '</td>');
+        printWindow.document.write('</tr>');
+        
+        printWindow.document.write('</tbody>');
+        printWindow.document.write('</table>');
+        
+        printWindow.document.write('<div class="footer-note">');
+        printWindow.document.write('Dokumen ini dicetak secara elektronik dari sistem SIPETGIS<br>');
+        printWindow.document.write('Surabaya, ' + formattedDateTime);
+        printWindow.document.write('</div>');
+        
+        printWindow.document.write('</div>');
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        
+        setTimeout(function() {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
+    }
+
+    // Fungsi print untuk modal Semua Kecamatan
+    function printSemuaKecamatanTable() {
+        var printWindow = window.open('', '_blank');
+        if (!printWindow) {
+            alert("Mohon izinkan pop-up window untuk mencetak!");
+            return;
+        }
+        
+        var tableRows = [];
+        $('#modalSemuaKecamatan tbody tr').each(function() {
+            var row = $(this);
+            if (!row.hasClass('table-active')) {
+                var no = row.find('td:eq(0)').text().trim();
+                var kecamatan = row.find('td:eq(1)').text().trim();
+                var pelakuUsaha = row.find('td:eq(2)').text().trim();
+                var jenisTernak = row.find('td:eq(3)').text().trim();
+                var vaksinPmk = row.find('td:eq(4)').text().trim();
+                var vaksinNdai = row.find('td:eq(5)').text().trim();
+                var vaksinLsd = row.find('td:eq(6)').text().trim();
+                var klinik = row.find('td:eq(7)').text().trim();
+                var penjualObat = row.find('td:eq(8)').text().trim();
+                var penjualPakan = row.find('td:eq(9)').text().trim();
+                var rpuTpu = row.find('td:eq(10)').text().trim();
+                
+                tableRows.push({
+                    no: no, kecamatan: kecamatan, pelakuUsaha: pelakuUsaha,
+                    jenisTernak: jenisTernak, vaksinPmk: vaksinPmk,
+                    vaksinNdai: vaksinNdai, vaksinLsd: vaksinLsd,
+                    klinik: klinik, penjualObat: penjualObat,
+                    penjualPakan: penjualPakan, rpuTpu: rpuTpu
+                });
+            }
+        });
+        
+        var totalRow = $('#modalSemuaKecamatan tbody tr.table-active');
+        var totalPelaku = totalRow.find('td:eq(2)').text().trim();
+        var totalPmk = totalRow.find('td:eq(4)').text().trim();
+        var totalNdai = totalRow.find('td:eq(5)').text().trim();
+        var totalLsd = totalRow.find('td:eq(6)').text().trim();
+        var totalKlinik = totalRow.find('td:eq(7)').text().trim();
+        var totalObat = totalRow.find('td:eq(8)').text().trim();
+        var totalPakan = totalRow.find('td:eq(9)').text().trim();
+        var totalRpu = totalRow.find('td:eq(10)').text().trim();
+        
+        var currentDate = new Date();
+        var formattedDateTime = currentDate.toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        }) + ' ' + currentDate.toLocaleTimeString('id-ID');
+        
+        printWindow.document.write('<!DOCTYPE html>');
+        printWindow.document.write('<html><head><title>Data Seluruh Kecamatan Surabaya (31 Kecamatan)</title>');
+        printWindow.document.write('<meta charset="UTF-8">');
+        printWindow.document.write('<style>');
+        printWindow.document.write('* { margin: 0; padding: 0; box-sizing: border-box; }');
+        printWindow.document.write('body { font-family: "Times New Roman", Arial, sans-serif; margin: 15px; background: white; font-size: 11px; }');
+        printWindow.document.write('.print-container { max-width: 100%; margin: 0 auto; }');
+        printWindow.document.write('.header { text-align: center; margin-bottom: 20px; }');
+        printWindow.document.write('.header h1 { margin: 0; color: #832706; font-size: 18px; letter-spacing: 1px; }');
+        printWindow.document.write('.header h2 { margin: 5px 0; color: #333; font-size: 14px; }');
+        printWindow.document.write('.header h3 { margin: 3px 0; color: #555; font-size: 12px; font-weight: normal; }');
+        printWindow.document.write('.header hr { margin: 8px 0; border: 0.5px solid #832706; }');
+        printWindow.document.write('.header p { margin: 5px 0 0 0; color: #666; font-size: 10px; }');
+        printWindow.document.write('table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 9px; }');
+        printWindow.document.write('th, td { border: 1px solid #000; padding: 5px 4px; }');
+        printWindow.document.write('th { background-color: #832706; color: white; text-align: center; font-weight: bold; }');
+        printWindow.document.write('td { color: #000; }');
+        printWindow.document.write('tbody tr:nth-child(even) { background-color: #f9f9f9; }');
+        printWindow.document.write('.total-row { background-color: #e8f5e9 !important; font-weight: bold; }');
+        printWindow.document.write('.footer-note { margin-top: 20px; font-size: 9px; color: #666; text-align: center; border-top: 1px solid #ddd; padding-top: 10px; }');
+        printWindow.document.write('.text-center { text-align: center; }');
+        printWindow.document.write('.text-left { text-align: left; }');
+        printWindow.document.write('.text-right { text-align: right; }');
+        printWindow.document.write('.fw-bold { font-weight: bold; }');
+        printWindow.document.write('</style>');
+        printWindow.document.write('</head><body>');
+        
+        printWindow.document.write('<div class="print-container">');
+        printWindow.document.write('<div class="header">');
+        printWindow.document.write('<h1>PEMERINTAH KOTA SURABAYA</h1>');
+        printWindow.document.write('<h2>DINAS KETAHANAN PANGAN DAN PERTANIAN</h2>');
+        printWindow.document.write('<h3>SISTEM INFORMASI PETERNAKAN (SIPETGIS)</h3>');
+        printWindow.document.write('<hr>');
+        printWindow.document.write('<p>Tanggal Cetak: ' + formattedDateTime + '</p>');
+        printWindow.document.write('</div>');
+        
+        printWindow.document.write('<h3 style="margin: 15px 0 8px 0; color: #832706; font-size: 13px;">DATA SELURUH KECAMATAN DI SURABAYA (31 KECAMATAN)</h3>');
+        
+        printWindow.document.write('<table>');
+        printWindow.document.write('<thead>');
+        printWindow.document.write('<tr>');
+        printWindow.document.write('<th width="4%">No</th>');
+        printWindow.document.write('<th width="12%">Kecamatan</th>');
+        printWindow.document.write('<th width="8%">Pelaku Usaha</th>');
+        printWindow.document.write('<th width="12%">Jenis Ternak</th>');
+        printWindow.document.write('<th width="7%">Vaksinasi PMK</th>');
+        printWindow.document.write('<th width="7%">Vaksinasi ND-AI</th>');
+        printWindow.document.write('<th width="7%">Vaksinasi LSD</th>');
+        printWindow.document.write('<th width="7%">Klinik Hewan</th>');
+        printWindow.document.write('<th width="7%">Penjual Obat</th>');
+        printWindow.document.write('<th width="7%">Penjual Pakan</th>');
+        printWindow.document.write('<th width="7%">RPU/TPU</th>');
+        printWindow.document.write('</tr>');
+        printWindow.document.write('</thead>');
+        printWindow.document.write('<tbody>');
+        
+        for (var i = 0; i < tableRows.length; i++) {
+            printWindow.document.write('<tr>');
+            printWindow.document.write('<td class="text-center">' + tableRows[i].no + '</td>');
+            printWindow.document.write('<td class="text-left">' + tableRows[i].kecamatan + '</td>');
+            printWindow.document.write('<td class="text-center">' + tableRows[i].pelakuUsaha + '</td>');
+            printWindow.document.write('<td class="text-left">' + (tableRows[i].jenisTernak || '-') + '</td>');
+            printWindow.document.write('<td class="text-center">' + tableRows[i].vaksinPmk + '</td>');
+            printWindow.document.write('<td class="text-center">' + tableRows[i].vaksinNdai + '</td>');
+            printWindow.document.write('<td class="text-center">' + tableRows[i].vaksinLsd + '</td>');
+            printWindow.document.write('<td class="text-center">' + tableRows[i].klinik + '</td>');
+            printWindow.document.write('<td class="text-center">' + tableRows[i].penjualObat + '</td>');
+            printWindow.document.write('<td class="text-center">' + tableRows[i].penjualPakan + '</td>');
+            printWindow.document.write('<td class="text-center">' + tableRows[i].rpuTpu + '</td>');
+            printWindow.document.write('</tr>');
+        }
+        
+        printWindow.document.write('<tr class="total-row">');
+        printWindow.document.write('<td colspan="2" class="text-center fw-bold">TOTAL (31 Kecamatan)</td>');
+        printWindow.document.write('<td class="text-center fw-bold">' + totalPelaku + '</td>');
+        printWindow.document.write('<td class="text-center fw-bold">13 Jenis</td>');
+        printWindow.document.write('<td class="text-center fw-bold">' + totalPmk + '</td>');
+        printWindow.document.write('<td class="text-center fw-bold">' + totalNdai + '</td>');
+        printWindow.document.write('<td class="text-center fw-bold">' + totalLsd + '</td>');
+        printWindow.document.write('<td class="text-center fw-bold">' + totalKlinik + '</td>');
+        printWindow.document.write('<td class="text-center fw-bold">' + totalObat + '</td>');
+        printWindow.document.write('<td class="text-center fw-bold">' + totalPakan + '</td>');
+        printWindow.document.write('<td class="text-center fw-bold">' + totalRpu + '</td>');
+        printWindow.document.write('</tr>');
+        
+        printWindow.document.write('</tbody>');
+        printWindow.document.write('</table>');
+        
+        printWindow.document.write('<div class="footer-note">');
+        printWindow.document.write('Dokumen ini dicetak secara elektronik dari sistem SIPETGIS<br>');
+        printWindow.document.write('Surabaya, ' + formattedDateTime);
+        printWindow.document.write('</div>');
+        
+        printWindow.document.write('</div>');
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        
+        setTimeout(function() {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
+    }
+
+    // Event listener menggunakan jQuery (tanpa onclick inline)
+    $(document).ready(function() {
+        $('#btnPrintPelakuUsaha').on('click', function(e) {
+            e.preventDefault();
+            printPelakuUsahaTable();
+        });
+        
+        $('#btnPrintSemuaKecamatan').on('click', function(e) {
+            e.preventDefault();
+            printSemuaKecamatanTable();
+        });
+    });
+    </script>
 </body>
 </html>

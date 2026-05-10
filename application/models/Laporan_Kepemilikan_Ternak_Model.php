@@ -10,15 +10,15 @@ class Laporan_kepemilikan_ternak_model extends CI_Model {
 
     // Daftar 31 kecamatan urutan tetap
     private $kecamatan_order = [
-        'Asemrowo', 'Krembangan', 'Pabean Cantian', 'Semampir', 'Bulak',
-        'Kenjeran', 'Simokerto', 'Tambaksari', 'Mulyorejo', 'Sukolilo', 
-        'Gubeng', 'Rungkut', 'Gunung Anyar', 'Tenggilis Mejoyo', 'Wonocolo',
-        'Benowo', 'Pakal', 'Sambikerep', 'Tandes', 'Sukomanunggal',
-        'Lakarsantri', 'Wiyung', 'Sawahan', 'Dukuh Pakis', 'Karangpilang',
-        'Gayungan', 'Jambangan', 'Wonokromo', 'Tegalsari', 'Genteng', 'Bubutan'
+        'Karang Pilang', 'Jambangan', 'Gayungan', 'Wonocolo', 'Tenggilis Mejoyo',
+        'Gunung Anyar', 'Rungkut', 'Sukolilo', 'Mulyorejo', 'Gubeng',
+        'Wonokromo', 'Dukuh Pakis', 'Wiyung', 'Lakarsantri', 'Sambikerep',
+        'Tandes', 'Sukomanunggal', 'Sawahan', 'Tegalsari', 'Genteng',
+        'Bubutan', 'Krembangan', 'Semampir', 'Kenjeran', 'Bulak',
+        'Tambaksari', 'Simokerto', 'Pabean Cantian', 'Kandangan', 'Benowo', 'Pakal'
     ];
 
-    public function get_kecamatan()
+    public function get_kecamatan() 
     {
         $result = [];
         foreach($this->kecamatan_order as $kec) {
@@ -44,7 +44,7 @@ class Laporan_kepemilikan_ternak_model extends CI_Model {
         return $result;
     }
 
-    // Data Peternak (COUNT DISTINCT NIK)
+    // Data Peternak (COUNT DISTINCT NIK) - DIPERBAIKI
     public function get_data_peternak($tahun, $bulan = null, $kecamatan_filter = null)
     {
         $sql = "SELECT 
@@ -69,8 +69,9 @@ class Laporan_kepemilikan_ternak_model extends CI_Model {
             $sql .= " AND MONTH(tanggal_input) = " . $this->db->escape($bulan);
         }
         
+        // FILTER KECAMATAN - Jika memilih kecamatan tertentu
         if($kecamatan_filter && $kecamatan_filter != 'semua') {
-            $sql .= " AND UPPER(kecamatan) = " . $this->db->escape(strtoupper($kecamatan_filter));
+            $sql .= " AND TRIM(UPPER(kecamatan)) = " . $this->db->escape(strtoupper(trim($kecamatan_filter)));
         }
         
         $sql .= " GROUP BY kecamatan ORDER BY kecamatan ASC";
@@ -78,22 +79,24 @@ class Laporan_kepemilikan_ternak_model extends CI_Model {
         $query = $this->db->query($sql);
         $results = $query->result();
         
-        // Map data
+        // Map data dari database
         $dataMap = [];
         foreach($results as $item) {
-            $kec = ucwords(strtolower($item->kecamatan));
+            $kec = trim($item->kecamatan);
             $dataMap[$kec] = $item;
         }
         
-        // Tentukan kecamatan yang ditampilkan
+        // Tentukan kecamatan yang akan ditampilkan
         $kecamatanList = [];
         if($kecamatan_filter && $kecamatan_filter != 'semua') {
-            $kecamatanList = [ucwords(strtolower($kecamatan_filter))];
+            // HANYA 1 kecamatan yang dipilih - YANG INI PERBAIKANNYA
+            $kecamatanList = [trim($kecamatan_filter)];
         } else {
+            // Semua 31 kecamatan
             $kecamatanList = $this->kecamatan_order;
         }
         
-        // Build hasil dengan nilai default 0
+        // Build hasil akhir
         $final_results = [];
         foreach($kecamatanList as $kec) {
             if(isset($dataMap[$kec])) {
@@ -111,7 +114,7 @@ class Laporan_kepemilikan_ternak_model extends CI_Model {
         return $final_results;
     }
 
-    // Data Populasi (SUM jumlah)
+    // Data Populasi (SUM jumlah) - DIPERBAIKI
     public function get_data_populasi($tahun, $bulan = null, $kecamatan_filter = null)
     {
         $sql = "SELECT 
@@ -136,8 +139,9 @@ class Laporan_kepemilikan_ternak_model extends CI_Model {
             $sql .= " AND MONTH(tanggal_input) = " . $this->db->escape($bulan);
         }
         
+        // FILTER KECAMATAN - Jika memilih kecamatan tertentu
         if($kecamatan_filter && $kecamatan_filter != 'semua') {
-            $sql .= " AND UPPER(kecamatan) = " . $this->db->escape(strtoupper($kecamatan_filter));
+            $sql .= " AND TRIM(UPPER(kecamatan)) = " . $this->db->escape(strtoupper(trim($kecamatan_filter)));
         }
         
         $sql .= " GROUP BY kecamatan ORDER BY kecamatan ASC";
@@ -145,22 +149,24 @@ class Laporan_kepemilikan_ternak_model extends CI_Model {
         $query = $this->db->query($sql);
         $results = $query->result();
         
-        // Map data
+        // Map data dari database
         $dataMap = [];
         foreach($results as $item) {
-            $kec = ucwords(strtolower($item->kecamatan));
+            $kec = trim($item->kecamatan);
             $dataMap[$kec] = $item;
         }
         
-        // Tentukan kecamatan yang ditampilkan
+        // Tentukan kecamatan yang akan ditampilkan
         $kecamatanList = [];
         if($kecamatan_filter && $kecamatan_filter != 'semua') {
-            $kecamatanList = [ucwords(strtolower($kecamatan_filter))];
+            // HANYA 1 kecamatan yang dipilih - YANG INI PERBAIKANNYA
+            $kecamatanList = [trim($kecamatan_filter)];
         } else {
+            // Semua 31 kecamatan
             $kecamatanList = $this->kecamatan_order;
         }
         
-        // Build hasil dengan nilai default 0
+        // Build hasil akhir
         $final_results = [];
         foreach($kecamatanList as $kec) {
             if(isset($dataMap[$kec])) {
@@ -216,7 +222,7 @@ class Laporan_kepemilikan_ternak_model extends CI_Model {
             $sql .= " AND MONTH(tanggal_input) = " . $this->db->escape($bulan);
         }
         if($kecamatan_filter && $kecamatan_filter != 'semua') {
-            $sql .= " AND UPPER(kecamatan) = " . $this->db->escape(strtoupper($kecamatan_filter));
+            $sql .= " AND TRIM(UPPER(kecamatan)) = " . $this->db->escape(strtoupper(trim($kecamatan_filter)));
         }
         
         $query = $this->db->query($sql);

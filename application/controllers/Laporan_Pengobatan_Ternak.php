@@ -14,7 +14,7 @@ class Laporan_pengobatan_ternak extends CI_Controller {
             redirect('login');
         }
     }
-
+ 
     public function index()
     {
         $data['title'] = 'Laporan Pengobatan Ternak';

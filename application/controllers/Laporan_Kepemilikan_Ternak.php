@@ -105,7 +105,7 @@ class Laporan_kepemilikan_ternak extends CI_Controller {
         $this->load->view('laporan/detail_kepemilikan_kecamatan', $data);
     }
     
-    // ==================== EXPORT EXCEL (TANPA LIBRARY) ====================
+    // ==================== EXPORT EXCEL ====================
     public function export_excel()
     {
         $tahun = $this->input->get('tahun');
@@ -132,7 +132,7 @@ class Laporan_kepemilikan_ternak extends CI_Controller {
         
         $jenisDataText = $jenis_data == 'peternak' ? 'PETERNAK' : 'POPULASI TERNAK';
         $bulanText = ($bulan && $bulan != '') ? $bulanNama[$bulan] : 'Semua Bulan';
-        $kecamatanText = ($kecamatan && $kecamatan != 'semua') ? 'Kecamatan ' . $kecamatan : 'Seluruh Kecamatan';
+        $kecamatanText = ($kecamatan && $kecamatan != 'semua') ? 'Kecamatan ' . ucwords(strtolower($kecamatan)) : 'Seluruh Kecamatan';
         
         // Header untuk download file Excel
         header('Content-Type: application/vnd.ms-excel');
@@ -185,7 +185,7 @@ class Laporan_kepemilikan_ternak extends CI_Controller {
         foreach($data as $item) {
             echo '<tr>';
             echo '<td align="center">' . $no++ . '</td>';
-            echo '<td>' . $item->kecamatan . '</td>';
+            echo '<td align="left">' . $item->kecamatan . '</td>';
             echo '<td align="right">' . number_format((int)$item->sapi_potong, 0, ',', '.') . '</td>';
             echo '<td align="right">' . number_format((int)$item->sapi_perah, 0, ',', '.') . '</td>';
             echo '<td align="right">' . number_format((int)$item->kambing, 0, ',', '.') . '</td>';

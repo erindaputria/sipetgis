@@ -72,10 +72,10 @@
                                 </div>
                                 <i class="fas fa-chevron-down ms-2" style="color: #832706 !important;"></i>
                             </a>
-                            <div class="collapse" id="laporanSubmenu"> 
+                            <div class="collapse show" id="laporanSubmenu"> 
                                <ul class="list-unstyled ps-4">
                                     <li><a href="<?= site_url('k_laporan_kepala/kepemilikan_ternak') ?>" class="nav-link">Kepemilikan Ternak</a></li>
-                                    <li><a href="<?= site_url('k_laporan_kepala/history_data_ternak') ?>" class="nav-link">History Data Ternak</a></li>
+                                    <li><a href="<?= site_url('k_laporan_kepala/history_data_ternak') ?>" class="nav-link active">History Data Ternak</a></li>
                                     <li><a href="<?= site_url('k_laporan_kepala/vaksinasi') ?>" class="nav-link">Vaksinasi</a></li>
                                     <li><a href="<?= site_url('k_laporan_kepala/history_vaksinasi') ?>" class="nav-link">History Data Vaksinasi</a></li>
                                     <li><a href="<?= site_url('k_laporan_kepala/pengobatan_ternak') ?>" class="nav-link">Pengobatan Ternak</a></li>
@@ -171,11 +171,11 @@
                         </div>
                     </div>
 
-                    <!-- Filter Section -->
+                    <!-- Filter Section - TANPA BINTANG MERAH -->
                     <div class="filter-section no-print">
                         <div class="row g-3">
                             <div class="col-md-4">
-                                <label class="form-label">Tahun <span class="text-danger">*</span></label>
+                                <label class="form-label">Tahun</label>
                                 <select class="form-select" id="filterTahun">
                                     <option value="">-- Pilih Tahun --</option>
                                     <?php foreach($tahun as $t): ?>
@@ -184,7 +184,7 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Bulan <span class="text-danger">*</span></label>
+                                <label class="form-label">Bulan</label>
                                 <select class="form-select" id="filterBulan">
                                     <option value="">-- Pilih Bulan --</option>
                                     <?php foreach($bulan as $key => $value): ?>
@@ -217,7 +217,7 @@
                     <!-- Report Header -->
                     <div class="report-header" id="reportHeader">
                         <div class="report-title" id="reportTitle">
-                            Data Peternak dan Populasi Ternak
+                            Data Peternak dan Populasi Ternak 
                         </div>
                         <div class="report-subtitle" id="reportSubtitle">
                             Kota Surabaya
@@ -247,6 +247,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                <!-- Data akan diisi oleh JavaScript -->
                                             </tbody>
                                         </table>
                                     </div>

@@ -579,7 +579,7 @@
     .page-inner {
         padding: 0 !important;
         margin: 0 !important;
-    }
+    } 
     
     /* Pastikan background putih */
     body, .wrapper, .main-panel, .container, .page-inner, .modal-content {

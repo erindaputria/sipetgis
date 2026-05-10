@@ -371,3 +371,9 @@ table.dataTable tbody td:last-child {
         padding: 8px 5px;
     }
 }
+
+/* Sembunyikan bintang merah di semua label */
+.filter-section .form-label .text-danger,
+label .text-danger {
+    display: none !important; 
+}

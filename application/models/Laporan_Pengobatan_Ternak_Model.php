@@ -7,7 +7,7 @@ class Laporan_pengobatan_ternak_model extends CI_Model {
     {
         parent::__construct();
     } 
-
+ 
     // Daftar kecamatan urutan tetap
     private $kecamatan_order = [
         'Asemrowo', 'Krembangan', 'Pabean Cantian', 'Semampir', 'Bulak',

@@ -6,7 +6,7 @@ class Laporan_history_data_ternak_model extends CI_Model {
     public function __construct()
     {
         parent::__construct();
-    }
+    } 
 
     private $kecamatan_order = [
         'Asemrowo', 'Krembangan', 'Pabean Cantian', 'Semampir', 'Bulak',

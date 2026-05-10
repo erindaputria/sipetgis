@@ -22,7 +22,7 @@
 } 
 
 /* Sidebar Active Menu */
-.nav-item.active > a {
+.nav-item.active > a { 
     background: var(--primary-soft);
     color: var(--primary);
 }

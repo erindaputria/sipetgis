@@ -8,22 +8,6 @@ $(document).ready(function() {
     dataTable = $('#kepemilikanTable').DataTable({
         dom: 'Bfrtip',
         buttons: [
-            // {
-            //     extend: 'copy',
-            //     text: '<i class="fas fa-copy"></i> Copy',
-            //     className: 'btn btn-sm btn-primary',
-            //     exportOptions: {
-            //         columns: ':visible'
-            //     }
-            // },
-            // {
-            //     extend: 'csv',
-            //     text: '<i class="fas fa-file-csv"></i> CSV',
-            //     className: 'btn btn-sm btn-success',
-            //     action: function(e, dt, button, config) {
-            //         exportWithParams('csv');
-            //     }
-            // },
             {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel"></i> Excel',
@@ -32,14 +16,6 @@ $(document).ready(function() {
                     exportWithParams('excel');
                 }
             },
-            // {
-            //     extend: 'pdf',
-            //     text: '<i class="fas fa-file-pdf"></i> PDF',
-            //     className: 'btn btn-sm btn-danger',
-            //     action: function(e, dt, button, config) {
-            //         exportPdfInline();
-            //     }
-            // },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print"></i> Print',
@@ -88,6 +64,77 @@ $(document).ready(function() {
         
         loadData();
     });
+
+    // ================ TOMBOL RESET (BENAR) ================
+    $("#btnReset").click(function() {
+        // Reset semua filter ke nilai default
+        $("#filterTahun").val('');
+        $("#filterBulan").val('');
+        $("#filterKecamatan").val('semua');
+        $("#filterJenisData").val('peternak');
+        
+        // Ambil tahun pertama dari dropdown
+        var firstYear = $("#filterTahun option:eq(1)").val();
+        
+        if(firstYear) {
+            // Set currentData dengan tahun pertama
+            currentData = {
+                tahun: firstYear,
+                bulan: '',
+                kecamatan: 'semua',
+                jenis_data: 'peternak'
+            };
+            
+            // Update dropdown values
+            $("#filterTahun").val(firstYear);
+            $("#filterBulan").val('');
+            $("#filterKecamatan").val('semua');
+            $("#filterJenisData").val('peternak');
+            
+            // Load data untuk semua kecamatan
+            loadData();
+        } else {
+            // Jika tidak ada tahun, tampilkan pesan
+            currentData = {
+                tahun: '',
+                bulan: '',
+                kecamatan: 'semua',
+                jenis_data: 'peternak'
+            };
+            
+            $("#kepemilikanTable tbody").empty();
+            $("#kepemilikanTable tbody").html('<tr><td colspan="11" class="text-center">Tidak ada data tahun tersedia</td></tr>');
+            
+            $("#reportTitle").html('REKAP DATA JUMLAH PETERNAK');
+            $("#reportSubtitle").html('Kota Surabaya');
+        }
+    });
+
+    // ================ TOMBOL REFRESH ================
+    $("#refreshBtn").click(function() {
+        if(currentData.tahun && currentData.tahun !== '') {
+            // Jika sudah ada filter yang dipilih, refresh dengan filter yang sama
+            loadData();
+        } else {
+            // Jika belum ada filter, ambil tahun pertama dari dropdown
+            var firstYear = $("#filterTahun option:eq(1)").val();
+            if(firstYear) {
+                currentData.tahun = firstYear;
+                currentData.bulan = '';
+                currentData.kecamatan = 'semua';
+                currentData.jenis_data = 'peternak';
+                
+                $("#filterTahun").val(firstYear);
+                $("#filterBulan").val('');
+                $("#filterKecamatan").val('semua');
+                $("#filterJenisData").val('peternak');
+                
+                loadData();
+            } else {
+                alert("Tidak ada data tahun yang tersedia. Silakan input data terlebih dahulu.");
+            }
+        }
+    });
 });
 
 var dataTable = null;
@@ -105,7 +152,7 @@ function exportWithParams(format) {
         return;
     }
     
-    var url = base_url + 'laporan_kepemilikan_ternak/export_' + format;
+    var url = base_url + 'laporan_kepemilikan_ternak/export_excel';
     url += "?tahun=" + currentData.tahun;
     url += "&bulan=" + (currentData.bulan || '');
     url += "&kecamatan=" + currentData.kecamatan;
@@ -113,22 +160,6 @@ function exportWithParams(format) {
     
     window.location.href = url;
 }
-
-// Fungsi untuk export PDF (sementara dinonaktifkan)
-// function exportPdfInline() {
-//     if(!currentData.tahun) {
-//         alert("Silakan pilih tahun terlebih dahulu!");
-//         return;
-//     }
-//     
-//     var url = base_url + 'laporan_kepemilikan_ternak/export_pdf_inline';
-//     url += "?tahun=" + currentData.tahun;
-//     url += "&bulan=" + (currentData.bulan || '');
-//     url += "&kecamatan=" + currentData.kecamatan;
-//     url += "&jenis_data=" + currentData.jenis_data;
-//     
-//     window.open(url, '_blank');
-// }
 
 function printWithCurrentData() {
     if(!currentData.tahun) {
@@ -281,7 +312,7 @@ function loadData() {
             $("#kepemilikanTable tbody").append(
                 '<tr class="total-row-bottom" style="background-color: #e8f5e9; font-weight: bold;">' +
                 '   <td colspan="2" style="text-align: center;"><strong>TOTAL KESELURUHAN</strong></td>' +
-                '   </td><strong class="' + totalClassSP + '">' + formatNumber(totalSapiPotong) + '</strong></td>' +
+                '   <td><strong class="' + totalClassSP + '">' + formatNumber(totalSapiPotong) + '</strong></td>' +
                 '   <td><strong class="' + totalClassSPerah + '">' + formatNumber(totalSapiPerah) + '</strong></td>' +
                 '   <td><strong class="' + totalClassKambing + '">' + formatNumber(totalKambing) + '</strong></td>' +
                 '   <td><strong class="' + totalClassDomba + '">' + formatNumber(totalDomba) + '</strong></td>' +
@@ -290,7 +321,7 @@ function loadData() {
                 '   <td><strong class="' + totalClassAngsa + '">' + formatNumber(totalAngsa) + '</strong></td>' +
                 '   <td><strong class="' + totalClassKalkun + '">' + formatNumber(totalKalkun) + '</strong></td>' +
                 '   <td><strong class="' + totalClassBurung + '">' + formatNumber(totalBurung) + '</strong></td>' +
-                '  </tr>'
+                '  </td>'
             );
             
             $("#loadingOverlay").fadeOut();

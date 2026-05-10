@@ -231,7 +231,7 @@ class Data_stok_pakan extends CI_Controller {
     {
         $this->output->set_content_type('application/json');
         
-        $id = $this->input->post('id');
+        $id = $this->input->post('id'); 
          
         if (!$id) {
             echo json_encode(['status' => 'error', 'message' => 'ID tidak ditemukan']);
